@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Guide RG – De BROL 2.0 au mouvement d’éducation permanente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --bg-alt: #ffffff;
+      --primary: #1d4ed8;
+      --primary-soft: rgba(37,99,235,0.08);
+      --accent: #f97316;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 18px 45px rgba(15,23,42,0.15);
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    * { box-sizing:border-box; margin:0; padding:0; }
+
+    body {
+      font-family:var(--sans);
+      background:
+        radial-gradient(circle at top, #dbeafe 0, #f3f4f6 40%, #e5e7eb 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    .page {
+      max-width:1160px;
+      margin:0 auto;
+      padding:20px 16px 32px;
+      display:grid;
+      grid-template-columns:260px minmax(0,1fr);
+      gap:16px;
+      align-items:flex-start;
+    }
+
+    @media (max-width:900px) {
+      .page {
+        grid-template-columns:minmax(0,1fr);
+      }
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      position:sticky;
+      top:14px;
+      align-self:flex-start;
+      background:rgba(255,255,255,0.95);
+      border-radius:18px;
+      border:1px solid rgba(209,213,219,0.95);
+      box-shadow:0 10px 28px rgba(148,163,184,0.45);
+      padding:14px 14px 12px;
+      backdrop-filter:blur(12px);
+    }
+
+    .logo-block {
+      display:flex;
+      align-items:center;
+      gap:9px;
+      margin-bottom:10px;
+    }
+
+    .logo-mark {
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      background:linear-gradient(135deg,#1d4ed8,#2563eb);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-weight:700;
+      font-size:17px;
+      box-shadow:0 10px 24px rgba(37,99,235,0.7);
+    }
+
+    .logo-main {
+      font-size:0.96rem;
+      font-weight:600;
+    }
+
+    .logo-sub {
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+
+    .badge {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 8px;
+      border-radius:999px;
+      background:var(--primary-soft);
+      border:1px solid rgba(148,163,184,0.9);
+      font-size:0.75rem;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    .badge-dot {
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:#22c55e;
+      box-shadow:0 0 0 4px rgba(34,197,94,0.4);
+    }
+
+    .nav-title {
+      margin-top:10px;
+      font-size:0.82rem;
+      font-weight:600;
+      color:#4b5563;
+      text-transform:uppercase;
+      letter-spacing:0.04em;
+    }
+
+    .nav-list {
+      list-style:none;
+      margin-top:6px;
+      font-size:0.86rem;
+    }
+
+    .nav-list li {
+      margin-bottom:3px;
+    }
+
+    .nav-link {
+      display:block;
+      padding:5px 8px;
+      border-radius:9px;
+      color:#374151;
+      cursor:pointer;
+      transition:background 0.12s,color 0.12s;
+    }
+
+    .nav-link:hover {
+      background:#eef2ff;
+      color:#111827;
+    }
+
+    .nav-link.active {
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .level-toggle {
+      margin-top:10px;
+      padding:7px 9px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+
+    .level-toggle button {
+      margin-top:5px;
+      padding:4px 8px;
+      font-size:0.78rem;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      margin-right:4px;
+    }
+
+    .level-toggle button.active {
+      background:#1f2937;
+      border-color:#1f2937;
+      color:#f9fafb;
+    }
+
+    /* MAIN */
+
+    main {
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .card {
+      background:var(--bg-alt);
+      border-radius:var(--radius-lg);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-soft);
+      padding:18px 18px 17px;
+    }
+
+    .section {
+      scroll-margin-top:80px;
+    }
+
+    h1 {
+      font-size:1.8rem;
+      line-height:1.25;
+      margin-bottom:8px;
+    }
+
+    h1 span {
+      color:var(--primary);
+    }
+
+    .section-title {
+      font-size:1.02rem;
+      font-weight:600;
+      margin-bottom:6px;
+    }
+
+    .section-sub {
+      font-size:0.92rem;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    p {
+      font-size:0.94rem;
+      color:#374151;
+      margin-bottom:6px;
+    }
+
+    .small {
+      font-size:0.8rem;
+      color:var(--muted);
+      margin-top:3px;
+    }
+
+    .pill-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+    }
+
+    .pill {
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      padding:7px 10px;
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+
+    .pill strong {
+      display:block;
+      font-size:0.9rem;
+      color:#111827;
+    }
+
+    .grid-2 {
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:10px;
+      margin-top:8px;
+    }
+
+    @media (max-width:640px) {
+      .grid-2 { grid-template-columns:minmax(0,1fr); }
+    }
+
+    .tile {
+      border-radius:var(--radius-md);
+      border:1px solid var(--border);
+      background:#f9fafb;
+      padding:9px 10px 8px;
+      font-size:0.86rem;
+    }
+
+    .tile-title {
+      font-weight:600;
+      margin-bottom:2px;
+    }
+
+    .tile-desc {
+      font-size:0.84rem;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+
+    .tag {
+      display:inline-block;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.9);
+      background:#eef2ff;
+      font-size:0.74rem;
+      color:#1e293b;
+      margin-right:4px;
+      margin-top:2px;
+    }
+
+    ul {
+      font-size:0.88rem;
+      color:#374151;
+      padding-left:18px;
+      margin-bottom:6px;
+    }
+
+    ul li { margin-bottom:4px; }
+
+    .code-block {
+      margin-top:6px;
+      background:#020617;
+      color:#e5e7eb;
+      border-radius:10px;
+      padding:8px 10px;
+      font-family:var(--mono);
+      font-size:0.8rem;
+      overflow-x:auto;
+      white-space:pre;
+    }
+
+    .code-block .comment {
+      color:#6b7280;
+    }
+
+    .btn-main {
+      margin-top:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      border:none;
+      background:var(--primary);
+      color:#fff;
+      font-size:0.88rem;
+      font-weight:600;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 10px 24px rgba(37,99,235,0.5);
+      transition:transform 0.12s,box-shadow 0.12s,filter 0.12s;
+    }
+
+    .btn-main:hover {
+      transform:translateY(-1px);
+      filter:brightness(1.03);
+      box-shadow:0 13px 30px rgba(37,99,235,0.6);
+    }
+
+    .btn-main:active {
+      transform:translateY(1px) scale(0.99);
+      box-shadow:0 7px 18px rgba(15,23,42,0.5);
+    }
+
+    .note-debutant {
+      border-radius:10px;
+      border:1px solid #bfdbfe;
+      background:#eff6ff;
+      padding:7px 9px;
+      font-size:0.84rem;
+      color:#1e3a8a;
+      margin-top:6px;
+    }
+
+    .note-avance {
+      border-radius:10px;
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      padding:7px 9px;
+      font-size:0.82rem;
+      color:#4b5563;
+      margin-top:6px;
+    }
+
+    .avance-only { display:none; }
+
+    footer {
+      grid-column:1 / -1;
+      margin-top:16px;
+      font-size:0.78rem;
+      color:var(--muted);
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:6px;
+      align-items:center;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-block">
+      <div class="logo-mark">RG</div>
+      <div>
+        <div class="logo-main">Guide RG</div>
+        <div class="logo-sub">De BROL 2.0 au mouvement d’éducation permanente</div>
+      </div>
+    </div>
+    <div class="badge">
+      <span class="badge-dot"></span>
+      <span>Mode tutoriel · Grand public</span>
+    </div>
+
+    <div class="nav-title">Par où commencer ?</div>
+    <ul class="nav-list">
+      <li><span class="nav-link active" data-target="s-intro">1. C’est quoi “RG” et BROL 2.0 ?</span></li>
+      <li><span class="nav-link" data-target="s-brol">2. Comprendre la page d’accueil BROL</span></li>
+      <li><span class="nav-link" data-target="s-gr">3. Le mouvement d’éducation permanente (GR)</span></li>
+      <li><span class="nav-link" data-target="s-dossier">4. Tout mettre dans un dossier</span></li>
+      <li><span class="nav-link" data-target="s-etapes">5. Pas à pas : de zéro à “j’ai tout compris”</span></li>
+      <li><span class="nav-link" data-target="s-plus">6. Et après ?</span></li>
+    </ul>
+
+    <div class="level-toggle">
+      Niveau d’explication :<br>
+      <button type="button" id="btn-debutant" class="active">Débutant</button>
+      <button type="button" id="btn-avance">Geek / avancé</button>
+      <div class="small">
+        Débutant = on évite le jargon.<br>
+        Geek = on détaille le HTML/JS/CSS.
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <!-- INTRO -->
+    <section class="card section" id="s-intro">
+      <h1>Un seul univers,<br><span>deux pages-clés, un tutoriel.</span></h1>
+      <p class="section-sub">
+        Tu as vu passer plusieurs pages, tu n’es plus sûr·e de ce qui sert à quoi, et tu veux tout reprendre calmement
+        depuis le début. Ce guide sert exactement à ça.
+      </p>
+
+      <div class="pill-row">
+        <div class="pill">
+          <strong>Page 1 : BROL 2.0</strong>
+          la “télécommande” centrale, le dashboard.
+        </div>
+        <div class="pill">
+          <strong>Page 2 : /gr</strong>
+          le site “mouvement d’éducation permanente” sérieux.
+        </div>
+        <div class="pill">
+          <strong>Tu</strong>
+          avec un dossier sur ton ordi ou ta clé USB.
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:10px;">
+        <div class="tile">
+          <div class="tile-title">1. La page BROL 2.0</div>
+          <div class="tile-desc">
+            C’est la page que tu vois sur <strong>https://rg-ashy.vercel.app/</strong>.  
+            Elle sert de <em>tableau de bord</em> : une liste de modules à gauche, un grand “écran” au centre
+            pour afficher les pages, et des “embeds” (YouTube, PDF, etc.).
+          </div>
+          <div>
+            <span class="tag">dashboard</span>
+            <span class="tag">navigation</span>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-title">2. La page “GR”</div>
+          <div class="tile-desc">
+            C’est la page sur <strong>https://rg-ashy.vercel.app/gr</strong> qui présente un
+            <em>mouvement d’éducation permanente citoyenne</em>, avec une partie vitrine
+            et une partie intranet / console.
+          </div>
+          <div>
+            <span class="tag">éducation permanente</span>
+            <span class="tag">intranet</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-debutant">
+        <strong>Idée clé (niveau débutant) :</strong><br>
+        Tout ça n’est qu’un ensemble de fichiers <code>.html</code> qu’on met dans le même dossier.
+        On peut les ouvrir depuis un navigateur, même sans internet, et on peut les héberger n’importe où
+        (comme sur Vercel ou GitHub Pages).
+      </div>
+
+      <div class="note-avance avance-only">
+        <strong>Idée clé (niveau geek) :</strong><br>
+        Le “RG-univers” est une collection de pages HTML statiques liées entre elles.
+        <code>/</code> joue le rôle de <em>router minimal</em> en JS, 
+        <code>/gr</code> est un cas d’usage concret (EP FWB) avec intranet front-only
+        et console de commande simulée.
+      </div>
+    </section>
+
+    <!-- BROL -->
+    <section class="card section" id="s-brol">
+      <div class="section-title">1. Comprendre la page BROL 2.0 (page d’accueil)</div>
+      <p class="section-sub">
+        BROL 2.0, c’est ton <strong>dashboard central</strong>. On peut le voir comme une télécommande
+        qui ouvre tous tes sites, fichiers et univers sans se perdre.
+      </p>
+
+      <p>
+        Sur <strong>https://rg-ashy.vercel.app/</strong>, tu vois :
+      </p>
+      <ul>
+        <li>À gauche : une liste de <strong>modules</strong> (pages, jeux, intranets…)</li>
+        <li>Au centre : un <strong>viewer</strong> qui affiche la page choisie</li>
+        <li>À droite : des <strong>embeds rapides</strong> (YouTube, PDF, pingouins…)</li>
+      </ul>
+
+      <div class="grid-2">
+        <div class="tile">
+          <div class="tile-title">Modules = pages / fichiers</div>
+          <div class="tile-desc">
+            Chaque module correspond à un fichier dans ton dossier (par ex.
+            <code>gr.html</code>, <code>intranet.html</code>, etc.) ou à une vue spéciale.
+          </div>
+          <div class="code-block">
+<span class="comment">// Dans BROL 2.0, en bas du fichier :</span>
+const modules = [
+  {
+    id: "gr",
+    title: "Mouvement EP citoyenne",
+    file: "gr.html",
+    category: "intra",
+    kind: "Portail & intranet EP",
+    description: "Site sérieux pour l’éducation permanente FWB."
+  },
+  // ... autres modules
+];
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-title">Embeds = contenus externes</div>
+          <div class="tile-desc">
+            Les “embeds” permettent de charger un PDF, une vidéo, une image dans le viewer
+            sans changer de page.
+          </div>
+          <div class="code-block">
+<span class="comment">// Exemple d’embed dans BROL 2.0 :</span>
+const embeds = {
+  plaidoyer: {
+    label: "PDF plaidoyer",
+    url: "plaidoyer-jp.pdf",
+    description: "Un exemple de document à analyser."
+  },
+  // ...
+};
+          </div>
+        </div>
+      </div>
+
+      <div class="note-debutant">
+        <strong>Version simple :</strong>  
+        BROL 2.0 ne “contient” pas tout. Il se contente d’ouvrir des fichiers qui sont
+        dans le même dossier que lui. Si tu enlèves un fichier, le module ne marchera plus.
+      </div>
+
+      <div class="note-avance avance-only">
+        <strong>Version geek :</strong>  
+        BROL 2.0 est un <em>SPA minimaliste sans framework</em>.  
+        Tu ajoutes / retires des “routes” en modifiant le tableau <code>modules</code>.
+        Le viewer est un <code>&lt;iframe&gt;</code> ou un conteneur qui change de <code>src</code>
+        selon le module sélectionné, sans API backend.
+      </div>
+
+      <button class="btn-main" type="button" onclick="openUrl('https://rg-ashy.vercel.app/')">
+        Ouvrir BROL 2.0 dans un nouvel onglet
+      </button>
+    </section>
+
+    <!-- GR -->
+    <section class="card section" id="s-gr">
+      <div class="section-title">2. Le site “GR” : mouvement d’éducation permanente</div>
+      <p class="section-sub">
+        La page <strong>/gr</strong> montre ce qu’on peut faire de sérieux avec ce système :
+        un portail d’<strong>éducation permanente citoyenne</strong> pour la Fédération Wallonie-Bruxelles,
+        avec vitrine publique + intranet de démonstration.
+      </p>
+
+      <div class="grid-2">
+        <div class="tile">
+          <div class="tile-title">Partie publique</div>
+          <div class="tile-desc">
+            On y trouve :
+          </div>
+          <ul>
+            <li>Une phrase d’ouverture (“un mouvement qui assume l’ambition de faire mieux”)</li>
+            <li>La mission, les axes, les publics, les territoires</li>
+            <li>Une section “Transparence & conformité” (statuts, rapports, EP FWB)</li>
+          </ul>
+          <div class="small">
+            Ça donne une image <em>crédible</em> pour des partenaires, des pouvoirs publics, des financeurs.
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-title">Partie intranet / console</div>
+          <div class="tile-desc">
+            Vers la fin de la page, tu vois :
+          </div>
+          <ul>
+            <li>Un <strong>tableau de bord interne</strong> avec quelques indicateurs</li>
+            <li>Une maquette de formulaire d’action / animation</li>
+            <li>Un “registre des documents” et des bénévoles</li>
+            <li>Une <strong>console</strong> accessible par <code>/console</code> dans le texte</li>
+          </ul>
+          <div class="small">
+            Dans la version statique, tout ça reste fictif, mais la structure est prête
+            pour une vraie mise en production.
+          </div>
+        </div>
+      </div>
+
+      <div class="note-debutant">
+        <strong>À retenir :</strong><br>
+        La page <code>gr.html</code> n’est “qu’un fichier HTML” dans le même dossier.
+        Ce fichier peut être :
+        <ul>
+          <li>ouvert directement dans ton navigateur</li>
+          <li>appelé depuis BROL 2.0 comme un module</li>
+          <li>hébergé en ligne sur un service statique</li>
+        </ul>
+      </div>
+
+      <div class="note-avance avance-only">
+        <strong>Pour les curieux :</strong><br>
+        <ul>
+          <li>Le texte colle aux exigences typiques du décret EP FWB (mission, axes, publics, gouvernance).</li>
+          <li>La section intranet est un “mock” de back-office, utilisable comme cahier des charges futur.</li>
+          <li>La console mentionnée (<code>/console – mouvement-ep-fwb</code>) simule un CLI interne
+              pour déployer des commandes symboliques (vision, statut, axes, etc.).</li>
+        </ul>
+      </div>
+
+      <button class="btn-main" type="button" onclick="openUrl('https://rg-ashy.vercel.app/gr')">
+        Ouvrir le site “GR” dans un nouvel onglet
+      </button>
+    </section>
+
+    <!-- DOSSIER -->
+    <section class="card section" id="s-dossier">
+      <div class="section-title">3. Tout mettre dans un dossier (version clé USB / ordi perso)</div>
+      <p class="section-sub">
+        Le plus simple pour vraiment comprendre, c’est de te dire :  
+        <strong>“Tout tient dans un dossier sur mon ordinateur ou ma clé USB.”</strong>
+      </p>
+
+      <p>Par exemple :</p>
+
+      <div class="code-block">
+<span class="comment"># Structure minimale sur ton ordinateur :</span>
+rg-univers/
+├─ index.html           <span class="comment"># BROL 2.0 – Dashboard central</span>
+├─ gr.html              <span class="comment"># Mouvement d’éducation permanente (GR)</span>
+├─ rg-tutoriel.html     <span class="comment"># CE FICHIER : le guide pour tout comprendre</span>
+├─ plaidoyer-jp.pdf
+├─ dystopie.pdf
+└─ autres-pages.html    <span class="comment"># intranet, jeux, etc. (optionnel)</span>
+      </div>
+
+      <p style="margin-top:6px;">
+        Ensuite, tu :
+      </p>
+      <ul>
+        <li>ouvres <code>index.html</code> (BROL 2.0) dans ton navigateur</li>
+        <li>renommes les modules pour qu’ils pointent vers <code>gr.html</code>, <code>rg-tutoriel.html</code>, etc.</li>
+        <li>peux ouvrir <code>rg-tutoriel.html</code> à côté pour relire les explications</li>
+      </ul>
+
+      <div class="note-debutant">
+        <strong>Hyper important :</strong><br>
+        Si un module dans BROL pointe vers <code>"gr.html"</code>,  
+        alors le fichier <code>gr.html</code> doit être présent dans le même dossier.
+      </div>
+
+      <div class="note-avance avance-only">
+        <strong>Petite astuce geek :</strong><br>
+        Si tu héberges sur Vercel/GitHub Pages,  
+        <code>index.html</code> devient <code>/</code>  
+        et <code>gr.html</code> devient <code>/gr</code>.  
+        C’est exactement ce qui se passe sur <code>rg-ashy.vercel.app</code>.
+      </div>
+    </section>
+
+    <!-- ETAPES -->
+    <section class="card section" id="s-etapes">
+      <div class="section-title">4. Pas à pas : de “je ne comprends rien” à “j’ai tout pigé”</div>
+      <p class="section-sub">
+        Voici une séquence simple à suivre, même si tu n’aimes pas la technique.
+      </p>
+
+      <ol style="font-size:0.94rem; color:#374151; padding-left:18px;">
+        <li style="margin-bottom:6px;">
+          <strong>Ouvrir ce guide</strong>  
+          → Tu lis cette page (<code>rg-tutoriel.html</code>).  
+          Tu retiens : il y a un dashboard (BROL) et un site sérieux (GR).
+        </li>
+        <li style="margin-bottom:6px;">
+          <strong>Ouvrir BROL 2.0</strong>  
+          → Sur ton ordi : <code>index.html</code> dans le même dossier.  
+          → En ligne : <a href="https://rg-ashy.vercel.app/" target="_blank">https://rg-ashy.vercel.app/</a>.
+        </li>
+        <li style="margin-bottom:6px;">
+          <strong>Cliquer sur le module “GR”</strong>  
+          → Tu vois la page “Mouvement d’éducation permanente citoyenne”.  
+          Tu la parcours une fois, sans chercher à tout analyser.
+        </li>
+        <li style="margin-bottom:6px;">
+          <strong>Relire ce guide en parallèle</strong>  
+          → Tu reviens ici, tu lis chaque section en comparant avec ce que tu vois réellement dans le site.
+        </li>
+        <li style="margin-bottom:6px;">
+          <strong>Ajouter un module perso</strong>  
+          → Tu crées une page simple (ex. <code>mon-projet.html</code>)  
+          → Tu l’ajoutes au tableau <code>modules</code> dans BROL 2.0.  
+          → Tu vois apparaître ton propre bouton dans la liste.
+        </li>
+      </ol>
+
+      <div class="note-debutant">
+        <strong>Si tu bloques :</strong><br>
+        Tu peux considérer chaque fichier HTML comme une feuille A4 :
+        - tu la modifies  
+        - tu l’enregistres  
+        - tu la ré-ouvres dans le navigateur  
+        Rien ne “casse” tout l’ordinateur : au pire, la page s’affiche mal jusqu’à ce que tu corriges.
+      </div>
+
+      <div class="note-avance avance-only">
+        <strong>Si tu veux aller plus loin techniquement :</strong><br>
+        <ul>
+          <li>Utiliser un éditeur comme VS Code.</li>
+          <li>Mettre ton dossier complet dans un dépôt Git.</li>
+          <li>Déployer sur Vercel / GitHub Pages pour avoir exactement ton propre <code>rg-*</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PLUS LOIN -->
+    <section class="card section" id="s-plus">
+      <div class="section-title">5. Et après ? (idées d’extension)</div>
+      <p class="section-sub">
+        Une fois que tu as compris la logique BROL + GR + dossier, tu peux t’amuser
+        à étendre sans tout casser.
+      </p>
+
+      <div class="grid-2">
+        <div class="tile">
+          <div class="tile-title">Idées “grand public”</div>
+          <div class="tile-desc">
+            Sans toucher au JavaScript compliqué :
+          </div>
+          <ul>
+            <li>Modifier les textes du site GR pour coller à un vrai projet.</li>
+            <li>Ajouter une page “FAQ” ou “Nous contacter” comme nouveau module.</li>
+            <li>Créer une page “Pas à pas pour créer ton propre site EP”.</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <div class="tile-title">Idées “geek / avancé”</div>
+          <div class="tile-desc">
+            En restant toujours en HTML/CSS/JS statique :
+          </div>
+          <ul>
+            <li>Améliorer la console du site GR pour qu’elle lise un peu l’URL ou l’heure.</li>
+            <li>Ajouter des petits formulaires qui stockent temporairement des infos dans <code>localStorage</code>.</li>
+            <li>Faire un second dashboard BROL pour un autre univers (pro, perso…).</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="small" style="margin-top:8px;">
+        L’idée générale : rester sur du <strong>statique</strong> (HTML/JS/CSS, pas de base de données),
+        pour que tout puisse tenir sur une clé USB, un dépôt Git, ou un hébergement ultra simple.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      Guide RG – BROL 2.0 & Mouvement d’éducation permanente · Ce tutoriel est lui-même un simple fichier HTML.
+    </div>
+    <div>
+      Mode : <span id="mode-label">Débutant</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // Scroll doux vers les sections
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const offset = window.scrollY + rect.top - 20;
+    window.scrollTo({ top: offset, behavior: "smooth" });
+  }
+
+  // Nav sidebar
+  const navLinks = document.querySelectorAll(".nav-link");
+  navLinks.forEach(link => {
+    link.addEventListener("click", () => {
+      const target = link.dataset.target;
+      navLinks.forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+      scrollToSection(target);
+    });
+  });
+
+  // Mode débutant / avancé
+  const btnDeb = document.getElementById("btn-debutant");
+  const btnAv = document.getElementById("btn-avance");
+  const avanceBlocks = document.querySelectorAll(".avance-only");
+  const modeLabel = document.getElementById("mode-label");
+
+  function setMode(mode) {
+    if (mode === "debutant") {
+      btnDeb.classList.add("active");
+      btnAv.classList.remove("active");
+      avanceBlocks.forEach(b => b.style.display = "none");
+      modeLabel.textContent = "Débutant";
+    } else {
+      btnDeb.classList.remove("active");
+      btnAv.classList.add("active");
+      avanceBlocks.forEach(b => b.style.display = "block");
+      modeLabel.textContent = "Geek / avancé";
+    }
+  }
+
+  btnDeb.addEventListener("click", () => setMode("debutant"));
+  btnAv.addEventListener("click", () => setMode("avance"));
+
+  // Ouverture des URLs externes (BROL, GR…)
+  function openUrl(url) {
+    window.open(url, "_blank");
+  }
+
+  // Mode par défaut : débutant
+  setMode("debutant");
+</script>
+</body>
+</html>
