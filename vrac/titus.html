@@ -1,0 +1,1074 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minitel · Annuaire + Monitoring (V2 autonome)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --screen-bg: #000000;
+      --screen-border: #4b5563;
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --minitel-green: #22c55e;
+      --minitel-cyan: #22d3ee;
+      --minitel-magenta: #e879f9;
+      --minitel-yellow: #fde047;
+      --border: #4b5563;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 18px 35px rgba(15,23,42,0.85);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 10px;
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    header {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.25), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.18), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 40%, #020819 100%);
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 260px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 20% 0, #bbf7d0, #22c55e 45%, #0ea5e9 90%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      color: #022c22;
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 18px rgba(34,197,94,0.75);
+    }
+
+    .header-title {
+      font-size: 17px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-right {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .chip {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+    }
+
+    @media (max-width: 720px) {
+      .header-right {
+        align-items: flex-start;
+      }
+    }
+
+    /* LAYOUT PRINCIPAL */
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 8px 9px 7px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .panel-title span.icon {
+      font-size: 14px;
+    }
+
+    /* TERMINAL MINITEL */
+
+    .terminal-frame {
+      border-radius: 12px;
+      border: 2px solid var(--screen-border);
+      background: #111827;
+      padding: 8px;
+      max-width: 100%;
+    }
+
+    .terminal-screen {
+      background: var(--screen-bg);
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      padding: 8px 8px 6px;
+      min-height: 260px;
+      max-height: 360px;
+      overflow-y: auto;
+
+      font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.2;
+      color: var(--minitel-green);
+      white-space: pre;
+    }
+
+    .screen-line {
+      display: block;
+    }
+
+    .c-green   { color: var(--minitel-green); }
+    .c-cyan    { color: var(--minitel-cyan); }
+    .c-magenta { color: var(--minitel-magenta); }
+    .c-yellow  { color: var(--minitel-yellow); }
+    .c-soft    { color: var(--text-soft); }
+
+    .line-clickable {
+      cursor: pointer;
+    }
+    .line-clickable:hover {
+      background: rgba(34,197,94,0.25);
+    }
+
+    .terminal-bottom {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .input-zone {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 180px;
+    }
+
+    .input-label {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    #minitelInput {
+      flex: 1 1 auto;
+      max-width: 120px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--text-main);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      outline: none;
+    }
+
+    #minitelInput:focus {
+      box-shadow: 0 0 0 1px var(--minitel-green);
+      border-color: var(--minitel-green);
+    }
+
+    .fn-keys {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+      flex: 1 1 auto;
+    }
+
+    .fn-btn {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--text-soft);
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      cursor: pointer;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    .fn-btn.primary {
+      border-color: var(--minitel-green);
+      color: var(--minitel-green);
+    }
+
+    .fn-btn.danger {
+      border-color: var(--danger);
+      color: #fecaca;
+    }
+
+    .fn-btn:active {
+      transform: translateY(1px);
+    }
+
+    .legend {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    /* MONITORING */
+
+    .monitor-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .monitor-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .monitor-field {
+      flex: 1 1 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 12px;
+    }
+
+    .monitor-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .monitor-input,
+    .monitor-select,
+    .monitor-textarea {
+      border-radius: 5px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--text-main);
+      font-size: 13px;
+      padding: 5px 7px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .monitor-input:focus,
+    .monitor-select:focus,
+    .monitor-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .monitor-textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    .mini-browser-card {
+      border-radius: 10px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mini-browser-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .mini-browser-iframe {
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      width: 100%;
+      height: 200px;
+    }
+
+    .monitor-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--text-soft);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      box-shadow: 0 0 8px rgba(34,197,94,0.6);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .monitor-meta {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    footer {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+
+    /* MODALE MONITORING */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      padding: 10px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-card {
+      max-width: 1100px;
+      width: 100%;
+      max-height: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #020617;
+      box-shadow: var(--shadow);
+      padding: 8px 9px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .modal-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .modal-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .modal-iframe {
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      width: 100%;
+      height: 320px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="header-left">
+        <div class="logo">M</div>
+        <div>
+          <div class="header-title">Minitel + Monitoring</div>
+          <div class="header-sub">
+            Annuaire style Minitel + mini-navigateur + modale responsive. Tout intégré, aucun fichier externe.
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="chip">minitel-monitor-v2.html</div>
+        <div>Version autonome pour démonstration & boulot.</div>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <!-- COLONNE GAUCHE : MINITEL -->
+      <section class="panel">
+        <div class="panel-title">
+          <span class="icon">📟</span>
+          <span>Annuaire style Minitel</span>
+        </div>
+        <div class="terminal-frame">
+          <div class="terminal-screen" id="screen"></div>
+
+          <div class="terminal-bottom">
+            <div class="input-zone">
+              <span class="input-label">N° :</span>
+              <input id="minitelInput" type="text" maxlength="4" autocomplete="off" />
+            </div>
+            <div class="fn-keys">
+              <button class="fn-btn danger" id="btnAnnuler">ANNULER</button>
+              <button class="fn-btn" id="btnRetour">RETOUR</button>
+              <button class="fn-btn" id="btnSuite">SUITE</button>
+              <button class="fn-btn primary" id="btnEnvoi">ENVOI</button>
+            </div>
+          </div>
+        </div>
+        <div class="legend">
+          Cliquez sur une ligne ou tapez un N°/code puis <strong>ENVOI</strong>.  
+          Chaque service ouvre un aperçu + monitoring à droite.
+        </div>
+      </section>
+
+      <!-- COLONNE DROITE : MONITORING -->
+      <section class="panel">
+        <div class="panel-title">
+          <span class="icon">📊</span>
+          <span>Mini navigateur & monitoring</span>
+        </div>
+
+        <div class="monitor-section">
+          <div class="monitor-row">
+            <div class="monitor-field">
+              <div class="monitor-label">Service</div>
+              <input id="monitorTitle" class="monitor-input" type="text" readonly />
+            </div>
+            <div class="monitor-field">
+              <div class="monitor-label">Code</div>
+              <input id="monitorCode" class="monitor-input" type="text" readonly />
+            </div>
+          </div>
+
+          <div class="monitor-row">
+            <div class="monitor-field">
+              <div class="monitor-label">Statut</div>
+              <select id="monitorStatus" class="monitor-select">
+                <option value="">(non défini)</option>
+                <option value="OK">OK / en service</option>
+                <option value="A vérifier">À vérifier</option>
+                <option value="En travaux">En travaux</option>
+                <option value="Idée">Idée / brouillon</option>
+              </select>
+            </div>
+            <div class="monitor-field">
+              <div class="monitor-label">Importance</div>
+              <select id="monitorImportance" class="monitor-select">
+                <option value="">(non défini)</option>
+                <option value="Essentiel">⭐ Essentiel</option>
+                <option value="Important">⚙️ Important</option>
+                <option value="Secondaire">📝 Secondaire</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="monitor-row">
+            <div class="monitor-field">
+              <div class="monitor-label">Tags</div>
+              <input id="monitorTags" class="monitor-input" type="text" placeholder="ex: intranet, casino, recrutement..." />
+            </div>
+          </div>
+
+          <div class="monitor-row">
+            <div class="monitor-field" style="flex: 1 1 100%;">
+              <div class="monitor-label">Notes</div>
+              <textarea id="monitorNotes" class="monitor-textarea" placeholder="Objectif, état, bugs, tâches, idées..."></textarea>
+            </div>
+          </div>
+
+          <div class="mini-browser-card">
+            <div class="mini-browser-header">
+              <span>Aperçu intégré (faux site généré pour ce service)</span>
+              <span class="monitor-meta">Toujours visible, même sans vrais fichiers.</span>
+            </div>
+            <iframe id="miniFrame" class="mini-browser-iframe" src="about:blank"></iframe>
+          </div>
+
+          <div class="monitor-row" style="justify-content: space-between; align-items: center;">
+            <div class="monitor-meta">
+              Sélectionne un service à gauche pour remplir automatiquement le monitoring.
+            </div>
+            <div class="monitor-buttons">
+              <button class="btn" id="btnResetMonitor">↺ Réinitialiser champs</button>
+              <button class="btn primary" id="btnModal">🖥️ Ouvrir en plein écran</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      Tout est simulé en local avec <code>srcdoc</code>.  
+      Pour brancher des vrais sites plus tard, tu pourras remplacer les contenus intégrés par des iframes normales.
+    </footer>
+  </div>
+
+  <!-- MODALE MONITORING -->
+  <div class="modal-backdrop" id="monitorModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Monitoring</div>
+        <div class="monitor-meta" id="modalInfo"></div>
+      </div>
+      <div class="modal-grid">
+        <div>
+          <iframe id="modalFrame" class="modal-iframe" src="about:blank"></iframe>
+        </div>
+        <div>
+          <div class="monitor-field">
+            <div class="monitor-label">Service</div>
+            <input id="modalService" class="monitor-input" type="text" readonly />
+          </div>
+          <div class="monitor-field">
+            <div class="monitor-label">Statut / importance</div>
+            <input id="modalStatus" class="monitor-input" type="text" readonly />
+          </div>
+          <div class="monitor-field">
+            <div class="monitor-label">Tags</div>
+            <input id="modalTags" class="monitor-input" type="text" readonly />
+          </div>
+          <div class="monitor-field">
+            <div class="monitor-label">Notes</div>
+            <textarea id="modalNotes" class="monitor-textarea" readonly></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnModalClose">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========
+       DONNÉES
+       ========== */
+
+    // On regroupe "tout ce qu’on a fait" en grandes familles
+    const annuaire = {
+      "1": {
+        label: "OS & INTRANETS FICTIFS",
+        description: "NYXO, ONYX, faux OS, intranet de renseignement, faux disque, etc.",
+        entries: [
+          { code: "101", name: "NYXO · Faux OS narratif", desc: "Interface d'OS fictif avec fenêtres, modules, disque imaginaire." },
+          { code: "102", name: "ONYX · Faux Obsidian portable", desc: "Graph view, lecture de .md, mini-intranet de renseignement." },
+          { code: "103", name: "Intranet Organisation", desc: "Société Anonyme Sociale très sérieuse avec tests et modules cachés." }
+        ]
+      },
+      "2": {
+        label: "JEUX & CASINOS PÉDAGOGIQUES",
+        description: "Jeux 12,50, Casino 642, spam.html, morpions, mini-arcades.",
+        entries: [
+          { code: "201", name: "Jeu concours 12,50", desc: "Créer le site statique le plus wow pour débloquer un easter egg." },
+          { code: "202", name: "Casino 642 · Looze ultime", desc: "Machine à sous avec 642 comme combo à éviter pour réfléchir au hasard." },
+          { code: "203", name: "Spam.html · Jeu de sensibilisation", desc: "Détournement de spam en mini-jeu de tri et de prévention." }
+        ]
+      },
+      "3": {
+        label: "PORTAILS & MÉTA-MOTEURS",
+        description: "Meta-moteurs, dark web fantasmé, veille citoyenne modulaire.",
+        entries: [
+          { code: "301", name: "Meta-moteur de veille", desc: "Interroger plusieurs sources, classer les résultats, filtrer par tags." },
+          { code: "302", name: "Explorateur dark web fantasmé", desc: "Simulation d'exploration avec faux sites & métadonnées." },
+          { code: "303", name: "GOO portail hardcore", desc: "Portail vers les outils citoyens, jeux, intranets et dossiers." }
+        ]
+      },
+      "4": {
+        label: "SITES PÉDAGOGIQUES & BILANS",
+        description: "CCPLC, fan club PAC, bilan perso burn-out / recasage.",
+        entries: [
+          { code: "401", name: "CCPLC · Site d'ensemble", desc: "Présentation de l'écosystème citoyen, méthodes et outils." },
+          { code: "402", name: "pac.html · Fan club PAC", desc: "Preuve de concept pour un mouvement d'éducation permanente revisitée." },
+          { code: "403", name: "bilan.html · Site bilan perso", desc: "Site bilan pour transformer un parcours chaotique en force." }
+        ]
+      },
+      "5": {
+        label: "JEUX DE RÔLE & TESTS",
+        description: "Jeux politico-dystopiques, tests de recrutement, fiches de personnage.",
+        entries: [
+          { code: "501", name: "Jeu politico-dystopique réaliste", desc: "Jeu autoguidé pour tirer son épingle du jeu en société." },
+          { code: "502", name: "Test recrutement Organisation", desc: "Simuler un processus de recrutement d'une agence très sérieuse." },
+          { code: "503", name: "Jeu polar / IA noire", desc: "Investigation en mode polar noir avec IA omniprésente." }
+        ]
+      },
+      "6": {
+        label: "OUTILS NUMÉRIQUES & GUIDES",
+        description: "Guides logiciels, faux navigateurs, tutos grand public.",
+        entries: [
+          { code: "601", name: "Guide logiciels & alternatives", desc: "Panorama de logiciels grand public et libres." },
+          { code: "602", name: "Faux navigateurs sécurisés", desc: "Chrome/Firefox en HTML pour démonstration contrôlée." },
+          { code: "603", name: "Tutoriel « faire son site »", desc: "Clé sur porte pour créer un site statique et le publier." }
+        ]
+      },
+      "7": {
+        label: "PROTOTYPES & TERMINAUX",
+        description: "Simulateurs de terminal, prototypes divers, scènes de jeu.",
+        entries: [
+          { code: "701", name: "Terminal diagnostic", desc: "Simulateur pour parler des pratiques numériques." },
+          { code: "702", name: "Frapad-terminal", desc: "Terminal qui se pose trop de questions (version apprivoisée)." },
+          { code: "703", name: "Prototype divers", desc: "Slot pour la prochaine expérimentation." }
+        ]
+      }
+    };
+
+    /* ===========
+       MINITEL
+       =========== */
+
+    let state = {
+      view: "home", // home | category | entry
+      categoryId: null,
+      selectedEntry: null
+    };
+
+    const screenEl = document.getElementById("screen");
+    const inputEl = document.getElementById("minitelInput");
+
+    function clearScreen() {
+      screenEl.innerHTML = "";
+    }
+
+    function addLine(text = "", className = "") {
+      const span = document.createElement("span");
+      span.className = "screen-line " + className;
+      span.textContent = text;
+      screenEl.appendChild(span);
+      screenEl.appendChild(document.createTextNode("\n"));
+      screenEl.scrollTop = screenEl.scrollHeight;
+      return span;
+    }
+
+    function pad(text, length) {
+      const t = String(text);
+      if (t.length >= length) return t.slice(0, length);
+      return t + " ".repeat(length - t.length);
+    }
+
+    function renderHome() {
+      state.view = "home";
+      state.categoryId = null;
+      state.selectedEntry = null;
+      clearScreen();
+
+      addLine("  M I N I T E L   A N N U A I R E", "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  Sélectionnez une rubrique :", "c-cyan");
+      addLine("", "");
+
+      Object.keys(annuaire).forEach(id => {
+        const cat = annuaire[id];
+        const line = addLine("  " + id + ". " + cat.label, "c-green line-clickable");
+        line.dataset.categoryId = id;
+      });
+
+      addLine("", "");
+      addLine("  Tapez le N° de rubrique et ENVOI", "c-soft");
+      addLine("  ou cliquez directement sur une ligne.", "c-soft");
+
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function renderCategory(catId) {
+      const cat = annuaire[catId];
+      if (!cat) { renderHome(); return; }
+
+      state.view = "category";
+      state.categoryId = catId;
+      state.selectedEntry = null;
+      clearScreen();
+
+      addLine("  " + pad(cat.label, 34), "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  " + cat.description, "c-cyan");
+      addLine("", "");
+
+      cat.entries.forEach(e => {
+        const line = addLine(`  ${e.code}  ${e.name}`, "c-green line-clickable");
+        line.dataset.entryCode = e.code;
+      });
+
+      addLine("", "");
+      addLine("  Tapez le code (3 chiffres) et ENVOI", "c-soft");
+      addLine("  ou cliquez sur un service pour la fiche + monitoring.", "c-soft");
+      addLine("  RETOUR : revenir à l'annuaire général.", "c-soft");
+
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function renderEntry(catId, code) {
+      const cat = annuaire[catId];
+      if (!cat) { renderHome(); return; }
+      const entry = cat.entries.find(e => e.code === code);
+      if (!entry) { renderCategory(catId); return; }
+
+      state.view = "entry";
+      state.selectedEntry = entry;
+      clearScreen();
+
+      addLine("  " + pad(entry.name, 34), "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  Code     : " + entry.code, "c-yellow");
+      addLine("  Rubrique : " + cat.label, "c-cyan");
+      addLine("", "");
+
+      const wrapLen = 38;
+      const words = entry.desc.split(" ");
+      let line = "  ";
+      words.forEach(w => {
+        if ((line + w).length > wrapLen) {
+          addLine(line, "c-soft");
+          line = "  " + w + " ";
+        } else {
+          line += w + " ";
+        }
+      });
+      if (line.trim().length > 0) addLine(line, "c-soft");
+
+      addLine("", "");
+      addLine("  ENVOI : synchroniser avec le panneau de monitoring.", "c-soft");
+      addLine("  RETOUR : revenir à la liste de la rubrique.", "c-soft");
+
+      inputEl.value = "";
+      inputEl.focus();
+
+      // On synchronise directement le monitoring
+      setActiveService(entry, cat);
+    }
+
+    function handleEnvoi() {
+      const value = inputEl.value.trim();
+
+      if (state.view === "home") {
+        if (annuaire[value]) {
+          renderCategory(value);
+        } else if (value !== "") {
+          addLine("", "");
+          addLine("  N° inconnu. Utilisez 1 à 7.", "c-soft");
+          inputEl.value = "";
+        }
+        return;
+      }
+
+      if (state.view === "category") {
+        if (/^\d{3}$/.test(value)) {
+          renderEntry(state.categoryId, value);
+        } else if (value !== "") {
+          addLine("", "");
+          addLine("  Code service invalide. Exemple : 101, 203, etc.", "c-soft");
+          inputEl.value = "";
+        }
+        return;
+      }
+
+      if (state.view === "entry" && state.selectedEntry) {
+        // ENVOI resynchronise le monitoring
+        const cat = annuaire[state.categoryId];
+        setActiveService(state.selectedEntry, cat);
+      }
+    }
+
+    function handleRetour() {
+      if (state.view === "entry") {
+        renderCategory(state.categoryId);
+      } else if (state.view === "category") {
+        renderHome();
+      } else {
+        renderHome();
+      }
+    }
+
+    function handleAnnuler() {
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function handleSuite() {
+      addLine("", "");
+      addLine("  SUITE : fin de page. Pas d'autres éléments.", "c-soft");
+    }
+
+    document.getElementById("btnEnvoi").addEventListener("click", handleEnvoi);
+    document.getElementById("btnRetour").addEventListener("click", handleRetour);
+    document.getElementById("btnAnnuler").addEventListener("click", handleAnnuler);
+    document.getElementById("btnSuite").addEventListener("click", handleSuite);
+
+    screenEl.addEventListener("click", (e) => {
+      const line = e.target.closest(".line-clickable");
+      if (!line) return;
+
+      if (line.dataset.categoryId) {
+        renderCategory(line.dataset.categoryId);
+        return;
+      }
+      if (line.dataset.entryCode && state.view === "category") {
+        renderEntry(state.categoryId, line.dataset.entryCode);
+      }
+    });
+
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleEnvoi();
+      }
+    });
+
+    /* ============
+       MONITORING
+       ============ */
+
+    const monitorTitle = document.getElementById("monitorTitle");
+    const monitorCode = document.getElementById("monitorCode");
+    const monitorStatus = document.getElementById("monitorStatus");
+    const monitorImportance = document.getElementById("monitorImportance");
+    const monitorTags = document.getElementById("monitorTags");
+    const monitorNotes = document.getElementById("monitorNotes");
+    const miniFrame = document.getElementById("miniFrame");
+    const btnResetMonitor = document.getElementById("btnResetMonitor");
+    const btnModal = document.getElementById("btnModal");
+
+    let currentService = null;
+    let currentCategoryLabel = "";
+
+    function generatePreviewHtml(entry, categoryLabel) {
+      // Aperçu intégré en srcdoc : fonctionne toujours, même sans fichier externe.
+      const safeTitle = (entry.name || "Service");
+      const safeDesc = (entry.desc || "");
+      const safeCat  = (categoryLabel || "");
+      return `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>${safeTitle}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #020617;
+    color: #e5e7eb;
+    padding: 10px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 999px;
+    border: 1px solid #4b5563;
+    font-size: 11px;
+    color: #9ca3af;
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-size: 18px;
+    margin: 4px 0 6px;
+  }
+  p {
+    font-size: 13px;
+    margin: 4px 0;
+  }
+  .meta {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+  <div class="badge">${safeCat}</div>
+  <h1>${safeTitle}</h1>
+  <p>${safeDesc}</p>
+  <p class="meta">
+    Aperçu intégré (srcdoc) – ce n'est pas le vrai site, mais une maquette pour travailler le monitoring.
+  </p>
+</body>
+</html>
+      `;
+    }
+
+    function setActiveService(entry, category) {
+      currentService = entry;
+      currentCategoryLabel = category ? category.label : "";
+
+      monitorTitle.value = entry.name || "";
+      monitorCode.value = entry.code || "";
+
+      // On conserve les champs de monitoring saisis (statut/tags/notes) : pas de localStorage ici → simple.
+      // On met à jour l'aperçu intégré :
+      const html = generatePreviewHtml(entry, currentCategoryLabel);
+      miniFrame.srcdoc = html;
+    }
+
+    btnResetMonitor.addEventListener("click", () => {
+      monitorStatus.value = "";
+      monitorImportance.value = "";
+      monitorTags.value = "";
+      monitorNotes.value = "";
+    });
+
+    /* ============
+       MODALE
+       ============ */
+
+    const modal = document.getElementById("monitorModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalInfo = document.getElementById("modalInfo");
+    const modalService = document.getElementById("modalService");
+    const modalStatus = document.getElementById("modalStatus");
+    const modalTags = document.getElementById("modalTags");
+    const modalNotes = document.getElementById("modalNotes");
+    const modalFrame = document.getElementById("modalFrame");
+    const btnModalClose = document.getElementById("btnModalClose");
+
+    function openModal() {
+      if (!currentService) {
+        alert("Sélectionne d'abord un service dans l'annuaire.");
+        return;
+      }
+      modalTitle.textContent = currentService.name || "Monitoring";
+      modalInfo.textContent = "Code " + (currentService.code || "–") + " · " + currentCategoryLabel;
+
+      modalService.value = (currentService.name || "") + " (" + (currentService.code || "") + ")";
+      const s = monitorStatus.value || "(statut non défini)";
+      const imp = monitorImportance.value || "(importance non définie)";
+      modalStatus.value = s + " · " + imp;
+      modalTags.value = monitorTags.value || "";
+      modalNotes.value = monitorNotes.value || "";
+
+      // même html que dans le mini navigateur, mais en plus grand
+      const html = generatePreviewHtml(currentService, currentCategoryLabel);
+      modalFrame.srcdoc = html;
+
+      modal.classList.add("active");
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+    }
+
+    btnModal.addEventListener("click", openModal);
+    btnModalClose.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // INIT
+    renderHome();
+  </script>
+</body>
+</html>
