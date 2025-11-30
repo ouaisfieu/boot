@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>JOUER · Kit de survie numérique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #22c55e;
+      --accent2: #22d3ee;
+      --danger: #f97316;
+      --card: #020617;
+      --border: #4b5563;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 65%);
+      color: var(--fg);
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .shell {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .glitch-title {
+      position: relative;
+      font-size: clamp(32px, 7vw, 52px);
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      text-align: center;
+      margin: 10px 0 4px;
+      color: var(--fg);
+    }
+
+    .glitch-title::before,
+    .glitch-title::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      mix-blend-mode: screen;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .glitch-title::before {
+      color: #22d3ee;
+      transform: translate3d(-2px, -1px, 0);
+      animation: glitchLeft 1.4s infinite alternate;
+    }
+
+    .glitch-title::after {
+      color: #f97316;
+      transform: translate3d(2px, 1px, 0);
+      animation: glitchRight 1.8s infinite alternate;
+    }
+
+    @keyframes glitchLeft {
+      0% { transform: translate3d(-1px,-1px,0); }
+      50%{ transform: translate3d(-3px,1px,0); }
+      100%{ transform: translate3d(-1px,2px,0); }
+    }
+
+    @keyframes glitchRight {
+      0% { transform: translate3d(1px,1px,0); }
+      50%{ transform: translate3d(3px,-2px,0); }
+      100%{ transform: translate3d(1px,-1px,0); }
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: var(--soft);
+      margin-bottom: 12px;
+    }
+
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 11px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: var(--soft);
+    }
+
+    .pill span {
+      color: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.12), transparent 55%),
+                  radial-gradient(circle at 100% 0, rgba(56,189,248,0.10), transparent 55%),
+                  #020617;
+      padding: 10px 11px;
+      box-shadow: 0 18px 35px rgba(15,23,42,0.90);
+    }
+
+    .card-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--soft);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title span.icon {
+      font-size: 15px;
+    }
+
+    .card p {
+      font-size: 13px;
+      margin: 4px 0;
+      color: var(--fg);
+    }
+
+    .card small {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .links-list {
+      margin-top: 6px;
+      font-size: 13px;
+      list-style: none;
+      padding: 0;
+    }
+
+    .links-list li {
+      margin: 4px 0;
+    }
+
+    .links-list a {
+      color: var(--accent2);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(56,189,248,0.6);
+    }
+
+    .links-list a:hover {
+      color: #7dd3fc;
+      border-bottom-style: solid;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 11px;
+      color: var(--soft);
+      margin: 2px 4px 2px 0;
+    }
+
+    .tag span {
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    details {
+      margin-top: 8px;
+      border-radius: 10px;
+      border: 1px dashed rgba(234,179,8,0.8);
+      background: rgba(24,24,27,0.9);
+      padding: 6px 8px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--danger);
+      font-weight: 600;
+      list-style: none;
+    }
+
+    summary::marker,
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .egg-title {
+      font-size: 12px;
+      color: var(--soft);
+      margin-top: 6px;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .egg-list {
+      padding-left: 16px;
+      font-size: 13px;
+      color: var(--fg);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(75,85,99,0.9);
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--soft);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="glitch-title" data-text="JOUER">JOUER</h1>
+    <div class="subtitle">
+      Scénario caché · lecture lente · humour noir · entraînement à la survie douce dans un monde bruyant.
+    </div>
+    <div class="meta-bar">
+      <div class="pill">Déclenché via <span>Konami</span></div>
+      <div class="pill">Utilisation principale : <span>kit de survie numérique</span></div>
+      <div class="pill">Niveau de sérieux : <span>80% réaliste / 20% glitch</span></div>
+    </div>
+
+    <div class="grid">
+      <!-- NARRATION & LIENS -->
+      <section class="card">
+        <div class="card-title">
+          <span class="icon">🕳️</span>
+          <span>Scène d'ouverture</span>
+        </div>
+        <p>
+          Quelqu'un, quelque part, a laissé traîner un fichier nommé <code>monitor.html</code> sur une clé USB.
+          Tu l'as ouvert “pour voir” et tu as commencé à cliquer. Mauvaise idée. Bonne idée. Difficile à dire.
+        </p>
+        <p>
+          Ce que tu regardes maintenant n'est pas un site officiel. C'est
+          <strong>une coquille</strong> : un faux os d'intranet, avec des liens vers des pages plus ou moins fictives,
+          utilisé comme <em>simulateur</em> pour apprendre à se débrouiller dans le bruit informationnel.
+        </p>
+
+        <p>
+          Les liens ci-dessous ne garantissent rien. Certains mèneront à tes propres prototypes, d'autres à des pages encore vides.
+          C'est normal : dans un monde saturé de données, il faut aussi savoir reconnaître le vide.
+        </p>
+
+        <ul class="links-list">
+          <li>↳ <a href="monitor.html" target="_blank">Retour au Minitel de contrôle</a></li>
+          <li>↳ <a href="titus.html" target="_blank">TITUS · Prototype d'écran surchargé</a></li>
+          <li>↳ <a href="12-50.html" target="_blank">12,50 · Jeu concours statique</a></li>
+          <li>↳ <a href="pac.html" target="_blank">Fan club PAC (preuve de concept)</a></li>
+          <li>↳ <a href="bilan.html" target="_blank">Bilan perso · version brute</a></li>
+          <li>↳ <a href="navigateur.html" target="_blank">Faux navigateur sécurisé</a></li>
+        </ul>
+
+        <p>
+          Si une page ne s'affiche pas, cela veut dire qu'elle reste à inventer.
+          Ici, c'est <strong>ton terrain d'entraînement</strong> : tu peux ajouter, modifier, réécrire.
+        </p>
+      </section>
+
+      <!-- KIT DE SURVIE & EASTER EGG -->
+      <section class="card">
+        <div class="card-title">
+          <span class="icon">🧬</span>
+          <span>Kit de survie numérique (easter egg)</span>
+        </div>
+        <p>
+          À la base, <code>monitor.html</code> n'est qu'un <strong>tableau de bord</strong> : un annuaire,
+          un mini-navigateur, quelques champs de suivi. Mais avec un peu de discipline,
+          ça devient un <strong>couteau suisse de veille citoyenne</strong>.
+        </p>
+
+        <div>
+          <span class="tag"><span>◆</span> veille citoyenne</span>
+          <span class="tag"><span>◆</span> éducation populaire</span>
+          <span class="tag"><span>◆</span> saturation de données</span>
+          <span class="tag"><span>◆</span> auto-défense numérique</span>
+        </div>
+
+        <details>
+          <summary>🧩 EASTER EGG : transformer ce fichier en kit de survie</summary>
+          <div class="egg-title">Étape 1 · Récupérer le fichier</div>
+          <ul class="egg-list">
+            <li>Ouvre <code>monitor.html</code> dans ton navigateur.</li>
+            <li>Utilise <strong>clic droit &gt; Enregistrer sous…</strong> pour sauvegarder le fichier sur ton disque.</li>
+            <li>Garde le même nom ou renomme-le en <code>dashboard-survie.html</code> si ça t'amuse.</li>
+          </ul>
+
+          <div class="egg-title">Étape 2 · L'éditer proprement</div>
+          <ul class="egg-list">
+            <li>Ouvre le fichier avec un éditeur de texte sérieux (VS Code, Notepad++, etc.).</li>
+            <li>
+              Dans le script, repère l'objet <code>annuaire</code> :
+              c'est là que tu peux remplacer les pages fictives par tes vrais sites, dossiers, outils.
+            </li>
+            <li>
+              Pour chaque entrée, adapte :
+              <br>• <code>name</code> = le titre humain de la page
+              <br>• <code>desc</code> = à quoi sert cette ressource (en clair)
+              <br>• <code>url</code> = le chemin réel (fichier local ou URL publique)
+            </li>
+          </ul>
+
+          <div class="egg-title">Étape 3 · En faire un “réseau clandestin” (légal)</div>
+          <ul class="egg-list">
+            <li>
+              Utilise le tableau de bord uniquement pour des
+              <strong>sources légales</strong> : sites d'info, pages d'associations,
+              documents publics, rapports officiels, blogs, etc.
+            </li>
+            <li>
+              Profite des champs <code>Tags</code> et <code>Notes</code> pour coder ta propre
+              cartographie : thématiques, risques, idées d'action collective.
+            </li>
+            <li>
+              Rien ne t'empêche de disséminer des messages “codés” dans les descriptions
+              et les tags, tant que tu restes dans un cadre <strong>non violent, légal</strong>
+              et orienté vers la compréhension du monde plutôt que sa destruction.
+            </li>
+            <li>
+              Tu peux partager le fichier avec d'autres en expliquant
+              que c'est un <em>simulateur de veille</em> : chacun peut cloner / l'adapter
+              à son propre réseau de confiance.
+            </li>
+          </ul>
+
+          <div class="egg-title">Étape 4 · Accepter le chaos, organiser localement</div>
+          <ul class="egg-list">
+            <li>Le monde est saturé de données. Ton but n'est pas de tout suivre.</li>
+            <li>Ton but est de construire une <strong>petite carte utile</strong> pour toi et tes alliés.</li>
+            <li>Ce fichier n'est pas un secret d'État. C'est un prétexte pour discuter de méthode.</li>
+          </ul>
+
+          <p style="font-size:12px; color:var(--soft); margin-top:6px;">
+            Bonus : sur la page principale, le code <code>↑ ↑ ↓ ↓ ← → ← → B A</code>
+            (Konami) relance ce scénario.  
+            Le mot <code>jouer</code> tapé au clavier, lui, a tendance à dérégler la lumière.
+          </p>
+        </details>
+
+        <p style="margin-top:8px;">
+          Le “réseau clandestin” dont il est question ici n'a rien d'illégal :
+          c'est juste le nom qu'on donne à des personnes qui refusent de rester passives face aux infos,
+          et qui s'organisent pour <strong>comprendre ensemble</strong>.
+        </p>
+      </section>
+    </div>
+
+    <div class="footer-note">
+      Si tu es arrivé ici par hasard, c'est que tu fais déjà partie des gens qui lisent les petites lignes.  
+      C'est un bon début pour ne pas se faire avaler par le bruit.
+    </div>
+  </div>
+</body>
+</html>
