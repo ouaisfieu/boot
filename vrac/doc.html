@@ -1,0 +1,743 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>sudoxo · OXO & Business Model Canevas (guerre hybride)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #38bdf8;
+      --accent2: #f97316;
+      --x-color: #22c55e;
+      --o-color: #fb7185;
+      --card: #020617;
+      --border: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.2), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(248,113,113,0.2), transparent 55%),
+        linear-gradient(to bottom, #020617, #000 60%, #020617 100%);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 12px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    /* HEADER */
+
+    header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    header .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--soft);
+    }
+
+    header h1 {
+      margin: 4px 0;
+      font-size: clamp(20px, 5vw, 28px);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    header p.subtitle {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    /* LAYOUT */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: 18px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+      padding: 10px 12px 12px;
+      font-size: 13px;
+    }
+
+    .card h2 {
+      font-size: 14px;
+      margin: 0 0 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .card p {
+      font-size: 12px;
+      margin: 3px 0;
+      color: var(--soft);
+    }
+
+    /* BOARD OXO */
+
+    .board-wrapper {
+      margin-top: 8px;
+      border-radius: 16px;
+      padding: 10px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.2), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(248,250,252,0.1), transparent 60%),
+        #020617;
+      border: 1px solid var(--border);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .cell {
+      position: relative;
+      border-radius: 14px;
+      border: 2px solid #111827;
+      background: #020617;
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out;
+    }
+
+    @media (max-width: 480px) {
+      .cell {
+        min-height: 72px;
+      }
+    }
+
+    .cell:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.9);
+      border-color: var(--accent);
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.25), transparent 70%);
+    }
+
+    .cell-symbol {
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    .cell-symbol.x {
+      color: var(--x-color);
+      text-shadow: 0 0 10px rgba(34,197,94,0.5);
+    }
+
+    .cell-symbol.o {
+      color: var(--o-color);
+      text-shadow: 0 0 10px rgba(248,113,113,0.5);
+    }
+
+    .cell-label {
+      position: absolute;
+      bottom: 4px;
+      left: 6px;
+      right: 6px;
+      font-size: 9px;
+      color: var(--soft);
+      opacity: 0.9;
+    }
+
+    .status-bar {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .status-main {
+      font-size: 13px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 3px 7px;
+      border: 1px solid #334155;
+      background: #020617;
+      font-size: 11px;
+    }
+
+    .pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    .dot-x { background: var(--x-color); }
+    .dot-o { background: var(--o-color); }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      font-size: 11px;
+      padding: 5px 9px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      background: radial-gradient(circle at 20% 0, #e0f2fe, #0ea5e9);
+      color: #02131f;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* PANEL CANVAS */
+
+    .canvas-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .canvas-title-block {
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .canvas-title-block strong {
+      color: var(--fg);
+    }
+
+    .canvas-block-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 3px 7px;
+      border: 1px solid var(--border);
+      background: #020617;
+      font-size: 11px;
+    }
+
+    .canvas-block-badge span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .canvas-body {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 6px 7px;
+      font-size: 12px;
+    }
+
+    .canvas-body p.hint {
+      font-size: 11px;
+      color: var(--soft);
+      margin-bottom: 4px;
+    }
+
+    textarea#canvasNotes {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      padding: 5px 6px;
+      font-size: 12px;
+      font-family: inherit;
+    }
+
+    .canvas-meta {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .progress-wrapper {
+      margin-top: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 6px 7px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .progress-bar-outer {
+      margin-top: 4px;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      overflow: hidden;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #eab308, #f97316, #ef4444);
+      transition: width 0.25s ease-out;
+    }
+
+    .success-banner {
+      margin-top: 6px;
+      padding: 5px 7px;
+      border-radius: 10px;
+      border: 1px solid #22c55e;
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.35), transparent 60%);
+      color: #bbf7d0;
+      font-size: 12px;
+      display: none;
+    }
+
+    .success-banner.visible {
+      display: block;
+    }
+
+    .examples-list {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .examples-list ul {
+      padding-left: 18px;
+      margin: 2px 0;
+    }
+
+    .examples-list li {
+      margin: 1px 0;
+    }
+
+    a.example-link {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">jeu d’oxo & business model canevas</div>
+    <h1>sudoxo</h1>
+    <p class="subtitle">
+      Un morpion sérieux mais joueur : chaque case du plateau est un bloc de Business Model Canvas pour
+      un jeu sur la <strong>place de l’information</strong> dans les rapports de force économiques,
+      en contexte de <strong>guerre hybride</strong>.  
+      Tu gagnes vraiment quand ton canevas tient debout… et que le jeu pourrait devenir un succès planétaire.
+    </p>
+  </header>
+
+  <section class="layout">
+    <!-- COLONNE GAUCHE · JEU OXO -->
+    <article class="card">
+      <h2>Plateau OXO</h2>
+      <p>
+        X représente le camp <strong>Signal</strong> (information utile), O le camp <strong>Bruit</strong> (désinformation / saturation).  
+        Mais en secret, chaque coup te force à réfléchir à un bloc du canevas.
+      </p>
+
+      <div class="board-wrapper">
+        <div id="board" class="board">
+          <!-- Cases générées en JS -->
+        </div>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-main" id="statusText">
+          Tour de <span style="color:var(--x-color);font-weight:600;">X (Signal)</span>.
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;">
+          <span class="pill">
+            <span class="dot dot-x"></span> X = Signal (info utile)
+          </span>
+          <span class="pill">
+            <span class="dot dot-o"></span> O = Bruit (désinfo / overload)
+          </span>
+          <button class="btn" id="resetBtn">Réinitialiser la manche</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- COLONNE DROITE · CANEVAS -->
+    <aside class="card">
+      <h2>Bloc du canevas caché</h2>
+      <div class="canvas-header-row">
+        <div class="canvas-title-block" id="canvasTitleBlock">
+          Clique sur une case du plateau pour lier ton coup à un bloc du Business Model Canvas.
+        </div>
+        <div class="canvas-block-badge" id="canvasBlockBadge">
+          <span class="dot"></span>
+          <span id="canvasBlockName">Aucun bloc sélectionné</span>
+        </div>
+      </div>
+
+      <div class="canvas-body">
+        <p class="hint" id="canvasHint">
+          Tu peux utiliser ce champ comme un brouillon sérieux : hypothèses, exemples concrets, risques info, leviers de puissance…
+        </p>
+        <textarea id="canvasNotes" placeholder="Exemple : Quels segments d’acteurs économiques sont exposés à la guerre de l’information dans ton jeu ? Comment la mécanique rend cela visible / jouable ?"></textarea>
+
+        <div class="canvas-meta">
+          <div id="canvasMetaLeft">
+            Bloc lié à la case : <strong>–</strong>
+          </div>
+          <div id="canvasMetaRight">
+            Coup actuel : <span id="currentPlayerLabel">X (Signal)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-wrapper">
+        <div>
+          <strong>Progression du canevas :</strong>
+          <span id="progressText">0 / 9 blocs renseignés</span>
+        </div>
+        <div class="progress-bar-outer">
+          <div class="progress-bar-inner" id="progressBar"></div>
+        </div>
+        <div class="success-banner" id="successBanner">
+          🌍 <strong>Succès planétaire (prototype) :</strong> les 9 blocs sont renseignés.  
+          Tu peux maintenant transformer cette grille en dossier, pitch, ou démo jouable.
+        </div>
+      </div>
+
+      <div class="examples-list">
+        <strong>Rappel des 9 blocs (adaptés à la guerre hybride & à l’info) :</strong>
+        <ul>
+          <li><strong>Segments d’acteurs</strong> : qui joue / qui est joué (États, plateformes, médias, publics…)?</li>
+          <li><strong>Proposition de valeur</strong> : qu’est-ce que ton jeu révèle / fait ressentir sur les rapports de force info ?</li>
+          <li><strong>Canaux</strong> : comment le jeu circule (web, mobile, réseaux sociaux, écoles…)?</li>
+          <li><strong>Relations</strong> : quelle relation avec les joueuses / joueurs (communauté, campagnes, mises à jour…)?</li>
+          <li><strong>Ressources clés</strong> : données, graphistes, experts, moteurs de jeu…</li>
+          <li><strong>Activités clés</strong> : design, écriture, animation de communauté, veille stratégique…</li>
+          <li><strong>Partenaires clés</strong> : ONG, médias, associations, écoles, studios…</li>
+          <li><strong>Structure de coûts</strong> : temps, développement, com’, infra…</li>
+          <li><strong>Flux de revenus / impact</strong> : revenus directs, financements publics, impact éducatif, réputation…</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <script>
+    // --- Mapping des 9 cases => Business Model Canvas --- //
+    const canvasBlocks = [
+      {
+        id: 0,
+        name: "Segments d’acteurs",
+        short: "Segments d’acteurs",
+        hint: "Qui sont les acteurs économiques / politiques pris dans la guerre de l’information dans ton jeu ? Qui sont les joueuses / joueurs ciblés ?"
+      },
+      {
+        id: 1,
+        name: "Proposition de valeur",
+        short: "Proposition de valeur",
+        hint: "Qu’est-ce que ton jeu apporte de spécifique sur la guerre hybride et les rapports de force info ? Pourquoi quelqu’un y jouerait plutôt qu’à un autre jeu ?"
+      },
+      {
+        id: 2,
+        name: "Canaux de diffusion",
+        short: "Canaux",
+        hint: "Par quels canaux ton jeu circule-t-il (web, mobile, réseaux sociaux, écoles, associations…) ? Comment l’info se propage-t-elle dans ton univers ?"
+      },
+      {
+        id: 3,
+        name: "Partenaires clés",
+        short: "Partenaires",
+        hint: "Avec qui pourrais-tu créer / diffuser ce jeu ? Médias, ONG, écoles, studios, collectivités, associations…"
+      },
+      {
+        id: 4,
+        name: "Cœur du système (dynamique info / pouvoir)",
+        short: "Cœur du système",
+        hint: "Comment ton jeu montre-t-il le lien entre contrôle de l’info, pouvoir économique et guerre hybride ? Quelles mécaniques incarnent ces tensions ?"
+      },
+      {
+        id: 5,
+        name: "Relations avec les joueurs / communautés",
+        short: "Relations",
+        hint: "Comment entretiens-tu la relation avec les joueuses / joueurs ? Communauté, campagnes narratives, mises à jour, événements…"
+      },
+      {
+        id: 6,
+        name: "Ressources clés",
+        short: "Ressources",
+        hint: "De quoi as-tu besoin pour soutenir ce jeu dans la durée ? Temps, équipe, données, illustrations, moteur de jeu, réseau…"
+      },
+      {
+        id: 7,
+        name: "Activités clés",
+        short: "Activités",
+        hint: "Quelles sont les activités stratégiques pour faire vivre le jeu ? Design, scénarios, tests, veille, communication, partenariats…"
+      },
+      {
+        id: 8,
+        name: "Coûts & Revenus / Impact",
+        short: "Coûts & Revenus",
+        hint: "Quels coûts ton jeu génère-t-il, et quels flux de revenus ou d’impact (éducatif, culturel, politique) peux-tu espérer ?"
+      }
+    ];
+
+    // --- État du jeu OXO --- //
+    let board = Array(9).fill(null); // 'X' | 'O' | null
+    let currentPlayer = 'X';
+    let gameOver = false;
+
+    // --- État du canevas (notes par case) --- //
+    const canvasNotes = Array(9).fill("");
+
+    // --- Références DOM --- //
+    const boardEl = document.getElementById("board");
+    const statusTextEl = document.getElementById("statusText");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const canvasTitleBlockEl = document.getElementById("canvasTitleBlock");
+    const canvasBlockBadgeNameEl = document.getElementById("canvasBlockName");
+    const canvasHintEl = document.getElementById("canvasHint");
+    const canvasNotesEl = document.getElementById("canvasNotes");
+    const canvasMetaLeftEl = document.getElementById("canvasMetaLeft");
+    const canvasMetaRightEl = document.getElementById("canvasMetaRight");
+    const currentPlayerLabelEl = document.getElementById("currentPlayerLabel");
+
+    const progressTextEl = document.getElementById("progressText");
+    const progressBarEl = document.getElementById("progressBar");
+    const successBannerEl = document.getElementById("successBanner");
+
+    // --- Construction du plateau --- //
+    function buildBoard() {
+      boardEl.innerHTML = "";
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement("button");
+        cell.className = "cell";
+        cell.dataset.index = i;
+
+        const sym = board[i];
+        const symSpan = document.createElement("div");
+        symSpan.className = "cell-symbol";
+        if (sym === 'X') {
+          symSpan.textContent = 'X';
+          symSpan.classList.add("x");
+        } else if (sym === 'O') {
+          symSpan.textContent = 'O';
+          symSpan.classList.add("o");
+        } else {
+          symSpan.textContent = "";
+        }
+
+        const label = document.createElement("div");
+        label.className = "cell-label";
+        label.textContent = canvasBlocks[i].short;
+
+        cell.appendChild(symSpan);
+        cell.appendChild(label);
+        boardEl.appendChild(cell);
+      }
+    }
+
+    // --- Gestion des clics sur le plateau --- //
+    boardEl.addEventListener("click", (e) => {
+      const cell = e.target.closest(".cell");
+      if (!cell) return;
+      const index = Number(cell.dataset.index);
+      handleCellClick(index);
+    });
+
+    function handleCellClick(index) {
+      // Côté OXO
+      if (!gameOver && board[index] === null) {
+        board[index] = currentPlayer;
+        buildBoard();
+        const winner = checkWinner();
+        if (winner) {
+          gameOver = true;
+          statusTextEl.innerHTML = `Victoire de <span style="font-weight:600;color:${winner === 'X' ? 'var(--x-color)' : 'var(--o-color)'};">${winner}</span> sur cette manche. Le vrai enjeu reste ton canevas.`;
+        } else if (board.every(c => c !== null)) {
+          gameOver = true;
+          statusTextEl.textContent = "Match nul. Ça arrive aussi dans la vraie vie des rapports de force.";
+        } else {
+          togglePlayer();
+          updateStatusText();
+        }
+      }
+
+      // Côté canevas
+      selectCanvasBlock(index);
+    }
+
+    function togglePlayer() {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      updateCurrentPlayerLabel();
+    }
+
+    function updateCurrentPlayerLabel() {
+      if (currentPlayer === 'X') {
+        currentPlayerLabelEl.textContent = "X (Signal)";
+      } else {
+        currentPlayerLabelEl.textContent = "O (Bruit)";
+      }
+    }
+
+    function updateStatusText() {
+      if (currentPlayer === 'X') {
+        statusTextEl.innerHTML = `Tour de <span style="color:var(--x-color);font-weight:600;">X (Signal)</span>. Clique une case et précise le bloc du canevas correspondant.`;
+      } else {
+        statusTextEl.innerHTML = `Tour de <span style="color:var(--o-color);font-weight:600;">O (Bruit)</span>. Même en brouillant le jeu, tu dois documenter le canevas.`;
+      }
+    }
+
+    function checkWinner() {
+      const lines = [
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,4,8],
+        [2,4,6]
+      ];
+      for (const [a,b,c] of lines) {
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          return board[a];
+        }
+      }
+      return null;
+    }
+
+    resetBtn.addEventListener("click", () => {
+      board = Array(9).fill(null);
+      currentPlayer = 'X';
+      gameOver = false;
+      buildBoard();
+      updateCurrentPlayerLabel();
+      updateStatusText();
+    });
+
+    // --- Interaction avec le canevas --- //
+    let currentBlockIndex = null;
+    let isUpdatingFromCode = false;
+
+    function selectCanvasBlock(index) {
+      currentBlockIndex = index;
+      const block = canvasBlocks[index];
+
+      canvasTitleBlockEl.innerHTML = `
+        Tu travailles actuellement sur : <strong>${block.name}</strong>.
+      `;
+      canvasBlockBadgeNameEl.textContent = block.short;
+      canvasHintEl.textContent = block.hint;
+      canvasMetaLeftEl.innerHTML = `Bloc lié à la case : <strong>${index + 1}/9</strong> · ${block.name}`;
+      updateCurrentPlayerLabel();
+      canvasMetaRightEl.innerHTML = `Coup actuel : <span>${currentPlayer === 'X' ? "X (Signal)" : "O (Bruit)"}</span>`;
+
+      // Charger les notes existantes
+      isUpdatingFromCode = true;
+      canvasNotesEl.value = canvasNotes[index] || "";
+      isUpdatingFromCode = false;
+    }
+
+    canvasNotesEl.addEventListener("input", () => {
+      if (isUpdatingFromCode) return;
+      if (currentBlockIndex === null) return;
+      canvasNotes[currentBlockIndex] = canvasNotesEl.value;
+      updateProgress();
+    });
+
+    function updateProgress() {
+      const filled = canvasNotes.filter(text => (text || "").trim().length > 0).length;
+      const total = canvasNotes.length;
+      const ratio = filled / total;
+      progressTextEl.textContent = `${filled} / ${total} blocs renseignés`;
+      progressBarEl.style.width = `${ratio * 100}%`;
+
+      if (filled === total) {
+        successBannerEl.classList.add("visible");
+      } else {
+        successBannerEl.classList.remove("visible");
+      }
+    }
+
+    // --- Initialisation --- //
+    function init() {
+      buildBoard();
+      updateCurrentPlayerLabel();
+      updateStatusText();
+      updateProgress();
+    }
+
+    init();
+  </script>
+</main>
+</body>
+</html>
