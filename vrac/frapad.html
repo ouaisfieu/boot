@@ -1,0 +1,524 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulateur de terminal · Diagnostic numérique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.25);
+      --border: rgba(148,163,184,0.45);
+      --danger: #ef4444;
+      --shadow: 0 18px 35px rgba(15,23,42,0.85);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 12px 12px 20px;
+    }
+
+    .shell {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    header {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.25), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(244,114,182,0.18), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 40%, #020819 100%);
+      box-shadow: var(--shadow);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 240px;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 20% 0, #bbf7d0, #22c55e 45%, #0ea5e9 90%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 22px;
+      color: #022c22;
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 20px rgba(34,197,94,0.75);
+    }
+
+    .header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-title {
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-right {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+
+    .header-chip {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+    }
+
+    @media (max-width: 700px) {
+      .header-right {
+        align-items: flex-start;
+      }
+    }
+
+    /* MAIN LAYOUT */
+
+    .main-card {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #020617;
+      box-shadow: var(--shadow);
+      padding: 10px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      border-radius: 14px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: #020617;
+      padding: 8px 9px 7px;
+    }
+
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .panel-title span.icon {
+      font-size: 14px;
+    }
+
+    /* TERMINAL */
+
+    .terminal {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      background: radial-gradient(circle at top left, #020617, #000);
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 8px 9px 7px;
+      max-height: 260px;
+      overflow-y: auto;
+      color: #d1fae5;
+    }
+
+    .term-line {
+      margin-bottom: 3px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .term-line.sys  { color: var(--text-soft); }
+    .term-line.ok   { color: #4ade80; }
+    .term-line.warn { color: #facc15; }
+    .term-line.err  { color: #fca5a5; }
+    .term-line.ai   { color: #93c5fd; }
+
+    /* CONTROLS */
+
+    .controls-row {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #020617;
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+      box-shadow: 0 0 8px rgba(34,197,94,0.5);
+    }
+
+    .btn.danger {
+      border-color: var(--danger);
+      color: #fecaca;
+      background: radial-gradient(circle at 0 0, rgba(239,68,68,0.25), #020617);
+      box-shadow: 0 0 8px rgba(239,68,68,0.6);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    /* EXPLICATIONS */
+
+    .explain p {
+      margin: 0 0 6px;
+      font-size: 13px;
+    }
+
+    .explain ul {
+      margin: 0 0 6px 16px;
+      padding: 0;
+      font-size: 13px;
+    }
+
+    .explain li {
+      margin-bottom: 4px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    footer {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: center;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="header-left">
+        <div class="logo">T</div>
+        <div class="header-text">
+          <div class="header-title">Terminal diagnostic</div>
+          <div class="header-sub">
+            Simulateur sérieux pour illustrer un diagnostic de système & de pratiques numériques.
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-chip">demo/terminal-diagnostic.html</div>
+        <div>Usage : formation / sensibilisation · aucun accès réel au système</div>
+      </div>
+    </header>
+
+    <main class="main-card">
+      <div class="layout">
+        <!-- COLONNE GAUCHE : TERMINAL -->
+        <section class="panel">
+          <div class="panel-title">
+            <span class="icon">💻</span>
+            <span>Terminal simulé</span>
+          </div>
+
+          <div class="terminal" id="terminal">
+            <div class="term-line sys">[SIM] Terminal en attente.</div>
+            <div class="term-line sys">Clique sur « Démarrer la simulation » pour lancer le scénario.</div>
+          </div>
+
+          <div class="controls-row">
+            <button class="btn primary" id="btnStart">1. Démarrer la simulation</button>
+            <button class="btn" id="btnManual">2. Afficher le manuel</button>
+            <button class="btn" id="btnBugs">3. Afficher bugs & pistes</button>
+            <button class="btn danger" id="btnReset">Réinitialiser</button>
+          </div>
+        </section>
+
+        <!-- COLONNE DROITE : EXPLICATION -->
+        <section class="panel explain">
+          <div class="panel-title">
+            <span class="icon">🧠</span>
+            <span>Lecture pédagogique</span>
+          </div>
+          <div id="explainBox"></div>
+          <div class="section-label">Comment utiliser ce simulateur en formation</div>
+          <div id="useBox"></div>
+          <div class="hint" id="hintBox"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      Cette page est entièrement fictive : aucun vrai diagnostic système n’est effectué.
+      Elle sert uniquement de support de discussion sur nos pratiques numériques.
+    </footer>
+  </div>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+    const btnStart = document.getElementById("btnStart");
+    const btnManual = document.getElementById("btnManual");
+    const btnBugs = document.getElementById("btnBugs");
+    const btnReset = document.getElementById("btnReset");
+
+    const explainBox = document.getElementById("explainBox");
+    const useBox = document.getElementById("useBox");
+    const hintBox = document.getElementById("hintBox");
+
+    let phase = 0; // 0 = rien, 1 = boot, 2 = manuel, 3 = bugs
+
+    function addLine(text, type = "sys") {
+      const div = document.createElement("div");
+      div.className = "term-line " + type;
+      div.textContent = text;
+      terminal.appendChild(div);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function clearTerminal() {
+      terminal.innerHTML = "";
+    }
+
+    function setPhase(newPhase) {
+      phase = newPhase;
+      updateExplain();
+    }
+
+    function updateExplain() {
+      if (phase === 0) {
+        explainBox.innerHTML = `
+          <p>Ce simulateur reproduit l’affichage d’un terminal d’ordinateur, mais
+          <strong>sans toucher à aucun système réel</strong>. Tout est joué côté navigateur.</p>
+          <p>On l’utilise comme support de conversation pour parler de :</p>
+          <ul>
+            <li>ce qu’on projette sur « la machine » (puissance, danger, culpabilité),</li>
+            <li>notre manière d’absorber ou d’ignorer les messages techniques,</li>
+            <li>les liens entre diagnostic technique et diagnostic humain (fatigue, surcharge, etc.).</li>
+          </ul>
+        `;
+        useBox.innerHTML = `
+          <ul>
+            <li>Lire à voix haute les lignes qui s’affichent dans le terminal.</li>
+            <li>Faire réagir les personnes : qu’est-ce que ça leur évoque ?</li>
+            <li>Relier chaque phase à des situations vécues dans leur quotidien numérique.</li>
+          </ul>
+        `;
+        hintBox.textContent = "Étape 1 : lance d’abord la simulation, puis ajoute le manuel, puis les bugs & pistes.";
+        return;
+      }
+
+      if (phase === 1) {
+        explainBox.innerHTML = `
+          <p>La phase <strong>« démarrage »</strong> montre un diagnostic basique :</p>
+          <ul>
+            <li>vérification du matériel,</li>
+            <li>vérification des services principaux,</li>
+            <li>un message de résumé (tout va bien / il y a des avertissements).</li>
+          </ul>
+          <p>C’est l’occasion de rappeler qu’un système peut fonctionner, tout en ayant des
+          zones grises ou des « warns » qui méritent discussion.</p>
+        `;
+        useBox.innerHTML = `
+          <ul>
+            <li>Demander : « dans votre quotidien, quels sont vos signaux d’alerte ? »</li>
+            <li>Faire le parallèle entre messages techniques et signaux humains (fatigue, saturation...).</li>
+          </ul>
+        `;
+        hintBox.textContent = "Étape 2 : clique sur « Afficher le manuel » pour voir comment la machine se présente elle-même.";
+        return;
+      }
+
+      if (phase === 2) {
+        explainBox.innerHTML = `
+          <p>Le <strong>manuel</strong> décrit le système avec un ton volontairement un peu
+          auto-dérisoire, mais compréhensible :</p>
+          <ul>
+            <li>ce que fait la machine,</li>
+            <li>ses limites,</li>
+            <li>le fait que l’utilisateur garde la main.</li>
+          </ul>
+          <p>C’est une façon de montrer qu’un outil peut être pensé comme un <strong>partenaire</strong>,
+          pas comme un maître ou un ennemi.</p>
+        `;
+        useBox.innerHTML = `
+          <ul>
+            <li>Demander : « si votre téléphone/PC avait un manuel honnête, que dirait-il ? »</li>
+            <li>Faire écrire 3 phrases de « manuel personnel » pour leur propre usage numérique.</li>
+          </ul>
+        `;
+        hintBox.textContent = "Étape 3 : clique sur « Afficher bugs & pistes » pour faire émerger les problèmes récurrents.";
+        return;
+      }
+
+      if (phase === 3) {
+        explainBox.innerHTML = `
+          <p>La dernière phase liste des <strong>« bugs » symboliques</strong> très fréquents
+          dans nos pratiques en ligne :</p>
+          <ul>
+            <li>infobésité,</li>
+            <li>confusion des rôles (jeu, travail, militantisme, repos),</li>
+            <li>oubli de la finitude humaine,</li>
+            <li>fantasme de devoir « tout sauver » seul.</li>
+          </ul>
+          <p>L’idée n’est pas de culpabiliser, mais de mettre des mots sur ces mécanismes
+          et de proposer des pistes d’ajustement réalistes.</p>
+        `;
+        useBox.innerHTML = `
+          <ul>
+            <li>Inviter chacun à identifier 1 ou 2 « bugs » qui lui parlent le plus.</li>
+            <li>Noter à côté, concrètement, une petite expérimentation possible (limite, pause, allié, etc.).</li>
+          </ul>
+        `;
+        hintBox.textContent = "Tu peux relancer la simulation ou utiliser cette page comme support récurrent.";
+      }
+    }
+
+    // Scénario terminal
+
+    function startSimulation() {
+      clearTerminal();
+      addLine("[SIM] Démarrage du diagnostic…", "sys");
+      addLine("check_hardware      : OK (cpu / ram / disque détectés)", "ok");
+      addLine("check_network       : WARN (charge élevée, beaucoup de flux entrants)", "warn");
+      addLine("check_security      : OK (mises à jour de base appliquées)", "ok");
+      addLine("check_user_load     : WARN (sollicitations et notifications multiples)", "warn");
+      addLine("", "sys");
+      addLine("[SIM] Résumé : le système tourne, mais il y a de la pression sur le réseau et sur l’utilisateur.", "sys");
+      setPhase(1);
+    }
+
+    function showManual() {
+      if (phase < 1) startSimulation(); // au cas où
+      addLine("", "sys");
+      addLine("[MANUEL] Version simplifiée du système :", "sys");
+      addLine("- Ce simulateur n’accède à aucune donnée réelle.", "sys");
+      addLine("- Il sert uniquement de support de discussion en formation.", "sys");
+      addLine("- L’utilisateur reste libre de fermer la page à tout moment.", "sys");
+      addLine("", "sys");
+      addLine("[MANUEL] Message important :", "sys");
+      addLine("« Vous avez le droit de faire une pause, de couper les notifications,", "sys");
+      addLine("de poser des limites et de demander du soutien. »", "sys");
+      setPhase(2);
+    }
+
+    function showBugs() {
+      if (phase < 1) startSimulation();
+      if (phase < 2) showManual();
+
+      addLine("", "sys");
+      addLine("[DIAGNOSTIC SYMBOLIQUE] Bugs fréquents dans les pratiques numériques :", "sys");
+      addLine("- BUG_001 : Infobésité (trop d’infos, trop de flux en parallèle).", "warn");
+      addLine("- BUG_002 : Confusion des rôles (jeu / travail / veille / militantisme / repos).", "warn");
+      addLine("- BUG_003 : Finitude oubliée (sommeil, santé, fatigue pris pour des bugs).", "warn");
+      addLine("- BUG_004 : Sauveur solitaire (penser qu’on doit tout porter seul).", "warn");
+      addLine("", "sys");
+      addLine("[PISTES] Idées de « patchs » humains :", "sys");
+      addLine("- choisir quelques sources de référence plutôt que tout suivre,", "sys");
+      addLine("- clarifier « dans quel mode je suis » avant d’ouvrir un onglet,", "sys");
+      addLine("- intégrer le repos comme partie du système, pas comme exception,", "sys");
+      addLine("- construire de petites alliances au lieu de viser le sauveur isolé.", "sys");
+
+      setPhase(3);
+    }
+
+    function resetAll() {
+      clearTerminal();
+      addLine("[SIM] Terminal réinitialisé.", "sys");
+      addLine("Clique sur « Démarrer la simulation » pour relancer le scénario.", "sys");
+      setPhase(0);
+    }
+
+    // Écouteurs
+
+    btnStart.addEventListener("click", startSimulation);
+    btnManual.addEventListener("click", showManual);
+    btnBugs.addEventListener("click", showBugs);
+    btnReset.addEventListener("click", resetAll);
+
+    // Init
+    setPhase(0);
+  </script>
+</body>
+</html>
