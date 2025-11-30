@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orientation • Positionnement de l’instance</title>
+<style>
+  :root {
+    --bg: #020617;
+    --bg-soft: #020617;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --accent: #38bdf8;
+    --accent2: #22c55e;
+    --accent-soft: rgba(56,189,248,0.12);
+    --border: rgba(31,41,55,0.9);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #000;
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  }
+
+  /* === SPLASH (copie de first_boot, adapté “orientation”) === */
+
+  #splash {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at top, #0b1120 0, #020617 35%, #000 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 18px;
+    opacity: 1;
+    transition: opacity 0.7s ease;
+    z-index: 10;
+  }
+
+  #splash-inner {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+  }
+
+  .logo-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+
+  .logo-halo {
+    position: absolute;
+    inset: -18px;
+    background: radial-gradient(circle, rgba(56,189,248,0.22), transparent 70%);
+    filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .logo {
+    width: 112px;
+    height: 112px;
+    border-radius: 32px;
+    border: 1px solid rgba(148,163,184,0.5);
+    background:
+      radial-gradient(circle at 15% 0%, rgba(148,163,184,0.25), transparent 60%),
+      radial-gradient(circle at 80% 120%, rgba(34,197,94,0.25), transparent 70%),
+      #020617;
+    box-shadow:
+      0 18px 40px rgba(0,0,0,0.75),
+      0 0 0 1px rgba(15,23,42,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transform: scale(0.8);
+    opacity: 0;
+    transition:
+      opacity 0.85s ease,
+      transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #splash.show-logo .logo {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  #splash.show-logo .logo-halo {
+    opacity: 1;
+  }
+
+  .logo span { display: block; }
+  .logo span.sub {
+    font-size: 0.65em;
+    color: var(--muted);
+    letter-spacing: 0.22em;
+  }
+
+  .loading-bar {
+    width: 100%;
+    max-width: 260px;
+    height: 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.55);
+    background: rgba(15,23,42,0.95);
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .loading-inner {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 18px rgba(56,189,248,0.7);
+  }
+
+  #splash.show-logo .loading-inner {
+    animation: loadBar 4.5s ease-out forwards;
+  }
+
+  @keyframes loadBar {
+    0%   { width: 0; }
+    10%  { width: 7%; }
+    25%  { width: 22%; }
+    45%  { width: 45%; }
+    65%  { width: 63%; }
+    85%  { width: 82%; }
+    100% { width: 100%; }
+  }
+
+  .loading-text {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .loading-sub {
+    margin-top: 4px;
+    color: rgba(148,163,184,0.75);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .dots::after {
+    content: "...";
+    animation: dots 1.4s steps(4, end) infinite;
+  }
+  @keyframes dots {
+    0%, 20%   { content: "."; }
+    40%       { content: ".."; }
+    60%,100%  { content: "..."; }
+  }
+
+  /* === CONTENU PRINCIPAL === */
+
+  .container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+    background:
+      radial-gradient(circle at top, #020617 0, #020617 38%, #020617 58%, #000 100%);
+  }
+
+  @media (min-width: 768px) {
+    .container-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  h1 span.icon {
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 6px 0;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  .boot-block {
+    margin: 18px 0;
+    padding-left: 18px;
+    border-left: 1px solid rgba(75,85,99,0.9);
+  }
+
+  .line {
+    margin: 7px 0;
+    opacity: 0;
+    transform: translateY(3px);
+    font-size: 0.83rem;
+  }
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 1.05em;
+    margin-left: 3px;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    animation: blinkCursor 1s steps(2, start) infinite;
+  }
+  @keyframes blinkCursor {
+    0%, 49%   { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  #main { display: none; }
+
+  .steps-box {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(55,65,81,0.9);
+    background: #020617;
+  }
+
+  .steps-title {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .steps-box ol {
+    margin: 0;
+    padding-left: 17px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .grid {
+    display: grid;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  @media (min-width: 860px) {
+    .grid-2 {
+      grid-template-columns: 1.25fr 1fr;
+    }
+  }
+
+  section {
+    background: rgba(15,23,42,0.98);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 14px 14px 16px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+  }
+  section h2 {
+    margin: 0 0 4px;
+    font-size: 0.95rem;
+  }
+  section p.small {
+    margin: 0 0 8px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .scale {
+    margin: 8px 0 12px;
+  }
+  .scale-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .scale-minmax {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 999px;
+    background: #020617;
+    outline: none;
+    border: 1px solid rgba(55,65,81,0.9);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #0b1120;
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #0b1120;
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .scale-value {
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    min-height: 1.2em;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .tag {
+    font-size: 0.7rem;
+    padding: 3px 7px;
+    border-radius: 999px;
+    border: 1px solid rgba(55,65,81,0.8);
+    color: var(--muted);
+  }
+
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .choice {
+    flex: 1 1 100%;
+    min-width: 0;
+    font-size: 0.8rem;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(55,65,81,0.95);
+    background: #020617;
+    color: var(--muted);
+    cursor: pointer;
+    text-align: left;
+  }
+  .choice strong {
+    color: var(--text);
+    display: block;
+    margin-bottom: 3px;
+  }
+  .choice.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  @media (min-width: 600px) {
+    .choice {
+      flex: 1 1 calc(50% - 6px);
+    }
+  }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  button {
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  button.secondary {
+    border-color: rgba(55,65,81,0.95);
+    background: #020617;
+    color: var(--muted);
+  }
+  button:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .result {
+    margin-top: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(55,65,81,0.9);
+    background: #020617;
+    padding: 9px 10px;
+    font-size: 0.82rem;
+    min-height: 60px;
+  }
+  .result-title {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  textarea#noteUser {
+    margin-top: 8px;
+    width: 100%;
+    min-height: 68px;
+    border-radius: 10px;
+    border: 1px solid rgba(55,65,81,0.95);
+    background: #020617;
+    color: var(--text);
+    padding: 7px 9px;
+    font-size: 0.82rem;
+    resize: vertical;
+  }
+  .hint {
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  footer {
+    margin-top: 18px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(56,189,248,0.4);
+  }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div id="splash-inner">
+    <div class="logo-wrapper">
+      <div class="logo-halo"></div>
+      <div class="logo">
+        <span>BOOT</span>
+        <span class="sub">orientation</span>
+      </div>
+    </div>
+    <div class="loading-bar">
+      <div class="loading-inner" id="loadingBarFill"></div>
+    </div>
+    <div class="loading-text">
+      Initialisation du module Orientation<span class="dots"></span>
+    </div>
+    <div class="loading-sub">
+      world / org / project mapping
+    </div>
+  </div>
+</div>
+
+<!-- CONTENU PRINCIPAL -->
+<div id="main" class="container">
+  <div class="container-inner">
+
+    <h1><span class="icon">🧭</span> Orientation de l’instance</h1>
+
+    <!-- Rappel : continuité narrative -->
+    <div class="boot-block">
+      <p class="line" data-delay="0.8s">&gt; Session précédente : FIRST_BOOT.html... <span class="muted">terminée</span></p>
+      <p class="line" data-delay="1.4s">&gt; Instanciation utilisateur : <span class="muted">en cours</span></p>
+      <p class="line" data-delay="2.0s">&gt; Chargement du module « Orientation »... <span class="muted">OK</span></p>
+      <p class="line" data-delay="2.8s">&gt; Objectif : t’aider à comprendre où tu te situes dans le Jeu.</p>
+    </div>
+
+    <p class="line" data-delay="3.6s">
+      <strong>Le Jeu</strong> : c’est une simulation de recrutement grandeur nature.
+      Tu joues ton propre rôle, dans un monde réel, avec une Organisation imaginaire mais crédible.
+    </p>
+    <p class="line" data-delay="4.4s">
+      <strong>Le Monde</strong> = la situation globale (société, travail, actualité).<br>
+      <strong>L’Organisation</strong> = le réseau qui te propose ce Jeu et t’observe.<br>
+      <strong>Le Projet</strong> = l’intention de fond : comprendre, questionner, améliorer ce monde au lieu de juste le subir.
+    </p>
+
+    <div class="steps-box line" data-delay="5.2s">
+      <div class="steps-title">Concrètement, que dois-je faire sur cette page&nbsp;?</div>
+      <ol>
+        <li>Lire rapidement ce que représentent le Monde, l’Organisation et le Projet.</li>
+        <li>Déplacer les trois curseurs (de 0 à 10) selon ce que tu ressens.</li>
+        <li>Choisir un « type de place » (le rôle qui te ressemble le plus).</li>
+        <li>Clique sur « Analyser mon positionnement » pour générer un résumé.</li>
+        <li>(Optionnel) Noter ce que tu veux garder en tête pour la suite.</li>
+        <li>Cliquer sur « Continuer vers instance.html » pour passer au test de recrutement.</li>
+      </ol>
+    </div>
+
+    <!-- Orientation interactive -->
+    <div class="grid grid-2">
+
+      <section>
+        <h2>1. Positionnement sur trois axes</h2>
+        <p class="small">
+          Les curseurs vont de <strong>0</strong> (très peu / pas du tout) à <strong>10</strong> (très fort).
+          Réponds avec ton impression du moment, sans te prendre la tête.
+        </p>
+
+        <div class="scale">
+          <div class="scale-label-row">
+            <span>Vis-à-vis du Monde</span>
+            <span id="valMonde">5 / 10</span>
+          </div>
+          <input id="rangeMonde" type="range" min="0" max="10" value="5">
+          <div class="scale-minmax">
+            <span>0 : je me sens peu concerné·e</span>
+            <span>10 : je suis très concerné·e</span>
+          </div>
+          <div class="scale-value" id="txtMonde"></div>
+        </div>
+
+        <div class="scale">
+          <div class="scale-label-row">
+            <span>Vis-à-vis de l’Organisation</span>
+            <span id="valOrg">5 / 10</span>
+          </div>
+          <input id="rangeOrg" type="range" min="0" max="10" value="5">
+          <div class="scale-minmax">
+            <span>0 : je n’ai pas confiance</span>
+            <span>10 : je suis prêt·e à coopérer</span>
+          </div>
+          <div class="scale-value" id="txtOrg"></div>
+        </div>
+
+        <div class="scale">
+          <div class="scale-label-row">
+            <span>Vis-à-vis du Projet</span>
+            <span id="valProjet">5 / 10</span>
+          </div>
+          <input id="rangeProjet" type="range" min="0" max="10" value="5">
+          <div class="scale-minmax">
+            <span>0 : ça ne me parle pas</span>
+            <span>10 : j’ai envie d’y contribuer</span>
+          </div>
+          <div class="scale-value" id="txtProjet"></div>
+        </div>
+
+        <div class="tag-row">
+          <div class="tag">Monde : ce qui t’entoure tous les jours.</div>
+          <div class="tag">Organisation : le « nous » derrière ce test.</div>
+          <div class="tag">Projet : ce que tu aimerais voir changer ou protéger.</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Type de place que tu vises</h2>
+        <p class="small">
+          Choisis la carte qui te ressemble le plus. Il n’y a pas de bon ou de mauvais rôle : on cherche juste à te comprendre.
+        </p>
+
+        <div class="choices" id="choices">
+          <button type="button" class="choice" data-role="messager">
+            <strong>Messager</strong>
+            Tu aimes transmettre, reformuler, faire circuler les infos de façon claire.
+          </button>
+          <button type="button" class="choice" data-role="cartographe">
+            <strong>Cartographe</strong>
+            Tu aimes comprendre comment les choses sont organisées, voir les liens cachés.
+          </button>
+          <button type="button" class="choice" data-role="gardien">
+            <strong>Gardien de seuil</strong>
+            Tu fais attention aux limites : ce qui est acceptable ou non, ce qui déborde.
+          </button>
+          <button type="button" class="choice" data-role="agitateur">
+            <strong>Agitateur tranquille</strong>
+            Tu aimes poser des questions qui bousculent, faire réfléchir, sans forcément te mettre au centre.
+          </button>
+        </div>
+
+        <div class="btn-row">
+          <button id="btnAnalyser">Analyser mon positionnement</button>
+          <button id="btnCopierSynthese" class="secondary" disabled>Copier la synthèse</button>
+        </div>
+
+        <div class="result" id="result">
+          <div class="result-title">Résumé automatique</div>
+          <div id="resultBody">
+            Une fois que tu as bougé les curseurs et choisi un rôle, clique sur «&nbsp;Analyser mon positionnement&nbsp;».
+          </div>
+        </div>
+
+        <label for="noteUser" class="hint">
+          Note personnelle (facultatif) :
+        </label>
+        <textarea id="noteUser" placeholder="Ce que tu retiens de ton positionnement, ce que tu veux dire à l’Organisation…"></textarea>
+
+        <p class="hint">
+          Tu pourras réutiliser ce texte dans ta fiche de personnage et la suite du test (<code>instance.html</code>).
+        </p>
+      </section>
+
+    </div>
+
+    <p class="line" data-delay="8.8s">
+      &gt; Quand tu es satisfait·e de ton orientation, passe à l’étape suivante pour détailler ton profil et répondre au test de recrutement.<span class="cursor"></span>
+    </p>
+
+    <footer>
+      <span class="muted">Étape suivante : créer ton personnage complet et répondre aux questions.</span>
+      <span><a href="mix.html">→ Continuer vers instance.html</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const splash = document.getElementById('splash');
+    const main   = document.getElementById('main');
+    const loadingBarFill = document.getElementById('loadingBarFill');
+
+    // Pause de 2s comme sur first_boot
+    setTimeout(() => {
+      splash.classList.add('show-logo');
+    }, 2000);
+
+    loadingBarFill.addEventListener('animationend', () => {
+      splash.style.opacity = '0';
+      setTimeout(() => {
+        splash.style.display = 'none';
+        main.style.display = 'block';
+        startBootAnimation();
+      }, 700);
+    });
+
+    function startBootAnimation() {
+      const lines = document.querySelectorAll('.line');
+      lines.forEach(line => {
+        const delay = line.getAttribute('data-delay') || '0s';
+        line.style.animation = 'appear 0.75s ease-out forwards';
+        line.style.animationDelay = delay;
+      });
+    }
+  });
+
+  // Logique des curseurs + synthèse
+  (function () {
+    const rangeMonde   = document.getElementById('rangeMonde');
+    const rangeOrg     = document.getElementById('rangeOrg');
+    const rangeProjet  = document.getElementById('rangeProjet');
+
+    const valMonde     = document.getElementById('valMonde');
+    const valOrg       = document.getElementById('valOrg');
+    const valProjet    = document.getElementById('valProjet');
+
+    const txtMonde     = document.getElementById('txtMonde');
+    const txtOrg       = document.getElementById('txtOrg');
+    const txtProjet    = document.getElementById('txtProjet');
+
+    const choicesWrap  = document.getElementById('choices');
+    const resultBody   = document.getElementById('resultBody');
+    const btnAnalyser  = document.getElementById('btnAnalyser');
+    const btnCopier    = document.getElementById('btnCopierSynthese');
+
+    let selectedRole = null;
+
+    function labelForWorld(v) {
+      if (v <= 2) return "Tu te sens peu concerné·e par ce qui se passe dans le monde, ou tu te protèges.";
+      if (v <= 4) return "Tu regardes de loin, sans encore te sentir acteur·rice.";
+      if (v <= 7) return "Tu te sens concerné·e et tu fais attention à ce qui se passe autour de toi.";
+      if (v <= 9) return "Tu es très impliqué·e, tu suis de près les enjeux de société.";
+      return "Tu as du mal à « décrocher » du monde : tout ce qui se passe te touche fortement.";
+    }
+    function labelForOrg(v) {
+      if (v <= 2) return "Tu te méfies des groupes structurés, y compris de ce jeu et de ceux qui le proposent.";
+      if (v <= 4) return "Tu restes prudent·e : tu joues le jeu, mais avec distance.";
+      if (v <= 7) return "Tu es prêt·e à coopérer tant que les règles restent claires et respectueuses.";
+      if (v <= 9) return "Tu te vois bien participer activement, donner des idées, prendre des responsabilités.";
+      return "Tu pourrais te projeter très loin dans cette Organisation, si elle reste alignée avec tes valeurs.";
+    }
+    function labelForProjet(v) {
+      if (v <= 2) return "Pour l’instant, le Projet ne te parle pas ou te laisse sceptique.";
+      if (v <= 4) return "Tu es curieux·se mais encore réservé·e. Tu as besoin de voir concrètement à quoi ça sert.";
+      if (v <= 7) return "Tu trouves l’idée intéressante et tu pourrais t’y investir un minimum.";
+      if (v <= 9) return "Tu te reconnais vraiment dans l’idée du Projet et tu as envie de le pousser.";
+      return "Tu te sens quasiment partie prenante du Projet et prêt·e à te battre pour qu’il avance.";
+    }
+
+    function updateScales() {
+      const m = parseInt(rangeMonde.value, 10);
+      const o = parseInt(rangeOrg.value, 10);
+      const p = parseInt(rangeProjet.value, 10);
+
+      valMonde.textContent  = m + " / 10";
+      valOrg.textContent    = o + " / 10";
+      valProjet.textContent = p + " / 10";
+
+      txtMonde.textContent  = labelForWorld(m);
+      txtOrg.textContent    = labelForOrg(o);
+      txtProjet.textContent = labelForProjet(p);
+    }
+
+    rangeMonde.addEventListener('input', updateScales);
+    rangeOrg.addEventListener('input', updateScales);
+    rangeProjet.addEventListener('input', updateScales);
+    updateScales(); // init
+
+    choicesWrap.addEventListener('click', (e) => {
+      const btn = e.target.closest('.choice');
+      if (!btn) return;
+      const all = choicesWrap.querySelectorAll('.choice');
+      all.forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      selectedRole = btn.getAttribute('data-role');
+    });
+
+    function syntheseRole(roleKey) {
+      switch (roleKey) {
+        case 'messager':
+          return "Rôle pressenti : Messager. Tu pourrais être une personne-relai qui aide à faire circuler l’information de façon claire et honnête.";
+        case 'cartographe':
+          return "Rôle pressenti : Cartographe. Tu pourrais aider à comprendre comment les choses sont organisées et où ça coince.";
+        case 'gardien':
+          return "Rôle pressenti : Gardien de seuil. Tu pourrais veiller aux limites, à ce qui est acceptable ou non pour le Projet et pour les personnes.";
+        case 'agitateur':
+          return "Rôle pressenti : Agitateur tranquille. Tu pourrais poser les bonnes questions, faire bouger les lignes sans forcément être en première ligne.";
+        default:
+          return "Aucun rôle précis n’a été choisi. C’est aussi une information : tu préfères peut-être garder tes options ouvertes.";
+      }
+    }
+
+    function generateSynthese() {
+      const m = parseInt(rangeMonde.value, 10);
+      const o = parseInt(rangeOrg.value, 10);
+      const p = parseInt(rangeProjet.value, 10);
+      const moyenne = (m + o + p) / 3;
+
+      let tonalite;
+      if (moyenne <= 3) {
+        tonalite = "Globalement, tu restes en retrait. Tu observes encore avant de décider si tu veux vraiment entrer dans le Jeu.";
+      } else if (moyenne <= 6) {
+        tonalite = "Tu es dans une position intermédiaire : assez impliqué·e pour comprendre, assez à distance pour garder du recul.";
+      } else {
+        tonalite = "Tu es déjà très impliqué·e intérieurement. La question devient : comment canaliser cette énergie de manière saine.";
+      }
+
+      const texteRole = syntheseRole(selectedRole);
+
+      return (
+        tonalite + "\n\n" +
+        "Par axe :\n" +
+        "- Monde : " + labelForWorld(m) + "\n" +
+        "- Organisation : " + labelForOrg(o) + "\n" +
+        "- Projet : " + labelForProjet(p) + "\n\n" +
+        texteRole + "\n\n" +
+        "Ce texte est là pour t’aider à mettre des mots. Tu peux le modifier, le compléter et t’en servir pour la suite du test (instance.html)."
+      );
+    }
+
+    document.getElementById('btnAnalyser').addEventListener('click', () => {
+      const texte = generateSynthese();
+      resultBody.innerHTML =
+        '<div class="result-title">Hypothèse de positionnement :</div>' +
+        '<p style="margin:4px 0 0;font-size:0.8rem;white-space:pre-line;">' + texte + '</p>';
+      btnCopier.disabled = false;
+    });
+
+    document.getElementById('btnCopierSynthese').addEventListener('click', () => {
+      const texte = "# Positionnement dans le Jeu\n\n" + generateSynthese();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texte).catch(() => {});
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
