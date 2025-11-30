@@ -1,0 +1,739 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minitel · Annuaire interactif</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --screen-bg: #000000;
+      --screen-border: #4b5563;
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --minitel-green: #22c55e;
+      --minitel-cyan: #22d3ee;
+      --minitel-magenta: #e879f9;
+      --minitel-yellow: #fde047;
+      --btn-bg: #020617;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 12px;
+    }
+
+    .shell {
+      max-width: 950px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    header {
+      border-radius: 14px;
+      border: 1px solid #4b5563;
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.25), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.18), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 40%, #020819 100%);
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      box-shadow: 0 18px 35px rgba(15,23,42,0.9);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 220px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 20% 0, #bbf7d0, #22c55e 45%, #0ea5e9 90%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      color: #022c22;
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 18px rgba(34,197,94,0.75);
+    }
+
+    .header-title {
+      font-size: 17px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-right {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .chip {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+    }
+
+    @media (max-width: 700px) {
+      .header-right {
+        align-items: flex-start;
+      }
+    }
+
+    /* TERMINAL MINITEL */
+
+    .terminal-shell {
+      border-radius: 16px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      padding: 10px;
+      box-shadow: 0 18px 35px rgba(15,23,42,0.9);
+    }
+
+    .terminal-frame {
+      border-radius: 12px;
+      border: 2px solid var(--screen-border);
+      background: #111827;
+      padding: 10px;
+      max-width: 100%;
+    }
+
+    .terminal-screen {
+      background: var(--screen-bg);
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      padding: 8px 8px 6px;
+      min-height: 260px;
+      max-height: 360px;
+      overflow-y: auto;
+
+      font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.2;
+      color: var(--minitel-green);
+      white-space: pre;
+    }
+
+    .screen-line {
+      display: block;
+    }
+
+    .c-green   { color: var(--minitel-green); }
+    .c-cyan    { color: var(--minitel-cyan); }
+    .c-magenta { color: var(--minitel-magenta); }
+    .c-yellow  { color: var(--minitel-yellow); }
+    .c-soft    { color: var(--text-soft); }
+
+    .line-clickable {
+      cursor: pointer;
+    }
+    .line-clickable:hover {
+      background: rgba(34,197,94,0.2);
+    }
+
+    /* BAS D'ÉCRAN : CHAMP + FONCTIONS */
+
+    .terminal-bottom {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .input-zone {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 220px;
+    }
+
+    .input-label {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    #minitelInput {
+      flex: 1 1 auto;
+      max-width: 140px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--text-main);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      outline: none;
+    }
+
+    #minitelInput:focus {
+      box-shadow: 0 0 0 1px var(--minitel-green);
+      border-color: var(--minitel-green);
+    }
+
+    .fn-keys {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+      flex: 1 1 auto;
+    }
+
+    .fn-btn {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #4b5563;
+      background: var(--btn-bg);
+      color: var(--text-soft);
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      cursor: pointer;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    .fn-btn.primary {
+      border-color: var(--minitel-green);
+      color: var(--minitel-green);
+    }
+
+    .fn-btn.danger {
+      border-color: #ef4444;
+      color: #fecaca;
+    }
+
+    .fn-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* AIDE / LEGENDE */
+
+    .legend {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+    }
+
+    .legend span.key {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      padding: 2px 4px;
+      border-radius: 3px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      margin-right: 4px;
+    }
+
+    footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="header-left">
+        <div class="logo">M</div>
+        <div>
+          <div class="header-title">Minitel · Annuaire</div>
+          <div class="header-sub">Terminal style Minitel avec annuaire fictif structuré.</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="chip">demo/minitel-annuaire.html</div>
+        <div>Usage : maquette de service · aucune connexion réelle</div>
+      </div>
+    </header>
+
+    <div class="terminal-shell">
+      <div class="terminal-frame">
+        <div class="terminal-screen" id="screen"></div>
+
+        <div class="terminal-bottom">
+          <div class="input-zone">
+            <span class="input-label">N° :</span>
+            <input id="minitelInput" type="text" maxlength="4" autocomplete="off" />
+          </div>
+          <div class="fn-keys">
+            <button class="fn-btn danger" id="btnAnnuler">ANNULER</button>
+            <button class="fn-btn" id="btnRetour">RETOUR</button>
+            <button class="fn-btn" id="btnSuite">SUITE</button>
+            <button class="fn-btn primary" id="btnEnvoi">ENVOI</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div>
+          <span class="key">ENVOI</span>valide le numéro saisi (catégorie ou code service).
+        </div>
+        <div>
+          <span class="key">RETOUR</span>revient à l'écran précédent ·
+          <span class="key">ANNULER</span>efface la saisie.
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Annuaire et numéros entièrement fictifs.  
+      Adaptable pour des services réels (formation, démonstration, jeu de rôle, etc.).
+    </footer>
+  </div>
+
+  <script>
+    // --- DONNÉES D'ANNUAIRE (FICTIONNELLES) ---
+
+    const annuaire = {
+      "1": {
+        label: "SERVICES PUBLICS & DROITS",
+        description: "Infos générales sur les services publics de base.",
+        entries: [
+          {
+            code: "101",
+            name: "CPAS · Infos droits sociaux",
+            desc: "Présentation des aides sociales de base, démarches types, adresses utiles.",
+            url: "minitel://cpas-infos"
+          },
+          {
+            code: "102",
+            name: "Mutualité · Info santé",
+            desc: "Remboursements, incapacité, dossier patient : vue d'ensemble simplifiée.",
+            url: "minitel://mutualite"
+          },
+          {
+            code: "103",
+            name: "Service logement",
+            desc: "Pistes pour le logement social, agences immobilières sociales, aides au loyer.",
+            url: "minitel://logement"
+          }
+        ]
+      },
+      "2": {
+        label: "ASSOCIATIONS & AIDE",
+        description: "Réseau associatif et soutien de proximité.",
+        entries: [
+          {
+            code: "201",
+            name: "Épicerie sociale",
+            desc: "Infos sur les épiceries sociales et conditions d'accès.",
+            url: "minitel://epicerie-sociale"
+          },
+          {
+            code: "202",
+            name: "Service écoute & soutien",
+            desc: "Lignes d'écoute, soutien psychologique de première ligne.",
+            url: "minitel://ecoute"
+          },
+          {
+            code: "203",
+            name: "Médiation de dettes",
+            desc: "Aperçu des services agréés et parcours type de médiation.",
+            url: "minitel://mediation-dettes"
+          }
+        ]
+      },
+      "3": {
+        label: "FORMATION & EMPLOI",
+        description: "Apprendre, se réorienter, trouver un accompagnement.",
+        entries: [
+          {
+            code: "301",
+            name: "Bilan de compétences",
+            desc: "Comprendre ce qu'est un bilan, qui le propose, comment s'y préparer.",
+            url: "minitel://bilan-competences"
+          },
+          {
+            code: "302",
+            name: "Alpha & FLE",
+            desc: "Annuaire simplifié des lieux d'alphabétisation et de cours de français.",
+            url: "minitel://alpha-fle"
+          },
+          {
+            code: "303",
+            name: "Orientation métier",
+            desc: "Zoom sur les services publics d'orientation et d'accompagnement pro.",
+            url: "minitel://orientation"
+          }
+        ]
+      },
+      "4": {
+        label: "CULTURE, LOISIRS & MÉDIAS",
+        description: "Ce qui permet de souffler, se cultiver, se rencontrer.",
+        entries: [
+          {
+            code: "401",
+            name: "Maisons de quartier",
+            desc: "Découvrir les maisons de quartier et centres culturels de proximité.",
+            url: "minitel://maisons-quartier"
+          },
+          {
+            code: "402",
+            name: "Bibliothèques",
+            desc: "Bibliothèques publiques, médiathèques, accès à la presse.",
+            url: "minitel://bibliotheques"
+          },
+          {
+            code: "403",
+            name: "Activités à petit prix",
+            desc: "Pistes pour sortir sans exploser le budget (culture, sport, ateliers).",
+            url: "minitel://loisirs-petit-prix"
+          }
+        ]
+      },
+      "5": {
+        label: "NUMÉRIQUE & OUTILS",
+        description: "Comprendre, apprivoiser et choisir ses outils.",
+        entries: [
+          {
+            code: "501",
+            name: "Initiation informatique",
+            desc: "Lieu d'apprentissage de base : souris, clavier, mail, sécurité.",
+            url: "minitel://init-info"
+          },
+          {
+            code: "502",
+            name: "Outils libres & alternatifs",
+            desc: "Panorama d'outils libres pour bureautique, web, mobilité.",
+            url: "minitel://logiciels-libres"
+          },
+          {
+            code: "503",
+            name: "Hygiène numérique",
+            desc: "Notions simples : mots de passe, mises à jour, fausses infos.",
+            url: "minitel://hygiene-numerique"
+          }
+        ]
+      },
+      "6": {
+        label: "JEUX & EXPÉRIENCES",
+        description: "Expériences interactives, tests et mini-jeux pédagogiques.",
+        entries: [
+          {
+            code: "601",
+            name: "Quiz droits sociaux",
+            desc: "Petit quiz pour vérifier ce qu'on connaît (ou pas) en matière de droits.",
+            url: "minitel://quiz-droits"
+          },
+          {
+            code: "602",
+            name: "Jeu budget du mois",
+            desc: "Jeu de simulation pour comprendre un budget mensuel.",
+            url: "minitel://jeu-budget"
+          },
+          {
+            code: "603",
+            name: "Parcours info/média",
+            desc: "Parcours ludique sur les infos, rumeurs, vérification des sources.",
+            url: "minitel://parcours-medias"
+          }
+        ]
+      },
+      "7": {
+        label: "CONTACT & ORIENTATION",
+        description: "Points de contact pour ne pas rester seul avec ses questions.",
+        entries: [
+          {
+            code: "701",
+            name: "Relais social local",
+            desc: "Coordonnées d'un relais social (fictif) pour s'orienter.",
+            url: "minitel://relais-social"
+          },
+          {
+            code: "702",
+            name: "Accueil de première ligne",
+            desc: "Exemple de guichet unique d'info / orientation.",
+            url: "minitel://accueil-1ere-ligne"
+          },
+          {
+            code: "703",
+            name: "Permanence associative",
+            desc: "Point de contact associatif où déposer une question.",
+            url: "minitel://permanence-associative"
+          }
+        ]
+      }
+    };
+
+    // --- ÉTAT ---
+
+    let state = {
+      view: "home",      // "home" | "category" | "entry"
+      categoryId: null,  // "1"..."7"
+      selectedEntry: null
+    };
+
+    const screenEl = document.getElementById("screen");
+    const inputEl = document.getElementById("minitelInput");
+
+    // --- RENDU ÉCRAN ---
+
+    function clearScreen() {
+      screenEl.innerHTML = "";
+    }
+
+    function addLine(text = "", className = "") {
+      const span = document.createElement("span");
+      span.className = "screen-line " + className;
+      span.textContent = text;
+      screenEl.appendChild(span);
+      screenEl.appendChild(document.createTextNode("\n"));
+      screenEl.scrollTop = screenEl.scrollHeight;
+      return span;
+    }
+
+    function pad(text, length) {
+      const t = String(text);
+      if (t.length >= length) return t.slice(0, length);
+      return t + " ".repeat(length - t.length);
+    }
+
+    function renderHome() {
+      state.view = "home";
+      state.categoryId = null;
+      state.selectedEntry = null;
+      clearScreen();
+
+      addLine("  M I N I T E L   A N N U A I R E", "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  Sélectionnez une rubrique :", "c-cyan");
+      addLine("", "");
+
+      Object.keys(annuaire).forEach(id => {
+        const cat = annuaire[id];
+        const label = `${id}. ${cat.label}`;
+        const line = addLine("  " + label, "c-green line-clickable");
+        line.dataset.categoryId = id;
+      });
+
+      addLine("", "");
+      addLine("  Tapez le N° de rubrique et ENVOI", "c-soft");
+      addLine("  ou cliquez directement sur une ligne.", "c-soft");
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function renderCategory(catId) {
+      const cat = annuaire[catId];
+      if (!cat) {
+        renderHome();
+        return;
+      }
+      state.view = "category";
+      state.categoryId = catId;
+      state.selectedEntry = null;
+      clearScreen();
+
+      addLine("  " + pad(cat.label, 34), "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  " + cat.description, "c-cyan");
+      addLine("", "");
+
+      cat.entries.forEach(e => {
+        const text = `  ${e.code}  ${e.name}`;
+        const line = addLine(text, "c-green line-clickable");
+        line.dataset.entryCode = e.code;
+      });
+
+      addLine("", "");
+      addLine("  Tapez le code (3 chiffres) et ENVOI", "c-soft");
+      addLine("  ou cliquez sur un service pour ouvrir la fiche.", "c-soft");
+      addLine("  RETOUR : revenir à l'annuaire général.", "c-soft");
+
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function renderEntry(catId, code) {
+      const cat = annuaire[catId];
+      if (!cat) {
+        renderHome();
+        return;
+      }
+      const entry = cat.entries.find(e => e.code === code);
+      if (!entry) {
+        renderCategory(catId);
+        return;
+      }
+      state.view = "entry";
+      state.selectedEntry = entry;
+      clearScreen();
+
+      addLine("  " + pad(entry.name, 34), "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  Code : " + entry.code, "c-yellow");
+      addLine("  Rubrique : " + cat.label, "c-cyan");
+      addLine("", "");
+      // description en blocs de longueur max
+      const wrapLen = 38;
+      const words = entry.desc.split(" ");
+      let line = "  ";
+      words.forEach(w => {
+        if ((line + w).length > wrapLen) {
+          addLine(line, "c-soft");
+          line = "  " + w + " ";
+        } else {
+          line += w + " ";
+        }
+      });
+      if (line.trim().length > 0) {
+        addLine(line, "c-soft");
+      }
+      addLine("", "");
+      addLine("  Adresse (symbolique) :", "c-soft");
+      addLine("  " + entry.url, "c-magenta");
+      addLine("", "");
+      addLine("  RETOUR : revenir à la liste de la rubrique.", "c-soft");
+      addLine("  ANNULER : efface la saisie éventuelle.", "c-soft");
+
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    // --- LOGIQUE DE SAISIE ---
+
+    function handleEnvoi() {
+      const value = inputEl.value.trim();
+
+      if (state.view === "home") {
+        // on attend un numéro de rubrique (1-7)
+        if (annuaire[value]) {
+          renderCategory(value);
+        } else if (value !== "") {
+          addLine("", "");
+          addLine("  N° inconnu. Utilisez 1 à 7.", "c-soft");
+          inputEl.value = "";
+        }
+        return;
+      }
+
+      if (state.view === "category") {
+        // on attend un code à 3 chiffres
+        if (/^\d{3}$/.test(value)) {
+          renderEntry(state.categoryId, value);
+        } else if (value !== "") {
+          addLine("", "");
+          addLine("  Code service invalide. Utilisez 3 chiffres (ex: 101).", "c-soft");
+          inputEl.value = "";
+        }
+        return;
+      }
+
+      if (state.view === "entry") {
+        // ENVOI ne fait rien de spécial ici, on peut éventuellement remonter
+        addLine("", "");
+        addLine("  ENVOI : déjà sur la fiche. Utilisez RETOUR.", "c-soft");
+      }
+    }
+
+    function handleRetour() {
+      if (state.view === "entry") {
+        renderCategory(state.categoryId);
+      } else if (state.view === "category") {
+        renderHome();
+      } else {
+        // déjà sur home
+        renderHome();
+      }
+    }
+
+    function handleAnnuler() {
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function handleSuite() {
+      // ici pas de pagination réelle, on peut afficher un message
+      addLine("", "");
+      addLine("  SUITE : fin de page. Pas d'autres éléments.", "c-soft");
+    }
+
+    // --- ÉVÉNEMENTS ---
+
+    document.getElementById("btnEnvoi").addEventListener("click", handleEnvoi);
+    document.getElementById("btnRetour").addEventListener("click", handleRetour);
+    document.getElementById("btnAnnuler").addEventListener("click", handleAnnuler);
+    document.getElementById("btnSuite").addEventListener("click", handleSuite);
+
+    // clic sur les lignes cliquables
+    screenEl.addEventListener("click", (e) => {
+      const line = e.target.closest(".line-clickable");
+      if (!line) return;
+
+      if (line.dataset.categoryId) {
+        renderCategory(line.dataset.categoryId);
+        return;
+      }
+      if (line.dataset.entryCode && state.view === "category") {
+        renderEntry(state.categoryId, line.dataset.entryCode);
+      }
+    });
+
+    // clavier : Enter = ENVOI
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleEnvoi();
+      }
+    });
+
+    // Initialisation
+    renderHome();
+  </script>
+</body>
+</html>
