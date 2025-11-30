@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test – Puissance des symboles & détournements</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #070b1f;
+      --card: #0f172a;
+      --accent: #8b5cff;
+      --accent-soft: rgba(139,92,255,0.2);
+      --accent2: #22c55e;
+      --accent3: #facc15;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(148,163,184,0.7);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(139,92,246,0.25), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.2), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1.1rem 0.7rem 1.8rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1100px;
+      background: var(--bg-alt);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px rgba(15,23,42,0.9);
+      padding: 1.2rem 0.9rem 1.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.7rem 1.5rem 2rem; }
+    }
+
+    .page::before {
+      content: "test-symboles.html · canevas embeds + quiz";
+      position: absolute;
+      top: 0.4rem;
+      right: 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: var(--accent-soft);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.45rem;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent2);
+    }
+
+    h1 {
+      font-size: clamp(1.7rem, 4.2vw, 2.4rem);
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+
+    h1 span { color: var(--accent3); }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 760px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    main {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 960px) {
+      main {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+        align-items: flex-start;
+      }
+    }
+
+    section {
+      background: radial-gradient(circle at 0 0, rgba(139,92,246,0.18), transparent 65%), var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.8rem 0.85rem 1rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    @media (min-width: 768px) {
+      section { padding: 1rem 1.1rem 1.15rem; }
+    }
+
+    section h2 {
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-main);
+    }
+
+    section p { line-height: 1.55; margin-bottom: 0.3rem; }
+
+    .tagline {
+      margin-top: 0.3rem;
+      font-size: 0.8rem;
+      color: var(--accent2);
+    }
+
+    /* Embeds */
+
+    .embed-block {
+      margin-top: 0.4rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .embed-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.1rem;
+    }
+
+    .embed-pdf,
+    .embed-video,
+    .embed-spotify {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: #020617;
+    }
+
+    .embed-pdf embed,
+    .embed-video iframe,
+    .embed-spotify iframe {
+      width: 100%;
+      height: 260px;
+      border: none;
+      display: block;
+    }
+
+    @media (min-width: 768px) {
+      .embed-pdf embed { height: 360px; }
+      .embed-video iframe { height: 290px; }
+      .embed-spotify iframe { height: 120px; }
+    }
+
+    /* Galerie */
+
+    .gallery {
+      margin-top: 0.4rem;
+    }
+
+    .thumb-grid {
+      display: grid;
+      gap: 0.35rem;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    }
+
+    .thumb {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      background: #020617;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s ease-out;
+    }
+
+    .thumb:hover img {
+      transform: scale(1.04);
+    }
+
+    .thumb-caption {
+      position: absolute;
+      bottom: 4px;
+      left: 6px;
+      right: 6px;
+      font-size: 0.7rem;
+      background: linear-gradient(to top, rgba(15,23,42,0.9), transparent);
+      padding: 0.15rem 0.2rem;
+      color: #e5e7eb;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-inner {
+      max-width: 900px;
+      width: 94%;
+      background: #020617;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 0.6rem;
+    }
+
+    .lightbox img {
+      width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      margin-bottom: 0.3rem;
+    }
+
+    .lightbox-caption {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .lightbox-close {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.7rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: #020617;
+      color: var(--text-muted);
+    }
+
+    /* Quiz */
+
+    .quiz-intro {
+      margin-bottom: 0.4rem;
+    }
+
+    .quiz-intro p { margin-bottom: 0.2rem; }
+
+    .difficulty-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.12rem 0.5rem;
+      font-size: 0.78rem;
+      color: var(--accent3);
+      margin-bottom: 0.2rem;
+    }
+
+    .difficulty-tag span {
+      color: var(--accent3);
+    }
+
+    .question {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.55rem;
+      margin-bottom: 0.4rem;
+      background: rgba(2,6,23,0.85);
+    }
+
+    .question.good {
+      border-color: var(--accent2);
+      box-shadow: 0 0 10px rgba(34,197,94,0.5);
+    }
+
+    .question.bad {
+      border-color: #f97373;
+      box-shadow: 0 0 10px rgba(248,113,113,0.4);
+    }
+
+    .question-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.15rem;
+      color: var(--text-main);
+    }
+
+    .question-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .question-options {
+      display: grid;
+      gap: 0.12rem;
+      margin-bottom: 0.2rem;
+      font-size: 0.86rem;
+    }
+
+    .question-options label {
+      display: flex;
+      gap: 0.35rem;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+
+    .question-options input {
+      margin-top: 0.15rem;
+    }
+
+    .question-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .quiz-actions {
+      margin-top: 0.5rem;
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      padding: 0.25rem 0.75rem;
+      font-size: 0.82rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      border-color: var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-muted);
+    }
+
+    .quiz-score {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .quiz-score strong { color: var(--accent2); }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.5rem;
+      background: #020617;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Canevas de test – Puissance des symboles & détournements</span>
+      </div>
+      <h1>Symboles, croix gammée & pictogrammes modernes <span>en questions</span></h1>
+      <p class="subtitle">
+        Cette page sert de <strong>terrain d’entraînement</strong> pour ton futur rapport grand public
+        sur la puissance des symboles, en particulier la swastika (croix gammée) et les pictogrammes modernes :
+        diffusion culturelle, <strong>réappropriations</strong> et <strong>détournements idéologiques</strong>.
+        Elle combine embeds de documents, ressources audio/vidéo et un quizz interactif.
+      </p>
+    </header>
+
+    <main>
+      <!-- Colonne gauche : docs + multimédia + galerie -->
+      <section>
+        <h2>1. Dossier central & ressources associées</h2>
+        <p>
+          Commence par parcourir les documents, extraits vidéo et audio avant de te lancer
+          dans le quizz. Tu peux adapter les liens ci-dessous à ton futur rapport
+          (PDF, vidéos d’analyse, podcasts, playlists).
+        </p>
+
+        <div class="embed-block">
+          <div>
+            <div class="embed-label">📄 Rapport principal (PDF) – <em>Puissance des symboles & détournements</em></div>
+            <div class="embed-pdf">
+              <!-- Remplace le src par ton vrai fichier PDF -->
+              <embed src="pdf/topo.pdf" type="application/pdf">
+            </div>
+          </div>
+
+          <div>
+            <div class="embed-label">🎥 Extrait vidéo – Analyse d’un symbole controversé dans les médias</div>
+            <div class="embed-video">
+              <!-- Remplace le src par ton URL YouTube -->
+              <iframe
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Analyse vidéo d'un symbole dans les médias"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+
+          <div>
+            <div class="embed-label">🎧 Playlist – Musiques & podcasts liés aux symboles & propagandes</div>
+            <div class="embed-spotify">
+              <!-- Remplace le src par ta playlist/podcast Spotify -->
+              <iframe
+                src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M"
+                loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery">
+          <h2 style="margin-top:0.8rem;">2. Galerie d’images – Symboles & pictogrammes</h2>
+          <p>
+            Ici, tu peux présenter des exemples de symboles dans le temps :
+            <strong>motifs anciens</strong>, <strong>pictogrammes modernes</strong>, logos,
+            panneaux de signalisation, emojis, etc.  
+            (À toi d’éviter toute iconographie ambiguë non contextualisée.)
+          </p>
+
+          <div class="thumb-grid">
+            <!-- Remplace les images par celles de ton choix -->
+            <div class="thumb" data-full="img/motif-ancien.jpg" data-caption="Motif géométrique ancien réutilisé dans différentes cultures.">
+              <img src="img/motif-ancien-thumb.jpg" alt="Motif géométrique ancien">
+              <div class="thumb-caption">Motif géométrique ancien</div>
+            </div>
+
+            <div class="thumb" data-full="img/panneau-signalisation.jpg" data-caption="Panneau de signalisation moderne : exemple de pictogramme normé.">
+              <img src="img/panneau-signalisation-thumb.jpg" alt="Panneau de signalisation">
+              <div class="thumb-caption">Pictogramme de signalisation</div>
+            </div>
+
+            <div class="thumb" data-full="img/picto-reseaux.jpg" data-caption="Icônes et pictos des plateformes numériques : langage visuel globalisé.">
+              <img src="img/picto-reseaux-thumb.jpg" alt="Pictogrammes réseaux sociaux">
+              <div class="thumb-caption">Pictos réseaux sociaux</div>
+            </div>
+
+            <div class="thumb" data-full="img/detournement-art.jpg" data-caption="Détournement artistique critique d’un symbole de pouvoir.">
+              <img src="https://dl.ouaisfi.eu/vrac/r/grand-detournement.png" alt="Détournement artistique de symbole">
+              <div class="thumb-caption">Détournement artistique</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Lightbox -->
+      <div class="lightbox" id="lightbox">
+        <div class="lightbox-inner">
+          <img src="" alt="" id="lightboxImg">
+          <div class="lightbox-caption">
+            <span id="lightboxText"></span>
+            <button class="lightbox-close" id="lightboxClose">Fermer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne droite : quiz -->
+      <section>
+        <h2>3. Quizz – Comprendre la puissance & les détournements des symboles</h2>
+        <div class="quiz-intro">
+          <p>
+            Ce quizz mélange ce que tu as déjà exploré (propagande, guerre narrative, veille citoyenne)
+            avec le futur contenu de ton rapport sur les symboles. Les niveaux de difficulté sont indiqués
+            pour chaque question.
+          </p>
+          <p class="tagline">
+            🔍 Objectif : tester ta compréhension de la <strong>longue histoire des symboles</strong>, de leur
+            circulation contemporaine et des enjeux éthiques de leur réutilisation.
+          </p>
+        </div>
+
+        <form id="quizForm">
+          <!-- Q1 -->
+          <div class="question" data-correct="b">
+            <div class="question-title">Q1. Avant d’être instrumentalisée par le régime nazi, la swastika (croix gammée) était…</div>
+            <div class="question-meta">Difficulté : <span class="difficulty-tag"><span>★☆☆</span> – Bases historiques</span></div>
+            <div class="question-options">
+              <label>
+                <input type="radio" name="q1" value="a">
+                <span>Un symbole créé de toutes pièces pour la propagande du XXᵉ siècle.</span>
+              </label>
+              <label>
+                <input type="radio" name="q1" value="b">
+                <span>Un motif très ancien, présent dans plusieurs cultures et traditions bien avant le XXᵉ siècle.</span>
+              </label>
+              <label>
+                <input type="radio" name="q1" value="c">
+                <span>Un pictogramme exclusivement lié aux mouvements ésotériques occidentaux.</span>
+              </label>
+            </div>
+            <div class="question-note">
+              Indice : un même symbole peut traverser les siècles et changer radicalement de signification.
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="question" data-correct="c">
+            <div class="question-title">Q2. En contexte contemporain, que signifie “détournement” d’un symbole ?</div>
+            <div class="question-meta">Difficulté : <span class="difficulty-tag"><span>★☆☆</span> – Lexique</span></div>
+            <div class="question-options">
+              <label>
+                <input type="radio" name="q2" value="a">
+                <span>Effacer complètement le symbole pour ne plus le voir.</span>
+              </label>
+              <label>
+                <input type="radio" name="q2" value="b">
+                <span>Répéter le symbole à l’identique, sans le commenter.</span>
+              </label>
+              <label>
+                <input type="radio" name="q2" value="c">
+                <span>Le réutiliser dans un nouveau contexte (humour, critique, marketing…) pour produire un effet différent.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="question" data-correct="a">
+            <div class="question-title">Q3. Pourquoi la diffusion globale des pictogrammes (emoji, logos, panneaux) est-elle un enjeu citoyen ?</div>
+            <div class="question-meta">Difficulté : <span class="difficulty-tag"><span>★★☆</span> – Analyse</span></div>
+            <div class="question-options">
+              <label>
+                <input type="radio" name="q3" value="a">
+                <span>Parce qu’ils imposent des façons de voir le monde qui semblent “neutres”, mais sont souvent produites par des acteurs dominants.</span>
+              </label>
+              <label>
+                <input type="radio" name="q3" value="b">
+                <span>Parce qu’ils remplacent totalement les langues écrites.</span>
+              </label>
+              <label>
+                <input type="radio" name="q3" value="c">
+                <span>Parce qu’ils empêchent d’utiliser des symboles anciens.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="question" data-correct="b">
+            <div class="question-title">Q4. Dans une démarche de veille citoyenne, que faut-il faire lorsqu’un symbole potentiellement haineux circule sans contexte ?</div>
+            <div class="question-meta">Difficulté : <span class="difficulty-tag"><span>★★☆</span> – Éthique & méthodo</span></div>
+            <div class="question-options">
+              <label>
+                <input type="radio" name="q4" value="a">
+                <span>Le partager massivement pour “alerter”, même sans le recontextualiser.</span>
+              </label>
+              <label>
+                <input type="radio" name="q4" value="b">
+                <span>Le recadrer : vérifier l’origine, expliquer le contexte, éviter de relayer sans analyse critique.</span>
+              </label>
+              <label>
+                <input type="radio" name="q4" value="c">
+                <span>Le censurer systématiquement sans discussion.</span>
+              </label>
+            </div>
+            <div class="question-note">
+              Ici, on croise ton projet de veille citoyenne : <strong>ne pas amplifier les symboles problématiques, mais les comprendre.</strong>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="question" data-correct="c">
+            <div class="question-title">Q5. Parmi ces situations, laquelle illustre le mieux un détournement critique d’un symbole autoritaire ?</div>
+            <div class="question-meta">Difficulté : <span class="difficulty-tag"><span>★★☆</span> – Étude de cas</span></div>
+            <div class="question-options">
+              <label>
+                <input type="radio" name="q5" value="a">
+                <span>Utiliser un symbole autoritaire sur un t-shirt sans explication, juste pour “le style”.</span>
+              </label>
+              <label>
+                <input type="radio" name="q5" value="b">
+                <span>Reproduire un symbole extrémiste dans un forum privé pour glorifier sa signification d’origine.</span>
+              </label>
+              <label>
+                <input type="radio" name="q5" value="c">
+                <span>Transformer un symbole autoritaire en caricature, dans une œuvre qui le critique explicitement et explique sa démarche.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q6 -->
+          <div class="question" data-correct="a">
+            <div class="question-title">Q6. Les pictogrammes “universels” (comme ceux des aéroports) sont…</div>
+            <div class="question-meta">Difficulté : <span class="difficulty-tag"><span>★★☆</span> – Culture & normes</span></div>
+            <div class="question-options">
+              <label>
+                <input type="radio" name="q6" value="a">
+                <span>Le résultat de conventions et de normes qui reflètent des choix culturels précis, pas une neutralité absolue.</span>
+              </label>
+              <label>
+                <input type="radio" name="q6" value="b">
+                <span>Des symboles arrivés naturellement, sans acteurs ni décisions.</span>
+              </label>
+              <label>
+                <input type="radio" name="q6" value="c">
+                <span>Des symboles magiques qui signifient la même chose pour tout le monde.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q7 (ouverte guidée) -->
+          <div class="question" data-open="true">
+            <div class="question-title">Q7. Question ouverte – Lignes rouges personnelles</div>
+            <div class="question-meta">Difficulté : <span class="difficulty-tag"><span>★★★</span> – Réflexion critique</span></div>
+            <p class="question-note">
+              En quelques phrases (à part, dans un carnet / doc perso), note :
+              <br>• Un symbole que tu accepterais de détourner pour le critiquer.
+              <br>• Un symbole que tu refuserais de réutiliser, même de façon “ironique”.
+              <br>Pourquoi ? Quelles sont tes lignes rouges ?
+            </p>
+          </div>
+
+          <div class="quiz-actions">
+            <button type="button" class="btn" id="checkQuiz">Corriger le quizz</button>
+            <button type="button" class="btn secondary" id="resetQuiz">Réinitialiser</button>
+            <div class="quiz-score" id="quizScore">
+              Score : <strong>0 / 6</strong> (les questions ouvertes ne sont pas notées automatiquement)
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <span>Ce canevas est une base : adapte les textes, médias et questions à ton futur rapport sur la puissance des symboles.</span>
+      <code>test-symboles.html · embeds + galerie + quiz interactif</code>
+    </footer>
+  </div>
+
+  <script>
+    // Lightbox galerie
+    (function() {
+      const lightbox = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightboxImg');
+      const lbText = document.getElementById('lightboxText');
+      const lbClose = document.getElementById('lightboxClose');
+
+      document.querySelectorAll('.thumb').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          const full = thumb.getAttribute('data-full');
+          const caption = thumb.getAttribute('data-caption') || '';
+          lbImg.src = full;
+          lbText.textContent = caption;
+          lightbox.classList.add('open');
+        });
+      });
+
+      lbClose.addEventListener('click', () => {
+        lightbox.classList.remove('open');
+        lbImg.src = '';
+      });
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          lightbox.classList.remove('open');
+          lbImg.src = '';
+        }
+      });
+    })();
+
+    // Quiz
+    (function() {
+      const form = document.getElementById('quizForm');
+      const checkBtn = document.getElementById('checkQuiz');
+      const resetBtn = document.getElementById('resetQuiz');
+      const scoreEl = document.getElementById('quizScore');
+
+      function checkQuiz() {
+        let total = 0;
+        let good = 0;
+
+        document.querySelectorAll('.question').forEach(q => {
+          q.classList.remove('good', 'bad');
+          const correct = q.getAttribute('data-correct');
+          const isOpen = q.getAttribute('data-open') === 'true';
+
+          if (isOpen || !correct) return;
+
+          total++;
+          const name = Array.from(q.querySelectorAll('input[type="radio"]'))[0]?.name;
+          const checked = name ? form.querySelector(`input[name="${name}"]:checked`) : null;
+
+          if (checked && checked.value === correct) {
+            good++;
+            q.classList.add('good');
+          } else {
+            q.classList.add('bad');
+          }
+        });
+
+        scoreEl.innerHTML = `Score : <strong>${good} / ${total}</strong> (les questions ouvertes ne sont pas notées automatiquement)`;
+      }
+
+      function resetQuiz() {
+        form.reset();
+        document.querySelectorAll('.question').forEach(q => q.classList.remove('good', 'bad'));
+        scoreEl.innerHTML = 'Score : <strong>0 / 6</strong> (les questions ouvertes ne sont pas notées automatiquement)';
+      }
+
+      checkBtn.addEventListener('click', checkQuiz);
+      resetBtn.addEventListener('click', resetQuiz);
+    })();
+  </script>
+</body>
+</html>
