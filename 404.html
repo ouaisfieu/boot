@@ -1,0 +1,929 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ordre de mission – Opération « Bout d’Internet »</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #02091f;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.1);
+      --accent-strong: #0ea5e9;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --success: #4ade80;
+      --card-radius: 16px;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.8);
+      --border-subtle: rgba(148, 163, 184, 0.25);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                  sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      background: radial-gradient(circle at top, #0f172a 0, #020617 50%, #000 100%);
+      color: var(--text);
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1080px;
+      border-radius: 24px;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(45,212,191,0.15), transparent 60%),
+        linear-gradient(to bottom right, var(--bg-soft), #020617 55%, #000 100%);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      backdrop-filter: blur(16px);
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+      header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .org-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .org-name {
+      font-size: 1.1rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .mission-title {
+      font-size: clamp(1.9rem, 2.5vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mission-pill {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15,23,42,0.7);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(56,189,248,0.8);
+    }
+
+    .meta-block {
+      display: grid;
+      gap: 6px;
+      font-size: 0.87rem;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .meta-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .meta-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+
+    .meta-value {
+      font-weight: 500;
+      text-align: right;
+      color: #e5e7eb;
+    }
+
+    .candidate-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.7);
+      color: inherit;
+      outline: none;
+      padding: 0 2px 2px;
+      font: inherit;
+      text-align: right;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.9fr) minmax(0, 1.2fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: var(--card-radius);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(15,23,42,0.95));
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 16px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, var(--accent-soft), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+    }
+
+    .card-tag {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--muted);
+    }
+
+    .card-body {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .card-body p {
+      margin: 4px 0 10px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .pill {
+      font-size: 0.78rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .pill--strong {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border-color: rgba(56,189,248,0.7);
+    }
+
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .step {
+      position: relative;
+      padding: 8px 10px 8px 32px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .step:hover {
+      border-color: rgba(56,189,248,0.7);
+      background: rgba(15, 23, 42, 1);
+      transform: translateY(-1px);
+    }
+
+    .step-badge {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 2px solid rgba(148, 163, 184, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: #9ca3af;
+      background: #020617;
+    }
+
+    .step-title {
+      font-size: 0.86rem;
+      font-weight: 500;
+    }
+
+    .step-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .step-details {
+      display: none;
+      padding: 8px 10px 4px 32px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .step[aria-expanded="true"] + .step-details {
+      display: block;
+    }
+
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 640px) {
+      .criteria-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .criteria-box {
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .criteria-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.7rem;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .criteria-score {
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+
+    .criteria-bar-outer {
+      margin-top: 6px;
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(30, 64, 175, 0.8);
+      overflow: hidden;
+    }
+
+    .criteria-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, var(--accent), #22c55e);
+      transition: width 0.8s ease-out;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+      display: grid;
+      gap: 4px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .check-toggle {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(148,163,184,0.7);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .check-toggle[data-checked="true"] {
+      background: var(--accent-soft);
+      border-color: rgba(56,189,248,0.9);
+      color: var(--accent-strong);
+    }
+
+    .side-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .side-card {
+      border-radius: var(--card-radius);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(15,23,42,0.98));
+      border: 1px solid var(--border-subtle);
+      padding: 16px 16px 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .side-card strong {
+      color: var(--text);
+    }
+
+    .side-card h3 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin: 0 0 6px;
+      color: #9ca3af;
+    }
+
+    .small-list {
+      padding-left: 16px;
+      margin: 4px 0;
+    }
+
+    .small-list li {
+      margin-bottom: 2px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      position: relative;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      background: rgba(15,23,42, 0.95);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-primary {
+      border-color: rgba(56,189,248,0.8);
+      background: linear-gradient(120deg, #0369a1, #0ea5e9, #22c55e);
+      background-size: 200% 200%;
+      animation: shimmer 9s ease infinite;
+      box-shadow: 0 12px 28px rgba(56,189,248,0.35);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15,23,42,0.7);
+    }
+
+    .btn-primary:hover {
+      border-color: #e5e7eb;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    footer {
+      margin-top: 18px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(75,85,99,0.7);
+      font-size: 0.74rem;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .footer-tag {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .footer-note {
+      max-width: 480px;
+    }
+
+    .warn {
+      color: var(--danger);
+    }
+  </style>
+</head>
+
+<body>
+<div class="shell">
+  <header>
+    <div class="org-block">
+      <div class="org-name">ORGANISATION &mdash; CELLULE SYSTÈMES & DYSTOPIES</div>
+      <div class="mission-title">
+        Ordre de mission&nbsp;: Opération «&nbsp;Bout d’Internet&nbsp;»
+      </div>
+      <div class="mission-pill">
+        <span class="badge-dot"></span>
+        TEST DE RECRUTEMENT &mdash; NIVEAU STRATÉGIQUE
+      </div>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-line">
+        <span class="meta-label">Réf.</span>
+        <span class="meta-value">OM-BI-<span id="ref-year"></span>-01</span>
+      </div>
+      <div class="meta-line">
+        <span class="meta-label">Candidat·e</span>
+        <span class="meta-value">
+          <input id="candidate-name" class="candidate-input"
+                 placeholder="Nom à renseigner"
+                 autocomplete="off" />
+        </span>
+      </div>
+      <div class="meta-line">
+        <span class="meta-label">Poste visé</span>
+        <span class="meta-value">Responsable stratégie numérique & intranet</span>
+      </div>
+      <div class="meta-line">
+        <span class="meta-label">Validité</span>
+        <span class="meta-value">Mission à réaliser sous 5&nbsp;jours ouvrables</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Colonne principale -->
+    <section>
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">Contexte & objectif</div>
+          <div class="card-tag">Lire attentivement</div>
+        </div>
+        <div class="card-body">
+          <p>
+            Cet ordre de mission définit l’épreuve principale du processus de sélection
+            pour un poste à haute responsabilité. Il s’agit de démontrer votre capacité à
+            <strong>récupérer un «&nbsp;bout d’Internet&nbsp;»</strong> (un dépôt public GitHub),
+            à l’analyser de manière critique, puis à produire un
+            <strong>livrable intranet augmenté</strong> à forte valeur ajoutée.
+          </p>
+          <div class="pill-row">
+            <span class="pill pill--strong">Analyse de code & contenu</span>
+            <span class="pill">Synthèse stratégique</span>
+            <span class="pill">Sens critique vis-à-vis des plateformes</span>
+            <span class="pill">HTML / CSS / JS pur</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">Phases de la mission</div>
+          <div class="card-tag">Checklist interactive</div>
+        </div>
+        <div class="card-body">
+          <ul class="step-list">
+            <!-- ÉTAPE 1 -->
+            <li class="step" data-step="1" aria-expanded="false">
+              <div class="step-badge">1</div>
+              <div class="step-title">Sélection & récupération du dépôt GitHub</div>
+              <div class="step-sub">Cloner un dépôt public représentatif d’un « bout d’Internet »</div>
+            </li>
+            <li class="step-details">
+              <p>Choisissez (ou recevez le jour J) l’URL d’un dépôt GitHub public contenant un
+                 projet web (site statique, mini-app, documentation, etc.).</p>
+              <ul class="checklist">
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step1-1"> </span>
+                  <span>Clonage du dépôt en local (via <code>git clone</code> ou téléchargement ZIP).</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step1-2"> </span>
+                  <span>Identification rapide&nbsp;: type de projet, techno, taille, dépendances.</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step1-3"> </span>
+                  <span>Lancement et test du projet (ouverture d’un fichier HTML ou serveur local).</span>
+                </li>
+              </ul>
+            </li>
+
+            <!-- ÉTAPE 2 -->
+            <li class="step" data-step="2" aria-expanded="false">
+              <div class="step-badge">2</div>
+              <div class="step-title">Analyse structurée du contenu</div>
+              <div class="step-sub">Comprendre architecture, forces, faiblesses, risques</div>
+            </li>
+            <li class="step-details">
+              <p>Produisez une analyse courte mais structurée :</p>
+              <ul class="checklist">
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step2-1"> </span>
+                  <span>Cartographie des fichiers clés (HTML, CSS, JS, assets, docs).</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step2-2"> </span>
+                  <span>Identification des dépendances (CDN, frameworks, APIs externes).</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step2-3"> </span>
+                  <span>Points forts (performance, lisibilité, UX) et points de vigilance (sécurité, dette technique, dépendance à des plateformes centrales).</span>
+                </li>
+              </ul>
+            </li>
+
+            <!-- ÉTAPE 3 -->
+            <li class="step" data-step="3" aria-expanded="false">
+              <div class="step-badge">3</div>
+              <div class="step-title">Conception du livrable intranet augmenté</div>
+              <div class="step-sub">Transformer l’analyse en ressource claire pour l’organisation</div>
+            </li>
+            <li class="step-details">
+              <p>Le livrable doit être un <strong>mini-site statique</strong> (une ou plusieurs pages
+                 HTML/CSS/JS pur, sans build system) hébergeable sur l’intranet ou une simple
+                 clé USB.</p>
+              <ul class="checklist">
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step3-1"> </span>
+                  <span>Page d’accueil expliquant : contexte, dépôt analysé, enjeux pour l’organisation.</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step3-2"> </span>
+                  <span>Section « Anatomie du dépôt » (schéma ou tableau des fichiers, rôles, dépendances).</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step3-3"> </span>
+                  <span>Section « Recommandations » avec propositions d’usage, d’amélioration et de réduction de risques (techniques et organisationnels).</span>
+                </li>
+              </ul>
+            </li>
+
+            <!-- ÉTAPE 4 -->
+            <li class="step" data-step="4" aria-expanded="false">
+              <div class="step-badge">4</div>
+              <div class="step-title">Synthèse stratégique pour la direction</div>
+              <div class="step-sub">Résumé décisionnel lisible en &lt; 3 minutes</div>
+            </li>
+            <li class="step-details">
+              <p>Intégrez dans le site une page ou un encart type « note à qui de droit » :</p>
+              <ul class="checklist">
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step4-1"> </span>
+                  <span>3 à 5 idées clés pour la direction (risques/opportunités liés au dépôt).</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step4-2"> </span>
+                  <span>Recommandations concrètes à court terme (0–3 mois) et moyen terme (3–12 mois).</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step4-3"> </span>
+                  <span>Un clin d’œil à la <em>dystopie numérique</em> : quelles dérives éviter si ce type de solution se généralise&nbsp;?</span>
+                </li>
+              </ul>
+            </li>
+
+            <!-- ÉTAPE 5 -->
+            <li class="step" data-step="5" aria-expanded="false">
+              <div class="step-badge">5</div>
+              <div class="step-title">Packaging & publication</div>
+              <div class="step-sub">Préparer le livrable pour l’intranet / clé USB</div>
+            </li>
+            <li class="step-details">
+              <p>Le livrable final doit pouvoir être :</p>
+              <ul class="checklist">
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step5-1"> </span>
+                  <span>Ouvert en double-cliquant sur un fichier <code>.html</code> (sans serveur ni installation).</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step5-2"> </span>
+                  <span>Copié-collé sur une clé USB ou dans un dossier intranet sans casser les liens.</span>
+                </li>
+                <li class="check-item">
+                  <span class="check-toggle" data-key="step5-3"> </span>
+                  <span>Facilement publiable (par exemple via GitHub Pages ou équivalent) pour démonstration.</span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">Grille d’évaluation</div>
+          <div class="card-tag">Critères principaux</div>
+        </div>
+        <div class="card-body">
+          <p>La mission sera évaluée selon les axes suivants (pondération indicative) :</p>
+          <div class="criteria-grid">
+            <div class="criteria-box" data-score="90">
+              <div class="criteria-label">Maîtrise technique</div>
+              <div class="criteria-score">HTML/CSS/JS pur, structure des fichiers, sobriété technique</div>
+              <div class="criteria-bar-outer">
+                <div class="criteria-bar-inner"></div>
+              </div>
+            </div>
+            <div class="criteria-box" data-score="85">
+              <div class="criteria-label">Clarté & pédagogie</div>
+              <div class="criteria-score">Capacité à expliquer simplement à un public non technique</div>
+              <div class="criteria-bar-outer">
+                <div class="criteria-bar-inner"></div>
+              </div>
+            </div>
+            <div class="criteria-box" data-score="80">
+              <div class="criteria-label">Vision stratégique</div>
+              <div class="criteria-score">Lien avec les enjeux de l’organisation et du monde numérique</div>
+              <div class="criteria-bar-outer">
+                <div class="criteria-bar-inner"></div>
+              </div>
+            </div>
+            <div class="criteria-box" data-score="70">
+              <div class="criteria-label">Esprit critique</div>
+              <div class="criteria-score">Capacité à voir les dérives possibles (techniques & sociétales)</div>
+              <div class="criteria-bar-outer">
+                <div class="criteria-bar-inner"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Colonne latérale -->
+    <aside class="side-actions">
+      <div class="side-card">
+        <h3>Livrables attendus</h3>
+        <p>
+          Le dossier transmis à l’organisation devra contenir&nbsp;:
+        </p>
+        <ul class="small-list">
+          <li><strong>1. Mini-site intranet</strong> (HTML/CSS/JS pur) + sources.</li>
+          <li><strong>2. Note de synthèse</strong> intégrée au site (ou PDF séparé si nécessaire).</li>
+          <li><strong>3. Fichier texte</strong> expliquant comment ouvrir le site (README).</li>
+        </ul>
+        <div class="hint">
+          Astuce&nbsp;: pensez votre site comme un <em>manual de survie</em> pour quelqu’un qui
+          n’a « pas le temps » mais doit comprendre l’essentiel en 3 minutes.
+        </div>
+      </div>
+
+      <div class="side-card">
+        <h3>Contraintes techniques</h3>
+        <ul class="small-list">
+          <li>Pas de framework lourd (pas de React, Vue, Angular, etc.).</li>
+          <li>Pas de build step (pas de Webpack, Vite, etc.).</li>
+          <li>Pas de dépendance réseau obligatoire (fonctionne même hors-ligne).</li>
+          <li>Code organisé, commenté avec sobriété.</li>
+        </ul>
+        <div class="hint">
+          Imaginez que votre livrable doive circuler discrètement, sur une simple clé USB,
+          dans une organisation très... surveillée.
+        </div>
+      </div>
+
+      <div class="side-card">
+        <h3>Mode de transmission</h3>
+        <p>
+          Une fois la mission réalisée, le mini-site doit être :
+        </p>
+        <ul class="small-list">
+          <li>Zippé dans une archive unique (<code>nom-candidat_mission.zip</code>).</li>
+          <li>Transmis selon les instructions du recruteur (mail, dépôt interne, etc.).</li>
+          <li>Optionnel&nbsp;: publié sur un espace public (GitHub Pages) pour démonstration.</li>
+        </ul>
+        <div class="button-row">
+          <button class="btn btn-primary" id="btn-print">
+            🖨️ Imprimer l’ordre de mission
+          </button>
+          <button class="btn" id="btn-reset">
+            ♻️ Réinitialiser la checklist
+          </button>
+        </div>
+        <div class="hint warn">
+          Attention&nbsp;: la qualité globale du livrable prévaudra toujours sur la quantité.
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="footer-tag">ORDRE DE MISSION &mdash; CONFIDENTIEL INTERNE</div>
+    <div class="footer-note">
+      Rappel&nbsp;: cette mission évalue autant vos compétences techniques que votre capacité
+      à <strong>penser le numérique</strong> dans un monde où les frontières entre outil,
+      contrôle et dystopie peuvent vite se brouiller.
+    </div>
+  </footer>
+</div>
+
+<script>
+  // Affichage de l'année dans la référence
+  (function() {
+    var yearSpan = document.getElementById("ref-year");
+    if (yearSpan) {
+      yearSpan.textContent = new Date().getFullYear();
+    }
+  })();
+
+  // Accordéon pour les étapes
+  (function() {
+    var steps = document.querySelectorAll(".step");
+    steps.forEach(function(step) {
+      step.addEventListener("click", function() {
+        var expanded = step.getAttribute("aria-expanded") === "true";
+        step.setAttribute("aria-expanded", expanded ? "false" : "true");
+      });
+    });
+  })();
+
+  // Checklist avec stockage localStorage
+  (function() {
+    var toggles = document.querySelectorAll(".check-toggle");
+    var STORAGE_KEY = "ordre-mission-checklist-v1";
+
+    function loadState() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return {};
+        return JSON.parse(raw);
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveState(state) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        // mode privé ou stockage désactivé : on ignore
+      }
+    }
+
+    var state = loadState();
+
+    toggles.forEach(function(t) {
+      var key = t.getAttribute("data-key");
+      if (!key) return;
+      if (state[key]) {
+        t.setAttribute("data-checked", "true");
+        t.textContent = "✓";
+      }
+
+      t.addEventListener("click", function(ev) {
+        ev.stopPropagation();
+        var current = t.getAttribute("data-checked") === "true";
+        var next = !current;
+        t.setAttribute("data-checked", next ? "true" : "false");
+        t.textContent = next ? "✓" : " ";
+        state[key] = next;
+        saveState(state);
+      });
+    });
+
+    var resetBtn = document.getElementById("btn-reset");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function() {
+        state = {};
+        saveState(state);
+        toggles.forEach(function(t) {
+          t.setAttribute("data-checked", "false");
+          t.textContent = " ";
+        });
+      });
+    }
+  })();
+
+  // Animation des barres de critères
+  (function() {
+    var boxes = document.querySelectorAll(".criteria-box");
+    function animate() {
+      boxes.forEach(function(b) {
+        var score = parseInt(b.getAttribute("data-score"), 10) || 0;
+        var bar = b.querySelector(".criteria-bar-inner");
+        if (bar) {
+          bar.style.width = score + "%";
+        }
+      });
+    }
+    // petite temporisation pour l’effet
+    setTimeout(animate, 200);
+  })();
+
+  // Bouton d’impression
+  (function() {
+    var btnPrint = document.getElementById("btn-print");
+    if (btnPrint) {
+      btnPrint.addEventListener("click", function() {
+        window.print();
+      });
+    }
+  })();
+</script>
+</body>
+</html>
