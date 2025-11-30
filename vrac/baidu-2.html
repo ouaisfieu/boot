@@ -1,0 +1,1381 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Amazin.AI • Black Friday</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #020617;
+      --fg: #f9fafb;
+      --soft: #9ca3af;
+      --accent: #facc15;
+      --accent-strong: #f97316;
+      --accent-dark: #92400e;
+      --border: #111827;
+      --danger: #ef4444;
+      --ok: #22c55e;
+      --card: #020617;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #020617;
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: #3b82f6; }
+
+    /* TOP STRIP */
+
+    .bf-strip {
+      background: linear-gradient(90deg, #0b1120, #111827);
+      color: var(--accent);
+      text-align: center;
+      font-size: 12px;
+      padding: 6px 8px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      border-bottom: 1px solid #111827;
+    }
+
+    .bf-strip span {
+      color: #fefce8;
+      font-weight: 700;
+    }
+
+    /* NAV PRINCIPALE (style Amazon) */
+
+    header {
+      background: #020617;
+      color: #f9fafb;
+      border-bottom: 1px solid #111827;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .nav-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .nav-logo-text {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-logo-text span {
+      color: var(--accent);
+    }
+
+    .nav-logo-badge {
+      font-size: 10px;
+      color: var(--accent-strong);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+    }
+
+    .nav-search {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      max-width: 600px;
+    }
+
+    .nav-search select {
+      border-radius: 999px 0 0 999px;
+      border: 1px solid #111827;
+      border-right: none;
+      background: #111827;
+      color: var(--soft);
+      font-size: 12px;
+      padding: 6px 7px;
+    }
+
+    .nav-search input {
+      flex: 1;
+      border: 1px solid #111827;
+      border-left: none;
+      border-right: none;
+      padding: 6px 8px;
+      font-size: 13px;
+      background: #f9fafb;
+      color: #111827;
+    }
+
+    .nav-search button {
+      border-radius: 0 999px 999px 0;
+      border: 1px solid var(--accent-dark);
+      background: radial-gradient(circle at 20% 0, #fef9c3, #facc15);
+      color: #111827;
+      font-size: 13px;
+      padding: 0 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+    }
+
+    .nav-block {
+      padding: 4px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .nav-block span.label {
+      display: block;
+      color: var(--soft);
+      font-size: 10px;
+    }
+
+    .nav-block span.value {
+      font-weight: 600;
+    }
+
+    .nav-cart {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .nav-cart-count {
+      color: var(--accent);
+    }
+
+    @media (max-width: 780px) {
+      .nav-main {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .nav-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    /* NAV SECONDAIRE */
+
+    .nav-secondary {
+      background: #111827;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      font-size: 13px;
+    }
+
+    .nav-secondary-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 14px;
+      padding: 6px 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+
+    .nav-secondary-inner::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-sec-item {
+      cursor: pointer;
+      color: #e5e7eb;
+    }
+
+    .nav-sec-item span {
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    /* HERO BLACK FRIDAY */
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0,3fr) minmax(0,2fr);
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .hero-main {
+      border-radius: 10px;
+      padding: 14px 14px 10px;
+      background:
+        radial-gradient(circle at 0 0, #facc1522, transparent 55%),
+        linear-gradient(135deg,#020617,#111827);
+      border: 1px solid #111827;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-title {
+      font-size: 26px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 4px;
+    }
+
+    .hero-title span {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: var(--soft);
+      margin-bottom: 6px;
+    }
+
+    .hero-deal {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-strong);
+      margin-bottom: 8px;
+    }
+
+    .hero-deal span {
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .hero-countdown {
+      font-size: 12px;
+      color: #fed7aa;
+      margin-bottom: 10px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .btn-main {
+      border-radius: 999px;
+      border: 1px solid var(--accent-dark);
+      background: radial-gradient(circle at 20% 0,#fef9c3,#facc15);
+      color: #111827;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .hero-footnote {
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    .hero-side {
+      border-radius: 10px;
+      padding: 10px;
+      background: #020617;
+      border: 1px solid #111827;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .hero-side h3 {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .hero-mini-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .hero-mini-card {
+      display: grid;
+      grid-template-columns: 60px minmax(0,1fr);
+      gap: 6px;
+      border-radius: 8px;
+      border: 1px solid #111827;
+      background: #020617;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .hero-mini-card img {
+      width: 100%;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .hero-mini-title {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .hero-mini-price {
+      font-size: 11px;
+      color: var(--accent-strong);
+    }
+
+    .hero-mini-tag {
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    /* SECTIONS PRODUITS */
+
+    .section {
+      margin-bottom: 14px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .section-title span {
+      color: var(--accent);
+    }
+
+    .section-sub {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .section-body {
+      border-radius: 10px;
+      border: 1px solid #111827;
+      background: #020617;
+      padding: 8px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+      gap: 8px;
+    }
+
+    .product-card {
+      border-radius: 10px;
+      border: 1px solid #111827;
+      background: #020617;
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform .08s ease-out, box-shadow .08s ease-out, border-color .08s ease-out;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.9);
+      border-color: var(--accent-strong);
+    }
+
+    .product-img-wrapper {
+      width: 100%;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .product-img-wrapper img {
+      width: 100%;
+      max-width: 180px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #020617;
+    }
+
+    .product-body {
+      padding: 6px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+    }
+
+    .product-name {
+      font-size: 13px;
+      font-weight: 600;
+      min-height: 32px;
+    }
+
+    .product-tagline {
+      font-size: 11px;
+      color: var(--soft);
+      min-height: 28px;
+    }
+
+    .product-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .product-price {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .product-old-price {
+      font-size: 11px;
+      color: var(--soft);
+      text-decoration: line-through;
+    }
+
+    .product-promo {
+      font-size: 11px;
+      color: var(--ok);
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 1px 6px;
+      border: 1px solid #111827;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .badge-smart {
+      border-color: var(--ok);
+      color: var(--ok);
+    }
+
+    .badge-ia {
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    .badge-kit {
+      border-color: #a855f7;
+      color: #e9d5ff;
+    }
+
+    .badge-soldout {
+      border-color: var(--danger);
+      color: #fecaca;
+    }
+
+    .product-status {
+      font-size: 10px;
+      color: var(--ok);
+    }
+
+    .product-status.soldout {
+      color: var(--danger);
+    }
+
+    .product-cta-row {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .btn-small {
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #111827;
+      color: #e5e7eb;
+      font-size: 11px;
+      padding: 4px 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-small.primary {
+      border-color: var(--accent-dark);
+      background: radial-gradient(circle at 20% 0,#fed7aa,#f97316);
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .deal-flag {
+      position: absolute;
+      top: 6px;
+      left: -2px;
+      background: linear-gradient(90deg,#b91c1c,#f97316);
+      color: #fef2f2;
+      font-size: 9px;
+      padding: 2px 8px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      border-radius: 0 999px 999px 0;
+    }
+
+    .ai-flash {
+      position: absolute;
+      top: 6px;
+      right: 4px;
+      font-size: 10px;
+      color: var(--accent);
+      text-shadow: 0 0 6px #facc15aa;
+    }
+
+    /* MODALE PRODUIT */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 80;
+      padding: 12px;
+    }
+
+    .modal-backdrop.visible {
+      display: flex;
+    }
+
+    .modal {
+      width: min(460px,100%);
+      max-height: min(580px,100%);
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #111827;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.95);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    .modal-header {
+      padding: 8px 10px 6px;
+      border-bottom: 1px solid #111827;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .modal-title-block {
+      min-width: 0;
+    }
+
+    .modal-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .modal-sub {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      color: var(--soft);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 8px 10px 6px;
+      overflow-y: auto;
+    }
+
+    .modal-body p {
+      margin: 4px 0;
+      color: var(--soft);
+      font-size: 12px;
+    }
+
+    .modal-img {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #111827;
+      margin-bottom: 6px;
+    }
+
+    .modal-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--soft);
+      margin: 6px 0 2px;
+    }
+
+    .modal-summary-box {
+      border-radius: 10px;
+      border: 1px dashed #111827;
+      padding: 5px 7px;
+      background: #020617;
+      margin-bottom: 4px;
+    }
+
+    .modal-summary-box ul {
+      margin: 4px 0 0;
+      padding-left: 18px;
+      font-size: 12px;
+    }
+
+    .modal-summary-box li {
+      margin-bottom: 2px;
+    }
+
+    .modal-footer {
+      padding: 6px 10px 8px;
+      border-top: 1px solid #111827;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .modal-footer .btn-small[disabled] {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .gift-box {
+      margin-top: 4px;
+      border-radius: 10px;
+      border: 1px solid #111827;
+      padding: 6px 7px;
+      background: #020617;
+      font-size: 11px;
+    }
+
+    .gift-box img {
+      display: block;
+      margin-top: 5px;
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #111827;
+    }
+
+    .gift-box a {
+      font-size: 11px;
+      word-break: break-all;
+    }
+
+    /* PETIT FOOTER */
+
+    footer {
+      border-top: 1px solid #111827;
+      background: #020617;
+      padding: 8px 10px 14px;
+      font-size: 11px;
+      color: var(--soft);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="bf-strip">
+  <span>BLACK FRIDAY AMAZIN.AI</span> – -80 % sur tout ce qui n’existe pas vraiment.
+</div>
+
+<header>
+  <div class="nav-main">
+    <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'});">
+      <div>
+        <div class="nav-logo-text">Amazin<span>.AI</span></div>
+        <div class="nav-logo-badge">BLACK FRIDAY ULTRA</div>
+      </div>
+    </div>
+
+    <form class="nav-search" onsubmit="event.preventDefault(); window.filterProductsBySearch();">
+      <select id="searchCategory">
+        <option value="all">Toutes les catégories</option>
+        <option value="smartphone">Smartphones</option>
+        <option value="gadget">Gadgets</option>
+        <option value="kit">Kits</option>
+        <option value="ia">IA & assistants</option>
+      </select>
+      <input id="searchInput" type="search" placeholder="Rechercher un deal, un smartphone, un gadget absurde…" />
+      <button type="submit">
+        🔍
+        <span>Rechercher</span>
+      </button>
+    </form>
+
+    <div class="nav-right">
+      <div class="nav-block">
+        <span class="label">Bonjour</span>
+        <span class="value">Identifie-toi</span>
+      </div>
+      <div class="nav-block">
+        <span class="label">Retours</span>
+        <span class="value">& Commandes</span>
+      </div>
+      <div class="nav-block nav-cart">
+        🛒
+        <span>Panier</span>
+        <span class="nav-cart-count" id="cartCount">0</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav-secondary">
+    <div class="nav-secondary-inner">
+      <div class="nav-sec-item"><span>Black Friday</span> Deals</div>
+      <div class="nav-sec-item">Smartphones maison</div>
+      <div class="nav-sec-item">Gadgets inutiles indispensables</div>
+      <div class="nav-sec-item">Kits de survie numérique</div>
+      <div class="nav-sec-item">IA sous amphé</div>
+      <div class="nav-sec-item">Tout doit (ne pas) partir</div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-main">
+      <div class="hero-title"><span>BLACK FRIDAY</span> AMAZIN.AI</div>
+      <div class="hero-sub">
+        La boutique dopée à l’IA qui te propose trop de choses dont tu n’as pas besoin…
+        sauf, peut-être, nos smartphones purement HTML.
+      </div>
+      <div class="hero-deal">
+        Jusqu’à <span>-80 %</span> sur les terminaux fictifs & gadgets conceptuels.
+      </div>
+      <div class="hero-countdown">
+        ⏳ Fin de la frénésie dans : <strong>06 h 42 min</strong> (en temps Web moralement relatif).
+      </div>
+      <div class="hero-cta-row">
+        <button class="btn-main" onclick="window.scrollTo({top: document.getElementById('smartphoneSection').offsetTop - 60, behavior: 'smooth'});">
+          Voir les smartphones Black Friday
+        </button>
+        <button class="btn-ghost" onclick="window.scrollTo({top: document.getElementById('gadgetSection').offsetTop - 60, behavior: 'smooth'});">
+          Chasser les gadgets (in)utiles
+        </button>
+      </div>
+      <div class="hero-footnote">
+        Les commandes sont 100 % fictives. Certaines débloquent des <strong>fichiers HTML</strong> et des <strong>images cadeau</strong>
+        pour ton futur jeu ou site.
+      </div>
+    </div>
+
+    <aside class="hero-side">
+      <h3>Deals ultra ciblés (ou pas)</h3>
+      <div class="hero-mini-list">
+        <div class="hero-mini-card" onclick="openProductModal('samsong')">
+          <img src="https://via.placeholder.com/300x200/020617/ffffff?text=Samsong+Black+Friday" alt="Samsong" />
+          <div>
+            <div class="hero-mini-title">Samsong • Matin gris</div>
+            <div class="hero-mini-price">12,50 € · -69 %</div>
+            <div class="hero-mini-tag">Smartphone HTML à télécharger</div>
+          </div>
+        </div>
+        <div class="hero-mini-card" onclick="openProductModal('cybrog')">
+          <img src="https://via.placeholder.com/300x200/020617/22c55e?text=CYBROG+Neural+Core" alt="Cybrog" />
+          <div>
+            <div class="hero-mini-title">CYBROG • Neural Core</div>
+            <div class="hero-mini-price">23,99 € · -70 %</div>
+            <div class="hero-mini-tag">Terminal de technophile ultrageek</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- SECTION SMARTPHONES -->
+  <section class="section" id="smartphoneSection">
+    <div class="section-header">
+      <div class="section-title">Smartphones <span>Black Friday</span> (100 % HTML)</div>
+      <div class="section-sub">Télécharge les fichiers & utilise-les comme terminaux dans tes jeux / sites.</div>
+    </div>
+    <div class="section-body">
+      <div class="product-grid" id="grid-smartphones"></div>
+    </div>
+  </section>
+
+  <!-- SECTION GADGETS -->
+  <section class="section" id="gadgetSection">
+    <div class="section-header">
+      <div class="section-title">Gadgets <span>inutiles</span> donc indispensables</div>
+      <div class="section-sub">Mugs, claviers, casques et autres prétextes à scénarios.</div>
+    </div>
+    <div class="section-body">
+      <div class="product-grid" id="grid-gadgets"></div>
+    </div>
+  </section>
+
+  <!-- SECTION KITS & IA -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-title">Kits & <span>IA</span> sous amphé</div>
+      <div class="section-sub">Concepts à recycler dans ton univers narratif.</div>
+    </div>
+    <div class="section-body">
+      <div class="product-grid" id="grid-others"></div>
+    </div>
+  </section>
+</main>
+
+<!-- MODALE PRODUIT -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title-block">
+        <div class="modal-title" id="modalTitle">Produit</div>
+        <div class="modal-sub" id="modalSub">Deal Black Friday fictif</div>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
+    </div>
+    <div class="modal-body">
+      <img src="" alt="" class="modal-img" id="modalImg" />
+      <p id="modalDescription"></p>
+      <p id="modalPriceLine" style="font-size:12px;"></p>
+
+      <div class="modal-section-title">Résumé express</div>
+      <div class="modal-summary-box">
+        <ul id="modalSummaryList"></ul>
+      </div>
+
+      <div class="modal-section-title">Commande & goodies</div>
+      <p style="font-size:11px;">
+        “Valider la commande” ajoute le deal au panier et,
+        pour certains articles, débloque un <strong>lien de téléchargement HTML</strong>
+        + une <strong>image cadeau</strong> (à utiliser dans tes projets).
+      </p>
+
+      <div class="gift-box" id="giftBox" style="display:none;">
+        <strong>Confirmation de commande fictive</strong>
+        <p id="giftMessage" style="margin-top:4px;"></p>
+        <div id="giftLinks"></div>
+        <img id="giftImage" src="" alt="Cadeau de fidélité" style="display:none;" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-small" id="btnSummaryOnly">Juste le résumé</button>
+      <button class="btn-small primary" id="btnOrder">Valider la commande</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Amazin.AI • Black Friday full HTML · Rien n’est vraiment à vendre, tout est à réutiliser dans tes propres jeux & sites.
+</footer>
+
+<script>
+  // -------- DATA PRODUITS --------
+  const PRODUCTS = [
+    {
+      id: "samsong",
+      name: "Samsong • Matin gris & mini-jeu",
+      tagline: "Smartphone HTML pour scroller les actus et cliquer partout",
+      category: "smartphone",
+      price: 12.50,
+      oldPrice: 39.90,
+      promo: "-69%",
+      status: "inStock",
+      badges: ["smartphone","ia"],
+      aiSpark: true,
+      image: "https://via.placeholder.com/400x300/020617/f9fafb?text=Samsong+Simu+HTML",
+      description: "Interface smartphone en pur HTML qui simule un réveil trop tôt, un flux d’actus, des notifications et un mini-jeu. Parfait pour illustrer la dépendance au scroll matinal.",
+      summary: [
+        "100 % HTML/CSS/JS, aucun backend",
+        "Scène de réveil, météo pourrie, café et doomscrolling",
+        "Lien de téléchargement : samsong.html (à placer dans le même dossier que cette page)"
+      ],
+      htmlFile: "samsong.html",
+      giftImage: "https://dl.ouaisfi.eu/images/coin.png"
+    },
+    {
+      id: "karyon",
+      name: "KARYON One • Smartphone pro simulé",
+      tagline: "Design sérieux pour frimer en réunion",
+      category: "smartphone",
+      price: 18.90,
+      oldPrice: 59.00,
+      promo: "-68%",
+      status: "inStock",
+      badges: ["smartphone"],
+      aiSpark: false,
+      image: "https://via.placeholder.com/400x300/020617/bae6fd?text=KARYON+One",
+      description: "Terminal de démo très propre, avec mode développeur, logs, onglets Console/Réseau/Système et inspecteur visuel. Idéal pour faire croire que tu audites la matrice.",
+      summary: [
+        "Panneau dev intégré (console, réseau, système)",
+        "Inspecteur visuel qui surligne les éléments cliquables",
+        "Lien de téléchargement : karyon-one.html (même dossier)"
+      ],
+      htmlFile: "karyon-one.html",
+      giftImage: "https://dl.ouaisfi.eu/images/ck-1.gif"
+    },
+    {
+      id: "cybrog",
+      name: "CYBROG • Neural Core v1",
+      tagline: "Terminal de technophile ultrageek / hacker narratif",
+      category: "smartphone",
+      price: 23.99,
+      oldPrice: 79.99,
+      promo: "-70%",
+      status: "inStock",
+      badges: ["smartphone","ia","kit"],
+      aiSpark: true,
+      image: "https://via.placeholder.com/400x300/020617/22c55e?text=CYBROG+Neural+Core",
+      description: "Interface de 'neural core' pour jeu de rôle : console, netwatch fictif, missions de veille, panel dev, ghost mode et inspecteur. Tout est narratif, rien n’est un vrai hack.",
+      summary: [
+        "Prop parfait pour un ARG techno / veille citoyenne",
+        "Panel hack/dev, logs & ghost mode purement cosmétiques",
+        "Lien de téléchargement : cybrog-one.html (même dossier)"
+      ],
+      htmlFile: "cybrog-one.html",
+      giftImage: "https://dl.ouaisfi.eu/gifs/hello%c2%b7Baltringue.gif"
+    },
+    {
+      id: "mug",
+      name: "Mug thermique « 404 Coffee Not Found »",
+      tagline: "Accessoire officiel des nuits de veille",
+      category: "gadget",
+      price: 8.90,
+      oldPrice: 14.90,
+      promo: "-40%",
+      status: "inStock",
+      badges: ["gadget"],
+      aiSpark: false,
+      image: "https://via.placeholder.com/400x300/111827/facc15?text=Mug+404+Coffee+Not+Found",
+      description: "Un mug noir mat qui annonce ta dépendance au café et aux erreurs HTTP existentielles. À intégrer dans n’importe quel décor de bureau dystopique.",
+      summary: [
+        "Compatible café, thé et remises en question tardives",
+        "Peut devenir un objet clé dans ton scénario",
+        "Pas de fichier HTML dédié, juste une idée d’asset"
+      ]
+    },
+    {
+      id: "keyboard",
+      name: "Clavier mécanique « Clickbait MK-I »",
+      tagline: "Bruit de tempête à chaque mail envoyé",
+      category: "gadget",
+      price: 49.00,
+      oldPrice: 89.00,
+      promo: "-45%",
+      status: "inStock",
+      badges: ["gadget","ia"],
+      aiSpark: true,
+      image: "https://via.placeholder.com/400x300/020617/f9fafb?text=Clavier+Clickbait+MK-I",
+      description: "Clavier imaginaire dont chaque touche déclenche un mini scénario où tu réponds trop tard, trop long ou trop poli. Parfait pour gamifier la correspondance.",
+      summary: [
+        "Switchs fictifs plus bruyants que ta to-do list",
+        "Devient un personnage à part entière dans ton jeu",
+        "Pas de fichier prêt, à implémenter dans un futur module"
+      ]
+    },
+    {
+      id: "survival-kit",
+      name: "Kit de survie numérique citoyenne",
+      tagline: "Garder la tête froide dans un océan de flux",
+      category: "kit",
+      price: 0.00,
+      oldPrice: 25.00,
+      promo: "GRATUIT",
+      status: "inStock",
+      badges: ["kit","ia"],
+      aiSpark: true,
+      image: "https://via.placeholder.com/400x300/020617/4ade80?text=Kit+Survie+Numerique",
+      description: "Un kit conceptuel : règles d’hygiène numérique, méthodes de tri de l’info et autorisation officielle de déconnecter. Pensé comme base d’un jeu pédagogique.",
+      summary: [
+        "Checklist mentale : ralentir, douter, recouper, contextualiser",
+        "Peut être injecté dans tes sites ou questionnaires",
+        "Pas de fichier unique, à reconstituer à partir de tes propres pages"
+      ]
+    },
+    {
+      id: "headset",
+      name: "Casque « Noise Cancelling Social »",
+      tagline: "Filtre surtout les conversations inutiles",
+      category: "gadget",
+      price: 79.90,
+      oldPrice: 129.00,
+      promo: "-38%",
+      status: "soldout",
+      badges: ["gadget","epuise"],
+      aiSpark: false,
+      image: "https://via.placeholder.com/400x300/020617/9ca3af?text=Casque+Social+NC",
+      description: "Casque purement théorique qui coupe automatiquement le son quand quelqu’un commence une phrase par « objectivement… ».",
+      summary: [
+        "Version actuelle : ÉPUISÉE (comme toi après la veille)",
+        "Objet parfait pour un PNJ mystérieux",
+        "Aucun téléchargement, aucun stock, juste un running gag"
+      ]
+    },
+    {
+      id: "keyboard-virtuel",
+      name: "Clavier virtuel « Brouillon perpétuel »",
+      tagline: "Tu tapes, rien n’est enregistré",
+      category: "gadget",
+      price: 12.00,
+      oldPrice: 29.00,
+      promo: "-59%",
+      status: "soon",
+      badges: ["gadget"],
+      aiSpark: false,
+      image: "https://via.placeholder.com/400x300/020617/ffffff?text=Clavier+Virtuel",
+      description: "Conçu pour brainstormer sans pression : aucune touche n’a de mémoire, tout est supposé s’effacer dès que tu fermes l’onglet (au moins dans ta tête).",
+      summary: [
+        "Idéal pour idées absurdes ou inavouables",
+        "Implémentable avec une simple textarea en HTML",
+        "Pas de fichier dédié pour l’instant : c’est un cahier des charges"
+      ]
+    },
+    {
+      id: "ai-assistant",
+      name: "Assistant IA « Trop Enthousiaste Pro Max »",
+      tagline: "Répond avant que tu finisses ta phrase",
+      category: "ia",
+      price: 999.99,
+      oldPrice: 9999.99,
+      promo: "-90%",
+      status: "inStock",
+      badges: ["ia"],
+      aiSpark: true,
+      image: "https://via.placeholder.com/400x300/020617/38bdf8?text=Assistant+IA+Pro+Max",
+      description: "Assistant fictif sous amphétamines qui propose toujours trois fois trop d’idées, de fonctionnalités et de bullet points. Toute ressemblance serait purement fortuite.",
+      summary: [
+        "Ne remplace personne, mais brainstorm en boucle",
+        "Peut être incarné par toi + un modèle de langage",
+        "Pas de fichier HTML : c’est le méta-concept de ce site"
+      ]
+    },
+    {
+      id: "dummy-phone",
+      name: "Smartphone factice « Placeholder X »",
+      tagline: "Juste un rectangle pour maquettes & prototypes",
+      category: "smartphone",
+      price: 5.00,
+      oldPrice: 19.00,
+      promo: "-74%",
+      status: "inStock",
+      badges: ["smartphone"],
+      aiSpark: false,
+      image: "https://via.placeholder.com/400x300/020617/f97316?text=Placeholder+X",
+      description: "Un smartphone totalement vide pour tester des interfaces, des jeux ou des prototypes sans s’attacher au matériel. À remplir plus tard.",
+      summary: [
+        "Idéal comme slot pour un futur terminal",
+        "Peut pointer vers n’importe quel HTML que tu créeras",
+        "À compléter plus tard quand une nouvelle idée surgira"
+      ]
+    }
+  ];
+
+  let currentProduct = null;
+  let cartCount = 0;
+
+  const gridSmartphones = document.getElementById("grid-smartphones");
+  const gridGadgets = document.getElementById("grid-gadgets");
+  const gridOthers = document.getElementById("grid-others");
+  const cartCountEl = document.getElementById("cartCount");
+
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalSub = document.getElementById("modalSub");
+  const modalImg = document.getElementById("modalImg");
+  const modalDescription = document.getElementById("modalDescription");
+  const modalPriceLine = document.getElementById("modalPriceLine");
+  const modalSummaryList = document.getElementById("modalSummaryList");
+  const giftBox = document.getElementById("giftBox");
+  const giftMessage = document.getElementById("giftMessage");
+  const giftLinks = document.getElementById("giftLinks");
+  const giftImage = document.getElementById("giftImage");
+  const btnSummaryOnly = document.getElementById("btnSummaryOnly");
+  const btnOrder = document.getElementById("btnOrder");
+  const modalClose = document.getElementById("modalClose");
+
+  const searchInput = document.getElementById("searchInput");
+  const searchCategory = document.getElementById("searchCategory");
+
+  function formatPrice(num) {
+    if (num === 0) return "0,00 €";
+    return num.toFixed(2).replace(".", ",") + " €";
+  }
+
+  function createCard(prod) {
+    const card = document.createElement("article");
+    card.className = "product-card";
+    card.dataset.id = prod.id;
+
+    const isSmartphone = prod.category === "smartphone";
+    const isDeal = prod.status === "inStock";
+
+    card.innerHTML = `
+      ${isDeal ? `<div class="deal-flag">Deal Black Friday</div>` : ""}
+      ${prod.aiSpark ? `<div class="ai-flash">IA 🔥</div>` : ""}
+      <div class="product-img-wrapper">
+        <img src="${prod.image}" alt="${prod.name}">
+      </div>
+      <div class="product-body">
+        <div class="product-name">${prod.name}</div>
+        <div class="product-tagline">${prod.tagline}</div>
+        <div class="product-price-row">
+          <div class="product-price">${formatPrice(prod.price)}</div>
+          ${prod.oldPrice ? `<div class="product-old-price">${formatPrice(prod.oldPrice)}</div>` : ""}
+          ${prod.promo ? `<div class="product-promo">${prod.promo}</div>` : ""}
+        </div>
+        <div class="product-meta">
+          <div>
+            ${prod.badges?.includes("smartphone") ? `<span class="badge badge-smart">smartphone</span>` : ""}
+            ${prod.badges?.includes("gadget") ? `<span class="badge">gadget</span>` : ""}
+            ${prod.badges?.includes("kit") ? `<span class="badge badge-kit">kit</span>` : ""}
+            ${prod.badges?.includes("ia") ? `<span class="badge badge-ia">ia</span>` : ""}
+            ${prod.status === "soldout" ? `<span class="badge badge-soldout">épuisé</span>` : ""}
+          </div>
+          <div class="product-status ${prod.status === "soldout" ? "soldout" : ""}">
+            ${prod.status === "soldout" ? "Épuisé" : prod.status === "soon" ? "Bientôt dispo" : "En stock"}
+          </div>
+        </div>
+        <div class="product-cta-row">
+          <button class="btn-small primary" data-action="deal">Voir le deal</button>
+          <button class="btn-small" data-action="quick">
+            Résumé
+          </button>
+        </div>
+      </div>
+    `;
+
+    card.addEventListener("click", (e) => {
+      const actionBtn = e.target.closest("button[data-action]");
+      if (actionBtn) {
+        e.stopPropagation();
+        openProductModal(prod.id);
+        if (actionBtn.dataset.action === "quick") {
+          // uniquement résumé
+          showSummaryOnly();
+        }
+      } else {
+        openProductModal(prod.id);
+      }
+    });
+
+    return card;
+  }
+
+  function renderAll() {
+    gridSmartphones.innerHTML = "";
+    gridGadgets.innerHTML = "";
+    gridOthers.innerHTML = "";
+
+    PRODUCTS.forEach(prod => {
+      const card = createCard(prod);
+      if (prod.category === "smartphone") {
+        gridSmartphones.appendChild(card);
+      } else if (prod.category === "gadget") {
+        gridGadgets.appendChild(card);
+      } else {
+        gridOthers.appendChild(card);
+      }
+    });
+  }
+
+  function openProductModal(id) {
+    const prod = PRODUCTS.find(p => p.id === id);
+    if (!prod) return;
+    currentProduct = prod;
+
+    giftBox.style.display = "none";
+    giftImage.style.display = "none";
+    giftImage.src = "";
+    giftLinks.innerHTML = "";
+    giftMessage.textContent = "";
+
+    modalTitle.textContent = prod.name;
+    modalSub.textContent =
+      prod.status === "soldout"
+        ? "Article épuisé, mais exploitable comme élément de scénario."
+        : "Deal Black Friday fictif, à réutiliser dans tes projets.";
+
+    modalImg.src = prod.image;
+    modalImg.alt = prod.name;
+    modalDescription.textContent = prod.description;
+
+    let priceLine = `Prix Black Friday : <strong>${formatPrice(prod.price)}</strong>`;
+    if (prod.oldPrice) {
+      priceLine += ` · Prix avant promo : <span style="text-decoration:line-through;color:#9ca3af;">${formatPrice(prod.oldPrice)}</span>`;
+    }
+    if (prod.promo) {
+      priceLine += ` · Promo : <span style="color:#22c55e;">${prod.promo}</span>`;
+    }
+    modalPriceLine.innerHTML = priceLine;
+
+    modalSummaryList.innerHTML = "";
+    (prod.summary || []).forEach(s => {
+      const li = document.createElement("li");
+      li.textContent = s;
+      modalSummaryList.appendChild(li);
+    });
+
+    if (prod.status === "soldout") {
+      btnOrder.disabled = true;
+      btnOrder.textContent = "Impossible de commander (épuisé)";
+    } else {
+      btnOrder.disabled = false;
+      btnOrder.textContent = "Valider la commande";
+    }
+
+    modalBackdrop.classList.add("visible");
+  }
+
+  function closeModal() {
+    modalBackdrop.classList.remove("visible");
+    currentProduct = null;
+  }
+
+  modalClose.addEventListener("click", closeModal);
+  modalBackdrop.addEventListener("click", (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+
+  function showSummaryOnly() {
+    giftBox.style.display = "block";
+    giftMessage.textContent =
+      "Résumé consulté. Ce deal reste purement conceptuel tant que tu ne l’intègres pas toi-même dans un jeu ou un site.";
+    giftLinks.innerHTML = "";
+    giftImage.style.display = "none";
+  }
+
+  btnSummaryOnly.addEventListener("click", () => {
+    if (!currentProduct) return;
+    showSummaryOnly();
+  });
+
+  btnOrder.addEventListener("click", () => {
+    if (!currentProduct || currentProduct.status === "soldout") return;
+
+    cartCount++;
+    cartCountEl.textContent = String(cartCount);
+    giftBox.style.display = "block";
+
+    const prod = currentProduct;
+    giftLinks.innerHTML = "";
+    giftImage.style.display = "none";
+    giftImage.src = "";
+
+    if (prod.htmlFile) {
+      giftMessage.innerHTML =
+        "Commande fictive validée. Tu peux récupérer le fichier HTML correspondant à ce terminal, et une image en cadeau de fidélité pour ton projet.";
+      const link = document.createElement("a");
+      link.href = prod.htmlFile;
+      link.download = prod.htmlFile;
+      link.textContent = `Télécharger ${prod.htmlFile}`;
+      giftLinks.appendChild(link);
+      if (prod.giftImage) {
+        giftImage.src = prod.giftImage;
+        giftImage.style.display = "block";
+      }
+    } else {
+      giftMessage.textContent =
+        "Commande fictive confirmée. Cet article est d’abord un concept : libre à toi de le transformer en module HTML, scène de jeu ou élément de décor.";
+    }
+  });
+
+  // -------- RECHERCHE / FILTRE SIMPLE --------
+  function filterProductsBySearch() {
+    const q = searchInput.value.trim().toLowerCase();
+    const cat = searchCategory.value;
+
+    [gridSmartphones, gridGadgets, gridOthers].forEach(grid => (grid.innerHTML = ""));
+
+    PRODUCTS.forEach(prod => {
+      if (cat !== "all" && prod.category !== cat) return;
+      if (q) {
+        const hay = (prod.name + " " + prod.tagline + " " + prod.description).toLowerCase();
+        if (!hay.includes(q)) return;
+      }
+      const card = createCard(prod);
+      if (prod.category === "smartphone") gridSmartphones.appendChild(card);
+      else if (prod.category === "gadget") gridGadgets.appendChild(card);
+      else gridOthers.appendChild(card);
+    });
+  }
+
+  window.filterProductsBySearch = filterProductsBySearch;
+
+  // init
+  renderAll();
+</script>
+</body>
+</html>
