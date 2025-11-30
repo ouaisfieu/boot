@@ -1,0 +1,561 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Silent Black Friday • Intro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --fg: #f9fafb;
+      --soft: #9ca3af;
+      --accent: #facc15;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    /* FUMÉE */
+
+    .smoke-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 120%, rgba(255,255,255,0.12) 0, transparent 55%),
+        radial-gradient(circle at 80% 130%, rgba(255,255,255,0.10) 0, transparent 55%),
+        radial-gradient(circle at -20% -10%, rgba(255,255,255,0.06) 0, transparent 60%);
+      opacity: 0;
+      animation: smokeFadeIn 6s ease-out forwards, smokeDrift 40s linear infinite;
+      mix-blend-mode: screen;
+      filter: blur(2px);
+    }
+
+    @keyframes smokeFadeIn {
+      0% { opacity: 0; }
+      60% { opacity: 0.8; }
+      100% { opacity: 0.9; }
+    }
+
+    @keyframes smokeDrift {
+      0% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(-3%, -2%, 0); }
+      100% { transform: translate3d(2%, 3%, 0); }
+    }
+
+    /* CONTENU CENTRAL */
+
+    .center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .logo {
+      font-family: "Cinzel", "Georgia", serif;
+      font-size: clamp(26px, 6vw, 40px);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: #fefce8;
+      text-shadow:
+        0 0 12px rgba(255,255,255,0.35),
+        0 0 40px rgba(255,255,255,0.12);
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 2.8s ease-out, transform 2.8s ease-out;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .logo.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* CRÉDITS / TEXTE CENTRAL */
+
+    .text-sequence {
+      position: absolute;
+      bottom: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 90%;
+      text-align: center;
+      font-size: clamp(12px, 2.6vw, 16px);
+      color: var(--soft);
+      opacity: 0;
+      transition: opacity 1.2s ease-out;
+    }
+
+    .text-sequence.visible {
+      opacity: 1;
+    }
+
+    .text-line-strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    /* TITRE FINAL */
+
+    .final-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1.06);
+      font-family: "Cinzel", "Georgia", serif;
+      font-size: clamp(26px, 7vw, 46px);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-align: center;
+      color: #fefce8;
+      text-shadow:
+        0 0 20px rgba(0,0,0,0.9),
+        0 0 40px rgba(148,163,184,0.5);
+      opacity: 0;
+      transition: opacity 1.8s ease-out, transform 1.8s ease-out;
+      white-space: normal;
+      padding: 0 10px;
+    }
+
+    .final-title span {
+      display: block;
+      font-size: 0.55em;
+      letter-spacing: 0.35em;
+      color: var(--soft);
+      margin-bottom: 4px;
+    }
+
+    .final-title.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* MENU */
+
+    .menu {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 1.4s ease-out;
+      font-size: 14px;
+    }
+
+    .menu.visible {
+      opacity: 1;
+    }
+
+    .menu-btn {
+      min-width: 200px;
+      max-width: 260px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.15s ease-out, transform 0.08s ease-out, border-color 0.15s ease-out;
+    }
+
+    .menu-btn:hover {
+      background: rgba(15,23,42,0.98);
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    .menu-btn:active {
+      transform: translateY(1px);
+    }
+
+    .menu-hint {
+      font-size: 11px;
+      color: var(--soft);
+      margin-top: 4px;
+    }
+
+    /* SKIP INTRO DISCRET */
+
+    .skip {
+      position: absolute;
+      right: 12px;
+      bottom: 10px;
+      font-size: 10px;
+      color: #4b5563;
+      cursor: pointer;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(31,41,55,0.85);
+      backdrop-filter: blur(4px);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 1s ease-out;
+    }
+
+    .skip.visible {
+      opacity: 1;
+    }
+
+    .skip span {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+    }
+
+    /* PANNEAU "SOUS PAGES" */
+
+    .next-screen {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(2,6,23,0.96), rgba(0,0,0,0.96) 60%);
+      color: #e5e7eb;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      z-index: 20;
+      backdrop-filter: blur(4px);
+    }
+
+    .next-screen.visible {
+      display: flex;
+    }
+
+    .next-inner {
+      max-width: 520px;
+      background: radial-gradient(circle at top, rgba(15,23,42,0.96), rgba(3,7,18,0.96));
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(31,41,55,0.95);
+      box-shadow:
+        0 20px 40px rgba(0,0,0,0.85),
+        0 0 0 1px rgba(15,23,42,0.9);
+      position: relative;
+    }
+
+    .next-title {
+      font-size: clamp(18px, 4vw, 24px);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .next-text {
+      font-size: 14px;
+      color: var(--soft);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .next-chip {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+    }
+
+    .next-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      cursor: pointer;
+    }
+
+    .next-close:hover {
+      border-color: var(--accent);
+      background: rgba(15,23,42,1);
+    }
+
+    .next-tagline {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    @media (max-width: 480px) {
+      .text-sequence {
+        bottom: 22%;
+      }
+      .menu {
+        bottom: 6%;
+      }
+      .next-inner {
+        width: 100%;
+        max-width: 92vw;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="screen" id="screenIntro">
+  <div class="smoke-layer"></div>
+
+  <div class="center">
+    <div class="logo" id="logo">
+      SILENT<span>·</span>PROTOCOL
+    </div>
+  </div>
+
+  <div class="text-sequence" id="textSequence"></div>
+
+  <div class="final-title" id="finalTitle">
+    <span>jeu de rôle sans bruit</span>
+    SILENT PROTOCOL
+  </div>
+
+  <div class="menu" id="menu">
+    <button class="menu-btn" id="btnNewGame">Nouvelle partie</button>
+    <button class="menu-btn" id="btnPrologue">Prologue silencieux</button>
+    <button class="menu-btn" id="btnCredits">Crédits & intentions</button>
+    <div class="menu-hint">
+      Aucun son, aucun tutoriel. Juste toi, et ce que tu acceptes de voir.
+    </div>
+  </div>
+
+  <div class="skip" id="skipIntro">
+    <span>passer l'intro</span> ▸
+  </div>
+</div>
+
+<!-- PANNEAU SUBPAGE / MODAL -->
+<div class="next-screen" id="nextScreen">
+  <div class="next-inner">
+    <button class="next-close" id="btnClosePanel">fermer</button>
+    <div class="next-tagline" id="nextTagline">chapitre 0</div>
+    <div class="next-title" id="nextTitle">Chapitre 0 · L’écran noir</div>
+    <div class="next-text" id="nextText">
+      Tu te réveilles dans un monde saturé d’alertes, mais ici, aucune notification ne sonne.<br><br>
+      La suite : une navigation lente, des choix discrets, et un jeu de rôle politico-dystopique
+      qui se cache derrière des pages web “ordinaires”.
+    </div>
+    <div class="next-chip" id="nextChip">à toi de jouer</div>
+  </div>
+</div>
+
+<script>
+  const logo = document.getElementById('logo');
+  const textSequence = document.getElementById('textSequence');
+  const finalTitle = document.getElementById('finalTitle');
+  const menu = document.getElementById('menu');
+  const skipIntro = document.getElementById('skipIntro');
+
+  const nextScreen = document.getElementById('nextScreen');
+  const nextTitle = document.getElementById('nextTitle');
+  const nextText = document.getElementById('nextText');
+  const nextChip = document.getElementById('nextChip');
+  const nextTagline = document.getElementById('nextTagline');
+  const btnClosePanel = document.getElementById('btnClosePanel');
+
+  const btnNewGame = document.getElementById('btnNewGame');
+  const btnPrologue = document.getElementById('btnPrologue');
+  const btnCredits = document.getElementById('btnCredits');
+
+  const creditsLines = [
+    { html: `<span class="text-line-strong">Un monde saturé de signaux.</span>`, duration: 2600 },
+    { html: `Des crises qui s’enchaînent. Des faits qui s’effacent.`, duration: 2600 },
+    { html: `Tu n’es ni héros, ni génie. Juste quelqu’un qui essaie de rester lucide.`, duration: 2800 },
+    { html: `<span class="text-line-strong">Ce jeu ne sauvera personne.</span><br>Mais il peut t’aider à voir clair.`, duration: 3200 },
+  ];
+
+  let creditsIndex = 0;
+  let creditsTimer = null;
+  let timelineFinished = false;
+
+  function showCreditsSequence(startDelay = 2000) {
+    setTimeout(() => {
+      runNextCredit();
+    }, startDelay);
+  }
+
+  function runNextCredit() {
+    if (creditsIndex >= creditsLines.length) {
+      showFinalTitleAndMenu();
+      return;
+    }
+    const line = creditsLines[creditsIndex];
+    textSequence.innerHTML = line.html;
+    textSequence.classList.add('visible');
+
+    creditsTimer = setTimeout(() => {
+      textSequence.classList.remove('visible');
+      creditsIndex++;
+      setTimeout(runNextCredit, 700);
+    }, line.duration);
+  }
+
+  function showFinalTitleAndMenu() {
+    setTimeout(() => {
+      finalTitle.classList.add('visible');
+    }, 600);
+
+    setTimeout(() => {
+      menu.classList.add('visible');
+      skipIntro.classList.add('visible');
+      timelineFinished = true;
+    }, 2200);
+  }
+
+  function startIntro() {
+    setTimeout(() => {
+      logo.classList.add('visible');
+    }, 2000);
+
+    showCreditsSequence(4200);
+
+    setTimeout(() => {
+      skipIntro.classList.add('visible');
+    }, 6000);
+  }
+
+  function skipToMenu() {
+    if (creditsTimer) clearTimeout(creditsTimer);
+    textSequence.classList.remove('visible');
+    creditsIndex = creditsLines.length;
+    logo.classList.add('visible');
+    finalTitle.classList.add('visible');
+    menu.classList.add('visible');
+    skipIntro.classList.add('visible');
+    timelineFinished = true;
+  }
+
+  // --- Gestion panneau / sous-pages ---
+
+  function openPanel(mode) {
+    // Paramétrage selon le bouton cliqué
+    if (mode === 'new') {
+      nextTagline.textContent = 'chapitre 0 · nouvelle partie';
+      nextTitle.textContent = 'Chapitre 0 · L’écran noir';
+      nextText.innerHTML = `
+        Tu te réveilles dans un monde saturé de messages, de promos, de notifications.<br><br>
+        Mais ici, rien ne clignote encore. Tu n’as que cet écran noir, quelques boutons, et la
+        sensation étrange d’entrer dans quelque chose qui ne te parlera jamais clairement.<br><br>
+        Ton objectif n’est pas de gagner, mais de repérer ce qui te met mal à l’aise.
+      `;
+      nextChip.textContent = 'commencer en silence';
+    } else if (mode === 'prologue') {
+      nextTagline.textContent = 'prologue silencieux';
+      nextTitle.textContent = 'Avant le premier clic';
+      nextText.innerHTML = `
+        Dans ce prologue, il ne se passe presque rien.<br><br>
+        Quelques écrans fixes, des textes lents, aucune explosion visuelle.
+        Tu observes simplement comment l’interface te parle — ou ne te parle pas.<br><br>
+        Le “jeu” commence lorsque tu remarques ce qui t’échappe.
+      `;
+      nextChip.textContent = 'voir le prologue';
+    } else if (mode === 'credits') {
+      nextTagline.textContent = 'crédits & intentions';
+      nextTitle.textContent = 'Pourquoi ce jeu existe';
+      nextText.innerHTML = `
+        SILENT PROTOCOL est un exercice de lenteur et de méfiance.<br><br>
+        Il ne cherche pas à divertir, mais à te montrer comment une interface peut
+        être à la fois accueillante et oppressante, claire et illisible, rassurante
+        et profondément politique.<br><br>
+        Les crédits “réels” n’importent pas. Ce qui compte, c’est ce que toi, tu
+        repères, ressens, refuses.
+      `;
+      nextChip.textContent = 'revenir au menu';
+    }
+
+    nextScreen.classList.add('visible');
+  }
+
+  function closePanel() {
+    nextScreen.classList.remove('visible');
+  }
+
+  window.addEventListener('load', () => {
+    startIntro();
+  });
+
+  // Skip via bouton
+  skipIntro.addEventListener('click', skipToMenu);
+
+  // Skip via touche (espace ou Entrée) pendant la timeline
+  window.addEventListener('keydown', (e) => {
+    if (!timelineFinished && (e.key === ' ' || e.key === 'Enter')) {
+      skipToMenu();
+    }
+  });
+
+  // Fermeture du panneau avec ESC quand il est ouvert
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && nextScreen.classList.contains('visible')) {
+      e.preventDefault();
+      closePanel();
+    }
+  });
+
+  // Menu actions → ouvrent tous le même panneau, contenu différent
+  btnNewGame.addEventListener('click', () => openPanel('new'));
+  btnPrologue.addEventListener('click', () => openPanel('prologue'));
+  btnCredits.addEventListener('click', () => openPanel('credits'));
+
+  // Bouton Fermer du panneau
+  btnClosePanel.addEventListener('click', closePanel);
+
+  // (Optionnel) clic hors de la carte pour fermer
+  nextScreen.addEventListener('click', (e) => {
+    if (e.target === nextScreen) {
+      closePanel();
+    }
+  });
+</script>
+</body>
+</html>
