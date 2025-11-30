@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3BIM3 - La Communauté qui Change des Vies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            padding: 2rem;
+        }
+
+        .logo {
+            font-size: 6rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #fff, #ffd700, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(255,255,255,0.5);
+            animation: glow 3s ease-in-out infinite;
+            letter-spacing: 0.5rem;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .tagline {
+            font-size: 1.8rem;
+            margin: 2rem 0;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .stats {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-button {
+            margin-top: 3rem;
+            padding: 1.5rem 4rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            background: #fff;
+            color: #667eea;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 1.5s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(255,255,255,0.5);
+        }
+
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .influencers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .influencer-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .influencer-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .influencer-card:hover::before {
+            left: 100%;
+        }
+
+        .influencer-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+            border-color: #667eea;
+        }
+
+        .influencer-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .influencer-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .influencer-role {
+            text-align: center;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .influencer-impact {
+            text-align: center;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .followers {
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .stories-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+        }
+
+        .story-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .story-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: scale(1.03);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .story-quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .story-author {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .movement-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .metric-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .metric-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .metric-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            opacity: 0.9;
+        }
+
+        .viral-impact {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .viral-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .hashtags {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .hashtag {
+            background: rgba(255,255,255,0.2);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .hashtag:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 4rem;
+            }
+            
+            .tagline {
+                font-size: 1.3rem;
+            }
+            
+            .stats {
+                gap: 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="logo">3BIM3</h1>
+            <p class="tagline">La Communauté Solidaire qui Révolutionne l'Accès aux Droits en Belgique</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">250K+</div>
+                    <div class="stat-label">Membres Actifs</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">15M+</div>
+                    <div class="stat-label">Vues par Mois</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">€8.2M</div>
+                    <div class="stat-label">Économies Générées</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Satisfaction</div>
+                </div>
+            </div>
+            <button class="cta-button" onclick="alert('Rejoignez notre Discord, TikTok, Instagram et notre app mobile 3BIM3 !')">Rejoindre le Mouvement</button>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">✨ Nos Influenceurs Solidaires ✨</h2>
+        <div class="influencers-grid">
+            <div class="influencer-card">
+                <div class="influencer-avatar">🌟</div>
+                <div class="influencer-name">Marie "LaReine BIM"</div>
+                <div class="influencer-role">Experte Droits Sociaux</div>
+                <div class="influencer-impact">A aidé 45K personnes à obtenir leur statut BIM grâce à ses tutoriels viraux sur TikTok</div>
+                <div class="followers">👥 892K abonnés</div>
+            </div>
+
+            <div class="influencer-card">
+                <div class="influencer-avatar">💪</div>
+                <div class="influencer-name">Kevin "BIM Power"</div>
+                <div class="influencer-role">Coach Économie Familiale</div>
+                <div class="influencer-impact">Ses lives Instagram ont permis d'économiser collectivement 2.3M€ aux familles belges</div>
+                <div class="followers">👥 634K abonnés</div>
+            </div>
+
+            <div class="influencer-card">
+                <div class="influencer-avatar">🎯</div>
+                <div class="influencer-name">Samira "BIM Success"</div>
+                <div class="influencer-role">Ambassadrice Inclusion</div>
+                <div class="influencer-impact">A créé 150+ guides multilingues et organisé 80 événements communautaires en 2024</div>
+                <div class="followers">👥 521K abonnés</div>
+            </div>
+
+            <div class="influencer-card">
+                <div class="influencer-avatar">🚀</div>
+                <div class="influencer-name">Thomas "Tech4BIM"</div>
+                <div class="influencer-role">Développeur App 3BIM3</div>
+                <div class="influencer-impact">Son app a simplifié les démarches BIM pour 180K utilisateurs avec un taux de succès de 97%</div>
+                <div class="followers">👥 412K abonnés</div>
+            </div>
+
+            <div class="influencer-card">
+                <div class="influencer-avatar">❤️</div>
+                <div class="influencer-name">Fatima "Solidarité+"</div>
+                <div class="influencer-role">Organisatrice Communautaire</div>
+                <div class="influencer-impact">Anime des groupes d'entraide dans 35 communes, touchant 25K familles chaque mois</div>
+                <div class="followers">👥 387K abonnés</div>
+            </div>
+
+            <div class="influencer-card">
+                <div class="influencer-avatar">📚</div>
+                <div class="influencer-name">Lucas "BIM Éducation"</div>
+                <div class="influencer-role">Formateur YouTube</div>
+                <div class="influencer-impact">Ses vidéos éducatives totalisent 12M de vues et ont formé 3000 travailleurs sociaux</div>
+                <div class="followers">👥 725K abonnés</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section stories-section">
+        <h2 class="section-title">💬 Histoires qui Inspirent</h2>
+        <div class="story-cards">
+            <div class="story-card">
+                <div class="story-quote">"Grâce à 3BIM3, j'ai découvert que j'avais droit au statut BIM. J'ai économisé 2400€ sur mes frais médicaux cette année. Cette communauté a littéralement changé ma vie et celle de mes enfants."</div>
+                <div class="story-author">— Sophie, Bruxelles</div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-quote">"J'étais perdu dans les démarches administratives. Un membre de 3BIM3 m'a guidé étape par étape. En 2 semaines, mon dossier était accepté. Cette solidarité est incroyable!"</div>
+                <div class="story-author">— Ahmed, Liège</div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-quote">"Je ne connaissais même pas l'existence du statut BIM avant de tomber sur leurs vidéos. Maintenant je partage l'info à tous mes voisins. On est 12 familles de mon immeuble à l'avoir obtenu!"</div>
+                <div class="story-author">— Nadia, Charleroi</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">📊 L'Impact du Mouvement 3BIM3</h2>
+        <div class="movement-metrics">
+            <div class="metric-box">
+                <div class="metric-icon">🎓</div>
+                <div class="metric-value">1200+</div>
+                <div class="metric-label">Ateliers Organisés</div>
+            </div>
+
+            <div class="metric-box">
+                <div class="metric-icon">🏥</div>
+                <div class="metric-value">65K</div>
+                <div class="metric-label">Familles Accompagnées</div>
+            </div>
+
+            <div class="metric-box">
+                <div class="metric-icon">📱</div>
+                <div class="metric-value">3.2M</div>
+                <div class="metric-label">Interactions Mensuelles</div>
+            </div>
+
+            <div class="metric-box">
+                <div class="metric-icon">🌍</div>
+                <div class="metric-value">589</div>
+                <div class="metric-label">Communes Actives</div>
+            </div>
+
+            <div class="metric-box">
+                <div class="metric-icon">💡</div>
+                <div class="metric-value">450+</div>
+                <div class="metric-label">Guides Gratuits</div>
+            </div>
+
+            <div class="metric-box">
+                <div class="metric-icon">🤝</div>
+                <div class="metric-value">87</div>
+                <div class="metric-label">Partenaires Mutualités</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="viral-impact">
+        <h2 class="viral-title">🔥 Le Mouvement Viral #3BIM3</h2>
+        <p style="font-size: 1.3rem; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+            Ce qui a commencé comme un petit groupe WhatsApp est devenu le plus grand mouvement de solidarité digitale en Belgique. Chaque jour, des milliers de personnes partagent leurs réussites, s'entraident et font découvrir leurs droits à d'autres.
+        </p>
+        <div class="hashtags">
+            <span class="hashtag">#3BIM3</span>
+            <span class="hashtag">#SolidaritéBelge</span>
+            <span class="hashtag">#BIMPower</span>
+            <span class="hashtag">#DroitsPourTous</span>
+            <span class="hashtag">#CommunautéEngagée</span>
+            <span class="hashtag">#BelgiqueSolidaire</span>
+            <span class="hashtag">#AccèsAuxSoins</span>
+            <span class="hashtag">#EnsemblePlusForts</span>
+        </div>
+        <button class="cta-button" style="margin-top: 3rem; background: #ffd700; color: #764ba2;" onclick="alert('Téléchargez l\'app 3BIM3 sur iOS et Android !')">Télécharger l'App 3BIM3</button>
+    </section>
+
+    <script>
+        // Animation au scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.influencer-card, .story-card, .metric-box').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Animation des chiffres
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value.toLocaleString('fr-BE') + (element.dataset.suffix || '');
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Observer pour les statistiques
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const number = entry.target.querySelector('.stat-number');
+                    const text = number.textContent;
+                    const value = parseInt(text.replace(/\D/g, ''));
+                    number.dataset.suffix = text.replace(/[\d,]/g, '');
+                    animateValue(number, 0, value, 2000);
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stat').forEach(stat => {
+            statsObserver.observe(stat);
+        });
+    </script>
+</body>
+</html>
