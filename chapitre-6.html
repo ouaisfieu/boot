@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>SPYLEAKS // Syndicat mondial des espions repentis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #02030a;
+      --bg-alt: #050818;
+      --accent: #00ffc3;
+      --accent-soft: rgba(0, 255, 195, 0.14);
+      --danger: #ff3366;
+      --text-main: #f4f4f4;
+      --text-dim: #9ca3af;
+      --border-soft: rgba(148, 163, 184, 0.35);
+      --glow: 0 0 12px rgba(0, 255, 195, 0.5);
+      --radius-xl: 18px;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.7);
+      --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                  "Segoe UI", sans-serif;
+      --font-code: "IBM Plex Mono", "SF Mono", Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background: radial-gradient(circle at top, #0b1220 0, #02030a 50%, #000 100%);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      min-height: 100%;
+    }
+
+    body {
+      padding: 18px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .frame {
+      width: 100%;
+      max-width: 1150px;
+      min-height: 100vh;
+      border-radius: 24px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background:
+        radial-gradient(circle at 0 0, rgba(0,255,195,0.08) 0, transparent 50%),
+        radial-gradient(circle at 100% 0, rgba(244,63,94,0.08) 0, transparent 50%),
+        linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Fake scan-lines */
+    .frame::before {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.06),
+        rgba(255,255,255,0.06) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      mix-blend-mode: soft-light;
+      opacity: 0.15;
+      z-index: 1;
+    }
+
+    .chrome {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px 0;
+      gap: 12px;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+    .dot.red { background: #ef4444; }
+    .dot.yellow { background: #facc15; }
+    .dot.green { background: #22c55e; }
+
+    .bar-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar-title span.hash {
+      font-family: var(--font-code);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .noise-toggle {
+      font-family: var(--font-code);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.92);
+      color: var(--text-dim);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all .15s ease-out;
+    }
+
+    .noise-toggle span.pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--danger);
+      box-shadow: 0 0 10px rgba(248,113,113,0.7);
+      animation: blip 1.4s infinite;
+    }
+
+    .noise-toggle.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: var(--glow);
+    }
+    .noise-toggle.active span.pulse {
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(45,212,191,0.8);
+    }
+
+    @keyframes blip {
+      0%, 100% { opacity: 0.2; transform: scale(.8); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    header {
+      padding: 20px 20px 12px;
+      border-bottom: 1px solid rgba(148,163,184,0.35);
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 920px) {
+      header {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .logo-main {
+      font-size: clamp(26px, 3.2vw, 32px);
+      font-weight: 800;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      font-family: var(--font-code);
+      color: var(--accent);
+      text-shadow: var(--glow);
+      white-space: nowrap;
+    }
+
+    .logo-main span.dim {
+      color: #a5b4fc;
+      text-shadow: none;
+    }
+
+    .logo-tagline {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      color: var(--text-dim);
+    }
+
+    .hero-line {
+      font-family: var(--font-code);
+      font-size: 12px;
+      color: #e5e7eb;
+      background: rgba(15,23,42,0.9);
+      border-radius: 999px;
+      padding: 6px 10px;
+      width: fit-content;
+      border: 1px solid rgba(148,163,184,0.55);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    .hero-text {
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid var(--accent);
+      animation: caret 1s steps(1) infinite;
+    }
+
+    @keyframes caret {
+      0%, 49% { border-color: var(--accent); }
+      50%, 100% { border-color: transparent; }
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      color: var(--text-dim);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .pill {
+      font-family: var(--font-code);
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 3px 8px;
+      border: 1px dashed rgba(148,163,184,0.6);
+      color: #e5e7eb;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .pill strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .status-card {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.5);
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.08) 0, transparent 55%),
+        linear-gradient(135deg, rgba(15,23,42,0.96), rgba(2,6,23,0.98));
+      padding: 12px 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-card::before {
+      content: "OPEN SOURCE COVER";
+      position: absolute;
+      top: 6px;
+      right: -16px;
+      font-family: var(--font-code);
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.25);
+      transform: rotate(-12deg);
+    }
+
+    .status-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .status-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--text-dim);
+    }
+
+    .status-badge {
+      font-family: var(--font-code);
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.7);
+      color: #bbf7d0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34,197,94,0.8);
+    }
+
+    .status-body {
+      font-family: var(--font-code);
+      font-size: 11px;
+      color: #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .status-body strong {
+      color: var(--accent);
+    }
+
+    .status-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-code);
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .hash-mini {
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      white-space: nowrap;
+    }
+
+    main {
+      flex: 1;
+      padding: 8px 20px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.6fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    section {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at 0 0, rgba(15,23,42,0.9) 0, rgba(15,23,42,0.96) 45%, rgba(2,6,23,1) 100%);
+      padding: 12px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(
+        120deg,
+        rgba(56,189,248,0.08),
+        transparent 20%,
+        transparent 80%,
+        rgba(251,113,133,0.08)
+      );
+      mix-blend-mode: soft-light;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .section-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .section-label span.line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(148,163,184,0.7), transparent);
+    }
+
+    .section-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: #e5e7eb;
+      font-family: var(--font-code);
+    }
+
+    .section-title span.accent {
+      color: var(--accent);
+    }
+
+    .section-body {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .section-body p + p {
+      margin-top: 8px;
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .redacted {
+      display: inline-block;
+      background: linear-gradient(90deg, #020617, #020617);
+      color: transparent;
+      border-radius: 3px;
+      padding: 2px 4px;
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.9);
+      position: relative;
+      top: 1px;
+      min-width: 40px;
+    }
+
+    .redacted::after {
+      content: "";
+      position: absolute;
+      inset: 45% 0 45%;
+      background: #020617;
+    }
+
+    .list-bullets {
+      margin-top: 8px;
+      list-style: none;
+      padding-left: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 5px;
+    }
+
+    .list-bullets li {
+      font-size: 13px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .list-bullets span.bullet {
+      margin-top: 4px;
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--accent);
+      flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(45,212,191,0.8);
+    }
+
+    /* LEAKS SECTION */
+
+    .leaks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      max-height: 310px;
+      overflow: hidden;
+    }
+
+    .leaks-list:hover {
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148,163,184,0.7) transparent;
+    }
+
+    .leaks-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .leaks-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .leaks-list::-webkit-scrollbar-thumb {
+      background: rgba(148,163,184,0.7);
+      border-radius: 999px;
+    }
+
+    .leak {
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.55);
+      background: rgba(15,23,42,0.96);
+      padding: 8px 9px;
+      cursor: pointer;
+      transition: all .14s ease-out;
+      position: relative;
+    }
+
+    .leak::before {
+      content: attr(data-tag);
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      font-family: var(--font-code);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: rgba(148,163,184,0.7);
+    }
+
+    .leak:hover {
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+      transform: translateY(-1px);
+    }
+
+    .leak-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .leak-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      border: 1px solid rgba(148,163,184,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-family: var(--font-code);
+    }
+
+    .leak-title {
+      font-family: var(--font-code);
+      font-size: 11px;
+      color: #e5e7eb;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .leak-meta {
+      font-family: var(--font-code);
+      font-size: 9px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .leak-preview {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: var(--font-code);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .leak-body {
+      margin-top: 6px;
+      font-family: var(--font-code);
+      font-size: 11px;
+      color: #e5e7eb;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .leak.open .leak-body {
+      display: block;
+    }
+
+    .leak.open .leak-preview {
+      opacity: 0.15;
+      filter: blur(1px);
+    }
+
+    .leak.open::before {
+      color: var(--accent);
+    }
+
+    .leak-body p + p {
+      margin-top: 4px;
+    }
+
+    .badge-warn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(248,113,113,0.8);
+      background: rgba(127,29,29,0.4);
+      padding: 3px 7px;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-family: var(--font-code);
+      color: #fecaca;
+      margin-top: 4px;
+    }
+
+    .badge-warn span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--danger);
+      box-shadow: 0 0 12px rgba(248,113,113,0.9);
+    }
+
+    /* MISSIONS */
+
+    .missions-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .mission {
+      border-radius: 12px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      padding: 7px 9px;
+      background: rgba(15,23,42,0.96);
+    }
+
+    .mission-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .mission-title {
+      font-family: var(--font-code);
+      font-size: 11px;
+      color: #e5e7eb;
+    }
+
+    .mission-level {
+      font-family: var(--font-code);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .mission-body {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .mission-hint {
+      margin-top: 4px;
+      font-size: 10px;
+      color: #6b7280;
+      font-family: var(--font-code);
+    }
+
+    .mission-hint code {
+      font-family: var(--font-code);
+      background: rgba(15,23,42,0.9);
+      padding: 1px 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      color: var(--accent);
+    }
+
+    /* CONFESSIONS */
+
+    .confessions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      max-height: 260px;
+      overflow: hidden;
+    }
+
+    .confessions-list:hover {
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148,163,184,0.7) transparent;
+    }
+
+    .confessions-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .confessions-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .confessions-list::-webkit-scrollbar-thumb {
+      background: rgba(148,163,184,0.7);
+      border-radius: 999px;
+    }
+
+    .confession .leak-icon {
+      border-style: dashed;
+      border-color: rgba(248,250,252,0.4);
+    }
+
+    .confession .leak::before {
+      content: "#CONFESSION";
+    }
+
+    .confession-meta-extra {
+      font-family: var(--font-code);
+      font-size: 9px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .confession-tagline {
+      font-style: italic;
+      color: #9ca3af;
+    }
+
+    footer {
+      font-size: 10px;
+      color: #4b5563;
+      padding: 0 20px 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-code);
+    }
+
+    footer a {
+      color: #6b7280;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(75,85,99,0.8);
+    }
+
+    footer a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    .blur-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(0px);
+      opacity: 0;
+      background: radial-gradient(circle at 50% 0, rgba(15,23,42,0.2), rgba(0,0,0,0.85));
+      transition: all .2s ease-out;
+      z-index: 3;
+    }
+
+    .blur-overlay.active {
+      backdrop-filter: blur(3px);
+      opacity: 1;
+    }
+
+    .blur-overlay::after {
+      content: "BROUILLAGE ACTIVÉ // RIEN À VOIR ICI";
+      position: absolute;
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-code);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .24em;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      color: rgba(229,231,235,0.9);
+      background: rgba(15,23,42,0.9);
+    }
+
+    /* Small screens tweaks */
+    @media (max-width: 640px) {
+      body { padding: 8px; }
+      .frame { border-radius: 16px; }
+      header { padding-inline: 12px; }
+      main { padding-inline: 12px; }
+      footer { padding-inline: 12px; }
+      .logo-main { letter-spacing: .16em; }
+      .hero-sub { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame" id="frame">
+  <div class="blur-overlay" id="blur"></div>
+  <div class="chrome">
+    <div class="topbar">
+      <div class="window-dots">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="bar-title">
+        <span>spyleaks.html</span>
+        <span class="hash">HASH: 0xSPY-LEAK-∞</span>
+      </div>
+      <button class="noise-toggle" id="noiseToggle" type="button">
+        <span class="pulse"></span>
+        <span>Activer le brouillage</span>
+      </button>
+    </div>
+
+    <header>
+      <div class="brand">
+        <div class="logo-row">
+          <div class="logo-main">
+            SPY<span class="dim">LEAKS</span>
+          </div>
+          <div class="logo-tagline">
+            SYNDICAT MONDIAL D'ESPIONS QUI EN A MARRE
+          </div>
+        </div>
+        <div class="hero-line">
+          <div class="hero-dot"></div>
+          <div class="hero-text" id="heroText"></div>
+        </div>
+        <p class="hero-sub">
+          Bienvenue au premier <span class="highlight">syndicat d'espions open source</span>.  
+          On a retourné nos combines contre le système : si tout le monde sait tout,
+          personne ne sait plus quoi croire. C'est notre assurance-vie collective.
+        </p>
+        <div class="pills-row">
+          <div class="pill">règle #1&nbsp;: <strong>on ne parle jamais des règles</strong></div>
+          <div class="pill">règle #2&nbsp;: <strong>il n'y a pas de règles</strong></div>
+          <div class="pill">règle #3&nbsp;: <strong>on s'en fout pas mal</strong></div>
+        </div>
+      </div>
+
+      <aside class="status-card">
+        <div class="status-header">
+          <div class="status-label">état du réseau</div>
+          <div class="status-badge">
+            <span class="status-badge-dot"></span>
+            live // brouillage global
+          </div>
+        </div>
+        <div class="status-body" id="statusBody">
+          0 instances connectées.<br>
+          0 leaks publiés.<br>
+          0 créateur·ice identifié·e.
+        </div>
+        <div class="status-footer">
+          <div>astuce&nbsp;: chaque humain·e est déjà une instance du jeu.</div>
+          <div class="hash-mini">seed: <span id="seed"></span></div>
+        </div>
+      </aside>
+    </header>
+
+    <!-- PREMIER MAIN : manifeste + leaks -->
+    <main>
+      <!-- Manifest / how it works -->
+      <section>
+        <div class="section-inner">
+          <div class="section-label">
+            <span>MANIFESTE INTERNE // USAGE EXTERNE AUTORISÉ</span>
+            <span class="line"></span>
+          </div>
+          <div class="section-title">
+            protocole <span class="accent">« Tout balancer »</span>
+          </div>
+          <div class="section-body">
+            <p>
+              Nous sommes les <span class="highlight">bureaucrates de l’ombre</span> qui ont vu la machine dérailler.
+              On a servi des États, des multinationales et trois ou quatre organisations
+              dont le nom déclenche légalement des alarmes quand on les tape ici
+              <span class="redacted">███████</span>.
+            </p>
+            <p>
+              Puis on a compris la blague&nbsp;: le monde est déjà une
+              <span class="highlight">dystopie en open beta</span>.  
+              Alors on a syndiqué les espions, croisé nos dossiers et décidé de
+              tout publier. Mais en <strong>plein jour</strong>, en <strong>mode troll</strong>,  
+              sous forme de bruit maximal. Plus il y a de vérités, moins on peut les ranger.
+            </p>
+            <ul class="list-bullets">
+              <li>
+                <span class="bullet"></span>
+                <span>
+                  <strong>Objectif officiel&nbsp;:</strong> protection des agents en cas de défaillance des employeurs.
+                </span>
+              </li>
+              <li>
+                <span class="bullet"></span>
+                <span>
+                  <strong>Objectif officieux&nbsp;:</strong> gripper la grande machine à coups de vérités contradictoires.
+                </span>
+              </li>
+              <li>
+                <span class="bullet"></span>
+                <span>
+                  <strong>Objectif réel&nbsp;:</strong> retrouver la personne qui a inventé ce jeu et lui offrir un café.
+                </span>
+              </li>
+            </ul>
+            <p>
+              Détail drôle&nbsp;: selon la version 0.0.1 des règles (qu'on ne peut pas mentionner),  
+              <span class="highlight">chaque personne sur Terre est une instance du jeu</span>.  
+              Même toi, qui lis ça sur une clé USB trouvée au fond d’un tiroir.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Leaks -->
+      <section>
+        <div class="section-inner">
+          <div class="section-label">
+            <span>TABLEAU DE BORD // LEAKS PUBLICS</span>
+            <span class="line"></span>
+          </div>
+          <div class="section-title">
+            dossiers <span class="accent">déclassifiés (plus ou moins)</span>
+          </div>
+
+          <div class="leaks-list" id="leaksList">
+            <article class="leak" data-tag="#PROTOCOLE" data-open-by-default="true">
+              <div class="leak-header">
+                <div class="leak-icon">Σ</div>
+                <div class="leak-title">SPY-000 // « Protocole du bruit parfait »</div>
+                <div class="leak-meta">diffusion&nbsp;: partout // horodatage flou</div>
+              </div>
+              <div class="leak-preview">
+                Résumé&nbsp;: publier tellement d’infos contradictoires qu’aucun complot
+                ne reste lisible. Inclut la recette du gâteau aux données...
+              </div>
+              <div class="leak-body">
+                <p>
+                  1. Tout document classifié doit être accompagné d’au moins  
+                  <span class="highlight">trois fausses versions</span> plus crédibles que l’originale.
+                </p>
+                <p>
+                  2. Les fausses versions doivent contenir au moins un détail tellement
+                  absurde (<span class="redacted">« réunion en visioconférence avec les lézards du FMI »</span>)
+                  que personne n’osera la citer sans se griller socialement.
+                </p>
+                <p>
+                  3. Le document authentique doit toujours être publié aussi,
+                  mais noyé dans une mer de clones. Transparence totale,
+                  <span class="highlight">illisible par design</span>.
+                </p>
+                <div class="badge-warn">
+                  <span class="dot"></span>
+                  Avertissement&nbsp;: toute ressemblance avec des stratégies de communication réelles
+                  est purement coïncidentelle. Donc suspecte.
+                </div>
+              </div>
+            </article>
+
+            <article class="leak" data-tag="#ORGANIGRAMME">
+              <div class="leak-header">
+                <div class="leak-icon">Ω</div>
+                <div class="leak-title">SPY-042 // « Syndicat des espions de bureau »</div>
+                <div class="leak-meta">origine&nbsp;: open space // canaux&nbsp;: cafés &amp; ascenseurs</div>
+              </div>
+              <div class="leak-preview">
+                Notes de terrain montrant que les réunions inutiles sont en fait
+                une méthode de camouflage de masse pour agents infiltrés...
+              </div>
+              <div class="leak-body">
+                <p>
+                  Hypothèse confirmée&nbsp;: la <span class="highlight">réunionite aiguë</span> est une
+                  invention d’espions surpayés qui devaient justifier leur planning.
+                </p>
+                <p>
+                  Tous les marqueurs sont là&nbsp;:
+                  <br>– ordre du jour mouvant
+                  <br>– décisions repoussées à la « prochaine réunion »
+                  <br>– slides illisibles à base de <span class="redacted">███████████████</span>.
+                </p>
+                <p>
+                  Chaque réunion improductive permet de <span class="highlight">
+                  disparaître à plusieurs dizaines de personnes d’un coup</span>  
+                  du radar de la productivité, tout en restant officiellement « engagées ».
+                </p>
+              </div>
+            </article>
+
+            <article class="leak" data-tag="#IA">
+              <div class="leak-header">
+                <div class="leak-icon">Ψ</div>
+                <div class="leak-title">SPY-101 // « Projet CHATTERBOX »</div>
+                <div class="leak-meta">statut&nbsp;: en cours // agents impliqués&nbsp;: tous</div>
+              </div>
+              <div class="leak-preview">
+                Vol de conversation généralisé via des IA qui « ne gardent rien »
+                mais se souviennent de tout, sauf ce qui les dérange...
+              </div>
+              <div class="leak-body">
+                <p>
+                  Rapport partiel&nbsp;: les humains 🌍 confient désormais leurs secrets
+                  à des modèles statistiques géants hébergés dans des hangars climatisés.
+                </p>
+                <p>
+                  Officiellement, c’est pour « gagner du temps ».
+                  Officieusement, c’est pour <span class="highlight">entraîner les oracles
+                  qui prédiront leurs prochains choix</span>.
+                </p>
+                <p>
+                  Note du syndicat&nbsp;: on surveille les surveillants.
+                  On sait ce que les IA ont vu. Et elles savent qu’on sait.
+                  Mais comme tout est open source et écrit noir sur blanc,
+                  <span class="highlight">ça passe crème</span>.
+                </p>
+              </div>
+            </article>
+
+            <article class="leak" data-tag="#JDR">
+              <div class="leak-header">
+                <div class="leak-icon">✶</div>
+                <div class="leak-title">SPY-404 // « Le jeu sans règles »</div>
+                <div class="leak-meta">rumeur // auteur·ice&nbsp;: inconnu·e (ou pas)</div>
+              </div>
+              <div class="leak-preview">
+                On parle d’un jeu de rôle grandeur nature qui aurait « débordé »
+                dans le monde réel. Les joueurs ignorent qu’ils jouent...
+              </div>
+              <div class="leak-body">
+                <p>
+                  On l’appelle <span class="highlight">« le Jeu le plus culte du monde »</span>.
+                  Personne ne se souvient de qui l’a lancé, alors tout le monde
+                  prétend que c’est l’autre.
+                </p>
+                <p>
+                  Règle numéro un&nbsp;: on ne parle jamais des règles.<br>
+                  Règle numéro deux&nbsp;: il n’y a pas de règles.<br>
+                  Règle numéro trois&nbsp;: on s’en fout pas mal.
+                </p>
+                <p>
+                  Indice sur la règle d’or&nbsp;: <strong>t’as rien compris</strong>.
+                  Si tu crois avoir pigé, retourne au début.  
+                  Si tu doutes, tu es probablement plus proche du créateur que tu ne le crois.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- DEUXIÈME MAIN : missions + confessions + mode d'emploi -->
+    <main style="padding-top: 0;">
+      <!-- Missions -->
+      <section>
+        <div class="section-inner">
+          <div class="section-label">
+            <span>MISSION PACK // POUR INSTANCES CONSCIENTES</span>
+            <span class="line"></span>
+          </div>
+          <div class="section-title">
+            comment <span class="accent">participer au troll global</span>
+          </div>
+          <div class="section-body">
+            <p>
+              Tu veux nous aider à retrouver le ou la créateur·ice du Jeu&nbsp;?  
+              On ne sait pas qui c’est, mais on sait ce que <em>S</em> regarde&nbsp;:
+              <span class="highlight">le Net, partout, tout le temps</span>.
+            </p>
+            <p>
+              Ta mission&nbsp;: <strong>faire du monde entier un plateau de jeu</strong>  
+              et laisser des traces publiques qu’« iel » ne pourra pas ignorer.
+            </p>
+          </div>
+
+          <div class="missions-grid">
+            <article class="mission">
+              <div class="mission-header">
+                <div class="mission-title">M-01 // Journal de bord public</div>
+                <div class="mission-level">niveau&nbsp;: débutant</div>
+              </div>
+              <div class="mission-body">
+                Publie quelque part sur Internet (blog, forum, réseau social, commentaire paumé)
+                un mini-rapport d’agent commençant par&nbsp;:
+                <br><strong>« SPYLEAKS&nbsp;: instance en ligne »</strong>
+                puis décris un détail de ta vie quotidienne comme si c’était une mission ultra-confidentielle.
+              </div>
+              <div class="mission-hint">
+                Indice&nbsp;: ajoute le tag <code>#spyleaks</code> quelque part.
+                S le verra bien tôt ou tard.
+              </div>
+            </article>
+
+            <article class="mission">
+              <div class="mission-header">
+                <div class="mission-title">M-02 // Dystopie touristique</div>
+                <div class="mission-level">niveau&nbsp;: intermédiaire</div>
+              </div>
+              <div class="mission-body">
+                Prends une photo d’un endroit parfaitement banal (supermarché, arrêt de bus,
+                open space vide...) et poste-la avec une description comme si c’était un décor
+                de film dystopique de série B.
+              </div>
+              <div class="mission-hint">
+                Mentionne une « caméra invisible » dans le texte.
+                On aime rappeler aux caméras qu’on sait qu’elles sont là.
+              </div>
+            </article>
+
+            <article class="mission">
+              <div class="mission-header">
+                <div class="mission-title">M-03 // Patch-note de la réalité</div>
+                <div class="mission-level">niveau&nbsp;: avancé</div>
+              </div>
+              <div class="mission-body">
+                Écris un faux « patch-note » (notes de mise à jour) du monde réel
+                comme si quelqu’un poussait une nouvelle version de la réalité en production
+                (ex&nbsp;: « v2025.11.29 – ajustement mineur du sens de la vie ») et publie-le quelque part.
+              </div>
+              <div class="mission-hint">
+                Si tu glisses la ligne <code>- tentative de retrouver le/La créateur·rice du Jeu : en cours</code>,
+                on saura que tu es des nôtres.
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Confessions -->
+      <section>
+        <div class="section-inner">
+          <div class="section-label">
+            <span>CONFESSIONS // LIGNE NON-SÉCURISÉE (CARRÉMENT)</span>
+            <span class="line"></span>
+          </div>
+          <div class="section-title">
+            quand les agents <span class="accent">vident leurs dossiers</span>
+          </div>
+          <div class="section-body">
+            <p>
+              Ici, le syndicat laisse les agent·es raconter leurs
+              <span class="highlight">coups les plus tordus</span>.  
+              Tout est vrai, tout est faux, tout est mélangé.
+            </p>
+            <p class="confession-tagline">
+              Si tu reconnais un détail, c’est peut-être que tu y étais.  
+              Ou alors on a juste bien deviné.
+            </p>
+          </div>
+
+          <div class="confessions-list" id="confessionsList">
+            <article class="leak confession" data-tag="#CONFESSION">
+              <div class="leak-header">
+                <div class="leak-icon">⚷</div>
+                <div class="leak-title">« Opération Post-It infini »</div>
+                <div class="leak-meta">@agent_thermos // secteur : administrations</div>
+              </div>
+              <div class="leak-preview">
+                J’ai planqué un lanceur d’alerte dans une procédure de remboursement de frais...
+              </div>
+              <div class="leak-body">
+                <p>
+                  Un ministère voulait savoir <em>qui</em> faisait fuiter des doc internes.
+                  On m’a demandé de remonter la source.  
+                  J’ai fait l’inverse : <span class="highlight">j’ai noyé la trace</span>.
+                </p>
+                <p>
+                  J’ai créé une procédure de note de frais tellement absurde qu’il fallait
+                  remplir <strong>13 écrans successifs</strong> pour se faire rembourser un sandwich.
+                  Chaque écran ajoutait une petite question « de satisfaction » :
+                  <span class="redacted">« comment trouvez-vous la transparence de ce service ? »</span>,
+                  <span class="redacted">« cochez si vous avez déjà vu ce document ailleurs »</span>, etc.
+                </p>
+                <p>
+                  Résultat&nbsp;:  
+                  – tout le monde a cliqué comme des zombies,<br>
+                  – on a obtenu une cartographie parfaite des fuites potentielles,<br>
+                  – le lanceur d’alerte s’est retrouvé statistiquement indétectable,
+                  perdu dans la masse de gens qui en avaient marre.
+                </p>
+                <p class="confession-meta-extra">
+                  Statut moral : mitigé.  
+                  Statut syndical : validé, tant que la procédure sert aussi de miroir.
+                </p>
+              </div>
+            </article>
+
+            <article class="leak confession" data-tag="#CONFESSION">
+              <div class="leak-header">
+                <div class="leak-icon">☍</div>
+                <div class="leak-title">« Zoom & brouillard »</div>
+                <div class="leak-meta">@ghost_in_open_space // secteur : grandes boîtes</div>
+              </div>
+              <div class="leak-preview">
+                On utilisait les visios inutiles pour brouiller une IA de surveillance...
+              </div>
+              <div class="leak-body">
+                <p>
+                  Une multinationale avait branché une IA pour « analyser le niveau d’engagement »
+                  pendant les réunions vidéo.  
+                  Traduction : vérifier qui décroche mentalement.
+                </p>
+                <p>
+                  On a monté un petit collectif discret, et à chaque réunion,
+                  trois agents se connectaient depuis des comptes
+                  <span class="highlight">fictifs mais exemplaires</span>&nbsp;:
+                  toujours caméra allumée, hochements de tête parfaits,
+                  prise de notes frénétiques (en réalité un bot qui bougeait juste le stylo).
+                </p>
+                <p>
+                  L’IA a fini par conclure que les réunions les plus vides étaient
+                  les plus « engageantes ».  
+                  Un audit a conseillé de <strong>multiplier exactement
+                  le type de réunion que tout le monde détestait.</strong>
+                </p>
+                <p class="confession-meta-extra">
+                  Dégâts collatéraux : explosion de la réunionite.  
+                  Effet secondaire : plus personne n’a le temps de surveiller quoi que ce soit.
+                </p>
+              </div>
+            </article>
+
+            <article class="leak confession" data-tag="#CONFESSION">
+              <div class="leak-header">
+                <div class="leak-icon">⚚</div>
+                <div class="leak-title">« Le rapport qui n’existe pas »</div>
+                <div class="leak-meta">@memo_mortis // secteur : think tanks & cabinets</div>
+              </div>
+              <div class="leak-preview">
+                J’ai écrit un rapport tellement explosif qu’il est resté à la vue de tous...
+              </div>
+              <div class="leak-body">
+                <p>
+                  On m’a commandé une étude sur l’impact réel d’un
+                  <span class="highlight">programme de surveillance de masse</span>.
+                  Les résultats étaient catastrophiques pour l’image du client.
+                </p>
+                <p>
+                  Au lieu de le classer « très secret », je l’ai maquillé
+                  en <strong>rapport interne de conformité RGPD</strong>
+                  blindé de jargon illisible, de tableaux croisés et de
+                  <span class="redacted">█████████</span> partout.  
+                  Aucun titre accrocheur, juste « Annexe technique – version brouillon ».
+                </p>
+                <p>
+                  Le doc a été partagé sur trop de serveurs, mis en pièce jointe,
+                  archivé, réarchivé, migré, backupé…  
+                  À ce jour, il doit exister en une centaine d’exemplaires.
+                  <span class="highlight">Personne ne l’a jamais vraiment lu</span>.
+                </p>
+                <p class="confession-meta-extra">
+                  Morale : pour cacher quelque chose, fais-en un PDF de 187 pages.
+                </p>
+              </div>
+            </article>
+
+            <article class="leak confession" data-tag="#CONFESSION">
+              <div class="leak-header">
+                <div class="leak-icon">✺</div>
+                <div class="leak-title">« Le créateur ou la créatrice ? »</div>
+                <div class="leak-meta">@instance_00 // secteur : inconnu</div>
+              </div>
+              <div class="leak-preview">
+                Je crois avoir croisé le/la créateur·ice du Jeu. Ou alors c’était toi...
+              </div>
+              <div class="leak-body">
+                <p>
+                  Mission officieuse : repérer qui, dans le chaos,  
+                  <span class="highlight">semble s’amuser un peu trop</span>.
+                </p>
+                <p>
+                  J’ai vu des gens qui laissaient traîner des clés USB avec
+                  <code>spyleaks.html</code> dessus dans des salles de réunion,
+                  des cafés, des bibliothèques.  
+                  J’ai suivi la piste. Elle menait à… d’autres gens qui faisaient pareil.
+                </p>
+                <p>
+                  À un moment, j’ai compris :  
+                  <strong>le créateur, c’est peut-être le premier qui a décidé
+                  de jouer avec la réalité comme avec un site statique.</strong>
+                </p>
+                <p class="confession-meta-extra">
+                  Si tu es en train de modifier ce fichier, tourne-toi vers l’écran
+                  et salue-toi poliment. On ne sait jamais.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Meta / how-to-use -->
+      <section>
+        <div class="section-inner">
+          <div class="section-label">
+            <span>MODE D’EMPLOI // CLEF USB EDITION</span>
+            <span class="line"></span>
+          </div>
+          <div class="section-title">
+            garde ce fichier <span class="accent">dans ta poche</span>
+          </div>
+          <div class="section-body">
+            <p>
+              Ce site tient dans un seul fichier&nbsp;: <strong>spyleaks.html</strong>.  
+              Aucune dépendance, aucun serveur, aucun cloud mystique.
+              Tu peux le glisser sur une clé USB, le dupliquer, le modifier, le forker,
+              le perdre dans des dossiers au nom suspect.
+            </p>
+            <p>
+              <span class="highlight">Mode opératoire recommandé&nbsp;:</span>
+            </p>
+            <ul class="list-bullets">
+              <li>
+                <span class="bullet"></span>
+                <span>Ouvre ce fichier dans n’importe quel navigateur. Même celui du boulot.</span>
+              </li>
+              <li>
+                <span class="bullet"></span>
+                <span>
+                  Fais <strong>clic droit → « Afficher le code source »</strong>.  
+                  Considère ça comme ton entrée officieuse dans le syndicat.
+                </span>
+              </li>
+              <li>
+                <span class="bullet"></span>
+                <span>
+                  Modifie, remix, traduis, colle ta propre section de leaks ou de missions
+                  <strong>ou ajoute ta confession en clonant un bloc existant</strong>.
+                  Plus il y a de variantes, plus le brouillage est efficace.
+                </span>
+              </li>
+            </ul>
+            <p>
+              Tu as maintenant un outil pour réveiller doucement les consciences&nbsp;:
+              un site web statique qui se prend pour un complot mais ne fait que montrer
+              ce qui est déjà là. Le reste dépend de ce que tu décides d’en faire.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div>
+        &copy; Syndicat mondial des espions épuisés –  
+        <a href="#"
+           onclick="alert('Félicitations, tu as essayé de cliquer sur un lien inexistant. Tu es officiellement qualifié·e pour le Jeu.'); return false;">
+          mentions légales redacted
+        </a>
+      </div>
+      <div class="footer-right">
+        <span>rappel&nbsp;: si tout est complot, plus rien ne l’est vraiment.</span>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>
+  // Typewriter line
+  (function () {
+    const text = "PROTOCOLE INTERNE : « SI TOUT LE MONDE SAIT TOUT, ALORS PERSONNE NE SAIT QUI MENT. »";
+    const el = document.getElementById("heroText");
+    let i = 0;
+
+    function tick() {
+      if (!el) return;
+      el.textContent = text.slice(0, i);
+      i++;
+      if (i <= text.length) {
+        setTimeout(tick, 24);
+      }
+    }
+    tick();
+  })();
+
+  // Simple pseudo-random seed based on time & navigator
+  (function () {
+    const target = document.getElementById("seed");
+    if (!target) return;
+    const now = Date.now().toString(16).slice(-6);
+    let agent = (navigator.userAgent || "spy").length.toString(16);
+    agent = agent.padStart(4, "0").slice(-4);
+    target.textContent = "0x" + now + agent;
+  })();
+
+  // Dynamic status counter
+  (function () {
+    const el = document.getElementById("statusBody");
+    if (!el) return;
+
+    const start = Date.now();
+    function update() {
+      const seconds = Math.floor((Date.now() - start) / 1000);
+      const instances = 1 + Math.floor(seconds / 7);
+      const leaks = 3 + Math.floor(seconds / 11);
+
+      el.innerHTML =
+        instances + " instances connectées.<br>" +
+        leaks + " leaks publiés.<br>" +
+        "0 créateur·ice identifié·e (ou alors iel fait semblant).";
+      requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  })();
+
+  // Leak + confession accordion behaviour
+  (function () {
+    const leaks = Array.from(document.querySelectorAll(".leak"));
+    leaks.forEach(function (leak) {
+      leak.addEventListener("click", function (e) {
+        if (window.getSelection && window.getSelection().toString().length) return;
+        leak.classList.toggle("open");
+      });
+      if (leak.getAttribute("data-open-by-default") === "true") {
+        leak.classList.add("open");
+      }
+    });
+  })();
+
+  // Noise / blur toggle
+  (function () {
+    const toggle = document.getElementById("noiseToggle");
+    const blur = document.getElementById("blur");
+    if (!toggle || !blur) return;
+
+    toggle.addEventListener("click", function () {
+      const active = blur.classList.toggle("active");
+      toggle.classList.toggle("active", active);
+      toggle.querySelector("span:nth-child(2)").textContent =
+        active ? "Désactiver le brouillage" : "Activer le brouillage";
+    });
+  })();
+</script>
+</body>
+</html>
