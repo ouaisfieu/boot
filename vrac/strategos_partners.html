@@ -1,0 +1,681 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategos Partners | Intelligence Économique & Recrutement Stratégique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #fbbf24;
+        }
+
+        .hero {
+            margin-top: 80px;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.08) 0%, transparent 70%);
+            top: -250px;
+            right: -250px;
+            animation: pulse 10s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+            50% { transform: scale(1.3) rotate(90deg); opacity: 0.3; }
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fef3c7, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(245, 158, 11, 0.5);
+        }
+
+        .banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 3rem auto;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .banner strong {
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        .section {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #fef3c7;
+        }
+
+        .section-intro {
+            text-align: center;
+            color: #94a3b8;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(51, 65, 85, 0.6));
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(245, 158, 11, 0.25);
+            border-color: rgba(251, 191, 36, 0.5);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fbbf24;
+        }
+
+        .service-card p {
+            color: #cbd5e1;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .service-detail {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-style: italic;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .dual-approach {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .approach-column {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(30, 41, 59, 0.6));
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .approach-column h3 {
+            font-size: 2rem;
+            color: #fbbf24;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .approach-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .approach-column li {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .approach-column li:before {
+            content: "→ ";
+            color: #fbbf24;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .methodology {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(30, 41, 59, 0.7));
+            padding: 4rem 2rem;
+            border-radius: 30px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .method-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .method-step {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(51, 65, 85, 0.7));
+            padding: 4rem 2rem;
+            border-radius: 30px;
+            text-align: center;
+            margin: 6rem auto;
+            max-width: 1400px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 3rem auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 1rem;
+            background: rgba(10, 14, 39, 0.6);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 10px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #fbbf24;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .transparency-note {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid #22c55e;
+            border-radius: 10px;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(10, 14, 39, 0.95);
+            color: #64748b;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        @media (max-width: 968px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .dual-approach {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">⚡ STRATEGOS PARTNERS</div>
+            <ul class="nav-links">
+                <li><a href="#mission">Mission</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#approche">Approche Duale</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Intelligence Économique<br>& Talent Stratégique</h1>
+            <p class="subtitle">Nous combinons légitimement l'intelligence économique et le recrutement executive pour donner à nos clients un avantage compétitif décisif dans l'identification et l'acquisition des meilleurs talents</p>
+            <a href="#contact" class="cta-button">Découvrir Notre Approche</a>
+            
+            <div class="banner">
+                <strong>🎯 Notre Positionnement Unique</strong><br>
+                Strategos Partners est une AISBL belge spécialisée dans la convergence légale et éthique entre intelligence économique, veille stratégique et recrutement de haut niveau. Nous opérons en toute transparence selon les réglementations européennes.
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="mission">
+        <h2>Pourquoi Combiner Intelligence & Recrutement ?</h2>
+        <p class="section-intro">
+            Dans un monde hypercompétitif, recruter les meilleurs talents exige bien plus qu'une simple annonce. Cela nécessite une compréhension profonde des marchés, des secteurs, des réseaux d'influence et des dynamiques concurrentielles. C'est exactement ce que nous faisons : nous utilisons les méthodologies d'intelligence économique pour transformer le recrutement en avantage stratégique.
+        </p>
+
+        <div class="dual-approach" id="approche">
+            <div class="approach-column">
+                <h3>📊 Intelligence Économique</h3>
+                <ul>
+                    <li>Veille stratégique sectorielle et technologique</li>
+                    <li>Cartographie des écosystèmes d'innovation</li>
+                    <li>Analyse concurrentielle et benchmarking</li>
+                    <li>Identification des signaux faibles de marché</li>
+                    <li>Mapping des réseaux d'influence</li>
+                    <li>Études de positionnement stratégique</li>
+                    <li>Due diligence économique et réputation</li>
+                </ul>
+            </div>
+            
+            <div class="approach-column">
+                <h3>🎯 Recrutement Stratégique</h3>
+                <ul>
+                    <li>Executive search & chasse de têtes</li>
+                    <li>Identification proactive de talents rares</li>
+                    <li>Assessment & évaluation approfondie</li>
+                    <li>Approche discrète de profils passifs</li>
+                    <li>Conseil en structuration d'équipes</li>
+                    <li>Accompagnement d'intégration</li>
+                    <li>Talent mapping & succession planning</li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="section-intro">
+            <strong style="color: #fbbf24;">L'avantage de cette synergie :</strong> Nos analyses d'intelligence économique identifient où se trouvent les meilleurs talents, dans quelles entreprises, sur quels projets stratégiques ils travaillent, et comment les approcher efficacement. Inversement, nos missions de recrutement génèrent une connaissance fine des marchés que nous réinvestissons dans nos analyses stratégiques.
+        </p>
+    </section>
+
+    <section class="section" id="services">
+        <h2>Nos Services Intégrés</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🔍</div>
+                <h3>Talent Intelligence</h3>
+                <p>Identification et cartographie systématique des talents clés dans votre secteur, incluant leur parcours, compétences rares, réseaux et projets actuels.</p>
+                <div class="service-detail">Combine veille OSINT, analyse de réseaux professionnels et intelligence de marché pour créer une cartographie exploitable des talents stratégiques</div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <h3>Executive Search Augmenté</h3>
+                <p>Chasse de têtes enrichie par nos capacités d'intelligence économique pour identifier les profils les plus pertinents avant même qu'ils soient sur le marché.</p>
+                <div class="service-detail">Approche proactive basée sur l'analyse prédictive des mobilités professionnelles et des signaux de disponibilité</div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h3>Veille Concurrentielle RH</h3>
+                <p>Surveillance des mouvements de talents chez vos concurrents, analyse des politiques de recrutement et identification des stratégies d'acquisition de compétences.</p>
+                <div class="service-detail">Tableaux de bord réguliers sur les flux de talents, embauches stratégiques et évolutions organisationnelles de votre écosystème</div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h3>Mapping d'Écosystèmes</h3>
+                <p>Cartographie complète des écosystèmes d'innovation, clusters technologiques et réseaux d'expertise pour identifier les viviers de talents stratégiques.</p>
+                <div class="service-detail">Analyse des hubs technologiques, laboratoires de recherche, startups innovantes et leurs équipes clés</div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🛡️</div>
+                <h3>Due Diligence Intégrale</h3>
+                <p>Vérification approfondie des candidats combinant background check classique et analyse d'intelligence économique (réputation, réseaux, historique).</p>
+                <div class="service-detail">Enquêtes conformes RGPD incluant analyse de réputation digitale, vérification de références et évaluation d'intégrité</div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">💼</div>
+                <h3>Conseil en Stratégie RH</h3>
+                <p>Accompagnement stratégique dans vos décisions de recrutement basé sur notre connaissance fine des marchés et des dynamiques sectorielles.</p>
+                <div class="service-detail">Études de positionnement salarial, analyses de compétitivité RH et recommandations d'acquisition de talents</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="methodology">
+            <h2>Notre Méthodologie Hybride</h2>
+            <p class="section-intro">Une approche en 5 phases qui intègre intelligence économique et recrutement executive</p>
+            
+            <div class="method-steps">
+                <div class="method-step">
+                    <div class="step-number">1</div>
+                    <h3>Analyse Stratégique</h3>
+                    <p>Compréhension approfondie de votre contexte business, enjeux stratégiques et besoins en compétences via intelligence économique</p>
+                </div>
+                
+                <div class="method-step">
+                    <div class="step-number">2</div>
+                    <h3>Veille & Cartographie</h3>
+                    <p>Identification et mapping des talents pertinents via veille OSINT, analyse de réseaux et intelligence de marché</p>
+                </div>
+                
+                <div class="method-step">
+                    <div class="step-number">3</div>
+                    <h3>Approche Ciblée</h3>
+                    <p>Contact discret et qualification des candidats potentiels avec messages personnalisés basés sur notre connaissance fine</p>
+                </div>
+                
+                <div class="method-step">
+                    <div class="step-number">4</div>
+                    <h3>Évaluation Complète</h3>
+                    <p>Assessment approfondi combinant entretiens structurés, tests et due diligence d'intelligence économique</p>
+                </div>
+                
+                <div class="method-step">
+                    <div class="step-number">5</div>
+                    <h3>Intégration & Suivi</h3>
+                    <p>Accompagnement de l'onboarding et veille continue sur le marché des talents pour anticiper vos futurs besoins</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Nos Domaines d'Expertise</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Tech & Cybersécurité</h3>
+                <p>Recrutement de CTO, CISO, data scientists et experts en IA. Veille technologique et cartographie des talents deep tech.</p>
+            </div>
+            <div class="service-card">
+                <h3>Finance & Compliance</h3>
+                <p>Identification de CFO, risk managers et experts en réglementation. Intelligence sur les mouvements de marché.</p>
+            </div>
+            <div class="service-card">
+                <h3>Industrie 4.0</h3>
+                <p>Talents en transformation digitale, IoT et manufacturing avancé. Mapping des écosystèmes d'innovation industrielle.</p>
+            </div>
+            <div class="service-card">
+                <h3>Pharma & Biotech</h3>
+                <p>Profils R&D, affairs réglementaires et market access. Veille scientifique et cartographie des pipelines.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">300+</div>
+                <div class="stat-label">Missions Réalisées</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15</div>
+                <div class="stat-label">Secteurs Couverts</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">92%</div>
+                <div class="stat-label">Taux de Succès</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Conformité RGPD</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <h2>Parlons de Vos Besoins</h2>
+        <p class="subtitle" style="margin-bottom: 0;">Que vous cherchiez à recruter un talent stratégique ou à mieux comprendre votre marché, nous pouvons vous aider</p>
+        
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="name">Nom / Organisation *</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Professionnel *</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="service">Type de Besoin *</label>
+                <select id="service" required>
+                    <option value="">-- Sélectionnez --</option>
+                    <option value="recrutement">Recrutement Executive</option>
+                    <option value="intelligence">Intelligence Économique</option>
+                    <option value="talent-mapping">Talent Mapping</option>
+                    <option value="veille">Veille Concurrentielle</option>
+                    <option value="conseil">Conseil Stratégique RH</option>
+                    <option value="autre">Autre / Combinaison</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">Décrivez Votre Projet *</label>
+                <textarea id="message" required placeholder="Profil recherché, contexte stratégique, objectifs de veille..."></textarea>
+            </div>
+            <button type="submit" class="cta-button">Demander un Entretien</button>
+        </form>
+        
+        <div class="transparency-note">
+            <strong>✓ Transparence & Conformité</strong><br>
+            Strategos Partners opère en toute légalité selon les réglementations belges et européennes. Nos activités d'intelligence économique respectent strictement le RGPD et les normes éthiques professionnelles. Nous n'utilisons que des sources ouvertes (OSINT) et des méthodes légales. Nos consultants sont formés aux enjeux de compliance et de confidentialité.
+        </div>
+        
+        <div style="margin-top: 2rem; color: #94a3b8;">
+            📞 Ligne Directe : +32 (0)2 XXX XX XX<br>
+            📧 Contact : contact@strategos-partners.eu<br>
+            🏢 Siège : Avenue Louise, 1050 Bruxelles, Belgique
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>Strategos Partners AISBL</strong></p>
+        <p>Association Internationale Sans But Lucratif</p>
+        <p>Spécialisée en Intelligence Économique & Recrutement Stratégique</p>
+        <p style="margin-top: 1.5rem; font-size: 0.9rem;">
+            BCE: BE 0XXX.XXX.XXX<br>
+            Membre de la SCIP (Strategic & Competitive Intelligence Professionals)<br>
+            Conforme RGPD - Agréée SPF Emploi
+        </p>
+        <p style="margin-top: 2rem; font-size: 0.85rem; color: #475569;">
+            © 2025 Strategos Partners AISBL. Tous droits réservés.<br>
+            Mentions Légales | Charte Éthique | Politique de Confidentialité
+        </p>
+    </footer>
+
+    <script>
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert('Merci pour votre demande. Un consultant Strategos vous contactera sous 48h pour discuter de votre projet.');
+            e.target.reset();
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
