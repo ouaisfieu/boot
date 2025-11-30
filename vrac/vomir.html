@@ -1,0 +1,1216 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>PANTHÉON : NEXUS DES JEUX — JDR autonome</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.16);
+      --accent-strong: rgba(56,189,248,0.5);
+      --bg: #020617;
+      --text-main: #e5e7eb;
+      --text-subtle: #9ca3af;
+      --danger: #fb7185;
+      --radius-xl: 22px;
+      --shadow-soft: 0 22px 55px rgba(0,0,0,0.78);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #020617 0, #020617 45%, #000 100%);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
+
+    /* HEADER */
+
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(20px);
+      background: linear-gradient(to bottom,
+        rgba(2,6,23,0.97),
+        rgba(2,6,23,0.9));
+      border-bottom: 1px solid rgba(15,23,42,0.96);
+    }
+
+    .site-header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-orb {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: conic-gradient(from 180deg,#22c55e,#22d3ee,#a855f7,#f97316,#ef4444,#22c55e);
+      padding: 2px;
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.9);
+    }
+
+    .logo-orb-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .logo-text-main {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.20em;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--text-subtle);
+    }
+
+    nav.main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      font-size: 12px;
+    }
+
+    nav.main-nav a {
+      text-decoration: none;
+      color: var(--text-subtle);
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.7);
+      border: 1px solid transparent;
+      transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.06s;
+      white-space: nowrap;
+    }
+
+    nav.main-nav a:hover {
+      color: var(--accent);
+      border-color: rgba(56,189,248,0.6);
+      background: rgba(15,23,42,1);
+      transform: translateY(-0.5px);
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 16px 24px;
+      width: 100%;
+    }
+
+    .badge-offline {
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: 1px solid rgba(34,197,94,0.8);
+      color: #bbf7d0;
+      background: rgba(5,46,22,0.8);
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+
+    /* HERO */
+
+    .hero {
+      margin-top: 16px;
+      padding: 18px 16px 20px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(30,64,175,0.7);
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,0.24), transparent 58%),
+        radial-gradient(circle at top right, rgba(244,63,94,0.18), transparent 55%),
+        radial-gradient(circle at bottom, rgba(96,165,250,0.18), transparent 60%),
+        rgba(15,23,42,0.97);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .hero-tagline {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--text-subtle);
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.0rem, 2.6vw, 2.6rem);
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      margin: 0 0 8px;
+    }
+
+    .hero-title span.accent {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      color: var(--text-subtle);
+      max-width: 36rem;
+    }
+
+    .hero-actions {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 1px solid rgba(51,65,85,0.9);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      background: rgba(15,23,42,0.96);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.12s, color 0.12s, box-shadow 0.12s, transform 0.06s, border-color 0.12s;
+    }
+    .btn span.icon { font-size: 14px; }
+
+    .btn:hover {
+      background: rgba(15,23,42,1);
+      border-color: rgba(148,163,184,0.7);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right,#22c55e,#14b8a6);
+      border-color: rgba(34,197,94,0.3);
+      color: #022c22;
+      font-weight: 500;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(to right,#4ade80,#2dd4bf);
+      box-shadow: 0 0 0 1px rgba(45,212,191,0.7);
+    }
+
+    .btn-ghost {
+      background: rgba(15,23,42,0.78);
+    }
+
+    .hero-meta {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-subtle);
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(51,65,85,0.9);
+      padding: 3px 8px;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .hero-preview {
+      border-radius: 16px;
+      padding: 12px;
+      background:
+        radial-gradient(circle at top right, rgba(56,189,248,0.24), transparent 55%),
+        radial-gradient(circle at bottom, rgba(168,85,247,0.22), transparent 60%),
+        #020617;
+      border: 1px solid rgba(30,64,175,0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .preview-title {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 16px);
+      gap: 4px;
+      align-self: flex-start;
+    }
+
+    .preview-node {
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(30,64,175,0.8);
+      box-shadow: 0 0 0 1px rgba(15,23,42,1);
+      position: relative;
+    }
+    .preview-node.on {
+      background: var(--accent-soft);
+      box-shadow:
+        0 0 10px var(--accent-strong),
+        0 0 0 1px rgba(15,23,42,1);
+      border-color: rgba(56,189,248,0.8);
+    }
+    .preview-node::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 4px;
+      border: 1px solid rgba(15,23,42,0.9);
+    }
+
+    .preview-log {
+      margin-top: 4px;
+      border-radius: 10px;
+      border: 1px solid rgba(15,23,42,0.95);
+      background: rgba(15,23,42,0.9);
+      padding: 6px 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      color: var(--text-subtle);
+      max-height: 96px;
+      overflow: hidden;
+    }
+
+    /* LAYOUT SECTIONS */
+
+    .grid-2 {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .card {
+      border-radius: 18px;
+      border: 1px solid rgba(30,64,175,0.7);
+      background: rgba(15,23,42,0.95);
+      padding: 12px 14px 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+    }
+
+    .card-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+      margin-bottom: 6px;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin: 4px 0 6px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: var(--text-subtle);
+      margin: 0 0 6px;
+      line-height: 1.7;
+    }
+
+    .card ul {
+      margin: 0 0 6px;
+      padding-left: 1.2em;
+      font-size: 13px;
+      color: var(--text-subtle);
+    }
+
+    .tagline-small {
+      font-size: 11px;
+      color: var(--text-subtle);
+      margin-bottom: 4px;
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-subtle);
+    }
+
+    .rules-block {
+      border-radius: 12px;
+      border: 1px solid rgba(30,64,175,0.7);
+      padding: 8px 9px;
+      background: rgba(15,23,42,0.96);
+    }
+
+    .rules-block strong {
+      color: var(--text-main);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .quote {
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 9px 10px;
+      background: rgba(15,23,42,0.96);
+      font-style: italic;
+      font-size: 13px;
+      color: #cbd5f5;
+    }
+
+    .quote span {
+      font-style: normal;
+      font-size: 11px;
+      color: var(--text-subtle);
+      display: block;
+      margin-top: 3px;
+    }
+
+    .section-title-big {
+      margin-top: 22px;
+      margin-bottom: 8px;
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+    }
+
+    .columns-3 {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 10px;
+    }
+
+    .mini-card {
+      border-radius: 14px;
+      border: 1px solid rgba(31,41,55,0.9);
+      background: rgba(15,23,42,0.96);
+      padding: 8px 9px;
+      font-size: 12px;
+      color: var(--text-subtle);
+    }
+
+    .mini-card h3 {
+      font-size: 13px;
+      margin: 0 0 4px;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+    }
+
+    .mini-card ul {
+      margin: 0;
+      padding-left: 1.1em;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.9);
+      padding: 2px 7px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-subtle);
+    }
+
+    .pill-system {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-subtle);
+      margin-top: 6px;
+    }
+
+    .pill-system span {
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      padding: 2px 7px;
+      background: rgba(15,23,42,0.9);
+    }
+
+    /* TOOLS */
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 14px;
+      margin-top: 8px;
+      align-items: flex-start;
+    }
+
+    .tool {
+      border-radius: 16px;
+      border: 1px solid rgba(30,64,175,0.8);
+      background: rgba(15,23,42,0.97);
+      padding: 10px 11px 11px;
+      font-size: 12px;
+      color: var(--text-subtle);
+    }
+
+    .tool h3 {
+      font-size: 13px;
+      margin: 0 0 4px;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+    }
+
+    .tool-controls {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .tool-output {
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(15,23,42,0.95);
+      background: rgba(15,23,42,0.98);
+      padding: 6px 8px;
+      font-size: 12px;
+      min-height: 40px;
+    }
+
+    .tool-output strong {
+      color: var(--accent);
+    }
+
+    .note-area-label {
+      font-size: 11px;
+      color: var(--text-subtle);
+      margin-bottom: 4px;
+    }
+
+    .note-area {
+      border-radius: 12px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.98);
+      min-height: 140px;
+      padding: 6px 8px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-main);
+      outline: none;
+      white-space: pre-wrap;
+    }
+
+    .note-area.empty::before {
+      content: attr(data-placeholder);
+      color: #6b7280;
+      pointer-events: none;
+      display: block;
+    }
+
+    .status-notes {
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--text-subtle);
+    }
+
+    .roller-result {
+      margin-top: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      color: var(--text-subtle);
+    }
+
+    .roller-result span.score {
+      color: #facc15;
+    }
+    .roller-result span.hit {
+      color: #4ade80;
+    }
+    .roller-result span.miss {
+      color: var(--danger);
+    }
+
+    footer.site-footer {
+      margin-top: 22px;
+      border-top: 1px solid rgba(15,23,42,0.96);
+      padding-top: 8px;
+      font-size: 11px;
+      color: var(--text-subtle);
+      text-align: center;
+      padding-bottom: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .tools-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav.main-nav {
+        justify-content: flex-start;
+      }
+      .hero {
+        padding: 14px;
+      }
+      .card {
+        padding: 10px 11px 12px;
+      }
+      .columns-3 {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="logo">
+        <div class="logo-orb">
+          <div class="logo-orb-inner">PX</div>
+        </div>
+        <div>
+          <div class="logo-text-main">PANTHÉON : NEXUS DES JEUX</div>
+          <div class="logo-text-sub">
+            JDR hommage aux classiques — de la table D&amp;D aux ruelles de Vampire, en passant par la paranoïa Cthulhu.
+          </div>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="#accueil">Accueil</a>
+        <a href="#jouer">Jouer</a>
+        <a href="#univers">Univers</a>
+        <a href="#archetypes">Archétypes</a>
+        <a href="#tables">Tables</a>
+        <a href="#outils">Outils MJ</a>
+        <a href="#manifeste">Manifeste</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <!-- HERO -->
+    <section class="hero" id="accueil">
+      <div>
+        <div class="hero-tagline">jeu de rôle · héritage des classiques · zéro serveur</div>
+        <h1 class="hero-title">
+          Un <span class="accent">même système</span> pour parcourir tous les mondes qu’on a aimés.
+        </h1>
+        <p class="hero-sub">
+          <strong>PANTHÉON : NEXUS DES JEUX</strong> est un JDR cinématique qui prend pour
+          point de départ les sensations des jeux cultes : la quête héroïque façon
+          <em>D&amp;D</em>, l’horreur sourde de <em>Cthulhu</em>, les nuits gothiques à la
+          <em>Vampire</em>, le chrome sale de <em>Cyberpunk</em>, la narration propulsée
+          par des <em>moves</em> comme dans <em>Apocalypse World</em> ou <em>Blades in the Dark</em>.
+        </p>
+        <p class="hero-sub">
+          Ici, tout tient dans ce fichier HTML : règles, univers modulable, tables aléatoires,
+          outils MJ &amp; carnet de campagne en localStorage. À toi de le tordre jusqu’à en faire
+          ton jeu culte.
+        </p>
+        <div style="margin-top:8px;">
+          <span class="badge-offline"><span class="dot"></span> Hors-ligne. Zéro compte, zéro cloud, zéro DRM.</span>
+        </div>
+        <div class="hero-actions" id="jouer">
+          <a href="#regles" class="btn btn-primary">
+            <span class="icon">▶</span><span>Commencer à jouer (2d6, c’est parti)</span>
+          </a>
+          <a href="#archetypes" class="btn btn-ghost">
+            <span class="icon">👤</span><span>Choisir un archétype</span>
+          </a>
+          <a href="#tables" class="btn btn-ghost">
+            <span class="icon">🎲</span><span>Lancer une mission aléatoire</span>
+          </a>
+        </div>
+        <div class="hero-meta">
+          <span class="pill">3–5 joueurs conseillé</span>
+          <span class="pill">1 meneur·se ou narration tournante</span>
+          <span class="pill">Durée : 3–4h la session, campagne possible</span>
+          <span class="pill">Matériel : dés à 6 faces, papier, cette page</span>
+        </div>
+      </div>
+
+      <aside class="hero-preview" aria-hidden="true">
+        <div class="preview-header">
+          <div>
+            <div class="preview-title">CARTOUCHE DE NEXUS</div>
+            <div class="tagline-small">
+              Chaque case allumée est un monde inspiré d’un classique. À votre table de les explorer.
+            </div>
+          </div>
+          <div class="pill">
+            <span>Modes :</span> <strong>Donjon</strong> · <strong>Gothique</strong> · <strong>Cyber</strong> · <strong>Mythe</strong>
+          </div>
+        </div>
+        <div class="preview-grid">
+          <!-- Juste esthétique -->
+          <div class="preview-node on"></div><div class="preview-node"></div><div class="preview-node on"></div>
+          <div class="preview-node"></div><div class="preview-node on"></div><div class="preview-node"></div>
+
+          <div class="preview-node"></div><div class="preview-node on"></div><div class="preview-node"></div>
+          <div class="preview-node on"></div><div class="preview-node on"></div><div class="preview-node"></div>
+
+          <div class="preview-node on"></div><div class="preview-node"></div><div class="preview-node on"></div>
+          <div class="preview-node"></div><div class="preview-node"></div><div class="preview-node on"></div>
+
+          <div class="preview-node"></div><div class="preview-node on"></div><div class="preview-node"></div>
+          <div class="preview-node on"></div><div class="preview-node"></div><div class="preview-node"></div>
+
+          <div class="preview-node on"></div><div class="preview-node"></div><div class="preview-node"></div>
+          <div class="preview-node"></div><div class="preview-node on"></div><div class="preview-node on"></div>
+
+          <div class="preview-node"></div><div class="preview-node"></div><div class="preview-node on"></div>
+          <div class="preview-node on"></div><div class="preview-node"></div><div class="preview-node"></div>
+        </div>
+        <div class="preview-log">
+          &gt; PANTHÉON v1.0<br />
+          &gt; modules inspirés : dungeon-crawl, enquêtes lovecraftiennes, nuits vampiriques, ruelles cyberpunk, heists à la Blades...<br />
+          &gt; moteur : 2d6 + Traits, succès/complications à la manière des PbtA<br />
+          &gt; stockage : localStorage &amp; carnets papier<br />
+          &gt; mise à jour : à ta table, pas sur un serveur.
+        </div>
+      </aside>
+    </section>
+
+    <!-- RÈGLES + UNIVERS DE BASE -->
+    <section class="grid-2" id="regles">
+      <article class="card">
+        <div class="card-title">Règles de base</div>
+        <h2>Système 2d6 cinématique (héritage PbtA &amp; co)</h2>
+        <p>
+          Quand une action est incertaine, jette <strong>2d6 + un Trait</strong>. On veut
+          quelque chose dans l’esprit des jeux propulsés par l’Apocalypse : peu de chiffres,
+          beaucoup de fiction, des résultats qui poussent à raconter.
+        </p>
+        <div class="rules-grid">
+          <div class="rules-block">
+            <strong>Traits</strong>
+            <ul>
+              <li><strong>Force</strong> — physique, intimidation, violence, survie.</li>
+              <li><strong>Finesse</strong> — agilité, tir, discrétion, adresse.</li>
+              <li><strong>Esprit</strong> — savoirs, intuition, enquête, occultisme.</li>
+              <li><strong>Ombre</strong> — réseaux, manipulation, pouvoirs étranges.</li>
+            </ul>
+            <p style="margin-top:4px;">
+              Répartissez <strong>+2, +1, +1, 0</strong> entre ces quatre Traits.
+            </p>
+          </div>
+          <div class="rules-block">
+            <strong>Résultat</strong>
+            <ul>
+              <li><strong>10+</strong> : <em>Succès plein</em> — tu obtiens ce que tu voulais, et un petit bonus.</li>
+              <li><strong>7–9</strong> : <em>Succès mitigé</em> — tu réussis, mais avec un coût, une complication ou un choix difficile.</li>
+              <li><strong>6-</strong> : <em>La situation se retourne</em> — le MJ fait avancer une menace, ou donne quelque chose de tordu.</li>
+            </ul>
+          </div>
+        </div>
+        <p>
+          Pas de longue liste de compétences : la table discute quel Trait s’applique, et ce que
+          la fiction autorise, comme dans les jeux narratifs modernes.
+        </p>
+        <p class="pill-system">
+          <span>Échos :</span>
+          <span>Apocalypse World</span>
+          <span>Dungeon World</span>
+          <span>Blades in the Dark</span>
+        </p>
+      </article>
+
+      <article class="card" id="univers">
+        <div class="card-title">Le Nexus</div>
+        <h2>Un hub entre mondes cultes</h2>
+        <p>
+          PANTHÉON ne décrit pas un seul monde, mais un <strong>nexus</strong> : un carrefour
+          entre quatre “lignes de fiction” qui rappellent des jeux cultes sans les copier :
+        </p>
+        <ul>
+          <li><strong>Royaumes Brisés</strong> — donjons, dragons, royaumes en ruine (écho D&amp;D / OSR).</li>
+          <li><strong>Cité de Chrome</strong> — néons, implants, mégacorps (écho Cyberpunk, Shadowrun).</li>
+          <li><strong>Nuits de Masques</strong> — intrigues vampiriques, sociétés secrètes (écho Vampire &amp; consorts).</li>
+          <li><strong>Archives du Mythe</strong> — horreur cosmique, enquête, santé mentale (écho Cthulhu).</li>
+        </ul>
+        <p>
+          Vos PJ sont des <strong>Traverseurs</strong> : ils laissent des traces dans plusieurs
+          lignées à la fois. Un même personnage peut vivre un arc “donjon crasseux” puis une
+          affaire de secte urbaine, puis un casse cyberpunk.
+        </p>
+        <p>
+          Choisissez une lignée principale pour la campagne, gardez les autres comme rêves,
+          flashbacks, visions ou futurs possibles.
+        </p>
+      </article>
+    </section>
+
+    <!-- ARCHÉTYPES -->
+    <h2 class="section-title-big" id="archetypes">Archétypes : clins d’œil aux classiques</h2>
+    <section class="columns-3">
+      <article class="mini-card">
+        <h3>Chevalier Déclassé</h3>
+        <p>
+          Écho : paladins &amp; guerriers tragiques. Tu as prêté un serment dans un autre monde, et tu traînes encore ses ruines.
+        </p>
+        <ul>
+          <li><strong>Traits conseillés</strong> : Force +2, Finesse +1, Esprit +1, Ombre 0.</li>
+          <li><strong>Move signature</strong> : quand tu défends quelqu’un plus faible que toi, gagne +1 à ton jet. Sur un 10+, tu inspires quelqu’un.</li>
+          <li><strong>Dette</strong> : quelle promesse n’as-tu jamais tenue ?</li>
+        </ul>
+        <span class="tag">Royaumes Brisés</span>
+      </article>
+
+      <article class="mini-card">
+        <h3>Fixer de la Cité</h3>
+        <p>
+          Écho : fixers de Cyberpunk, riggers de Shadowrun. Tu tiens un carnet de dettes et de fausses pistes.
+        </p>
+        <ul>
+          <li><strong>Traits conseillés</strong> : Ombre +2, Esprit +1, Finesse +1, Force 0.</li>
+          <li><strong>Move signature</strong> : quand tu actives tes contacts, tu sais qui peut fournir quelque chose — mais le MJ choisit le prix.</li>
+          <li><strong>Dette</strong> : à qui refuses-tu de vendre des infos, même bien payé·e ?</li>
+        </ul>
+        <span class="tag">Cité de Chrome</span>
+      </article>
+
+      <article class="mini-card">
+        <h3>Enfant du Masque</h3>
+        <p>
+          Écho : clans vampiriques &amp; intrigues urbaines. Tu appartiens à une famille occultée qui tire des ficelles dans l’ombre.
+        </p>
+        <ul>
+          <li><strong>Traits conseillés</strong> : Ombre +2, Finesse +1, Esprit +1, Force 0.</li>
+          <li><strong>Move signature</strong> : quand tu joues sur les émotions de quelqu’un, sur 10+ il te suit au-delà du raisonnable, sur 7–9 il te suit mais veut quelque chose en retour.</li>
+          <li><strong>Dette</strong> : quel secret sur ta lignée te détruirait s’il sortait ?</li>
+        </ul>
+        <span class="tag">Nuits de Masques</span>
+      </article>
+
+      <article class="mini-card">
+        <h3>Archiviste du Mythe</h3>
+        <p>
+          Écho : investigateurs de Cthulhu. Tu as lu trop de choses, vu trop de dossiers qui n’existent pas officiellement.
+        </p>
+        <ul>
+          <li><strong>Traits conseillés</strong> : Esprit +2, Ombre +1, Finesse +1, Force 0.</li>
+          <li><strong>Move signature</strong> : quand tu plonges dans des sources obscures, sur 10+ tu obtiens un avantage décisif, sur 7–9 tu coches aussi une case de Fêlure.</li>
+          <li><strong>Dette</strong> : quel souvenir refuses-tu de revivre en rêve ?</li>
+        </ul>
+        <span class="tag">Archives du Mythe</span>
+      </article>
+
+      <article class="mini-card">
+        <h3>Blade des Ruelles</h3>
+        <p>
+          Écho : crew de voleurs à la Blades in the Dark. Tu sais monter des coups, choisir des cibles, et encaisser les représailles.
+        </p>
+        <ul>
+          <li><strong>Traits conseillés</strong> : Finesse +2, Ombre +1, Force +1, Esprit 0.</li>
+          <li><strong>Move signature</strong> : quand vous lancez un casse, décris le plan en une phrase ; tant qu’il tient, gagne +1 pour rester dans le coup.</li>
+          <li><strong>Dette</strong> : à quel gang dois-tu une faveur impossible ?</li>
+        </ul>
+        <span class="tag">Cité de Chrome / Masques</span>
+      </article>
+
+      <article class="mini-card">
+        <h3>Voyageur de la Table</h3>
+        <p>
+          Écho méta : tous ces soirs passés sur des fiches tachées de café. Tu te souviens des autres jeux ; le Nexus aussi.
+        </p>
+        <ul>
+          <li><strong>Traits conseillés</strong> : à ta guise — tu es un pont.</li>
+          <li><strong>Move signature</strong> : une fois par session, tu peux déclarer “dans un autre monde, je sais faire ça” et gagner avantage sur un jet.</li>
+          <li><strong>Dette</strong> : quel jeu réel t’a fait voir le monde autrement ?</li>
+        </ul>
+        <span class="tag">Nexus</span>
+      </article>
+    </section>
+
+    <!-- TABLES & OUTILS -->
+    <h2 class="section-title-big" id="tables">Tables & générateurs à la volée</h2>
+    <section class="tools-grid">
+      <article class="tool">
+        <h3>Générateur de pitch de scénario</h3>
+        <p class="tagline-small">
+          Comme les tables d’aventures aléatoires des livres old school, mais en multi-genre.
+        </p>
+        <div class="tool-controls">
+          <button class="btn btn-ghost" id="btn-pitch">
+            <span class="icon">🎲</span><span>Nouveau pitch</span>
+          </button>
+        </div>
+        <div class="tool-output" id="out-pitch">
+          <em>Exemple :</em> Dans une taverne rongée par le mythe, un vampire politique te demande de pirater une IA de surveillance.
+        </div>
+      </article>
+
+      <article class="tool">
+        <h3>Complication façon 7–9</h3>
+        <p class="tagline-small">
+          Quand un joueur fait 7–9, pioche ici une torsion inspirée des meilleurs “moves durs”.
+        </p>
+        <div class="tool-controls">
+          <button class="btn btn-ghost" id="btn-complication">
+            <span class="icon">⚡</span><span>Ajouter du sel</span>
+          </button>
+        </div>
+        <div class="tool-output" id="out-complication">
+          <em>Exemple :</em> Tu réussis, mais tu fais du bruit : une horloge de menace avance d’un cran.
+        </div>
+      </article>
+    </section>
+
+    <section class="tools-grid" style="margin-top:10px;">
+      <article class="tool">
+        <h3>Table d’horreur douce</h3>
+        <p class="tagline-small">
+          Quand le ton doit glisser vers Cthulhu sans tout casser en gore.
+        </p>
+        <div class="tool-controls">
+          <button class="btn btn-ghost" id="btn-horreur">
+            <span class="icon">👁</span><span>Manifestation étrange</span>
+          </button>
+        </div>
+        <div class="tool-output" id="out-horreur">
+          <em>Exemple :</em> Un PNJ parle de la partie comme si elle était déjà arrivée, dans une autre version de la soirée.
+        </div>
+      </article>
+
+      <article class="tool">
+        <h3>Oracle rapide pour MJ fatigué·e</h3>
+        <p class="tagline-small">
+          Oui / Non / Oui mais… façon jeu solo ou décisions rapides.
+        </p>
+        <div class="tool-controls">
+          <button class="btn btn-ghost" id="btn-oracle">
+            <span class="icon">❓</span><span>Demander à l’Oracle</span>
+          </button>
+        </div>
+        <div class="tool-output" id="out-oracle">
+          <em>Exemple :</em> L’Oracle répond : <strong>Oui, mais une conséquence revient plus tard.</strong>
+        </div>
+      </article>
+    </section>
+
+    <!-- OUTILS MJ -->
+    <h2 class="section-title-big" id="outils">Outils MJ : jet de dés & carnet local</h2>
+    <section class="grid-2">
+      <article class="card">
+        <div class="card-title">Lanceur 2d6 intégré</div>
+        <h2>Pour les soirs sans dés (ou à distance)</h2>
+        <p>
+          Ce n’est pas là pour remplacer les vrais dés, mais pour dépanner. Lance 2d6, ajoute un
+          Trait, et lis le résultat comme dans les PbtA.
+        </p>
+        <div class="tool-controls">
+          <label style="font-size:12px;">Modificateur :</label>
+          <input id="mod-input" type="number" value="0" style="width:60px;padding:3px 6px;border-radius:999px;border:1px solid rgba(55,65,81,0.9);background:#020617;color:var(--text-main);font-size:12px;outline:none;" />
+          <button class="btn btn-ghost" id="btn-roll">
+            <span class="icon">🎲</span><span>Lancer 2d6 + mod</span>
+          </button>
+        </div>
+        <div class="roller-result" id="out-roll">
+          Lance pour voir si tu fais un 10+ héroïque, un 7–9 bien sale, ou un 6- dramatique.
+        </div>
+        <p style="margin-top:8px;font-size:11px;color:var(--text-subtle);">
+          Rappel : <strong>10+</strong> = succès fort, <strong>7–9</strong> = succès avec complication,
+          <strong>6-</strong> = l’ennemi, la ville ou le mythe répond.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-title">Carnet de campagne</div>
+        <h2>Notes stockées uniquement en local</h2>
+        <p>
+          Comme un équivalent numérique de ton carnet Moleskine : ce que tu écris ici est
+          enregistré dans le <strong>localStorage</strong> du navigateur. Ça reste sur cette machine.
+        </p>
+        <div class="note-area-label">
+          Notes campagne / fronts / PNJ — <span id="notes-status">non modifié</span>
+        </div>
+        <div id="notes" class="note-area empty"
+             contenteditable="true"
+             data-placeholder="Écris ici les fronts façon Apocalypse World, les horloges à la Blades, les PNJ, les secrets…">
+        </div>
+        <div class="status-notes">
+          ⚠ Changer de navigateur ou d’ordinateur = ce carnet ne suit pas. Fais des sauvegardes papier ou copie-colle dans un fichier texte.
+        </div>
+      </article>
+    </section>
+
+    <!-- MANIFESTE -->
+    <section class="grid-2" id="manifeste">
+      <article class="card">
+        <div class="card-title">Manifeste</div>
+        <h2>Un jeu-tribute que tu es censé trahir</h2>
+        <p>
+          PANTHÉON est volontairement un <strong>frankenstein affectif</strong> : il porte des
+          cicatrices de D&amp;D, de l’Appel de Cthulhu, de Vampire, de Cyberpunk, des PbtA, de
+          Blades in the Dark, des vieilles tables aléatoires à la Warhammer, des carnets griffonnés.
+        </p>
+        <p>
+          Tu n’es pas censé·e le “respecter” : tu es censé·e le hacker. Change les noms, supprime
+          des lignées, invente la tienne (mécha, space opera, rural weird, teen drama surnaturel…).
+        </p>
+        <ul>
+          <li>Tu peux transformer les Traits en classes (Guerrier, Mage, Voleur, etc.).</li>
+          <li>Tu peux durcir le système (blessures, santé mentale, dettes chiffrées).</li>
+          <li>Tu peux en faire un jeu solo avec l’Oracle et les tables.</li>
+          <li>Tu peux splitter ce fichier en plusieurs pages ou tout imprimer.</li>
+        </ul>
+        <p>
+          Si un jour ton propre fork circule sur des clés USB, qu’on joue dessus à 2h du matin sur
+          une table collante, alors là tu auras vraiment fait un jeu culte.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-title">Pour aller plus loin</div>
+        <h2>Comment le surclasser à ta sauce</h2>
+        <p>
+          Quelques pistes concrètes pour faire “mieux” que ce fichier :
+        </p>
+        <ul>
+          <li>Écrire une mini-campagne en 4 épisodes, un par lignée (donjon, gothique, cyber, mythe).</li>
+          <li>Ajouter des “horloges” graphiques en HTML/CSS pour suivre les menaces.</li>
+          <li>Coder un générateur de PNJ avec portrait ASCII ou CSS.</li>
+          <li>Intégrer une feuille de personnage interactive qui se sauvegarde en local.</li>
+          <li>Créer des modules de règles optionnels (magie noire, pouvoirs vampiriques, implants cyber…).</li>
+        </ul>
+        <p>
+          Ce fichier est la “boîte rouge” : l’édition d’initiation. À toi de faire la 3.5, le
+          supplément gothique, le hack space opera, le petit livret que les gens gardent 20 ans.
+        </p>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      PANTHÉON : NEXUS DES JEUX — JDR HTML/CSS/JS autonome, inspiré par des géants mais destiné à être dépassé par ta propre version.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      // --- GENERATEURS ------------------------------------------------------
+      const pitches = [
+        "Dans une taverne en ruine des Royaumes Brisés, un noble déchu t’engage pour voler un artefact que tu as déjà vu dans un rêve cyberpunk.",
+        "Dans une ruelle de la Cité de Chrome, une goule élégante te propose un pacte : effacer une dette ancienne inscrite dans le sang et dans le code.",
+        "À la bibliothèque d’une petite ville côtière, un livre impossible mentionne vos noms comme des PJ d’un autre jeu.",
+        "Une guilde de voleurs old school découvre une horloge de menace affichée sur le ciel nocturne, codée en constellations.",
+        "Dans un club gothique, un vampire parle d’un donjon qui n’existe que quand on y pense collectivement.",
+        "Un fixeur cyberpunk te confie un job simple : escorter un groupe d’ados qui croient jouer à un JDR, mais qui modifient réellement la ville.",
+        "Un prêtre guerrier te montre une fiche de perso vieille de vingt ans qui décrit exactement ton personnage actuel.",
+        "Une IA de recommandation commence à conseiller des modules de jeu de rôle anciens à tout le monde, comme un virus nostalgique.",
+        "Un ami de longue date revient d’une campagne Cthulhu… avec des souvenirs d’événements qui n’ont jamais eu lieu à cette table.",
+        "Une faille dans le Nexus permet de parler à des PJ d’une autre campagne, dans un autre monde, qui essaient aussi de sauver leur ville."
+      ];
+
+      const complications = [
+        "Tu réussis, mais une horloge de menace que vous aviez oubliée avance d’un cran.",
+        "Tu réussis, mais un PNJ innocent encaisse une partie du prix.",
+        "Tu réussis, mais la Grille (ou l’équivalent local) enregistre ta signature.",
+        "Tu réussis, mais tu dois choisir : préserver le plan ou préserver une relation.",
+        "Tu réussis, mais quelqu’un d’autre récolte le crédit — et la cible sur le dos.",
+        "Tu réussis, mais tu perds un objet symbolique important.",
+        "Tu réussis, mais tu déclenches une rumeur incontrôlable.",
+        "Tu réussis, mais un souvenir douloureux remonte et te poursuit.",
+        "Tu réussis, mais tu fermes une porte narrative que tu espérais garder ouverte.",
+        "Tu réussis, mais un ancien ennemi comprend enfin comment te toucher."
+      ];
+
+      const horreurs = [
+        "Un PNJ utilise exactement les mots d’un autre PNJ joué des années plus tôt dans une autre campagne.",
+        "Les personnages voient, dans une vitrine, leurs propres silhouettes en figurines peintes.",
+        "Une vieille carte de donjon correspond à la topographie d’un quartier moderne de la ville.",
+        "Les journaux d’un investigateur d’une autre époque mentionnent la session en cours comme un ‘cas de 202X’.",
+        "Une ombre sur un mur continue de jouer, alors que la scène est terminée.",
+        "Le bruit de dés qui roulent se fait entendre dans une pièce vide.",
+        "Un PNJ parle d’une “table précédente” qui a échoué là où vous réussissez.",
+        "Le temps semble se répéter jusqu’à ce que quelqu’un change un détail minuscule.",
+        "Un livre de règles oublié sur une étagère comporte des annotations dans ton écriture.",
+        "À chaque échec sérieux, la ville perd une couleur, juste un peu."
+      ];
+
+      const oracles = [
+        "Oui, sans réserve.",
+        "Oui, mais une complication revient plus tard.",
+        "Oui, mais quelqu’un d’important t’en veut désormais.",
+        "Non, mais quelque chose de précieux est révélé.",
+        "Non, et la situation empire immédiatement.",
+        "Non, mais tu gagnes un allié inattendu.",
+        "Oui, mais un coût s’abat sur quelqu’un d’innocent.",
+        "Oui, à condition de sacrifier quelque chose de réel (objet, lien, vérité)."
+      ];
+
+      function pickRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function bindGenerator(btnId, outId, label, table) {
+        const btn = document.getElementById(btnId);
+        const out = document.getElementById(outId);
+        if (!btn || !out) return;
+        btn.addEventListener("click", () => {
+          const t = pickRandom(table);
+          out.innerHTML = label + "<strong>" + t + "</strong>";
+        });
+      }
+
+      bindGenerator("btn-pitch", "out-pitch", "Pitch : ", pitches);
+      bindGenerator("btn-complication", "out-complication", "Complication : ", complications);
+      bindGenerator("btn-horreur", "out-horreur", "Manifestation : ", horreurs);
+      bindGenerator("btn-oracle", "out-oracle", "L’Oracle répond : ", oracles);
+
+      // --- ROLLER 2D6 -------------------------------------------------------
+      const modInput = document.getElementById("mod-input");
+      const btnRoll = document.getElementById("btn-roll");
+      const outRoll = document.getElementById("out-roll");
+
+      function roll2d6(mod) {
+        const d1 = Math.floor(Math.random() * 6) + 1;
+        const d2 = Math.floor(Math.random() * 6) + 1;
+        const total = d1 + d2 + mod;
+        return { d1, d2, total };
+      }
+
+      if (btnRoll && outRoll && modInput) {
+        btnRoll.addEventListener("click", () => {
+          const mod = parseInt(modInput.value, 10) || 0;
+          const { d1, d2, total } = roll2d6(mod);
+          let verdict, cls;
+          if (total >= 10) {
+            verdict = "Succès fort — prends la main et décris quelque chose de stylé.";
+            cls = "hit";
+          } else if (total >= 7) {
+            verdict = "Succès mitigé — ça passe, mais le MJ ajoute une complication.";
+            cls = "score";
+          } else {
+            verdict = "6- — le MJ fait un move dur, une menace avance.";
+            cls = "miss";
+          }
+          outRoll.innerHTML =
+            "Tu obtiens <span class='score'>" + d1 + "</span> + <span class='score'>" + d2 +
+            "</span> " + (mod >= 0 ? "+ " + mod : "– " + Math.abs(mod)) +
+            " = <span class='score'>" + total + "</span> · <span class='" + cls + "'>" + verdict + "</span>";
+        });
+      }
+
+      // --- NOTES LOCALSTORAGE -----------------------------------------------
+      const NOTES_KEY = "pantheon-nexus-notes-v1";
+      const notesEl = document.getElementById("notes");
+      const notesStatusEl = document.getElementById("notes-status");
+      let notesTimeout = null;
+
+      function setNotesPlaceholderClass() {
+        const text = (notesEl.textContent || "").trim();
+        if (!text) {
+          notesEl.classList.add("empty");
+        } else {
+          notesEl.classList.remove("empty");
+        }
+      }
+
+      function loadNotes() {
+        try {
+          const raw = localStorage.getItem(NOTES_KEY);
+          if (!raw) {
+            notesEl.textContent = "";
+            setNotesPlaceholderClass();
+            notesStatusEl.textContent = "aucune note sauvegardée";
+            return;
+          }
+          const data = JSON.parse(raw);
+          notesEl.textContent = data.content || "";
+          setNotesPlaceholderClass();
+          notesStatusEl.textContent = "notes chargées (local)";
+        } catch (e) {
+          notesStatusEl.textContent = "impossible de charger les notes locales";
+        }
+      }
+
+      function saveNotes() {
+        try {
+          const data = {
+            content: notesEl.textContent || "",
+            updatedAt: new Date().toISOString()
+          };
+          localStorage.setItem(NOTES_KEY, JSON.stringify(data));
+          notesStatusEl.textContent = "notes sauvegardées (local)";
+        } catch (e) {
+          notesStatusEl.textContent = "erreur de sauvegarde (quota ?)";
+        }
+      }
+
+      function scheduleNotesSave() {
+        if (notesTimeout) clearTimeout(notesTimeout);
+        notesStatusEl.textContent = "modifications non sauvegardées…";
+        notesTimeout = setTimeout(saveNotes, 700);
+      }
+
+      if (notesEl && notesStatusEl) {
+        loadNotes();
+        notesEl.addEventListener("input", () => {
+          setNotesPlaceholderClass();
+          scheduleNotesSave();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
