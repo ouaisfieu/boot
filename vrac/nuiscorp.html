@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NuisCorp - Excellence en Nuisance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: #ff6b6b;
+        }
+
+        .hero {
+            margin-top: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: #1a1a2e;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .stats {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+        }
+
+        .stat {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .testimonials {
+            background: #f8f9fa;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .testimonial-author {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">NuisCorp</div>
+            <ul>
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#stats">Résultats</a></li>
+                <li><a href="#temoignages">Témoignages</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="accueil">
+        <div class="hero-content">
+            <h1>Bienvenue chez NuisCorp</h1>
+            <p>Leader mondial en optimisation de désagréments et maximisation d'irritations depuis 1987</p>
+            <a href="#services" class="cta-button">Découvrir nos services</a>
+        </div>
+    </section>
+
+    <section id="services">
+        <h2>Nos Services Premium</h2>
+        <div class="services">
+            <div class="service-card">
+                <div class="service-icon">📞</div>
+                <h3>Appels Téléphoniques Intempestifs</h3>
+                <p>Notre équipe d'experts vous contacte aux moments les plus inopportuns avec une précision chirurgicale. Pendant le dîner, en réunion, ou à 6h du matin.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📧</div>
+                <h3>Spam Premium</h3>
+                <p>Des emails non sollicités de haute qualité, optimisés pour saturer votre boîte de réception avec une efficacité redoutable.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔊</div>
+                <h3>Nuisances Sonores</h3>
+                <p>Travaux nocturnes, musique à volume maximal, et bruits inexpliqués. Nous perturbons votre tranquillité avec professionnalisme.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🚗</div>
+                <h3>Stationnement Gênant</h3>
+                <p>Nos véhicules bloquent stratégiquement les accès, sorties de garage et places de livraison. Un art maîtrisé à la perfection.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">⏰</div>
+                <h3>Retards Systématiques</h3>
+                <p>Nous garantissons des retards dans tous vos projets, livraisons et rendez-vous importants. La ponctualité est notre ennemi.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">💬</div>
+                <h3>Service Client Kafkaïen</h3>
+                <p>Des attentes interminables, des transferts incessants et des réponses évasives. L'expérience client réinventée.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats" id="stats">
+        <h2>Nos Résultats Impressionnants</h2>
+        <div class="stats-container">
+            <div class="stat">
+                <div class="stat-number">2.4M+</div>
+                <div class="stat-label">Personnes agacées quotidiennement</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">87%</div>
+                <div class="stat-label">Taux de satisfaction en irritation</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Pays où nous opérons</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Nuisances non-stop</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="temoignages">
+        <h2>Ce Que Nos Victimes Disent</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial">
+                <p class="testimonial-text">"Je ne peux plus dormir tranquille. Leur efficacité est terrifiante. Bravo pour le professionnalisme !"</p>
+                <p class="testimonial-author">- Jean D., Paris</p>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"Grâce à NuisCorp, ma boîte mail déborde et mon téléphone n'arrête pas de sonner. C'est exactement ce que je ne voulais pas."</p>
+                <p class="testimonial-author">- Marie L., Lyon</p>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"Impossible de les joindre, impossible de se débarrasser d'eux. Un paradoxe magistralement exécuté."</p>
+                <p class="testimonial-author">- Pierre M., Marseille</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="text-align: center; background: #f8f9fa;">
+        <h2>Contactez-Nous (Si Vous Osez)</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #555;">Notre équipe ne vous répondra probablement jamais, mais tentez votre chance !</p>
+        <a href="mailto:nepasrepondre@nuiscorp.com" class="cta-button">Envoyer un message dans le vide</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 NuisCorp - Tous droits de nuire réservés</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">Disclaimer : Cette entreprise est entièrement fictive et satirique.</p>
+    </footer>
+</body>
+</html>
