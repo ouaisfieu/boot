@@ -34,7 +34,7 @@
       display: flex;
       align-items: stretch;
       justify-content: center;
-      padding: 16px;
+      padding: 8px; /* un peu moins de marge pour gagner de la place */
       overflow-x: hidden;
       position: relative;
       animation: bg-shift 16s infinite alternate ease-in-out;
@@ -78,7 +78,7 @@
       max-width: 1100px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 8px;
       position: relative;
       z-index: 2;
     }
@@ -86,8 +86,21 @@
     @media (min-width: 820px) {
       .app {
         flex-direction: row;
-        gap: 20px;
+        gap: 12px;
       }
+    }
+
+    /* MODE PLEIN ÉCRAN VISIONNEUSE (NOUVEAU) */
+    .app.viewer-full .digicode-panel {
+      display: none;
+    }
+
+    .app.viewer-full .viewer-panel {
+      flex: 1 1 auto;
+    }
+
+    .app.viewer-full .viewer {
+      min-height: 80vh;
     }
 
     /* BOOT SCREEN (plein écran au chargement) */
@@ -581,18 +594,18 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      min-height: 280px;
+      min-height: 60vh; /* plus haut pour que le site ne paraisse pas rikiki */
     }
 
     @media (min-width: 820px) {
       .panel.digicode-panel {
-        flex: 0 0 42%;
+        flex: 0 0 38%;
       }
       .panel.viewer-panel {
         flex: 1;
       }
       .viewer {
-        min-height: 420px;
+        min-height: 70vh;
       }
     }
 
@@ -702,6 +715,27 @@
       75% { transform: translateX(-2px); }
       100% { transform: translateX(0); }
     }
+
+    /* Bouton fantôme pour le plein écran (NOUVEAU) */
+    .btn-ghost {
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px dashed rgba(255,255,255,0.45);
+      background: transparent;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
   </style>
 </head>
 <body>
@@ -719,7 +753,7 @@
     </div>
   </div>
 
-  <div class="app">
+  <div class="app" id="appRoot">
     <!-- PANEL DIGICODE -->
     <section class="panel digicode-panel">
       <div class="panel-inner">
@@ -808,6 +842,9 @@
             Affiche le site associé au code, ou le <strong>fallback</strong> si le code
             est imaginaire comme la notion de contrôle.
           </div>
+          <button class="btn-ghost" id="toggleViewerSize">
+            <span>⤢ PLEIN ÉCRAN</span>
+          </button>
         </header>
 
         <div class="viewer">
@@ -835,8 +872,9 @@
             </div>
           </div>
           <div class="viewer-note">
-            Note&nbsp;: certains sites refusent l’iframe (sécurité navigateur).  
-            Dans ce cas, utilise le bouton <strong>«&nbsp;Ouvrir dans un nouvel onglet&nbsp;»</strong>.
+            Note&nbsp;: certains sites refusent l’iframe (sécurité navigateur) ou gèrent mal le zoom.  
+            Dans ce cas, utilise le bouton <strong>«&nbsp;Ouvrir dans un nouvel onglet&nbsp;»</strong>
+            ou le mode <strong>«&nbsp;Plein écran&nbsp;»</strong>.
           </div>
         </div>
       </div>
@@ -847,7 +885,6 @@
     // ==========================
     // CONFIG : CODES → URLS
     // ==========================
-    // Modifie/ajoute des codes ici.
     const CODE_MAP = {
       "0000": "https://ouaisfieu.github.io/",
       "0001": "https://ouaisfieu.github.io/tech/",
@@ -856,8 +893,6 @@
       "1337": "https://rg-ashy.vercel.app/",
       "1984": "https://ouaisfieu.github.io/bxl2030",
       "4242": "https://mouse-dun.vercel.app/",
-      // Ajoute tes propres portails :
-      // "1234": "https://ton-site.tld/"
       "9999": "https://b-b-ashy.vercel.app/",
       "9998": "https://shop-dusky-theta.vercel.app/",
       "9997": "https://nyxo-beta.vercel.app/2",
@@ -865,7 +900,7 @@
       "9995": "https://ouaisfieu.github.io/metaFox/",
       "9994": "https://ouaisfieu.github.io/mikey/2/4/2/",
       "9993": "https://ouaisfieu.github.io/shop/",
-      "9992": "https://ouaisfieu.github.io/ghostnet/2/", 
+      "9992": "https://ouaisfieu.github.io/ghostnet/2/",
       "9991": "https://rg-ashy.vercel.app/police.html",
     };
 
@@ -889,8 +924,10 @@
     const loadingMain = document.getElementById("loadingMain");
     const loadingSub = document.getElementById("loadingSub");
     const bootScreen = document.getElementById("bootScreen");
+    const appRoot = document.getElementById("appRoot");
+    const toggleViewerSize = document.getElementById("toggleViewerSize");
 
-    // Messages de loading "barrés"
+    // Messages de loading
     const LOADING_MESSAGES = [
       {
         main: "CALIBRAGE DU RÉEL…",
@@ -1027,6 +1064,13 @@
       window.open(currentUrl, "_blank", "noopener,noreferrer");
     });
 
+    // Bouton plein écran visionneuse
+    toggleViewerSize.addEventListener("click", () => {
+      appRoot.classList.toggle("viewer-full");
+      const full = appRoot.classList.contains("viewer-full");
+      toggleViewerSize.innerHTML = full ? "⤡ MODE SPLIT" : "⤢ PLEIN ÉCRAN";
+    });
+
     // Chargement de l'iframe : on cache le loader
     siteFrame.addEventListener("load", () => {
       if (!currentUrl) return;
@@ -1070,4 +1114,3 @@
   </script>
 </body>
 </html>
-
