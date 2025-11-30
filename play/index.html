@@ -1,0 +1,761 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>SILENT·PROTOCOL — Scène PlayStation Portable</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #000008;
+      --accent-green: #23d37f;  /* triangle */
+      --accent-red:   #ff4762;  /* rond */
+      --accent-blue:  #47a6ff;  /* croix */
+      --accent-pink:  #ff69c9;  /* carré */
+      --text-main: #f8f8ff;
+      --text-muted: #9a9ecc;
+      --card: #050512;
+      --border-soft: rgba(255,255,255,0.16);
+      --shadow-strong: 0 26px 70px rgba(0,0,0,0.95);
+      --t-fast: 0.18s ease-out;
+      --t-med: 0.3s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #000;
+      color: var(--text-main);
+      padding: 16px 12px 24px;
+    }
+
+    .scene-root {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      min-height: 420px;
+      background:
+        radial-gradient(circle at 50% -20%, rgba(255,255,255,0.1), transparent 60%),
+        radial-gradient(circle at 0% 100%, rgba(71,166,255,0.16), transparent 65%),
+        radial-gradient(circle at 100% 0%, rgba(255,105,201,0.18), transparent 70%),
+        #000;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: var(--shadow-strong);
+      padding: 18px 12px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* LOGO + FADE-IN + ROTATIONS */
+
+    .logo-stage {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .scene-logo-wrap {
+      width: 110px;
+      height: 110px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 0, rgba(255,255,255,0.18), transparent 60%);
+    }
+
+    .scene-logo {
+      width: 84px;
+      height: 84px;
+      border-radius: 999px;
+      background: #000;
+      padding: 10px;
+      box-shadow:
+        0 0 18px rgba(255,255,255,0.9),
+        0 0 40px rgba(0,0,0,1);
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 1.8s ease-out, transform 1.8s ease-out;
+    }
+
+    .scene-logo.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .scene-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    @keyframes rouletteSpin {
+      0%   { transform: scale(1) rotate(0deg); }
+      40%  { transform: scale(1.05) rotate(540deg); }
+      100% { transform: scale(1.02) rotate(720deg); }
+    }
+
+    @keyframes vinylSpin {
+      from { transform: scale(1.02) rotate(0deg); }
+      to   { transform: scale(1.02) rotate(360deg); }
+    }
+
+    .roulette-spin {
+      animation: rouletteSpin 2.2s cubic-bezier(.12,.81,.25,1) forwards;
+    }
+
+    .vinyl-spin {
+      animation: vinylSpin 8s linear infinite;
+    }
+
+    .scene-caption {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 18rem;
+    }
+
+    /* MENU PRINCIPAL — MOBILE FIRST */
+
+    .menu-wrapper {
+      width: 100%;
+      margin-top: 12px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity var(--t-med), transform var(--t-med);
+    }
+
+    .menu-wrapper.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .menu-header {
+      text-align: center;
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    .menu-title {
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 4px;
+    }
+
+    .menu-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      max-width: 30rem;
+      margin: 0 auto;
+    }
+
+    .ps-buttons {
+      display: grid;
+      grid-template-columns: 1fr;  /* mobile: 1 bouton par ligne */
+      gap: 10px;
+      margin: 12px auto 10px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    @media (min-width: 560px) {
+      .ps-buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));  /* desktop: 2x2 */
+        max-width: 520px;
+      }
+    }
+
+    .ps-btn {
+      border-radius: 999px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: radial-gradient(circle at 0 0, rgba(0,0,0,0.8), transparent 65%), #050515;
+      color: var(--text-main);
+      cursor: pointer;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: left;
+      transition: transform var(--t-fast), box-shadow var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+    }
+
+    .ps-btn span.symbol {
+      font-size: 1rem;
+      font-weight: 700;
+      width: 1.4em;
+      text-align: center;
+    }
+
+    .ps-btn-triangle span.symbol { color: var(--accent-green); }
+    .ps-btn-circle   span.symbol { color: var(--accent-red);   }
+    .ps-btn-cross    span.symbol { color: var(--accent-blue);  }
+    .ps-btn-square   span.symbol { color: var(--accent-pink);  }
+
+    .ps-btn-triangle { box-shadow: 0 0 16px rgba(35,211,127,0.6); }
+    .ps-btn-circle   { box-shadow: 0 0 16px rgba(255,71,98,0.6); }
+    .ps-btn-cross    { box-shadow: 0 0 16px rgba(71,166,255,0.6); }
+    .ps-btn-square   { box-shadow: 0 0 16px rgba(255,105,201,0.6); }
+
+    .ps-btn:hover,
+    .ps-btn:focus-visible {
+      transform: translateY(-2px);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.1), transparent 65%), #090921;
+      border-color: rgba(255,255,255,0.5);
+      outline: none;
+    }
+
+    .ps-btn:active {
+      transform: translateY(0);
+    }
+
+    .menu-note {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 28rem;
+      margin: 0 auto;
+    }
+
+    .full-game-menu {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(255,255,255,0.25);
+      background: rgba(5,5,20,0.9);
+      padding: 7px 9px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .full-game-menu-title {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.7rem;
+      margin-bottom: 4px;
+      color: rgba(228,232,255,0.9);
+    }
+
+    .full-game-menu ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4px 10px;
+    }
+
+    @media (min-width: 600px) {
+      .full-game-menu ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .full-game-menu li::before {
+      content: "▸ ";
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* PSP overlay MODALE */
+
+    .psp-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.6), #000010);
+      z-index: 40;
+      padding: 12px;
+    }
+
+    .psp-overlay.open {
+      display: flex;
+    }
+
+    .psp-shell {
+      width: 100%;
+      max-width: 900px;
+      aspect-ratio: 16 / 9;
+      background: radial-gradient(circle at 10% 20%, #202040, #050511 70%);
+      border-radius: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow:
+        0 0 30px rgba(0,0,0,1),
+        0 0 50px rgba(0,0,0,1);
+      display: grid;
+      grid-template-columns: 0.7fr 2.4fr 0.7fr;
+      padding: 8px 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 780px) {
+      .psp-shell {
+        grid-template-columns: 1.1fr 2fr 1.1fr;
+        padding: 10px 16px;
+        border-radius: 30px;
+      }
+    }
+
+    .psp-shell::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background:
+        radial-gradient(circle at 0 0, rgba(71,166,255,0.25), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(255,105,201,0.25), transparent 60%);
+      mix-blend-mode: screen;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .psp-close {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      font-size: 1.1rem;
+      border: none;
+      background: none;
+      color: rgba(245,247,255,0.95);
+      cursor: pointer;
+      text-shadow: 0 0 8px rgba(0,0,0,1);
+      z-index: 2;
+    }
+
+    .psp-close:hover {
+      color: #fff;
+      transform: scale(1.06);
+    }
+
+    .psp-side {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(225,228,255,0.9);
+      font-size: 0.7rem;
+    }
+
+    .psp-side-left {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .psp-dpad {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      border: 2px solid rgba(0,0,0,0.8);
+      background: radial-gradient(circle at 50% 15%, #3a3a5a, #050514 80%);
+      display: grid;
+      place-items: center;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,0,0,1);
+    }
+
+    .psp-dpad::before,
+    .psp-dpad::after {
+      content: "";
+      position: absolute;
+      background: #15152a;
+      border-radius: 6px;
+    }
+
+    .psp-dpad::before { width: 60%; height: 18%; }
+    .psp-dpad::after  { width: 18%; height: 60%; }
+
+    .psp-side-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 1;
+    }
+
+    .psp-face-buttons {
+      width: 62px;
+      height: 62px;
+      position: relative;
+    }
+
+    .psp-face-circle,
+    .psp-face-cross,
+    .psp-face-square,
+    .psp-face-triangle {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 2px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      background: #050515;
+      box-shadow: 0 0 10px rgba(0,0,0,1);
+    }
+
+    .psp-face-circle {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .psp-face-cross {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .psp-face-square {
+      border-color: var(--accent-pink);
+      color: var(--accent-pink);
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .psp-face-triangle {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .psp-screen-wrapper {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 4px 0;
+    }
+
+    .psp-screen {
+      flex: 1;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 50% 0, rgba(255,255,255,0.3), transparent 65%),
+        radial-gradient(circle at 0 100%, rgba(71,166,255,0.3), transparent 65%),
+        #050513;
+      border: 2px solid rgba(0,0,0,0.9);
+      box-shadow:
+        inset 0 0 12px rgba(0,0,0,1),
+        0 0 18px rgba(0,0,0,1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .psp-top-bar {
+      height: 26px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      background: linear-gradient(90deg, rgba(10,10,30,0.95), rgba(24,24,52,0.95));
+      color: rgba(235,238,255,0.9);
+    }
+
+    .psp-top-bar span.small {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(210,215,255,0.9);
+    }
+
+    .psp-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .psp-control-btn {
+      font-size: 0.68rem;
+      border-radius: 999px;
+      padding: 3px 7px;
+      border: 1px solid rgba(255,255,255,0.5);
+      background: rgba(5,5,20,0.9);
+      color: rgba(230,234,255,0.95);
+      cursor: pointer;
+    }
+
+    .psp-iframe-wrap {
+      flex: 1;
+      background: #000;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+    }
+
+    .psp-iframe-wrap iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    .psp-bottom-bar {
+      height: 26px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: rgba(205,210,255,0.9);
+      background: radial-gradient(circle at 50% 150%, rgba(0,0,0,0.9), #050515);
+    }
+
+    .psp-bottom-bar button {
+      font-size: 0.7rem;
+      border-radius: 999px;
+      padding: 3px 10px;
+      border: 1px solid rgba(255,255,255,0.5);
+      background: rgba(5,5,20,0.95);
+      color: rgba(235,238,255,0.97);
+      cursor: pointer;
+    }
+
+    .psp-bottom-bar button:hover {
+      background: rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="scene-root">
+    <!-- LOGO + FADE-IN + ROTATIONS -->
+    <div class="logo-stage">
+      <div class="scene-logo-wrap">
+        <div class="scene-logo" id="sceneLogo">
+          <img src="https://dl.ouaisfi.eu/images/coin.png" alt="Logo SILENT·PROTOCOL" />
+        </div>
+      </div>
+      <p class="scene-caption">
+        Nouvelle scène : en fade in lent, le logo apparaît sur fond noir, tourne d’abord comme
+        une roulette, puis se cale en rotation lente façon 33 tours.
+      </p>
+    </div>
+
+    <!-- MENU PRINCIPAL / PLAYSTATION -->
+    <div class="menu-wrapper" id="mainMenu">
+      <div class="menu-header">
+        <div class="menu-title">menu complet du jeu</div>
+        <p class="menu-sub">
+          Choisis un bouton de couleur façon PlayStation pour ouvrir une PlayStation Portable
+          virtuelle. Chaque bouton charge une page web marquée (un fichier HTML qu’on a fait
+          avant) et propose aussi de l’ouvrir dans un autre onglet.
+        </p>
+      </div>
+
+      <div class="ps-buttons">
+        <button class="ps-btn ps-btn-triangle" data-slot="triangle">
+          <span class="symbol">△</span>
+          <span>Bande-annonce HTML du film</span>
+        </button>
+        <button class="ps-btn ps-btn-circle" data-slot="circle">
+          <span class="symbol">○</span>
+          <span>Logo glitch &amp; menu du film du jeu</span>
+        </button>
+        <button class="ps-btn ps-btn-cross" data-slot="cross">
+          <span class="symbol">✕</span>
+          <span>Boutique &amp; produits dérivés</span>
+        </button>
+        <button class="ps-btn ps-btn-square" data-slot="square">
+          <span class="symbol">▢</span>
+          <span>Expériences cachées &amp; scènes bonus</span>
+        </button>
+      </div>
+
+      <p class="menu-note">
+        Sur chaque PlayStation Portable ouverte, tu peux naviguer dans la page,
+        ou cliquer sur « Ouvrir dans un autre onglet » pour la sortir de la console virtuelle.
+      </p>
+
+      <div class="full-game-menu">
+        <div class="full-game-menu-title">menu complet du jeu</div>
+        <ul>
+          <li>Prologue : roulette néon &amp; 33 tours</li>
+          <li>Chapitre 1 : bande-annonce HTML SILENT·PROTOCOL</li>
+          <li>Chapitre 2 : logo du film du jeu &amp; glitch total</li>
+          <li>Chapitre 3 : boutique, merch &amp; produits dérivés</li>
+          <li>Chapitre 4 : scènes d’horreur psychologique en statique</li>
+          <li>Chapitre 5 : embeds de pingouin et protocole silencieux</li>
+          <li>Chapitre 6 : scènes bonus &amp; timelines alternatives</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE PSP -->
+  <div class="psp-overlay" id="pspOverlay">
+    <div class="psp-shell">
+      <button class="psp-close" id="pspClose" aria-label="Fermer la PlayStation Portable">✕</button>
+
+      <div class="psp-side psp-side-left">
+        <div class="psp-dpad"></div>
+        <div>SELECT · START</div>
+      </div>
+
+      <div class="psp-screen-wrapper">
+        <div class="psp-screen">
+          <div class="psp-top-bar">
+            <span class="small" id="pspGameLabel">SILENT·PROTOCOL / PSP VIEW</span>
+            <div class="psp-controls">
+              <button class="psp-control-btn" id="pspOpenTab">
+                Ouvrir dans un autre onglet
+              </button>
+            </div>
+          </div>
+          <div class="psp-iframe-wrap">
+            <iframe id="pspFrame" src="about:blank" title="Page SILENT·PROTOCOL"></iframe>
+          </div>
+          <div class="psp-bottom-bar">
+            <span id="pspGameName">Aucune scène chargée</span>
+            <button id="pspCloseBottom">Fermer la PSP</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="psp-side psp-side-right">
+        <div class="psp-face-buttons">
+          <div class="psp-face-circle">○</div>
+          <div class="psp-face-cross">✕</div>
+          <div class="psp-face-square">▢</div>
+          <div class="psp-face-triangle">△</div>
+        </div>
+        <div>VOL · HOLD</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // LOGO FADE-IN + SPINS + apparition du menu
+    (function () {
+      var logo = document.getElementById("sceneLogo");
+      var menu = document.getElementById("mainMenu");
+
+      window.addEventListener("load", function () {
+        requestAnimationFrame(function () {
+          logo.classList.add("visible");
+        });
+
+        // roulette
+        setTimeout(function () {
+          logo.classList.add("roulette-spin");
+        }, 400);
+
+        // puis rotation 33 tours
+        setTimeout(function () {
+          logo.classList.remove("roulette-spin");
+          logo.classList.add("vinyl-spin");
+        }, 2800);
+
+        // menu affiché après le moment "roulette"
+        setTimeout(function () {
+          menu.classList.add("visible");
+        }, 2200);
+      });
+    })();
+
+    // PAGES A CHARGER DANS LA PSP (adapter les URLs à tes fichiers réels)
+    var pspPages = {
+      triangle: {
+        label: "Bande-annonce HTML SILENT·PROTOCOL",
+        url: "exit.html"
+      },
+      circle: {
+        label: "Logo glitch & menu du film du jeu",
+        url: "oxut.html"
+      },
+      cross: {
+        label: "Boutique & produits dérivés",
+        url: "krayon-one.html"
+      },
+      square: {
+        label: "Expériences cachées & scènes bonus",
+        url: "cyborg.html"
+      }
+    };
+
+    var pspOverlay   = document.getElementById("pspOverlay");
+    var pspClose     = document.getElementById("pspClose");
+    var pspCloseBottom = document.getElementById("pspCloseBottom");
+    var pspFrame     = document.getElementById("pspFrame");
+    var pspGameLabel = document.getElementById("pspGameLabel");
+    var pspGameName  = document.getElementById("pspGameName");
+    var pspOpenTab   = document.getElementById("pspOpenTab");
+    var currentURL   = null;
+
+    function openPSP(slot) {
+      var data = pspPages[slot];
+      if (!data) return;
+      currentURL = data.url;
+      pspFrame.src = data.url;
+      pspGameLabel.textContent = "SILENT·PROTOCOL / " + data.label;
+      pspGameName.textContent  = data.label;
+      pspOverlay.classList.add("open");
+    }
+
+    function closePSP() {
+      pspOverlay.classList.remove("open");
+      pspFrame.src = "about:blank";
+      currentURL = null;
+    }
+
+    // Boutons PlayStation de l'accueil -> PSP
+    document.querySelectorAll(".ps-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var slot = btn.getAttribute("data-slot");
+        openPSP(slot);
+      });
+    });
+
+    // Fermeture modale (croix + bouton + clic dehors + ESC)
+    pspClose.addEventListener("click", closePSP);
+    pspCloseBottom.addEventListener("click", closePSP);
+
+    pspOverlay.addEventListener("click", function (e) {
+      if (e.target === pspOverlay) {
+        closePSP();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        closePSP();
+      }
+    });
+
+    // Ouvrir la page dans un autre onglet
+    pspOpenTab.addEventListener("click", function () {
+      if (!currentURL) return;
+      window.open(currentURL, "_blank");
+    });
+  </script>
+</body>
+</html>
