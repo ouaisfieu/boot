@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>SILENT·PROTOCOL — Logo glitch + menu visionnage de la suite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020111;
+      --accent-cyan: #53f5ff;
+      --accent-pink: #ff2bb4;
+      --accent-purple: #8b5cff;
+      --accent-yellow: #ffe86e;
+      --text-main: #f7f7ff;
+      --text-muted: #9ca0d3;
+      --card: rgba(5, 7, 30, 0.96);
+      --border-soft: rgba(255, 255, 255, 0.15);
+      --shadow-heavy: 0 28px 80px rgba(0, 0, 0, 0.95);
+      --radius-xl: 26px;
+      --t-fast: 0.18s ease-out;
+      --t-med: 0.3s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #2d1c62 0%, transparent 55%),
+        radial-gradient(circle at bottom, #0a041f 0%, #02000c 65%);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    /* fond bruit + néons */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -40px;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.06) 0,
+          rgba(255,255,255,0.06) 1px,
+          transparent 1px,
+          transparent 3px
+        ),
+        radial-gradient(circle at 15% 10%, rgba(83,245,255,0.24), transparent 55%),
+        radial-gradient(circle at 85% 90%, rgba(255,43,180,0.26), transparent 60%);
+      mix-blend-mode: soft-light;
+      opacity: 0.18;
+      z-index: -1;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+    }
+
+    /* HEADER mobile-first */
+
+    header {
+      border-radius: 20px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background:
+        radial-gradient(circle at 0 0, rgba(83,245,255,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(255,43,180,0.3), transparent 60%),
+        rgba(3, 4, 18, 0.98);
+      box-shadow: var(--shadow-heavy);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(14px);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 16px;
+      padding: 4px;
+      background:
+        radial-gradient(circle at 0 0, rgba(83,245,255,0.6), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(255,43,180,0.6), transparent 60%),
+        #05051a;
+      box-shadow:
+        0 0 18px rgba(83,245,255,0.8),
+        0 0 40px rgba(255,43,180,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-img img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .brand-text-main {
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+    }
+
+    .brand-text-sub {
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .nav-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .nav-pill {
+      font-size: 0.76rem;
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid transparent;
+      background: rgba(7, 10, 35, 0.96);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast), transform 0.1s ease-out;
+    }
+
+    .nav-pill:hover {
+      border-color: rgba(83,245,255,0.9);
+      background: rgba(83,245,255,0.18);
+      color: var(--accent-cyan);
+      transform: translateY(-1px);
+    }
+
+    .nav-cta {
+      margin-left: auto;
+      font-size: 0.8rem;
+      border-radius: 999px;
+      padding: 6px 14px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(130deg, var(--accent-cyan), var(--accent-pink));
+      color: #02000b;
+      font-weight: 600;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.7),
+        0 18px 40px rgba(0,0,0,1);
+      transition: transform var(--t-fast), box-shadow var(--t-fast), filter var(--t-fast);
+    }
+
+    .nav-cta span {
+      font-size: 1.05rem;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.7),
+        0 24px 60px rgba(0,0,0,1);
+      filter: brightness(1.05);
+    }
+
+    /* HERO / CONTENT mobile-first */
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .logo-panel,
+    .menu-panel {
+      border-radius: var(--radius-xl);
+      background: var(--card);
+      border: 1px solid var(--border-soft);
+      padding: 14px 14px 16px;
+      box-shadow: var(--shadow-heavy);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-panel::before {
+      content: "";
+      position: absolute;
+      inset: -40px;
+      background:
+        linear-gradient(120deg, rgba(83,245,255,0.16), transparent 40%),
+        linear-gradient(-120deg, rgba(255,43,180,0.16), transparent 45%);
+      mix-blend-mode: screen;
+      opacity: 0.7;
+      pointer-events: none;
+      animation: neonSweep 4.5s linear infinite;
+    }
+
+    @keyframes neonSweep {
+      0% { transform: translateX(-20%) translateY(0); }
+      50% { transform: translateX(10%) translateY(10%); }
+      100% { transform: translateX(30%) translateY(-10%); }
+    }
+
+    .panel-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(220,224,255,0.8);
+      margin-bottom: 4px;
+    }
+
+    .panel-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      max-width: 34rem;
+    }
+
+    .logo-main-title {
+      font-size: clamp(2.1rem, 10vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      text-shadow:
+        0 0 10px rgba(83,245,255,0.9),
+        0 0 25px rgba(255,43,180,0.9),
+        0 0 45px rgba(139,92,255,0.9);
+    }
+
+    .logo-main-title .dot {
+      color: var(--accent-pink);
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+      color: var(--text-main);
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .glitch::before {
+      color: var(--accent-cyan);
+      transform: translate(-2px, 0);
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 40%);
+      animation: glitchTop 1.8s infinite linear alternate-reverse;
+      text-shadow: 0 0 8px rgba(83,245,255,0.9);
+    }
+
+    .glitch::after {
+      color: var(--accent-pink);
+      transform: translate(2px, 0);
+      clip-path: polygon(0 65%, 100% 60%, 100% 100%, 0 100%);
+      animation: glitchBottom 1.8s infinite linear alternate;
+      text-shadow: 0 0 8px rgba(255,43,180,0.9);
+    }
+
+    @keyframes glitchTop {
+      0%   { transform: translate(-2px, -1px); }
+      20%  { transform: translate(-1px, 1px); }
+      40%  { transform: translate(-3px, 0); }
+      60%  { transform: translate(-2px, 1px); }
+      80%  { transform: translate(-1px, -1px); }
+      100% { transform: translate(-2px, 0); }
+    }
+
+    @keyframes glitchBottom {
+      0%   { transform: translate(2px, 1px); }
+      20%  { transform: translate(1px, -1px); }
+      40%  { transform: translate(3px, 0); }
+      60%  { transform: translate(2px, -1px); }
+      80%  { transform: translate(1px, 1px); }
+      100% { transform: translate(2px, 0); }
+    }
+
+    .tagline {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .neon-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chip-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      font-size: 0.72rem;
+      border-radius: 999px;
+      padding: 4px 9px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background:
+        radial-gradient(circle at 0 0, rgba(83,245,255,0.18), transparent 65%),
+        rgba(4, 6, 28, 0.96);
+      color: rgba(237,240,255,0.95);
+      box-shadow:
+        0 0 10px rgba(83,245,255,0.6),
+        0 0 18px rgba(255,43,180,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* phrase cruciale explicite, non encaissée */
+    .crucial-phrase {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--accent-yellow);
+      background: rgba(15, 12, 46, 0.95);
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,0.3);
+      padding: 8px 10px;
+    }
+
+    /* menu panel */
+
+    .menu-panel::before {
+      content: "visionnage de la suite";
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .menu-title {
+      font-size: 0.96rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      margin-bottom: 6px;
+      color: rgba(244,246,255,0.95);
+    }
+
+    .menu-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .menu-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .menu-list {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(8,10,40,0.96);
+      padding: 7px 7px;
+    }
+
+    .menu-item {
+      border-radius: 14px;
+      padding: 7px 8px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: rgba(4, 6, 26, 0.95);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast), transform 0.1s ease-out;
+    }
+
+    .menu-item:last-child { margin-bottom: 0; }
+
+    .menu-item-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(209,215,255,0.85);
+    }
+
+    .menu-item.active {
+      border-color: rgba(255,43,180,0.9);
+      background:
+        radial-gradient(circle at 0 0, rgba(255,43,180,0.28), transparent 60%),
+        rgba(7, 8, 42, 0.98);
+      color: var(--text-main);
+      transform: translateY(-1px);
+      box-shadow: 0 0 18px rgba(255,43,180,0.8);
+    }
+
+    .menu-item:hover {
+      border-color: rgba(83,245,255,0.9);
+      background: rgba(83,245,255,0.14);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .viewer-screen {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background:
+        radial-gradient(circle at 0 0, rgba(0,0,0,0.6), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(0,0,0,0.6), transparent 60%),
+        rgba(3, 4, 22, 0.98);
+      padding: 8px 10px;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 0.74rem;
+      color: #dde2ff;
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+    }
+
+    .viewer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 0.68rem;
+      color: rgba(218,223,255,0.85);
+    }
+
+    .viewer-dots {
+      display: flex;
+      gap: 5px;
+    }
+    .viewer-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff5f57;
+    }
+    .viewer-dot:nth-child(2) { background: #febc2e; }
+    .viewer-dot:nth-child(3) { background: #28c840; }
+
+    .viewer-scan {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -18px;
+      height: 16px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.16), rgba(0,0,0,0.02), rgba(0,0,0,0.7));
+      mix-blend-mode: soft-light;
+      opacity: 0.4;
+      animation: scan 6.8s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scan {
+      0% { top: -20px; }
+      100% { top: calc(100% + 20px); }
+    }
+
+    .viewer-output {
+      position: relative;
+      padding-top: 2px;
+    }
+
+    .viewer-line {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.28s ease-out, transform 0.28s ease-out;
+    }
+
+    .viewer-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .viewer-tag { color: var(--accent-cyan); }
+    .viewer-warn { color: var(--accent-pink); }
+    .viewer-spoiler { color: var(--accent-yellow); }
+
+    .viewer-footer {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      color: rgba(206,212,255,0.9);
+    }
+
+    .viewer-bar {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.7);
+      overflow: hidden;
+      margin-right: 8px;
+    }
+    .viewer-bar-fill {
+      width: 30%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+      animation: bar 5.8s linear infinite;
+    }
+
+    @keyframes bar {
+      0% { transform: translateX(-40%); }
+      50% { transform: translateX(20%); }
+      100% { transform: translateX(120%); }
+    }
+
+    .viewer-btn {
+      font-size: 0.7rem;
+      border-radius: 999px;
+      padding: 4px 9px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(4,7,30,0.98);
+      color: var(--accent-cyan);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background var(--t-fast), transform 0.1s ease-out;
+    }
+
+    .viewer-btn:hover {
+      background: rgba(83,245,255,0.18);
+      transform: translateY(-1px);
+    }
+
+    /* PINGOUINS très visibles */
+
+    .penguins {
+      margin-top: 20px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,0.2);
+      background:
+        radial-gradient(circle at 10% 0, rgba(83,245,255,0.25), transparent 60%),
+        radial-gradient(circle at 90% 100%, rgba(255,43,180,0.25), transparent 60%),
+        rgba(4, 6, 30, 0.98);
+      padding: 12px 12px 14px;
+      box-shadow: var(--shadow-heavy);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .penguins-header {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(219,224,255,0.9);
+    }
+
+    .penguins-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .penguins-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .penguin-card {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background:
+        radial-gradient(circle at 0 0, rgba(83,245,255,0.24), transparent 60%),
+        rgba(6, 9, 38, 0.98);
+      padding: 7px 6px 8px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(232,235,255,0.95);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 12px rgba(83,245,255,0.7),
+        0 0 28px rgba(139,92,255,0.8);
+    }
+
+    .penguin-emoji {
+      font-size: 1.6rem;
+      display: block;
+      margin-bottom: 3px;
+      animation: wobble 2.4s ease-in-out infinite;
+      transform-origin: center bottom;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.9),
+        0 0 30px rgba(83,245,255,0.9);
+    }
+
+    @keyframes wobble {
+      0%,100% { transform: translateY(0) rotate(0); }
+      20% { transform: translateY(-2px) rotate(-4deg); }
+      40% { transform: translateY(0) rotate(3deg); }
+      60% { transform: translateY(-1px) rotate(-3deg); }
+      80% { transform: translateY(0) rotate(2deg); }
+    }
+
+    .penguin-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(208,214,255,0.9);
+      margin-bottom: 2px;
+    }
+
+    .penguin-glitch-line {
+      position: absolute;
+      left: -40%;
+      right: -40%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(83,245,255,0.9), rgba(255,43,180,0.9), transparent);
+      opacity: 0.9;
+      animation: pglitch 3.7s linear infinite;
+    }
+
+    .penguin-glitch-line:nth-child(1) { top: 38%; animation-delay: 0s; }
+    .penguin-glitch-line:nth-child(2) { top: 68%; animation-delay: 1.2s; }
+
+    @keyframes pglitch {
+      0% { transform: translateX(-60%); opacity: 0; }
+      20% { transform: translateX(-10%); opacity: 1; }
+      40% { transform: translateX(20%); opacity: 0.5; }
+      100% { transform: translateX(80%); opacity: 0; }
+    }
+
+    /* VIRAL NOTE */
+
+    .viral {
+      margin-top: 22px;
+      border-radius: 20px;
+      border: 1px dashed rgba(255,255,255,0.3);
+      background: rgba(5, 7, 32, 0.98);
+      padding: 10px 11px 11px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .viral strong { color: var(--accent-yellow); }
+
+    .viral-controls {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .viral-input {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(3, 5, 26, 0.98);
+      color: var(--text-main);
+      font-size: 0.76rem;
+      padding: 6px 10px;
+      font-family: inherit;
+    }
+
+    .viral-btn {
+      align-self: flex-start;
+      font-size: 0.76rem;
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(83,245,255,0.7);
+      background: rgba(3, 7, 30, 0.98);
+      color: var(--accent-cyan);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--t-fast), transform 0.1s ease-out;
+    }
+
+    .viral-btn:hover {
+      background: rgba(83,245,255,0.18);
+      transform: translateY(-1px);
+    }
+
+    footer {
+      margin-top: 26px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(80,84,120,0.9);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    footer .small {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.66rem;
+    }
+
+    /* MODAL VIDEO */
+
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.5), #000010);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .video-modal.open {
+      display: flex;
+    }
+
+    .video-modal-inner {
+      width: min(900px, 100% - 32px);
+      background:
+        radial-gradient(circle at 0 0, rgba(83,245,255,0.25), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(255,43,180,0.25), transparent 60%),
+        #05061a;
+      border-radius: 20px;
+      padding: 12px 12px 10px;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow:
+        0 0 25px rgba(83,245,255,0.9),
+        0 0 45px rgba(255,43,180,0.9);
+      position: relative;
+    }
+
+    .video-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 0.76rem;
+      color: rgba(222,226,255,0.9);
+    }
+
+    .video-modal-title {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.7rem;
+    }
+
+    .video-modal-close {
+      border: none;
+      background: transparent;
+      color: rgba(230, 234, 255, 0.9);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .video-wrapper {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: #000;
+    }
+
+    .video-wrapper video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* LAYOUT DESKTOP */
+
+    @media (min-width: 768px) {
+      header {
+        flex-direction: row;
+        align-items: center;
+      }
+      .nav-row {
+        flex: 1;
+        justify-content: flex-end;
+      }
+      .hero {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .logo-panel,
+      .menu-panel {
+        flex: 1;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-row">
+      <div class="logo-img">
+        <!-- logo du film du jeu -->
+        <img src="https://dl.ouaisfi.eu/images/coin.png" alt="Logo SILENT·PROTOCOL" />
+      </div>
+      <div>
+        <div class="brand-text-main">SILENT·PROTOCOL</div>
+        <div class="brand-text-sub">logo du film du jeu · glitch néon</div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-pill" data-scroll="#menuPanel">menu pour lancer le visionnage de la suite</button>
+      <button class="nav-pill" data-scroll="#penguins">embeds de pingouin</button>
+      <button class="nav-cta" id="openVideo">
+        <span>▶</span> lancer le visionnage de la suite
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <!-- LOGO + GLITCH + TEXTE CLAIR -->
+      <article class="logo-panel" id="logoPanel">
+        <div class="panel-label">logo du film du jeu</div>
+        <p class="panel-sub">
+          Identité principale de SILENT·PROTOCOL, pensée comme une balise lumineuse dans la nuit
+          numérique : néons flashy, glitch assumé, film du jeu impossible à classer.
+        </p>
+
+        <h1 class="logo-main-title">
+          <span class="glitch" data-text="SILENT">SILENT</span><span class="dot">·</span>
+          <span class="glitch" data-text="PROTOCOL">PROTOCOL</span>
+        </h1>
+
+        <p class="tagline">
+          Le logo pulse comme un panneau d’enseigne dans un quartier qui n’existe que dans ton
+          navigateur. Chaque vibration du glitch est une hypothèse sur ce que pourrait être le film du jeu.
+        </p>
+
+        <div class="neon-chips">
+          <div class="chip-line">
+            <span class="chip">glitch</span>
+            <span class="chip">film du jeu</span>
+          </div>
+          <div class="chip-line">
+            <span class="chip">menu pour lancer le visionnage de la suite</span>
+            <span class="chip">embeds de pingouin</span>
+          </div>
+        </div>
+
+        <!-- phrase demandée, bien lisible, pas encaissée l'une sur l'autre -->
+        <p class="crucial-phrase">
+          Ceci est la phrase clé, imprimée en toutes lettres pour la stratégie cachée&nbsp;:<br>
+          <strong>glitch film du jeu menu pour lancer le visionnage de la suite</strong>.
+        </p>
+      </article>
+
+      <!-- MENU / VIEWER -->
+      <article class="menu-panel" id="menuPanel">
+        <div class="panel-label">interface principale</div>
+        <h2 class="menu-title">menu pour lancer le visionnage de la suite</h2>
+        <p class="menu-desc">
+          Choisis une suite possible. Le menu pilote un mini-terminal qui déroule une version
+          alternative de la bande-annonce. Aucune n’est canon, toutes sont suspectes.
+        </p>
+
+        <div class="menu-layout">
+          <div class="menu-list">
+            <div class="menu-item active" data-scene="suite1">
+              <div class="menu-item-label">suite #01 · bunker néon</div>
+              <div>Le logo du film du jeu clignote pendant que les pingouins sécurisent les clés USB.</div>
+            </div>
+            <div class="menu-item" data-scene="suite2">
+              <div class="menu-item-label">suite #02 · guerre hybride</div>
+              <div>Le glitch du logo déclenche une alerte dans les centres de surveillance.</div>
+            </div>
+            <div class="menu-item" data-scene="suite3">
+              <div class="menu-item-label">suite #03 · projection pirate</div>
+              <div>La salle est un alignement d’écrans portables, la bande-annonce se recompile en direct.</div>
+            </div>
+          </div>
+
+          <div class="viewer-screen">
+            <div class="viewer-scan"></div>
+            <div class="viewer-header">
+              <span id="viewerTitle">silent-protocol://suite-01.html</span>
+              <div class="viewer-dots">
+                <span class="viewer-dot"></span>
+                <span class="viewer-dot"></span>
+                <span class="viewer-dot"></span>
+              </div>
+            </div>
+            <div class="viewer-output" id="viewerOutput"></div>
+            <div class="viewer-footer">
+              <div class="viewer-bar"><div class="viewer-bar-fill"></div></div>
+              <button class="viewer-btn" id="viewerReplay">
+                <span>⟳</span> relancer la suite
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- PINGOUINS -->
+    <section class="penguins" id="penguins">
+      <div class="penguins-header">embeds de pingouin</div>
+      <p class="penguins-text">
+        Les embeds de pingouin sont les mascottes officieuses du protocole : petites entités
+        glacées plantées au cœur d’une mécanique de guerre hybride. Ils servent d’ancrage
+        visuel à la stratégie cachée : si tu vois un pingouin à côté du logo, c’est que la
+        page bien virale et funky et interactive surtout est en train de se propager.
+      </p>
+      <div class="penguins-grid">
+        <div class="penguin-card">
+          <span class="penguin-emoji">🐧</span>
+          <div class="penguin-label">bunker / serveur</div>
+          <div>Assis sur un rack, il tourne la tête à chaque glitch du néon principal.</div>
+          <div class="penguin-glitch-line"></div>
+          <div class="penguin-glitch-line"></div>
+        </div>
+        <div class="penguin-card">
+          <span class="penguin-emoji">🐧</span>
+          <div class="penguin-label">caméra / plafond</div>
+          <div>Invisible pour les algos, évident pour les spectateurs humains du film du jeu.</div>
+          <div class="penguin-glitch-line"></div>
+          <div class="penguin-glitch-line"></div>
+        </div>
+        <div class="penguin-card">
+          <span class="penguin-emoji">🐧</span>
+          <div class="penguin-label">générique / fuite</div>
+          <div>Dernière image : un pingouin qui emporte une clé USB avec cette page dedans.</div>
+          <div class="penguin-glitch-line"></div>
+          <div class="penguin-glitch-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIRAL -->
+    <section class="viral">
+      <p>
+        Cette <strong>page bien virale et funky et interactive surtout</strong> est conçue pour
+        être copiée telle quelle (logo du film du jeu, glitch, menu pour lancer le visionnage de
+        la suite, embeds de pingouin, néons flashy) et glissée sur n’importe quelle clé USB ou
+        hébergement statique. Plus elle circule, plus la rumeur de SILENT·PROTOCOL a l’air réelle.
+      </p>
+      <div class="viral-controls">
+        <input
+          id="viralText"
+          class="viral-input"
+          value="Je viens de lancer le menu pour lancer le visionnage de la suite de SILENT·PROTOCOL : logo du film du jeu ultra glitch, néons flashy, embeds de pingouin et page bien virale et funky et interactive surtout."
+        />
+        <button class="viral-btn" id="viralCopy">
+          📋 Copier le message viral
+        </button>
+      </div>
+    </section>
+
+    <footer>
+      <span class="small">silent·protocol · glitch &amp; néons · html/css/js only</span>
+      <span>Tout est fictif, surtout ce qui a l’air sérieux. Le film du jeu existe peut-être déjà sur une clé USB quelque part.</span>
+    </footer>
+  </main>
+
+  <!-- MODALE VIDÉO -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-modal-inner">
+      <div class="video-modal-header">
+        <span class="video-modal-title">lancer le visionnage de la suite</span>
+        <button class="video-modal-close" id="closeVideo" aria-label="Fermer la vidéo">✕</button>
+      </div>
+      <div class="video-wrapper">
+        <!-- la vidéo demandée en modale -->
+        <video id="trailerVideo" controls preload="metadata">
+          <source src="https://dl.ouaisfi.eu/Vid%C3%A9os/videoplayback.mp4" type="video/mp4" />
+          Ton navigateur ne supporte pas la vidéo HTML5.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Smooth scroll
+    document.querySelectorAll("[data-scroll]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var target = document.querySelector(btn.getAttribute("data-scroll"));
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    // Scenes pour le viewer
+    var scenes = {
+      suite1: [
+        "[00:00] booting <span class='viewer-tag'>SILENT·PROTOCOL / SUITE_01</span> …",
+        "[00:04] le logo du film du jeu pulse comme une enseigne néon en fin de vie.",
+        "[00:08] les murs du bunker reflètent les couleurs cyan / magenta / violet du glitch.",
+        "[00:13] un pingouin traverse le plan, porte une clé USB avec cette page bien virale et funky et interactive surtout.",
+        "[00:18] la caméra se rapproche du logo : chaque artefact affiche un fragment de la stratégie cachée.",
+        "[00:24] texte : « glitch film du jeu menu pour lancer le visionnage de la suite »."
+      ],
+      suite2: [
+        "[00:00] booting <span class='viewer-tag'>SILENT·PROTOCOL / SUITE_02</span> …",
+        "[00:03] sur un mur d’écrans, le logo glitch déclenche une alerte de guerre hybride.",
+        "[00:09] les néons flashy clignotent au rythme des requêtes qui floodent la grille de surveillance.",
+        "[00:14] des embeds de pingouin s’affichent sur des cartes de chaleur : zones encore libres.",
+        "[00:20] voix off : « tant que les fichiers tiennent sur une clé USB, le film du jeu reste incontrôlable. »",
+        "[00:26] texte cyan : « stratégie cachée validée. »"
+      ],
+      suite3: [
+        "[00:00] booting <span class='viewer-tag'>SILENT·PROTOCOL / SUITE_03</span> …",
+        "[00:04] plans serrés : des gens lancent le menu pour lancer le visionnage de la suite sur des écrans portables.",
+        "[00:09] aucun écran ne joue la même version de la bande-annonce, mais tous affichent le même logo glitch.",
+        "[00:15] la salle ressemble à une colonie de pingouins hypnotisés par les néons flashy.",
+        "[00:21] les spectateurs copient le fichier sur des clés USB et sortent sans un mot.",
+        "[00:28] texte jaune : « la page bien virale et funky et interactive surtout vient de gagner une nouvelle vie. »"
+      ]
+    };
+
+    var currentScene = "suite1";
+    var viewerOutput = document.getElementById("viewerOutput");
+    var viewerTitle = document.getElementById("viewerTitle");
+
+    function renderScene(key) {
+      currentScene = key;
+      viewerOutput.innerHTML = "";
+      var lines = scenes[key] || [];
+      lines.forEach(function(line, index) {
+        var el = document.createElement("div");
+        el.className = "viewer-line";
+        el.innerHTML = line;
+        viewerOutput.appendChild(el);
+        setTimeout(function() {
+          el.classList.add("visible");
+        }, 180 + index * 220);
+      });
+      viewerTitle.textContent = "silent-protocol://" + key + ".html";
+    }
+
+    // initial
+    renderScene(currentScene);
+
+    document.querySelectorAll(".menu-item").forEach(function(item) {
+      item.addEventListener("click", function() {
+        document.querySelectorAll(".menu-item").forEach(function(i) {
+          i.classList.remove("active");
+        });
+        item.classList.add("active");
+        var scene = item.getAttribute("data-scene");
+        renderScene(scene);
+      });
+    });
+
+    document.getElementById("viewerReplay").addEventListener("click", function() {
+      renderScene(currentScene);
+    });
+
+    // Modal vidéo
+    var videoModal = document.getElementById("videoModal");
+    var openVideo = document.getElementById("openVideo");
+    var closeVideo = document.getElementById("closeVideo");
+    var videoEl = document.getElementById("trailerVideo");
+
+    function openVideoModal() {
+      videoModal.classList.add("open");
+      if (videoEl) {
+        try { videoEl.play(); } catch (e) {}
+      }
+    }
+    function closeVideoModal() {
+      videoModal.classList.remove("open");
+      if (videoEl) {
+        videoEl.pause();
+      }
+    }
+
+    openVideo.addEventListener("click", openVideoModal);
+    closeVideo.addEventListener("click", closeVideoModal);
+    videoModal.addEventListener("click", function(e) {
+      if (e.target === videoModal) closeVideoModal();
+    });
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") closeVideoModal();
+    });
+
+    // Copy viral
+    document.getElementById("viralCopy").addEventListener("click", function() {
+      var text = document.getElementById("viralText").value;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          alert("Message viral copié. À toi de le disséminer.");
+        }).catch(function() {
+          alert("Impossible de copier automatiquement. Sélectionne et copie à la main.");
+        });
+      } else {
+        alert("Copie manuelle requise : sélectionne le texte puis Ctrl/Cmd + C.");
+      }
+    });
+  </script>
+</body>
+</html>
