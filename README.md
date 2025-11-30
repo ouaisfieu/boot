@@ -8,7 +8,7 @@ voir [Vercel](https://boot-a-rat.vercel.app/) /boot
 
 ## TODO
 
-+ trier le [dossier](https://dl.ouaisfi.eu/vrac/) /vrac
++ trier le [dossier](https://dl.ouaisfi.eu/vrac/) /[vrac](https://dl.ouaisfi.eu)
 
 ## Notes
 
