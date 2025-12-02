@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>mission-2.html – Marché des ressources & modales en kit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #050818;
+      --card: #020617;
+      --accent-blue: #38bdf8;
+      --accent-red: #fb7185;
+      --accent-green: #22c55e;
+      --accent-soft-blue: rgba(56,189,248,0.15);
+      --accent-soft-red: rgba(251,113,133,0.18);
+      --accent-gold: #eab308;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(148,163,184,0.7);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56,189,248,0.2), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.18), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1200px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.16), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.96), transparent 60%),
+        var(--bg-alt);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      padding: 1.2rem 0.9rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.8rem 1.6rem 2.2rem; }
+    }
+
+    .page::before {
+      content: "mission-2.html · Marché \"sel → VPS\" · modales en kit + budget & markdown";
+      position: absolute;
+      top: 0.45rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      pointer-events: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .header-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-blue);
+      background: rgba(15,23,42,0.98);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      box-shadow: 0 0 18px rgba(56,189,248,0.4);
+    }
+
+    .badge-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent-blue);
+      box-shadow: 0 0 14px rgba(56,189,248,0.8);
+    }
+
+    .header-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 340px;
+    }
+
+    h1 {
+      margin-top: 0.4rem;
+      font-size: clamp(2rem, 4.6vw, 2.9rem);
+      line-height: 1.05;
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #38bdf8, #22c55e, #fb7185, #eab308);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 880px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .notice {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 0.55rem 0.7rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 0.4rem;
+      align-items: flex-start;
+    }
+
+    .notice-icon { font-size: 1.4rem; }
+    .notice strong { color: var(--accent-blue); }
+
+    .controls {
+      margin-top: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .btn-pill {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.98);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 0.25rem 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+
+    .btn-pill span.dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--border);
+    }
+
+    body[data-edit-mode="on"] .btn-edit span.dot {
+      background: var(--accent-red);
+      box-shadow: 0 0 10px rgba(251,113,133,0.9);
+    }
+
+    body[data-edit-mode="on"] .btn-edit {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    main {
+      margin-top: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 980px) {
+      main {
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
+        align-items: flex-start;
+      }
+    }
+
+    /* Board / cartes */
+
+    .board {
+      background: radial-gradient(circle at 50% 0, rgba(56,189,248,0.13), transparent 65%), var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 0.9rem 0.95rem 1.1rem;
+      position: relative;
+    }
+
+    .board h2 {
+      font-size: 1.05rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .board p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 640px) {
+      .cards-grid {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+
+    .card {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: radial-gradient(circle at 50% 0, rgba(56,189,248,0.16), transparent 60%), #020617;
+      padding: 0.48rem 0.5rem 0.55rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .card-status {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-bottom: 0.16rem;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-blue);
+      box-shadow: 0 0 8px rgba(56,189,248,0.8);
+    }
+
+    .card.sponsor .status-dot {
+      background: var(--accent-red);
+      box-shadow: 0 0 10px rgba(251,113,133,0.9);
+    }
+
+    .card.sponsor {
+      border-color: rgba(251,113,133,0.9);
+      background: radial-gradient(circle at 50% 0, rgba(251,113,133,0.18), transparent 60%), #020617;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.25rem;
+      margin-bottom: 0.12rem;
+    }
+
+    .card-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .card-emoji {
+      font-size: 1.3rem;
+    }
+
+    .card-body {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      min-height: 2.2em;
+    }
+
+    .card-footer {
+      margin-top: 0.22rem;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .pill-mini {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      padding: 0.05rem 0.4rem;
+      font-size: 0.65rem;
+      white-space: nowrap;
+    }
+
+    .pill-mini.cost {
+      border-color: rgba(248,113,113,0.9);
+      color: #fecaca;
+    }
+
+    .pill-mini.rev {
+      border-color: rgba(52,211,153,0.9);
+      color: #a7f3d0;
+    }
+
+    /* Budget */
+
+    .budget {
+      margin-top: 0.7rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.98);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.83rem;
+    }
+
+    .budget-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .budget-grid {
+      display: grid;
+      gap: 0.25rem;
+    }
+
+    @media (min-width: 480px) {
+      .budget-grid {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+
+    .budget-item {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0.28rem 0.35rem;
+      font-size: 0.78rem;
+    }
+
+    .budget-item h3 {
+      font-size: 0.78rem;
+      margin-bottom: 0.06rem;
+      color: var(--text-main);
+    }
+
+    .budget-val {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.82rem;
+      margin-bottom: 0.06rem;
+    }
+
+    .budget-hint {
+      margin-top: 0.25rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Panneau de droite : éditeur & markdown */
+
+    .side-panel {
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.16), transparent 60%), var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 0.9rem 0.95rem 1.1rem;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .side-tabs {
+      display: flex;
+      gap: 0.3rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.98);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 0.22rem 0.6rem;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: var(--accent-soft-blue);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .side-panel h2 {
+      font-size: 1.02rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-main);
+    }
+
+    .side-panel h3 {
+      font-size: 0.9rem;
+      margin: 0.35rem 0 0.18rem;
+      color: var(--text-main);
+    }
+
+    .side-panel ul {
+      margin-left: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .side-panel li { margin-bottom: 0.16rem; }
+
+    .mono {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.78rem;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 0.35rem;
+      margin-bottom: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      flex: 1 1 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.4rem;
+      font-size: 0.8rem;
+      background: #020617;
+      color: var(--text-main);
+      min-width: 0;
+    }
+
+    .field textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    .btn-small {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.98);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 0.18rem 0.55rem;
+      cursor: pointer;
+    }
+
+    .btn-small.primary {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .btn-small.danger {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    textarea.code-area {
+      width: 100%;
+      min-height: 140px;
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.78rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.45rem;
+      background: #020617;
+      color: var(--text-main);
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .hint strong { color: var(--accent-green); }
+
+    /* Modal carte */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal {
+      width: 95%;
+      max-width: 540px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.22), transparent 60%), #020617;
+      padding: 0.9rem 0.9rem 0.95rem;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .modal-status {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    .modal-close {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.98);
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      padding: 0.18rem 0.4rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .modal-img {
+      margin: 0.3rem 0 0.4rem;
+      border-radius: 16px;
+      border: 1px dashed rgba(148,163,184,0.9);
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 0.5rem;
+      background:
+        repeating-linear-gradient(135deg, rgba(148,163,184,0.1) 0, rgba(148,163,184,0.1) 8px, transparent 8px, transparent 16px);
+    }
+
+    .modal-img.sponsor {
+      border-style: solid;
+      border-color: rgba(251,113,133,0.9);
+      background:
+        repeating-linear-gradient(135deg, rgba(251,113,133,0.18) 0, rgba(251,113,133,0.18) 10px, transparent 10px, transparent 20px),
+        radial-gradient(circle at 50% 0, rgba(56,189,248,0.16), transparent 60%);
+    }
+
+    .modal-img img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 12px;
+      object-fit: contain;
+    }
+
+    .modal-footer {
+      margin-top: 0.4rem;
+      border-top: 1px solid rgba(30,41,59,0.9);
+      padding-top: 0.35rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-footer span.tag {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      padding: 0.1rem 0.5rem;
+      font-size: 0.72rem;
+      white-space: nowrap;
+    }
+
+    .modal-footer span.tag.red {
+      border-color: rgba(251,113,133,0.9);
+      color: var(--accent-red);
+    }
+
+    /* Footer */
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.45rem;
+      right: 0.6rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.75);
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-row">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>Mission-2 – Marché “sel → VPS” & modales Markdown</span>
+          </div>
+          <h1>
+            Tout ton <span>écosystème</span> sur une page
+          </h1>
+        </div>
+        <div class="header-meta">
+          Du sel de cuisine à ton VPS : chaque ressource devient une carte,  
+          une modale, un poste de budget… et un bloc Markdown réutilisable.
+        </div>
+      </div>
+      <p class="subtitle">
+        Jouable sur mobile, 100% HTML/CSS/JS.  
+        Tu peux ajouter tes propres cartes, modifier les modales, calculer ton
+        <strong>budget / recettes</strong> et exporter le tout en <strong>Markdown</strong>
+        (cartes + profil utilisateur) pour ta clé USB ou ton Git.
+      </p>
+      <div class="notice">
+        <div class="notice-icon">🎮</div>
+        <div>
+          <strong>Modes :</strong>  
+          – Mode <strong>joueur</strong> : cliquer sur une carte ouvre sa modale (dépense / ressource / sponsor).<br>
+          – Mode <strong>édition</strong> : cliquer sur une carte change juste son statut neutre/rouge (sponsor).  
+          Les données sont stockées dans le <em>localStorage</em> du navigateur.
+        </div>
+      </div>
+
+      <div class="controls">
+        <button type="button" class="btn-pill btn-edit" id="toggleEditBtn">
+          <span class="dot"></span>
+          <span>Mode édition cartes (ON/OFF)</span>
+        </button>
+        <button type="button" class="btn-pill" id="newCardBtn">
+          ➕ Nouvelle carte (sel, VPS, etc.)
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Colonne gauche : jeu + budget -->
+      <section class="board">
+        <h2>1. Plateau “sel de cuisine → VPS”</h2>
+        <p>
+          Chaque carte représente un poste : une ressource basique (sel, café),
+          un outil (ordi, hébergeur, IA), ou un poste de recettes (cotisations, ateliers).  
+          Bleu = neutre. Rouge = sponsor (ou poste assumé comme “payé”).
+        </p>
+
+        <div class="cards-grid" id="cardsGrid">
+          <!-- Les cartes seront injectées via JS -->
+        </div>
+
+        <div class="budget" id="budgetBox">
+          <div class="budget-title">2. Calculateur budget / recettes (par mois)</div>
+          <div class="budget-grid">
+            <div class="budget-item">
+              <h3>Dépenses totales</h3>
+              <div class="budget-val" id="totalCost">0 €</div>
+              <div>Dépenses mensuelles (sel, VPS, cafés, logiciels, etc.).</div>
+            </div>
+            <div class="budget-item">
+              <h3>Recettes totales</h3>
+              <div class="budget-val" id="totalRevenue">0 €</div>
+              <div>Recettes mensuelles (cagnottes, ateliers, ventes, sponsors…).</div>
+            </div>
+            <div class="budget-item">
+              <h3>Résultat net</h3>
+              <div class="budget-val" id="netResult">0 €</div>
+              <div>Si c’est positif, tu tiens ton écosystème à flot (dans le jeu).</div>
+            </div>
+          </div>
+          <div class="budget-hint">
+            Les montants se règlent dans l’onglet <strong>“Éditeur de cartes”</strong>  
+            (champ <span class="mono">coût / mois</span> et <span class="mono">recette / mois</span>).
+          </div>
+        </div>
+      </section>
+
+      <!-- Colonne droite : éditeur / markdown -->
+      <section class="side-panel">
+        <div class="side-tabs">
+          <button type="button" class="tab-btn active" data-tab="edit">Éditeur de cartes</button>
+          <button type="button" class="tab-btn" data-tab="md">Markdown cartes</button>
+          <button type="button" class="tab-btn" data-tab="profile">Profil utilisateur</button>
+        </div>
+
+        <!-- Onglet éditeur -->
+        <div class="tab-panel active" data-tab-panel="edit">
+          <h2>Éditeur de cartes (jeu + budget)</h2>
+          <p>
+            Sélectionne une carte pour l’éditer, ou crée une nouvelle ressource.  
+            Tu peux aller du <strong>sel de cuisine</strong> au <strong>VPS</strong> en passant par ton café, tes livres, ton IA, etc.
+          </p>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="editId">ID (technique, unique)</label>
+              <input id="editId" placeholder="ex: sel-cuisine">
+            </div>
+            <div class="field">
+              <label for="editTitle">Titre affiché</label>
+              <input id="editTitle" placeholder="Sel de cuisine">
+            </div>
+            <div class="field">
+              <label for="editEmoji">Emoji</label>
+              <input id="editEmoji" placeholder="🧂">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="editCategory">Catégorie</label>
+              <input id="editCategory" placeholder="Ressource basique / Hébergement / Recettes…">
+            </div>
+            <div class="field">
+              <label for="editType">Type</label>
+              <select id="editType">
+                <option value="depense">Dépense</option>
+                <option value="recette">Recette</option>
+                <option value="mixte">Mixte</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="editCost">Coût / mois (€)</label>
+              <input id="editCost" type="number" min="0" step="0.1" placeholder="ex: 2.5">
+            </div>
+            <div class="field">
+              <label for="editRevenue">Recette / mois (€)</label>
+              <input id="editRevenue" type="number" min="0" step="0.1" placeholder="ex: 15">
+            </div>
+            <div class="field">
+              <label for="editStatus">Statut</label>
+              <select id="editStatus">
+                <option value="neutral">Neutre (bleu)</option>
+                <option value="sponsor">Sponsor (rouge)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="editBrand">Nom de marque (pour la modale sponsor)</label>
+              <input id="editBrand" placeholder="ex: Sel Libre 2042">
+            </div>
+            <div class="field">
+              <label for="editImageUrl">Image (URL optionnelle)</label>
+              <input id="editImageUrl" placeholder="https://…/image.png">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="editDescription">Description détaillée (modale)</label>
+            <textarea id="editDescription" placeholder="À quoi sert cette ressource, pourquoi elle compte dans ton projet…"></textarea>
+          </div>
+
+          <div class="field-row" style="margin-top:0.4rem;">
+            <button type="button" class="btn-small primary" id="saveCardBtn">💾 Sauver la carte</button>
+            <button type="button" class="btn-small" id="clearFormBtn">↺ Réinitialiser le formulaire</button>
+            <button type="button" class="btn-small danger" id="deleteCardBtn">🗑️ Supprimer la carte</button>
+          </div>
+
+          <p class="hint">
+            Étapes pour créer ton propre jeu sur clé USB :  
+            1. Adapter / ajouter les cartes ici.  
+            2. Tester le mode joueur sur mobile (touch).  
+            3. Exporter les cartes en <strong>Markdown</strong> (onglet suivant).  
+            4. Copier ce fichier <span class="mono">mission-2.html</span> + le Markdown dans un dossier de kit.
+          </p>
+        </div>
+
+        <!-- Onglet Markdown cartes -->
+        <div class="tab-panel" data-tab-panel="md">
+          <h2>Export / import Markdown des modales</h2>
+          <p>
+            Ce bloc génère une représentation Markdown de <strong>toutes les cartes</strong>.  
+            Tu peux :
+          </p>
+          <ul>
+            <li>copier-coller ce Markdown dans un fichier <span class="mono">cartes.md</span>,</li>
+            <li>modifier le fichier à la main,</li>
+            <li>puis le recoller ici et cliquer sur “Importer le Markdown” pour mettre à jour les cartes.</li>
+          </ul>
+
+          <textarea class="code-area" id="cardsMarkdown"></textarea>
+
+          <div class="field-row" style="margin-top:0.35rem;">
+            <button type="button" class="btn-small primary" id="exportMdBtn">⬇️ Regénérer le Markdown depuis les cartes</button>
+            <button type="button" class="btn-small" id="importMdBtn">⬆️ Importer ce Markdown dans le jeu</button>
+          </div>
+
+          <p class="hint">
+            Format attendu par l’import (simplifié) :<br>
+            <span class="mono">
+              ---<br>
+              id: vps-main<br>
+              title: VPS principal<br>
+              category: Hébergement<br>
+              emoji: 🖥️<br>
+              type: depense<br>
+              status: sponsor<br>
+              cost_month: 8.5<br>
+              revenue_month: 0<br>
+              brand: Mon VPS Éthique<br>
+              image: https://…/vps.png<br>
+              description: Ton serveur où tournent les instances du jeu…<br>
+              ---<br>
+              (puis une autre carte, etc.)
+            </span>
+          </p>
+        </div>
+
+        <!-- Onglet profil utilisateur -->
+        <div class="tab-panel" data-tab-panel="profile">
+          <h2>Markdown de profil utilisateur</h2>
+          <p>
+            Ici tu écris ton <strong>profil joueur / opérateur</strong> en Markdown.  
+            Il peut servir de fiche perso, de CV militant ou de description de ton rôle dans l’instance.
+          </p>
+
+          <textarea class="code-area" id="profileMarkdown"></textarea>
+
+          <div class="field-row" style="margin-top:0.35rem;">
+            <button type="button" class="btn-small primary" id="saveProfileBtn">💾 Sauver le profil (localStorage)</button>
+            <button type="button" class="btn-small" id="resetProfileBtn">↺ Revenir au modèle</button>
+          </div>
+
+          <p class="hint">
+            Ce Markdown n’est jamais envoyé nulle part par le fichier lui-même :  
+            il reste dans le <strong>localStorage</strong> du navigateur, à toi de le copier dans Git, Obsidian, etc.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal carte -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title" id="modalTitle">Titre</div>
+            <div class="modal-status" id="modalStatus">Statut…</div>
+          </div>
+          <button type="button" class="modal-close" id="modalCloseBtn">fermer</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-img" id="modalImg">
+            PLACEHOLDER
+          </div>
+          <div id="modalText"></div>
+        </div>
+        <div class="modal-footer">
+          <span class="tag" id="modalTagLeft">mode joueur</span>
+          <span class="tag" id="modalTagRight">statut: neutre</span>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span>
+        mission-2 condense : jeu “qui-est-ce ?”, budget, modales, export Markdown & profil.  
+        Tout est modifiable et clonable instance par instance sur ta clé USB.
+      </span>
+      <code>mission-2.html · mobile first · pur HTML/CSS/JS · cartes + budget + markdown</code>
+    </footer>
+
+    <div class="badge-corner">
+      MISSION-2 · MARCHÉ SEL → VPS
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const STORAGE_KEY_CARDS = "mission2_cards_v1";
+      const STORAGE_KEY_PROFILE = "mission2_profile_md_v1";
+
+      // ---------- Données par défaut : du sel → VPS ----------
+      const defaultCards = [
+        {
+          id: "sel-cuisine",
+          title: "Sel de cuisine",
+          emoji: "🧂",
+          category: "Ressource basique",
+          type: "depense",
+          status: "neutral",
+          costMonth: 1.5,
+          revenueMonth: 0,
+          brand: "Sel Libre 2042",
+          imageUrl: "",
+          description: "Les petits détails matériels qui font tourner la logistique : repas d’équipe, ateliers, événements. Le sel est le symbole de toutes ces micro-dépenses invisibles."
+        },
+        {
+          id: "cafe",
+          title: "Café collectif",
+          emoji: "☕",
+          category: "Ressource sociale",
+          type: "depense",
+          status: "neutral",
+          costMonth: 12,
+          revenueMonth: 0,
+          brand: "Café du Quartier",
+          imageUrl: "",
+          description: "Les litres qui alimentent les réunions tardives, les brainstorms et les débriefs post-atelier. Une dépense modeste, un impact social énorme."
+        },
+        {
+          id: "vps",
+          title: "VPS principal",
+          emoji: "🖥️",
+          category: "Hébergement",
+          type: "depense",
+          status: "sponsor",
+          costMonth: 8.5,
+          revenueMonth: 0,
+          brand: "Mon VPS Éthique",
+          imageUrl: "",
+          description: "Serveur qui héberge les sites, les tests, parfois des services critiques pour ta veille citoyenne. Sans lui, ton multivers se met en pause."
+        },
+        {
+          id: "cotisations",
+          title: "Cotisations annuelles",
+          emoji: "🎫",
+          category: "Recettes citoyennes",
+          type: "recette",
+          status: "neutral",
+          costMonth: 0,
+          revenueMonth: 50,
+          brand: "Cercle des Soutiens",
+          imageUrl: "",
+          description: "Les 12,50 €/an multipliés par un certain nombre de personnes. Dans le jeu, on lisse à ~50 €/mois pour illustrer les petites rivières qui font les grands fleuves."
+        },
+        {
+          id: "atelier",
+          title: "Ateliers pédagogiques",
+          emoji: "📚",
+          category: "Recettes pédagogiques",
+          type: "recette",
+          status: "neutral",
+          costMonth: 0,
+          revenueMonth: 120,
+          brand: "Pack ateliers citoyenneté",
+          imageUrl: "",
+          description: "Les animations (écoles, maisons de jeunes, associations) facturées au mois. Une des lignes de recettes principales dans le jeu comme dans la réalité."
+        },
+        {
+          id: "outil-ia",
+          title: "Outil IA",
+          emoji: "🤖",
+          category: "Outil numérique",
+          type: "mixte",
+          status: "neutral",
+          costMonth: 20,
+          revenueMonth: 0,
+          brand: "Assistant Chaotique",
+          imageUrl: "",
+          description: "Un abonnement IA que tu détournes pour fiches pédagogiques, sites, jeux, simulations. Ici, tu décides si tu assumes la marque (rouge) ou pas (bleu)."
+        }
+      ];
+
+      function loadCards() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY_CARDS);
+          if (!raw) return defaultCards.slice();
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed) || !parsed.length) return defaultCards.slice();
+          return parsed;
+        } catch(e) {
+          return defaultCards.slice();
+        }
+      }
+
+      function saveCards() {
+        try {
+          localStorage.setItem(STORAGE_KEY_CARDS, JSON.stringify(cards));
+        } catch(e) {}
+      }
+
+      let cards = loadCards();
+
+      // ---------- DOM ----------
+      const body = document.body;
+      const toggleEditBtn = document.getElementById("toggleEditBtn");
+      const newCardBtn = document.getElementById("newCardBtn");
+      const cardsGrid = document.getElementById("cardsGrid");
+
+      const totalCostEl = document.getElementById("totalCost");
+      const totalRevenueEl = document.getElementById("totalRevenue");
+      const netResultEl = document.getElementById("netResult");
+
+      // Éditeur
+      const editId = document.getElementById("editId");
+      const editTitle = document.getElementById("editTitle");
+      const editEmoji = document.getElementById("editEmoji");
+      const editCategory = document.getElementById("editCategory");
+      const editType = document.getElementById("editType");
+      const editCost = document.getElementById("editCost");
+      const editRevenue = document.getElementById("editRevenue");
+      const editStatus = document.getElementById("editStatus");
+      const editBrand = document.getElementById("editBrand");
+      const editImageUrl = document.getElementById("editImageUrl");
+      const editDescription = document.getElementById("editDescription");
+
+      const saveCardBtn = document.getElementById("saveCardBtn");
+      const clearFormBtn = document.getElementById("clearFormBtn");
+      const deleteCardBtn = document.getElementById("deleteCardBtn");
+
+      let currentEditId = null;
+
+      // Markdown
+      const cardsMarkdown = document.getElementById("cardsMarkdown");
+      const exportMdBtn = document.getElementById("exportMdBtn");
+      const importMdBtn = document.getElementById("importMdBtn");
+
+      // Profil
+      const profileMarkdown = document.getElementById("profileMarkdown");
+      const saveProfileBtn = document.getElementById("saveProfileBtn");
+      const resetProfileBtn = document.getElementById("resetProfileBtn");
+
+      // Tabs
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const tabPanels = document.querySelectorAll(".tab-panel");
+
+      // Modal
+      const modalBackdrop = document.getElementById("modalBackdrop");
+      const modalCloseBtn = document.getElementById("modalCloseBtn");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalStatus = document.getElementById("modalStatus");
+      const modalImg = document.getElementById("modalImg");
+      const modalText = document.getElementById("modalText");
+      const modalTagLeft = document.getElementById("modalTagLeft");
+      const modalTagRight = document.getElementById("modalTagRight");
+
+      // ---------- Rendu cartes ----------
+
+      function createCardElement(card) {
+        const el = document.createElement("div");
+        el.className = "card";
+        el.dataset.cardId = card.id;
+
+        if (card.status === "sponsor") {
+          el.classList.add("sponsor");
+        }
+
+        const statusHtml = `
+          <div class="card-status">
+            <span class="status-dot"></span>
+            <span class="status-text">${card.status === "sponsor" ? "sponsor (rouge)" : "neutre (bleu)"}</span>
+          </div>
+        `;
+
+        const emoji = card.emoji || "❓";
+        const costLabel = card.costMonth && card.costMonth > 0 ? `${card.costMonth} €/mois` : "0 €/mois";
+        const revLabel = card.revenueMonth && card.revenueMonth > 0 ? `${card.revenueMonth} €/mois` : "0 €/mois";
+
+        el.innerHTML = `
+          ${statusHtml}
+          <div class="card-title-row">
+            <div class="card-title">${card.title || card.id}</div>
+            <div class="card-emoji">${emoji}</div>
+          </div>
+          <div class="card-body">
+            ${card.category || "Catégorie à définir"}
+          </div>
+          <div class="card-footer">
+            <span class="pill-mini cost">- ${costLabel}</span>
+            <span class="pill-mini rev">+ ${revLabel}</span>
+          </div>
+        `;
+
+        el.addEventListener("click", () => handleCardClick(card.id));
+
+        return el;
+      }
+
+      function renderCards() {
+        cardsGrid.innerHTML = "";
+        cards.forEach(card => {
+          const el = createCardElement(card);
+          cardsGrid.appendChild(el);
+        });
+        updateBudget();
+      }
+
+      function updateBudget() {
+        let totalCost = 0;
+        let totalRevenue = 0;
+
+        cards.forEach(card => {
+          const cost = parseFloat(card.costMonth) || 0;
+          const rev = parseFloat(card.revenueMonth) || 0;
+          totalCost += cost;
+          totalRevenue += rev;
+        });
+
+        function fmt(x) {
+          return x.toLocaleString("fr-BE", { maximumFractionDigits: 2 }) + " €";
+        }
+
+        totalCostEl.textContent = fmt(totalCost);
+        totalRevenueEl.textContent = fmt(totalRevenue);
+        netResultEl.textContent = fmt(totalRevenue - totalCost);
+      }
+
+      // ---------- Mode édition / jeu ----------
+
+      function toggleEditMode() {
+        const current = body.getAttribute("data-edit-mode");
+        const next = current === "on" ? "off" : "on";
+        body.setAttribute("data-edit-mode", next);
+      }
+
+      toggleEditBtn.addEventListener("click", toggleEditMode);
+      body.setAttribute("data-edit-mode", "off");
+
+      function handleCardClick(id) {
+        const card = cards.find(c => c.id === id);
+        if (!card) return;
+        const editMode = body.getAttribute("data-edit-mode") === "on";
+
+        if (editMode) {
+          // Toggle sponsor / neutral
+          card.status = card.status === "sponsor" ? "neutral" : "sponsor";
+          saveCards();
+          renderCards();
+          loadCardIntoForm(id);
+        } else {
+          openCardModal(card);
+        }
+      }
+
+      // ---------- Modal ----------
+
+      function openCardModal(card) {
+        modalTitle.textContent = card.title || card.id;
+        const isSponsor = card.status === "sponsor";
+
+        if (isSponsor) {
+          modalStatus.textContent = "Carte sponsorisée – marque et détails visibles";
+          modalTagRight.textContent = "statut: sponsor (rouge)";
+          modalTagRight.classList.add("red");
+        } else {
+          modalStatus.textContent = "Carte neutre – marque masquée";
+          modalTagRight.textContent = "statut: neutre (bleu)";
+          modalTagRight.classList.remove("red");
+        }
+
+        modalTagLeft.textContent = "mode joueur";
+
+        // Image
+        modalImg.classList.remove("sponsor");
+        modalImg.innerHTML = "";
+        if (isSponsor) {
+          modalImg.classList.add("sponsor");
+          if (card.imageUrl) {
+            const img = document.createElement("img");
+            img.src = card.imageUrl;
+            img.alt = card.brand || card.title;
+            modalImg.appendChild(img);
+          } else {
+            modalImg.textContent = "VISUEL SPONSOR\n(Aucune image fournie, tu peux en ajouter une dans l’éditeur.)";
+          }
+        } else {
+          modalImg.textContent = "PLACEHOLDER LOREM IPSUM\n(Tant que la carte reste neutre, la marque n’est pas affichée.)";
+        }
+
+        // Texte
+        const cost = parseFloat(card.costMonth) || 0;
+        const rev = parseFloat(card.revenueMonth) || 0;
+        const typeLabel = card.type || "indéfini";
+
+        let html = "";
+
+        if (isSponsor) {
+          html += `<strong>${card.brand || "Marque sponsor"}</strong><br>`;
+        } else {
+          html += `<strong>${card.category || "Poste"}</strong><br>`;
+        }
+
+        html += (card.description || "Description à compléter dans l’éditeur.") + "<br><br>";
+
+        html += `<strong>Type :</strong> ${typeLabel}<br>`;
+        html += `<strong>Coût mensuel :</strong> ${cost.toLocaleString("fr-BE", { maximumFractionDigits: 2 })} €<br>`;
+        html += `<strong>Recette mensuelle :</strong> ${rev.toLocaleString("fr-BE", { maximumFractionDigits: 2 })} €<br>`;
+
+        const net = rev - cost;
+        const netLabel = net.toLocaleString("fr-BE", { maximumFractionDigits: 2 }) + " €";
+        html += `<strong>Impact net :</strong> ${net >= 0 ? "+" : ""}${netLabel}`;
+
+        modalText.innerHTML = html;
+
+        modalBackdrop.style.display = "flex";
+      }
+
+      function closeModal() {
+        modalBackdrop.style.display = "none";
+      }
+
+      modalCloseBtn.addEventListener("click", closeModal);
+      modalBackdrop.addEventListener("click", (e) => {
+        if (e.target === modalBackdrop) closeModal();
+      });
+
+      // ---------- Éditeur de carte ----------
+
+      function clearForm() {
+        currentEditId = null;
+        editId.value = "";
+        editTitle.value = "";
+        editEmoji.value = "";
+        editCategory.value = "";
+        editType.value = "depense";
+        editCost.value = "";
+        editRevenue.value = "";
+        editStatus.value = "neutral";
+        editBrand.value = "";
+        editImageUrl.value = "";
+        editDescription.value = "";
+      }
+
+      clearFormBtn.addEventListener("click", clearForm);
+
+      function loadCardIntoForm(id) {
+        const card = cards.find(c => c.id === id);
+        if (!card) return;
+        currentEditId = card.id;
+        editId.value = card.id;
+        editTitle.value = card.title || "";
+        editEmoji.value = card.emoji || "";
+        editCategory.value = card.category || "";
+        editType.value = card.type || "depense";
+        editCost.value = card.costMonth != null ? card.costMonth : "";
+        editRevenue.value = card.revenueMonth != null ? card.revenueMonth : "";
+        editStatus.value = card.status || "neutral";
+        editBrand.value = card.brand || "";
+        editImageUrl.value = card.imageUrl || "";
+        editDescription.value = card.description || "";
+      }
+
+      newCardBtn.addEventListener("click", () => {
+        clearForm();
+        currentEditId = null;
+      });
+
+      function saveCardFromForm() {
+        const id = (editId.value || "").trim();
+        if (!id) {
+          alert("Il faut un ID unique pour la carte (champ ID).");
+          return;
+        }
+
+        const existingIndex = cards.findIndex(c => c.id === id);
+        const cost = parseFloat(editCost.value) || 0;
+        const rev = parseFloat(editRevenue.value) || 0;
+
+        const cardData = {
+          id: id,
+          title: (editTitle.value || "").trim() || id,
+          emoji: (editEmoji.value || "").trim() || "❓",
+          category: (editCategory.value || "").trim(),
+          type: editType.value || "depense",
+          status: editStatus.value || "neutral",
+          costMonth: cost,
+          revenueMonth: rev,
+          brand: (editBrand.value || "").trim(),
+          imageUrl: (editImageUrl.value || "").trim(),
+          description: (editDescription.value || "").trim()
+        };
+
+        if (existingIndex >= 0 && (currentEditId === id || currentEditId === null)) {
+          cards[existingIndex] = cardData;
+        } else if (existingIndex >= 0 && currentEditId && currentEditId !== id) {
+          // changement d'ID
+          const oldIndex = cards.findIndex(c => c.id === currentEditId);
+          if (oldIndex >= 0) {
+            cards.splice(oldIndex, 1, cardData);
+          } else {
+            cards[existingIndex] = cardData;
+          }
+        } else {
+          // nouvelle carte
+          if (existingIndex >= 0 && !currentEditId) {
+            alert("Une carte avec cet ID existe déjà. Choisis un autre ID.");
+            return;
+          }
+          cards.push(cardData);
+        }
+
+        currentEditId = id;
+        saveCards();
+        renderCards();
+        alert("Carte sauvegardée.");
+      }
+
+      saveCardBtn.addEventListener("click", saveCardFromForm);
+
+      deleteCardBtn.addEventListener("click", () => {
+        if (!currentEditId) {
+          alert("Aucune carte sélectionnée à supprimer.");
+          return;
+        }
+        const idx = cards.findIndex(c => c.id === currentEditId);
+        if (idx < 0) {
+          alert("Carte introuvable.");
+          return;
+        }
+        if (!confirm("Supprimer la carte '" + currentEditId + "' ?")) return;
+        cards.splice(idx, 1);
+        saveCards();
+        renderCards();
+        clearForm();
+      });
+
+      // Quand on clique sur une carte en mode édition ou jeu, on charge la carte dans le formulaire aussi (utile)
+      cardsGrid.addEventListener("click", (e) => {
+        const cardEl = e.target.closest(".card");
+        if (!cardEl) return;
+        const id = cardEl.dataset.cardId;
+        if (!id) return;
+        // petit délai pour laisser l'action principale se faire
+        setTimeout(() => {
+          loadCardIntoForm(id);
+        }, 0);
+      });
+
+      // ---------- Tabs ----------
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const tab = btn.getAttribute("data-tab");
+          tabBtns.forEach(b => b.classList.remove("active"));
+          tabPanels.forEach(p => p.classList.remove("active"));
+          btn.classList.add("active");
+          const panel = document.querySelector(`.tab-panel[data-tab-panel="${tab}"]`);
+          if (panel) panel.classList.add("active");
+        });
+      });
+
+      // ---------- Markdown cartes (export / import) ----------
+
+      function cardsToMarkdown() {
+        let md = "# Cartes “sel → VPS” (export mission-2)\n\n";
+        cards.forEach(card => {
+          md += "---\n";
+          md += `id: ${card.id}\n`;
+          md += `title: ${card.title || ""}\n`;
+          md += `category: ${card.category || ""}\n`;
+          md += `emoji: ${card.emoji || ""}\n`;
+          md += `type: ${card.type || ""}\n`;
+          md += `status: ${card.status || ""}\n`;
+          md += `cost_month: ${card.costMonth != null ? card.costMonth : 0}\n`;
+          md += `revenue_month: ${card.revenueMonth != null ? card.revenueMonth : 0}\n`;
+          md += `brand: ${card.brand || ""}\n`;
+          md += `image: ${card.imageUrl || ""}\n`;
+          const desc = (card.description || "").replace(/\n/g, "\\n");
+          md += `description: ${desc}\n`;
+          md += "---\n\n";
+        });
+        return md;
+      }
+
+      function markdownToCards(md) {
+        const lines = md.split(/\r?\n/);
+        const blocks = [];
+        let current = [];
+
+        lines.forEach(line => {
+          if (line.trim() === "---") {
+            if (current.length) {
+              blocks.push(current.join("\n"));
+              current = [];
+            }
+          } else {
+            current.push(line);
+          }
+        });
+        if (current.length) blocks.push(current.join("\n"));
+
+        const parsedCards = [];
+
+        blocks.forEach(block => {
+          const obj = {};
+          const blines = block.split(/\r?\n/);
+          blines.forEach(l => {
+            const idx = l.indexOf(":");
+            if (idx === -1) return;
+            const key = l.slice(0, idx).trim();
+            const value = l.slice(idx + 1).trim();
+            obj[key] = value;
+          });
+          if (!obj.id) return;
+          parsedCards.push({
+            id: obj.id,
+            title: obj.title || obj.id,
+            emoji: obj.emoji || "❓",
+            category: obj.category || "",
+            type: obj.type || "depense",
+            status: obj.status === "sponsor" ? "sponsor" : "neutral",
+            costMonth: parseFloat(obj.cost_month) || 0,
+            revenueMonth: parseFloat(obj.revenue_month) || 0,
+            brand: obj.brand || "",
+            imageUrl: obj.image || "",
+            description: (obj.description || "").replace(/\\n/g, "\n")
+          });
+        });
+
+        return parsedCards;
+      }
+
+      exportMdBtn.addEventListener("click", () => {
+        cardsMarkdown.value = cardsToMarkdown();
+      });
+
+      importMdBtn.addEventListener("click", () => {
+        const md = cardsMarkdown.value || "";
+        if (!md.trim()) {
+          alert("Aucun Markdown à importer.");
+          return;
+        }
+        const imported = markdownToCards(md);
+        if (!imported.length) {
+          alert("Aucune carte valide trouvée dans le Markdown.");
+          return;
+        }
+        cards = imported;
+        saveCards();
+        renderCards();
+        alert("Cartes mises à jour depuis le Markdown.");
+      });
+
+      // ---------- Profil utilisateur (Markdown) ----------
+
+      function defaultProfileMarkdown() {
+        return (
+`---
+id: profil-joueur
+role: opérateur·rice de veille citoyenne
+niveau: 1
+objectifs:
+  - créer une instance locale du jeu
+  - apprendre à relier budget, outils et politique
+---
+
+# Profil joueur / opérateur
+
+Je m'appelle **[à compléter]** et je joue / j'opère dans cette instance de veille citoyenne.
+
+- Localisation : [ville / région / pays]
+- Disponibilité : [x heures / semaine]
+- Compétences : 
+  - [techniques] (HTML, Git, serveurs, etc.)
+  - [pédagogiques] (animation, écriture, etc.)
+  - [politiques / citoyennes]
+
+## Ce que je veux tester avec cette instance
+
+- Comprendre combien coûte vraiment *mon* écosystème (du sel au VPS).
+- Voir ce qui se passe si j'augmente les recettes (ateliers, cagnottes, etc.).
+- Faire tester le jeu à d'autres (amis, collègues, publics) et récupérer leurs retours.
+
+## Limites & garde-fous
+
+- Je garde la main sur le choix des sponsors.
+- Je ne vends pas l'âme du projet pour quelques euros de pub.
+- Je documente ce que j'apprends en cours de route dans un dépôt Git ou un carnet de bord.`
+        );
+      }
+
+      function loadProfile() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY_PROFILE);
+          if (!raw) {
+            profileMarkdown.value = defaultProfileMarkdown();
+          } else {
+            profileMarkdown.value = raw;
+          }
+        } catch(e) {
+          profileMarkdown.value = defaultProfileMarkdown();
+        }
+      }
+
+      saveProfileBtn.addEventListener("click", () => {
+        try {
+          localStorage.setItem(STORAGE_KEY_PROFILE, profileMarkdown.value || "");
+          alert("Profil sauvegardé dans le localStorage.");
+        } catch(e) {
+          alert("Impossible de sauvegarder le profil (localStorage bloqué ?).");
+        }
+      });
+
+      resetProfileBtn.addEventListener("click", () => {
+        if (!confirm("Remplacer le profil actuel par le modèle par défaut ?")) return;
+        profileMarkdown.value = defaultProfileMarkdown();
+      });
+
+      // ---------- Init ----------
+
+      renderCards();
+      loadProfile();
+      cardsMarkdown.value = cardsToMarkdown(); // pré-remplir
+
+    })();
+  </script>
+</body>
+</html>
