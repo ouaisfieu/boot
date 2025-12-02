@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Écran central · Portail multimédia Orga</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #050513;
+      --bg-panel: #0d0d22;
+      --bg-panel-alt: #151530;
+      --border-soft: rgba(255,255,255,0.08);
+      --text-main: #f7f7ff;
+      --text-muted: #a2a2d5;
+      --neon-green: #3dffb5;
+      --neon-purple: #c46bff;
+      --neon-pink: #ff4b9f;
+      --neon-blue: #57c1ff;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow-deep: 0 24px 50px rgba(0,0,0,0.9);
+      --shadow-soft: 0 14px 30px rgba(0,0,0,0.8);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #242457 0, #050513 55%),
+        radial-gradient(circle at bottom, #1e0f33 0, #050513 60%);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.8rem 0.8rem 1rem;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 3px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.5) 0, rgba(0,0,0,.5) 1px, transparent 1px, transparent 3px);
+      mix-blend-mode: soft-light;
+      z-index: 0;
+    }
+
+    .frame {
+      position: relative;
+      z-index: 1;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.07), rgba(0,0,0,0.95));
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.85),
+        var(--shadow-deep);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    header {
+      padding: 0.9rem 1.1rem 0.7rem;
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 1.15rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--neon-green);
+      text-shadow: 0 0 18px rgba(61,255,181,0.9);
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .tagline {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--neon-purple);
+    }
+
+    .mode-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 0.32rem 0.9rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.06), rgba(0,0,0,0.98));
+      box-shadow: 0 0 26px rgba(0,0,0,0.9);
+      white-space: nowrap;
+    }
+
+    .mode-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--neon-pink);
+      box-shadow: 0 0 20px rgba(255,75,159,0.9);
+    }
+
+    /* Layout principal : mobile -> 1 colonne, desktop -> 2 colonnes */
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.7rem;
+      padding: 0.7rem;
+    }
+
+    @media (min-width: 900px) {
+      main {
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
+      }
+    }
+
+    /* Écran central */
+    .viewer-panel {
+      background: linear-gradient(145deg, rgba(7,10,34,0.98), rgba(8,20,48,0.98));
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .viewer-headline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: baseline;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    .viewer-title {
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .viewer-info {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: right;
+      flex: 1;
+    }
+
+    @media (max-width: 600px) {
+      .viewer-info {
+        text-align: left;
+      }
+    }
+
+    /* Viewer responsive 16:9 */
+    .viewer-wrapper {
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: radial-gradient(circle at top, rgba(33,38,92,0.95), rgba(2,3,14,0.98));
+      box-shadow: 0 18px 35px rgba(0,0,0,0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .viewer-aspect {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 */
+    }
+
+    .viewer-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      background: #02030c;
+    }
+
+    .viewer-inner iframe,
+    .viewer-inner embed {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .viewer-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .viewer-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.4rem 1.1rem;
+      gap: 0.55rem;
+    }
+
+    .viewer-placeholder h2 {
+      font-size: 0.96rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .viewer-placeholder p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 420px;
+    }
+
+    .viewer-placeholder .hint {
+      font-size: 0.72rem;
+      color: var(--neon-purple);
+    }
+
+    .viewer-meta {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: space-between;
+      margin-top: 0.25rem;
+    }
+
+    /* Colonne contenus */
+    .grid-panel {
+      background: linear-gradient(135deg, rgba(7,7,32,0.98), rgba(12,12,48,0.98));
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-height: 70vh;
+      overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+      .grid-panel {
+        max-height: none;
+      }
+    }
+
+    .grid-headline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: baseline;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    .grid-title {
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .grid-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .filter-pill {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: var(--text-muted);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.95));
+      cursor: pointer;
+      transition: all 0.12s ease-out;
+    }
+
+    .filter-pill.active {
+      color: var(--neon-green);
+      border-color: rgba(61,255,181,0.9);
+      box-shadow: 0 0 16px rgba(61,255,181,0.7);
+      text-shadow: 0 0 12px rgba(61,255,181,0.85);
+    }
+
+    .items-grid {
+      margin-top: 0.4rem;
+      display: grid;
+      grid-template-columns: minmax(0,1fr);
+      gap: 0.55rem;
+      overflow-y: auto;
+      padding-right: 0.2rem;
+    }
+
+    @media (min-width: 700px) {
+      .items-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .item-card {
+      border-radius: 12px;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.05), rgba(0,0,0,0.95));
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.65rem 0.65rem 0.6rem;
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .item-card::before {
+      content: "";
+      position: absolute;
+      top: -40%;
+      right: -40%;
+      width: 140px;
+      height: 140px;
+      background: conic-gradient(
+        from 230deg,
+        rgba(61,255,181,0.0),
+        rgba(61,255,181,0.16),
+        rgba(196,107,255,0.18),
+        rgba(255,75,159,0.0)
+      );
+      opacity: 0.6;
+      filter: blur(12px);
+      pointer-events: none;
+    }
+
+    .item-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .item-meta {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      align-items: center;
+    }
+
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      padding: 0.05rem 0.45rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .item-desc {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .item-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.1rem;
+    }
+
+    /* Boutons néon */
+    .btn-neon {
+      --neon-color: var(--neon-green);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 0.33rem 0.85rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.1), rgba(0,0,0,0.98));
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: transform 0.08s ease-out, box-shadow 0.12s ease-out, border-color 0.1s ease-out, background 0.1s ease-out;
+    }
+
+    .btn-neon::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 55%);
+      opacity: 0;
+      transform: translateY(60%);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+    }
+
+    .btn-neon span.bullet {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--neon-color);
+      box-shadow: 0 0 14px var(--neon-color);
+      flex-shrink: 0;
+    }
+
+    .btn-neon[data-variant="fullscreen"] { --neon-color: var(--neon-green); }
+    .btn-neon[data-variant="modal"]      { --neon-color: var(--neon-purple); }
+    .btn-neon[data-variant="newtab"]     { --neon-color: var(--neon-blue); }
+
+    .btn-neon:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.7);
+      box-shadow:
+        0 0 26px rgba(61,255,181,0.55),
+        0 12px 24px rgba(0,0,0,0.95);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.18), rgba(0,0,0,0.98));
+    }
+
+    .btn-neon:hover::before {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .btn-neon:active {
+      transform: translateY(0);
+      box-shadow:
+        0 0 18px rgba(61,255,181,0.45),
+        0 6px 16px rgba(0,0,0,0.98);
+    }
+
+    /* Modale */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      padding: 0.8rem;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      max-height: 90vh;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.4);
+      background: radial-gradient(circle at top, rgba(15,20,60,0.98), rgba(4,5,18,0.98));
+      box-shadow: 0 32px 80px rgba(0,0,0,0.98);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Mobile : modale plein écran et scrollable */
+    @media (max-width: 700px) {
+      .modal-dialog {
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+      }
+    }
+
+    .modal-header {
+      padding: 0.55rem 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.28);
+      font-size: 0.78rem;
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      opacity: 0.9;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      font-size: 0.78rem;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.35);
+      font-family: "JetBrains Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .modal-body {
+      flex: 1;
+      position: relative;
+      background: #02030b;
+      overflow-y: auto; /* <- le contenu de la modale est scrollable */
+    }
+
+    iframe#modal-viewer {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #02030b;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 0.45rem 1.1rem 0.65rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="shell">
+  <div class="frame">
+    <header>
+      <div class="title-block">
+        <h1>Écran central · Orga</h1>
+        <div class="subtitle">
+          Un seul écran pour tout voir : jeux, tests, PDF, images, YouTube, Spotify — en plein écran, en modale ou dans un nouvel onglet.
+        </div>
+        <div class="tagline">
+          Dashboard mémoire · tout ce qu’on s’est infligé depuis le début
+        </div>
+      </div>
+      <div class="mode-pill">
+        <span class="mode-dot"></span>
+        Portail multimédia · mobile first
+      </div>
+    </header>
+
+    <main>
+      <!-- ÉCRAN CENTRAL -->
+      <section class="viewer-panel">
+        <div class="viewer-headline">
+          <div class="viewer-title">Écran central de lecture</div>
+          <div class="viewer-info" id="viewer-info">
+            Aucun contenu chargé — clique sur un bouton « Plein écran ».
+          </div>
+        </div>
+
+        <div class="viewer-wrapper">
+          <div class="viewer-aspect">
+            <div class="viewer-inner" id="viewer-inner" aria-label="Visionneuse centrale">
+              <div class="viewer-placeholder" id="viewer-placeholder">
+                <h2>Choisis ta torture visuelle</h2>
+                <p>
+                  Dans la colonne de droite : toutes les choses qu’on a testées ensemble
+                  (HTML, PDF, images, YouTube, Spotify). Tu peux tout afficher ici, en modale,
+                  ou ouvrir dans un autre onglet.
+                </p>
+                <p class="hint">
+                  Sur mobile : tu scrolles simplement — rien n’est coupé en bas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="viewer-meta" id="viewer-meta">
+          <span>Mode affichage : aucun</span>
+          <span>Source : —</span>
+        </div>
+      </section>
+
+      <!-- CONTENUS -->
+      <section class="grid-panel">
+        <div class="grid-headline">
+          <div class="grid-title">Tous les contenus</div>
+          <div class="grid-filters">
+            <button class="filter-pill active" data-filter="all">Tous</button>
+            <button class="filter-pill" data-filter="html">Sites / Tests</button>
+            <button class="filter-pill" data-filter="pdf">PDF</button>
+            <button class="filter-pill" data-filter="image">Images</button>
+            <button class="filter-pill" data-filter="youtube">YouTube</button>
+            <button class="filter-pill" data-filter="spotify">Spotify</button>
+          </div>
+        </div>
+
+        <div class="items-grid" id="items-grid">
+          <!-- HTML / SITES / JEUX -->
+          <article class="item-card"
+                   data-type="html"
+                   data-src="jeu-polar-1980.html"
+                   data-label="Polar noir · Vlan & tri de dossiers">
+            <div class="item-title">Polar noir · Petit boulot dans le Vlan</div>
+            <div class="item-meta">
+              <span class="badge">HTML</span>
+              <span>Jeu narratif années 80 · tri + GitHub</span>
+            </div>
+            <p class="item-desc">
+              Le petit boulot pour « trié documents dans fichier » qui cache un programme
+              de recrutement d’espion ultra secret.
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="jeu-polar-1980.html" target="_blank" rel="noopener">
+                <span class="bullet"></span>Nouvel onglet
+              </a>
+            </div>
+          </article>
+
+          <article class="item-card"
+                   data-type="html"
+                   data-src="12-50.html"
+                   data-label="Jeu concours 12,50">
+            <div class="item-title">Jeu concours « 12,50 »</div>
+            <div class="item-meta">
+              <span class="badge">HTML</span>
+              <span>Site statique le plus « wow »</span>
+            </div>
+            <p class="item-desc">
+              Concours Matrix-bling pour créer le site statique ultime, avec cheatcodes et mystère
+              autour des 12,50€.
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="12-50.html" target="_blank" rel="noopener">
+                <span class="bullet"></span>Nouvel onglet
+              </a>
+            </div>
+          </article>
+
+          <article class="item-card"
+                   data-type="html"
+                   data-src="orga-recrutement.html"
+                   data-label="Recrutement pour l’Organisation">
+            <div class="item-title">Recrutement · L’Organisation</div>
+            <div class="item-meta">
+              <span class="badge">HTML</span>
+              <span>Disclaimer honnête + test d’entrée</span>
+            </div>
+            <p class="item-desc">
+              Page de recrutement sérieuse/ironique pour l’Orga, avec tests, réserves de recrutement
+              et tout ce qu’il faut pour postuler en connaissance de cause.
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="orga-recrutement.html" target="_blank" rel="noopener">
+                <span class="bullet"></span>Nouvel onglet
+              </a>
+            </div>
+          </article>
+
+          <!-- PDF -->
+          <article class="item-card"
+                   data-type="pdf"
+                   data-src="https://dl.ouaisfi.eu/pdfs/citoyennete.pdf"
+                   data-label="Dossier citoyenneté (PDF)">
+            <div class="item-title">Dossier « citoyenneté » (PDF)</div>
+            <div class="item-meta">
+              <span class="badge">PDF</span>
+              <span>Annexe utilisée pour les tests de révision</span>
+            </div>
+            <p class="item-desc">
+              Dossier documentaire au format PDF, déjà utilisé pour des pages de test, quiz
+              et révision critique.
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="https://dl.ouaisfi.eu/pdfs/citoyennete.pdf" target="_blank" rel="noopener">
+                <span class="bullet"></span>Nouvel onglet
+              </a>
+            </div>
+          </article>
+
+          <article class="item-card"
+                   data-type="pdf"
+                   data-src="https://dl.ouaisfi.eu/pdfs/dossier_belgique.pdf"
+                   data-label="Dossier Belgique (PDF)">
+            <div class="item-title">Dossier « Belgique & institutions »</div>
+            <div class="item-meta">
+              <span class="badge">PDF</span>
+              <span>Place-holder pour un autre gros dossier</span>
+            </div>
+            <p class="item-desc">
+              Second PDF pour les tests combinés (remplace l’URL par un vrai fichier si besoin).
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="https://dl.ouaisfi.eu/pdfs/dossier_belgique.pdf" target="_blank" rel="noopener">
+                <span class="bullet"></span>Nouvel onglet
+              </a>
+            </div>
+          </article>
+
+          <!-- IMAGES -->
+          <article class="item-card"
+                   data-type="image"
+                   data-src="https://dl.ouaisfi.eu/images/login.jpg"
+                   data-label="Image login (test)">
+            <div class="item-title">Image « login »</div>
+            <div class="item-meta">
+              <span class="badge">Image</span>
+              <span>Utilisée pour tester les embeds</span>
+            </div>
+            <p class="item-desc">
+              Image d’exemple hébergée sur ton serveur, déjà utilisée pour tester le switch
+              entre PDF / image / YouTube.
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="https://dl.ouaisfi.eu/images/login.jpg" target="_blank" rel="noopener">
+                <span class="bullet"></span>Nouvel onglet
+              </a>
+            </div>
+          </article>
+
+          <article class="item-card"
+                   data-type="image"
+                   data-src="https://dl.ouaisfi.eu/images/orga-dashboard.png"
+                   data-label="Mockup Orga dashboard">
+            <div class="item-title">Mockup Orga dashboard</div>
+            <div class="item-meta">
+              <span class="badge">Image</span>
+              <span>Placeholder pour captures d’écran</span>
+            </div>
+            <p class="item-desc">
+              À remplacer par des captures d’écran réelles de ton système (Hugo, Grav, Appsmith…).
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="https://dl.ouaisfi.eu/images/orga-dashboard.png" target="_blank" rel="noopener">
+                <span class="bullet"></span>Nouvel onglet
+              </a>
+            </div>
+          </article>
+
+          <!-- YOUTUBE -->
+          <article class="item-card"
+                   data-type="youtube"
+                   data-src="https://www.youtube.com/embed/PUakC5VfeRk"
+                   data-label="Vidéo YouTube (embed)">
+            <div class="item-title">YouTube · test embed (OK)</div>
+            <div class="item-meta">
+              <span class="badge">YouTube</span>
+              <span>Format /embed/ pour fonctionnement propre</span>
+            </div>
+            <p class="item-desc">
+              Exemple de vidéo YouTube intégrée correctement (format <code>/embed/ID</code>)
+              pour résoudre le bug d’embed.
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="https://www.youtube.com/watch?v=PUakC5VfeRk" target="_blank" rel="noopener">
+                <span class="bullet"></span>Ouvrir sur YouTube
+              </a>
+            </div>
+          </article>
+
+          <!-- SPOTIFY -->
+          <article class="item-card"
+                   data-type="spotify"
+                   data-src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6"
+                   data-label="Playlist Spotify · ambiance travail de nuit">
+            <div class="item-title">Playlist Spotify · ambiance « tri de dossiers de nuit »</div>
+            <div class="item-meta">
+              <span class="badge">Spotify</span>
+              <span>Playlist test (remplaçable)</span>
+            </div>
+            <p class="item-desc">
+              Playlist d’ambiance pour les sessions de veille, de tri ou de complot numérique
+              tard dans la nuit.
+            </p>
+            <div class="item-actions">
+              <button class="btn-neon" data-variant="fullscreen" data-action="fullscreen">
+                <span class="bullet"></span>Plein écran
+              </button>
+              <button class="btn-neon" data-variant="modal" data-action="modal">
+                <span class="bullet"></span>Modale
+              </button>
+              <a class="btn-neon" data-variant="newtab" data-action="newtab"
+                 href="https://open.spotify.com/playlist/37i9dQZF1DX4WYpdgoIcn6" target="_blank" rel="noopener">
+                <span class="bullet"></span>Ouvrir dans Spotify
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        Portail mémoire : branche ici toutes tes pages HTML, PDF, images, vidéos et playlists.
+      </span>
+      <span>
+        Pour ajouter un élément : duplique une carte, adapte <code>data-type</code> + <code>data-src</code> + le texte.
+      </span>
+    </footer>
+  </div>
+</div>
+
+<!-- MODALE -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Lecture en modale</div>
+      <button class="modal-close" type="button" id="modal-close">
+        ✕ Fermer
+      </button>
+    </div>
+    <div class="modal-body">
+      <iframe id="modal-viewer" title="Visionneuse modale"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  const filterButtons = document.querySelectorAll(".filter-pill");
+  const itemCards = document.querySelectorAll(".item-card");
+
+  // Filtres
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const filter = btn.dataset.filter;
+      filterButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      itemCards.forEach(card => {
+        const type = card.dataset.type;
+        if (filter === "all" || type === filter) {
+          card.style.display = "";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  });
+
+  // Visionneuse centrale
+  const viewerInner = document.getElementById("viewer-inner");
+  const viewerPlaceholder = document.getElementById("viewer-placeholder");
+  const viewerInfo = document.getElementById("viewer-info");
+  const viewerMeta = document.getElementById("viewer-meta");
+
+  function buildEmbedHTML(type, src) {
+    if (!src) return "";
+
+    if (type === "image") {
+      return `<img src="${src}" alt="Image">`;
+    }
+
+    if (type === "pdf") {
+      return `<iframe src="${src}" title="PDF"></iframe>`;
+    }
+
+    if (type === "youtube") {
+      return `<iframe src="${src}"
+                       title="YouTube video player"
+                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                       allowfullscreen></iframe>`;
+    }
+
+    if (type === "spotify") {
+      return `<iframe src="${src}"
+                       title="Spotify player"
+                       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`;
+    }
+
+    // HTML / autre => iframe
+    return `<iframe src="${src}" title="Page"></iframe>`;
+  }
+
+  function loadInCentral(card) {
+    const type = card.dataset.type;
+    const src = card.dataset.src;
+    const label = card.dataset.label || card.querySelector(".item-title")?.textContent.trim() || "Contenu";
+
+    if (!src) return;
+
+    viewerInner.innerHTML = buildEmbedHTML(type, src);
+    viewerPlaceholder.style.display = "none";
+    viewerInfo.textContent = `Contenu chargé : ${label}`;
+    viewerMeta.innerHTML = `<span>Mode affichage : plein écran dans le portail</span><span>Source : ${src}</span>`;
+  }
+
+  // Modale
+  const modalBackdrop = document.getElementById("modal-backdrop");
+  const modalViewer = document.getElementById("modal-viewer");
+  const modalTitle = document.getElementById("modal-title");
+  const modalClose = document.getElementById("modal-close");
+
+  function openModal(card) {
+    const src = card.dataset.src;
+    const label = card.dataset.label || card.querySelector(".item-title")?.textContent.trim() || "Contenu";
+
+    if (!src) return;
+
+    modalViewer.src = src;
+    modalTitle.textContent = `Lecture en modale · ${label}`;
+    modalBackdrop.classList.add("active");
+  }
+
+  function closeModal() {
+    modalBackdrop.classList.remove("active");
+    modalViewer.src = "";
+  }
+
+  modalClose.addEventListener("click", closeModal);
+  modalBackdrop.addEventListener("click", (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+
+  // Brancher les boutons sur chaque carte
+  itemCards.forEach(card => {
+    const buttons = card.querySelectorAll("[data-action]");
+
+    buttons.forEach(btn => {
+      const action = btn.dataset.action;
+
+      if (action === "fullscreen") {
+        btn.addEventListener("click", () => loadInCentral(card));
+      }
+
+      if (action === "modal") {
+        btn.addEventListener("click", () => openModal(card));
+      }
+      // "newtab" reste un <a> avec href
+    });
+  });
+</script>
+</body>
+</html>
