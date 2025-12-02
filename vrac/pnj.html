@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>qg.html – QG des PNJ & fiches stratégiques</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Police lisible -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --accent-1: #38bdf8;
+      --accent-2: #22c55e;
+      --accent-3: #fbbf24;
+      --accent-4: #f97316;
+      --accent-danger: #ef4444;
+      --text-main: #f9fafb;
+      --text-muted: #cbd5f5;
+      --border: rgba(148,163,184,0.9);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.3), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(168,85,247,0.25), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.8rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1120px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.96), transparent 60%),
+        var(--card);
+      border-radius: 30px;
+      border: 2px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.95);
+      padding: 1.3rem 1rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.7rem 1.7rem 2.4rem; }
+    }
+
+    .page::before {
+      content: "qg.html · QG des PNJ & fiches stratégiques";
+      position: absolute;
+      top: 0.4rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+    }
+
+    header {
+      border-bottom: 2px dashed rgba(148,163,184,0.7);
+      padding-bottom: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 999px;
+      padding: 0.22rem 0.7rem;
+      border: 2px solid var(--accent-1);
+      background: #020617;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-1);
+      box-shadow: 0 0 16px rgba(56,189,248,0.8);
+    }
+
+    .tag-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent-1);
+      box-shadow: 0 0 10px rgba(56,189,248,1);
+    }
+
+    h1 {
+      margin-top: 0.5rem;
+      font-size: clamp(2rem, 4.6vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #38bdf8, #22c55e, #fbbf24, #f97316);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.4rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 860px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .chips {
+      margin-top: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 0.22rem 0.7rem;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #020617;
+      color: var(--text-muted);
+    }
+
+    .layout {
+      margin-top: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 980px) {
+      .layout {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.2fr);
+        align-items: flex-start;
+      }
+    }
+
+    section {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.98);
+      padding: 0.9rem 0.9rem 1.1rem;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    section.full {
+      grid-column: 1 / -1;
+    }
+
+    h2 {
+      font-size: 1.02rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    h2 span.icon { font-size: 1.2rem; }
+
+    p {
+      margin-bottom: 0.25rem;
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent-1); text-decoration: none; }
+
+    /* Colonne gauche – Formulaire PNJ */
+    .field-group {
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .field-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      color: var(--text-main);
+      padding: 0.32rem 0.5rem;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+
+    select { padding-right: 1.8rem; }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .small-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.12rem;
+    }
+
+    .img-preview {
+      margin-top: 0.25rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #020617;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 70px;
+      max-height: 150px;
+      overflow: hidden;
+    }
+
+    .img-preview img {
+      max-width: 100%;
+      max-height: 140px;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .img-placeholder {
+      font-size: 0.78rem;
+      color: rgba(148,163,184,0.9);
+      text-align: center;
+    }
+
+    .btn-row {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.36rem 0.9rem;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.9);
+      background: linear-gradient(135deg, #22c55e, #38bdf8);
+      color: #020617;
+    }
+
+    .btn-outline {
+      background: #020617;
+      color: var(--text-muted);
+      border: 1px solid rgba(148,163,184,0.9);
+      box-shadow: none;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      color: #020617;
+    }
+
+    .btn span.icon { font-size: 1.1rem; }
+
+    .badge-inline {
+      margin-top: 0.4rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.9);
+      padding: 0.14rem 0.55rem;
+      font-size: 0.75rem;
+      color: rgba(226,232,240,0.98);
+    }
+
+    .badge-inline span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #38bdf8;
+      box-shadow: 0 0 8px rgba(56,189,248,1);
+    }
+
+    /* Colonne droite – Liste PNJ */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .filters input[type="text"], .filters select {
+      font-size: 0.8rem;
+      padding: 0.28rem 0.5rem;
+      border-radius: 999px;
+    }
+
+    .pnj-list {
+      margin-top: 0.3rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.55rem;
+      max-height: 460px;
+      overflow: auto;
+      padding-right: 0.15rem;
+    }
+
+    @media (min-width: 700px) {
+      .pnj-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .pnj-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      padding: 0.55rem 0.6rem 0.6rem;
+      font-size: 0.83rem;
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pnj-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.26), transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .pnj-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.98);
+      border-color: var(--accent-1);
+      background: #020617;
+    }
+
+    .pnj-card:hover::before { opacity: 1; }
+
+    .pnj-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 30% 0, rgba(56,189,248,0.6), #020617);
+      font-size: 1.25rem;
+      border: 1px solid rgba(148,163,184,0.9);
+      flex-shrink: 0;
+    }
+
+    .pnj-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      object-fit: cover;
+    }
+
+    .pnj-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      min-width: 0;
+    }
+
+    .pnj-title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      align-items: baseline;
+    }
+
+    .pnj-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      min-width: 0;
+    }
+
+    .pnj-alias {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .pnj-camp {
+      font-size: 0.73rem;
+      border-radius: 999px;
+      padding: 0.09rem 0.45rem;
+      border: 1px solid rgba(148,163,184,0.9);
+    }
+
+    .camp-citoyen { border-color: rgba(34,197,94,0.9); color: #bbf7d0; }
+    .camp-systeme { border-color: rgba(239,68,68,0.9); color: #fecaca; }
+    .camp-neutre  { border-color: rgba(148,163,184,0.9); color: #e5e7eb; }
+    .camp-conspi  { border-color: rgba(168,85,247,0.9); color: #e9d5ff; }
+    .camp-autre   { border-color: rgba(250,204,21,0.9); color: #fef9c3; }
+
+    .pnj-meta {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .pnj-tags {
+      margin-top: 0.1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      font-size: 0.72rem;
+    }
+
+    .pnj-tag {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      padding: 0.05rem 0.35rem;
+      color: rgba(209,213,219,0.98);
+    }
+
+    .pnj-coords {
+      font-size: 0.72rem;
+      color: rgba(148,163,184,0.95);
+    }
+
+    .pnj-empty {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 0.4rem;
+    }
+
+    /* Export bloc */
+    .export-panel {
+      margin-top: 0.5rem;
+      border-radius: 16px;
+      border: 1px solid rgba(34,197,94,0.9);
+      background: rgba(22,163,74,0.12);
+      padding: 0.55rem 0.7rem;
+      font-size: 0.83rem;
+      color: #dcfce7;
+    }
+
+    .export-panel h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+      color: #bbf7d0;
+    }
+
+    .export-panel textarea {
+      background: #022c22;
+      border-color: rgba(34,197,94,0.9);
+      min-height: 120px;
+      font-size: 0.8rem;
+      font-family: monospace;
+      color: #e5e7eb;
+    }
+
+    .export-panel .btn-row { margin-top: 0.35rem; }
+
+    .toast {
+      margin-top: 0.25rem;
+      font-size: 0.76rem;
+      color: #bbf7d0;
+      display: none;
+    }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+      font-family: monospace;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.7rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.8);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="tag">
+      <span class="tag-dot"></span>
+      <span>QG · Gestionnaire central des PNJ & fiches d’acteurs</span>
+    </div>
+    <h1>QG des <span>PNJ & acteurs stratégiques</span></h1>
+    <p class="subtitle">
+      Ceci est ton <strong>fichier central</strong> : un QG pour ficher tous les PNJ / acteurs
+      de ton univers (citoyens, institutions, trolls, anonymes, S., Sharky, etc.).  
+      Chaque fiche est stockée dans le <strong>localStorage</strong>, consultable, modifiable,
+      filtrable, et <strong>exportable en markdown ou JSON</strong> pour alimenter ton
+      univers (Obsidian, site statique, clé USB, dépôt Git, etc.).
+    </p>
+    <div class="chips">
+      <div class="chip">📁 QG unique de toutes les fiches</div>
+      <div class="chip">🧍 PNJ + acteurs réels ou conceptuels</div>
+      <div class="chip">♟ Champ “case d’échiquier” pour liaison avec chess-vortex</div>
+      <div class="chip">📝 Export markdown / JSON</div>
+      <div class="chip">📱 Mobile first & 100% offline</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Colonne gauche : Formulaire PNJ -->
+    <section>
+      <h2><span class="icon">🧩</span> 1. Fiche PNJ / acteur</h2>
+      <p>
+        Crée ou modifie une fiche. Tu peux par exemple relier un PNJ à une
+        <strong>case de ton échiquier</strong> (coordonnée A1–H8) pour garder la cohérence
+        avec <code>chess-vortex.html</code>.
+      </p>
+
+      <div class="field-group">
+        <input type="hidden" id="pnjId">
+
+        <div class="field-row">
+          <div style="flex:1 1 160px;">
+            <label for="fieldName">Nom du PNJ / acteur</label>
+            <input type="text" id="fieldName" placeholder="Ex. Sharky, Madame X, Le Maire…">
+          </div>
+          <div style="flex:1 1 140px;">
+            <label for="fieldAlias">Alias / surnom (facultatif)</label>
+            <input type="text" id="fieldAlias" placeholder="Ex. 'l’Archiviste', 'S.'…">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div style="flex:1 1 160px;">
+            <label for="fieldRole">Rôle / fonction principale</label>
+            <input type="text" id="fieldRole" placeholder="Ex. Élu local, troll, archiviste, bot…">
+          </div>
+          <div style="flex:0 0 130px;">
+            <label for="fieldCamp">Camp</label>
+            <select id="fieldCamp">
+              <option value="citoyen">Citoyen / allié</option>
+              <option value="systeme">Système / adversaire</option>
+              <option value="neutre">Neutre / zone grise</option>
+              <option value="conspi">Conspi / Mordor</option>
+              <option value="autre">Autre / inclassable</option>
+            </select>
+          </div>
+          <div style="flex:0 0 100px;">
+            <label for="fieldCoord">Case échiquier</label>
+            <input type="text" id="fieldCoord" placeholder="Ex. E4">
+            <div class="small-hint">Pour lier à chess-vortex (facultatif).</div>
+          </div>
+        </div>
+
+        <div>
+          <label for="fieldImageUrl">URL d’image (avatar / symbole)</label>
+          <input type="text" id="fieldImageUrl" placeholder="https://… (photo, logo, pictogramme)">
+          <div class="img-preview" id="imagePreview">
+            <div class="img-placeholder">
+              Aucune image chargée. Colle une URL ci-dessus pour prévisualiser l’avatar.
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label for="fieldTags">Tags (séparés par des virgules)</label>
+          <input type="text" id="fieldTags" placeholder="Ex. mairie, éducation, OSINT, S., veille…">
+          <div class="small-hint">
+            Servira pour les filtres et le tri (ex. “veille, fédéral, local, conspi”…).
+          </div>
+        </div>
+
+        <div>
+          <label for="fieldNotes">Notes en markdown – fiche détaillée</label>
+          <textarea id="fieldNotes" placeholder="# Dossier
+- Qui ?
+- Où ?
+- Stakes / enjeux ?
+- Forces / faiblesses ?
+- Liens avec les autres dossiers / pages du projet…"></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn" type="button" id="btnSave">
+            <span class="icon">💾</span><span>Enregistrer / mettre à jour</span>
+          </button>
+          <button class="btn btn-outline" type="button" id="btnNew">
+            <span class="icon">🆕</span><span>Nouvelle fiche</span>
+          </button>
+          <button class="btn btn-outline btn-danger" type="button" id="btnDelete">
+            <span class="icon">🗑️</span><span>Supprimer</span>
+          </button>
+        </div>
+
+        <div class="badge-inline">
+          <span class="dot"></span>
+          <span>Les fiches sont stockées dans le navigateur (localStorage) · 100% local.</span>
+        </div>
+
+        <div class="toast" id="formToast"></div>
+      </div>
+    </section>
+
+    <!-- Colonne droite : Liste PNJ + export -->
+    <section>
+      <h2><span class="icon">📋</span> 2. Vue d’ensemble & filtres</h2>
+      <p>
+        Toutes les fiches sauvegardées apparaissent ici. Clique sur une carte pour la charger
+        dans le formulaire à gauche et la modifier.
+      </p>
+
+      <div class="filters">
+        <input type="text" id="filterSearch" placeholder="Recherche nom / alias / tags…">
+        <select id="filterCamp">
+          <option value="">Tous les camps</option>
+          <option value="citoyen">Citoyen / allié</option>
+          <option value="systeme">Système / adversaire</option>
+          <option value="neutre">Neutre / zone grise</option>
+          <option value="conspi">Conspi / Mordor</option>
+          <option value="autre">Autre / inclassable</option>
+        </select>
+      </div>
+
+      <div id="pnjList" class="pnj-list"></div>
+      <div id="pnjEmpty" class="pnj-empty" style="display:none;">
+        Aucune fiche pour l’instant. Commence par en créer une à gauche, puis reviens ici.
+      </div>
+
+      <div class="export-panel">
+        <h3>Export central – toutes les fiches en markdown / JSON</h3>
+        <p>
+          Utilise ces boutons pour sortir un <strong>fichier central</strong> avec toutes
+          tes fiches :
+        </p>
+        <textarea id="exportMarkdown" placeholder="Clique sur “Générer markdown” pour construire un fichier central."></textarea>
+        <div class="btn-row">
+          <button class="btn" type="button" id="btnGenerateMarkdown">
+            <span class="icon">📝</span><span>Générer markdown</span>
+          </button>
+          <button class="btn btn-outline" type="button" id="btnCopyMarkdown">
+            <span class="icon">📋</span><span>Copier le markdown</span>
+          </button>
+          <button class="btn btn-outline" type="button" id="btnDownloadJson">
+            <span class="icon">💾</span><span>Télécharger JSON</span>
+          </button>
+        </div>
+        <div class="small-hint">
+          Exemple : <code>fiches-pnj-qg.md</code> pour ton Obsidian / GitHub, et
+          <code>fiches-pnj-qg.json</code> pour une réimportation éventuelle dans une autre instance.
+        </div>
+        <div class="toast" id="exportToast"></div>
+        <a id="downloadLink" style="display:none;"></a>
+      </div>
+    </section>
+
+    <!-- Bandeau bas explicatif -->
+    <section class="full">
+      <h2><span class="icon">🧠</span> 3. Comment ce QG s’intègre au reste du projet ?</h2>
+      <p>
+        Idées d’usage raccord avec ton multivers :
+      </p>
+      <ul style="margin-left:1.1rem; margin-top:0.2rem;">
+        <li>
+          <strong>Avec chess-vortex :</strong> utilise le champ “case échiquier” pour mapper
+          chaque PNJ sur le plateau (E1, D8, etc.) et garder une cohérence entre
+          <em>fiches d’acteurs</em> et <em>cartographie stratégique</em>.
+        </li>
+        <li>
+          <strong>Avec tes tests / portails :</strong> exporte les fiches en markdown pour les
+          intégrer dans tes pages Hugo / HTML comme “annexe acteurs du dossier”.
+        </li>
+        <li>
+          <strong>Avec ta clé USB :</strong> garde ce fichier <code>qg.html</code> à la racine
+          de ton kit comme <em>fichier central</em> de tous les PNJ / acteurs.
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <footer>
+    <span>
+      qg.html peut servir de <strong>fichier central de fichage</strong> pour PNJ, acteurs réels,
+      institutions, organisations… dans toutes tes instances.
+    </span>
+    <code>qg.html · QG des PNJ · fiches exportables</code>
+  </footer>
+
+  <div class="badge-corner">
+    QG · FICHES PNJ
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = "pnjHQ_v1";
+
+  let pnjList = [];
+  let currentId = null;
+
+  function uid() {
+    return "pnj_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  }
+
+  function loadPNJList() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      pnjList = [];
+      return;
+    }
+    try {
+      pnjList = JSON.parse(raw) || [];
+    } catch (e) {
+      console.warn("Erreur JSON PNJ, reinit:", e);
+      pnjList = [];
+    }
+  }
+
+  function savePNJList() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(pnjList));
+    } catch (e) {
+      console.warn("Impossible de sauvegarder les PNJ.", e);
+    }
+  }
+
+  function clearFormToast() {
+    document.getElementById("formToast").style.display = "none";
+  }
+
+  function showToast(id, message) {
+    const el = document.getElementById(id);
+    el.textContent = message;
+    el.style.display = "block";
+    setTimeout(() => { el.style.display = "none"; }, 2500);
+  }
+
+  function updateImagePreview() {
+    const url = document.getElementById("fieldImageUrl").value.trim();
+    const preview = document.getElementById("imagePreview");
+    preview.innerHTML = "";
+    if (!url) {
+      const ph = document.createElement("div");
+      ph.className = "img-placeholder";
+      ph.textContent = "Aucune image chargée. Colle une URL ci-dessus pour prévisualiser l’avatar.";
+      preview.appendChild(ph);
+      return;
+    }
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "Avatar PNJ";
+    img.addEventListener("error", () => {
+      preview.innerHTML = "";
+      const ph = document.createElement("div");
+      ph.className = "img-placeholder";
+      ph.textContent = "Impossible de charger l’image. Vérifie l’URL.";
+      preview.appendChild(ph);
+    });
+    preview.appendChild(img);
+  }
+
+  function clearForm() {
+    currentId = null;
+    document.getElementById("pnjId").value = "";
+    document.getElementById("fieldName").value = "";
+    document.getElementById("fieldAlias").value = "";
+    document.getElementById("fieldRole").value = "";
+    document.getElementById("fieldCamp").value = "citoyen";
+    document.getElementById("fieldCoord").value = "";
+    document.getElementById("fieldImageUrl").value = "";
+    document.getElementById("fieldTags").value = "";
+    document.getElementById("fieldNotes").value = "";
+    updateImagePreview();
+    clearFormToast();
+  }
+
+  function loadPNJIntoForm(id) {
+    const p = pnjList.find(x => x.id === id);
+    if (!p) return;
+    currentId = p.id;
+    document.getElementById("pnjId").value = p.id;
+    document.getElementById("fieldName").value = p.name || "";
+    document.getElementById("fieldAlias").value = p.alias || "";
+    document.getElementById("fieldRole").value = p.role || "";
+    document.getElementById("fieldCamp").value = p.camp || "citoyen";
+    document.getElementById("fieldCoord").value = p.coord || "";
+    document.getElementById("fieldImageUrl").value = p.imageUrl || "";
+    document.getElementById("fieldTags").value = p.tags ? p.tags.join(", ") : "";
+    document.getElementById("fieldNotes").value = p.notes || "";
+    updateImagePreview();
+  }
+
+  function getCampLabel(camp) {
+    switch (camp) {
+      case "citoyen": return "Citoyen / allié";
+      case "systeme": return "Système / adversaire";
+      case "neutre":  return "Neutre / zone grise";
+      case "conspi":  return "Conspi / Mordor";
+      case "autre":   return "Autre / inclassable";
+      default:        return "Non défini";
+    }
+  }
+
+  function getCampClass(camp) {
+    switch (camp) {
+      case "citoyen": return "camp-citoyen";
+      case "systeme": return "camp-systeme";
+      case "neutre":  return "camp-neutre";
+      case "conspi":  return "camp-conspi";
+      case "autre":   return "camp-autre";
+      default:        return "";
+    }
+  }
+
+  function getInitialLetter(name) {
+    if (!name) return "?";
+    return name.trim().charAt(0).toUpperCase();
+  }
+
+  function renderList() {
+    const container = document.getElementById("pnjList");
+    const empty = document.getElementById("pnjEmpty");
+    container.innerHTML = "";
+
+    const search = document.getElementById("filterSearch").value.trim().toLowerCase();
+    const camp = document.getElementById("filterCamp").value;
+
+    let filtered = pnjList.slice().sort((a,b) => {
+      return (a.name || "").localeCompare(b.name || "", "fr", { sensitivity: "base" });
+    });
+
+    if (search) {
+      filtered = filtered.filter(p => {
+        const blob = [
+          p.name || "",
+          p.alias || "",
+          p.role || "",
+          (p.tags || []).join(" ")
+        ].join(" ").toLowerCase();
+        return blob.includes(search);
+      });
+    }
+
+    if (camp) {
+      filtered = filtered.filter(p => (p.camp || "") === camp);
+    }
+
+    if (!filtered.length) {
+      empty.style.display = "block";
+      return;
+    } else {
+      empty.style.display = "none";
+    }
+
+    filtered.forEach(p => {
+      const card = document.createElement("article");
+      card.className = "pnj-card";
+      card.dataset.id = p.id;
+
+      const avatar = document.createElement("div");
+      avatar.className = "pnj-avatar";
+
+      if (p.imageUrl) {
+        const img = document.createElement("img");
+        img.src = p.imageUrl;
+        img.alt = p.name || "Avatar PNJ";
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = getInitialLetter(p.name);
+      }
+
+      const main = document.createElement("div");
+      main.className = "pnj-main";
+
+      const titleRow = document.createElement("div");
+      titleRow.className = "pnj-title-row";
+
+      const nameEl = document.createElement("div");
+      nameEl.className = "pnj-name";
+      nameEl.textContent = p.name || "(sans nom)";
+
+      const campLabel = document.createElement("div");
+      campLabel.className = "pnj-camp " + getCampClass(p.camp || "");
+      campLabel.textContent = getCampLabel(p.camp || "");
+
+      titleRow.appendChild(nameEl);
+      titleRow.appendChild(campLabel);
+
+      const aliasEl = document.createElement("div");
+      aliasEl.className = "pnj-alias";
+      aliasEl.textContent = p.alias ? "Alias : " + p.alias : "";
+
+      const meta = document.createElement("div");
+      meta.className = "pnj-meta";
+      meta.textContent = p.role ? p.role : "";
+
+      const coord = document.createElement("div");
+      coord.className = "pnj-coords";
+      coord.textContent = p.coord ? ("Case échiquier : " + p.coord) : "";
+
+      const tagsWrap = document.createElement("div");
+      tagsWrap.className = "pnj-tags";
+      (p.tags || []).forEach(t => {
+        const tagEl = document.createElement("span");
+        tagEl.className = "pnj-tag";
+        tagEl.textContent = t;
+        tagsWrap.appendChild(tagEl);
+      });
+
+      main.appendChild(titleRow);
+      if (p.alias) main.appendChild(aliasEl);
+      if (p.role) main.appendChild(meta);
+      if (p.coord) main.appendChild(coord);
+      if ((p.tags || []).length) main.appendChild(tagsWrap);
+
+      card.appendChild(avatar);
+      card.appendChild(main);
+
+      card.addEventListener("click", () => {
+        loadPNJIntoForm(p.id);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  function saveCurrentPNJ() {
+    const name = document.getElementById("fieldName").value.trim();
+    const alias = document.getElementById("fieldAlias").value.trim();
+    const role  = document.getElementById("fieldRole").value.trim();
+    const camp  = document.getElementById("fieldCamp").value;
+    const coord = document.getElementById("fieldCoord").value.trim().toUpperCase();
+    const imageUrl = document.getElementById("fieldImageUrl").value.trim();
+    const tagsRaw  = document.getElementById("fieldTags").value;
+    const notes    = document.getElementById("fieldNotes").value;
+
+    if (!name) {
+      showToast("formToast", "Merci d’au moins donner un nom au PNJ / acteur.");
+      return;
+    }
+
+    let tags = tagsRaw.split(",").map(t => t.trim()).filter(Boolean);
+
+    if (!currentId) {
+      currentId = uid();
+      pnjList.push({
+        id: currentId,
+        name,
+        alias,
+        role,
+        camp,
+        coord,
+        imageUrl,
+        tags,
+        notes,
+        createdAt: new Date().toISOString()
+      });
+    } else {
+      const idx = pnjList.findIndex(x => x.id === currentId);
+      if (idx >= 0) {
+        pnjList[idx] = {
+          ...pnjList[idx],
+          name,
+          alias,
+          role,
+          camp,
+          coord,
+          imageUrl,
+          tags,
+          notes,
+          updatedAt: new Date().toISOString()
+        };
+      } else {
+        pnjList.push({
+          id: currentId,
+          name,
+          alias,
+          role,
+          camp,
+          coord,
+          imageUrl,
+          tags,
+          notes,
+          createdAt: new Date().toISOString()
+        });
+      }
+    }
+
+    savePNJList();
+    renderList();
+    showToast("formToast", "Fiche PNJ enregistrée / mise à jour.");
+  }
+
+  function deleteCurrentPNJ() {
+    if (!currentId) {
+      showToast("formToast", "Aucune fiche sélectionnée à supprimer.");
+      return;
+    }
+    if (!confirm("Supprimer cette fiche PNJ ?")) return;
+    pnjList = pnjList.filter(x => x.id !== currentId);
+    savePNJList();
+    clearForm();
+    renderList();
+    showToast("formToast", "Fiche PNJ supprimée.");
+  }
+
+  function copyToClipboard(text, toastId) {
+    if (!text) {
+      showToast(toastId, "Rien à copier pour l’instant.");
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(toastId, "Copié dans le presse-papiers.");
+      }).catch(() => {
+        fallbackCopy(text, toastId);
+      });
+    } else {
+      fallbackCopy(text, toastId);
+    }
+  }
+
+  function fallbackCopy(text, toastId) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    showToast(toastId, "Copié (mode compatibilité).");
+  }
+
+  function generateMarkdownCentral() {
+    if (!pnjList.length) {
+      showToast("exportToast", "Aucune fiche PNJ à exporter.");
+      return;
+    }
+
+    const lines = [];
+    lines.push("# QG – Fichier central des PNJ & acteurs");
+    lines.push("");
+    lines.push("_Fichier généré depuis qg.html (QG des PNJ)._");
+    lines.push("");
+
+    const sorted = pnjList.slice().sort((a,b) => {
+      return (a.name || "").localeCompare(b.name || "", "fr", { sensitivity: "base" });
+    });
+
+    sorted.forEach(p => {
+      const campLabel = getCampLabel(p.camp || "");
+      const tags = (p.tags || []).length ? p.tags.join(", ") : "—";
+      lines.push(`## ${p.name || "(sans nom)"}${p.alias ? " — alias : " + p.alias : ""}`);
+      lines.push("");
+      lines.push(`- Rôle : ${p.role || "—"}`);
+      lines.push(`- Camp : ${campLabel}`);
+      lines.push(`- Case échiquier : ${p.coord || "—"}`);
+      lines.push(`- Tags : ${tags}`);
+      if (p.imageUrl) {
+        lines.push(`- Image : ${p.imageUrl}`);
+      }
+      lines.push("");
+      if (p.notes && p.notes.trim()) {
+        lines.push(p.notes.trim());
+        lines.push("");
+      } else {
+        lines.push("_(notes à compléter)_");
+        lines.push("");
+      }
+      lines.push("---");
+      lines.push("");
+    });
+
+    document.getElementById("exportMarkdown").value = lines.join("\n");
+    showToast("exportToast", "Markdown central généré.");
+  }
+
+  function downloadJson() {
+    const data = JSON.stringify(pnjList, null, 2);
+    const blob = new Blob([data], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.getElementById("downloadLink");
+    link.href = url;
+    link.download = "fiches-pnj-qg.json";
+    link.click();
+    showToast("exportToast", "JSON téléchargé (fiches-pnj-qg.json).");
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadPNJList();
+    renderList();
+    updateImagePreview();
+
+    document.getElementById("fieldImageUrl").addEventListener("input", updateImagePreview);
+
+    document.getElementById("btnSave").addEventListener("click", saveCurrentPNJ);
+    document.getElementById("btnNew").addEventListener("click", clearForm);
+    document.getElementById("btnDelete").addEventListener("click", deleteCurrentPNJ);
+
+    document.getElementById("filterSearch").addEventListener("input", renderList);
+    document.getElementById("filterCamp").addEventListener("change", renderList);
+
+    document.getElementById("btnGenerateMarkdown").addEventListener("click", generateMarkdownCentral);
+    document.getElementById("btnCopyMarkdown").addEventListener("click", () => {
+      const text = document.getElementById("exportMarkdown").value;
+      copyToClipboard(text, "exportToast");
+    });
+    document.getElementById("btnDownloadJson").addEventListener("click", downloadJson);
+  });
+</script>
+</body>
+</html>
