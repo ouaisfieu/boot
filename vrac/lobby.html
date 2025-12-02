@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Portefeuille – Conseil en affaires publiques & lobbying</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --bg-alt: #ffffff;
+      --primary: #1f4db8;
+      --primary-soft: rgba(31,77,184,0.08);
+      --accent: #f97316;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 18px 45px rgba(15,23,42,0.15);
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top, #e2ebff 0, #f4f6fb 45%, #edf1f8 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(209,213,219,0.9);
+      box-shadow: 0 10px 30px rgba(148,163,184,0.35);
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+    }
+
+    @media (max-width: 800px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        border-radius: 18px;
+      }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1f4db8, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 10px 25px rgba(37,99,235,0.6);
+    }
+
+    .logo-text-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .logo-text-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.88rem;
+    }
+
+    .nav-link {
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      color: var(--muted);
+      background: transparent;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      background: var(--primary-soft);
+      border-color: rgba(148,163,184,0.7);
+      color: var(--text);
+    }
+
+    .nav-link.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    main {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 960px) {
+      main {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 17px;
+    }
+
+    .hero-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #16a34a;
+    }
+
+    .hero-title {
+      margin-top: 4px;
+      font-size: 1.8rem;
+      line-height: 1.25;
+    }
+
+    .hero-title span {
+      color: var(--primary);
+    }
+
+    .hero-sub {
+      margin-top: 8px;
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+
+    .hero-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,0.9fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .hero-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .pill-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .pill-stats {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .pill strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .list {
+      margin: 2px 0 8px;
+      padding-left: 18px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .list li {
+      margin-bottom: 4px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #eef2ff;
+      font-size: 0.75rem;
+      color: #111827;
+    }
+
+    .btn-main {
+      margin-top: 10px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 26px rgba(37,99,235,0.45);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      box-shadow: 0 14px 32px rgba(37,99,235,0.5);
+    }
+
+    .btn-main:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 7px 18px rgba(15,23,42,0.4);
+    }
+
+    .btn-ghost {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      color: var(--muted);
+      font-size: 0.84rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    }
+
+    .btn-ghost:hover {
+      background: #eef2ff;
+      border-color: rgba(148,163,184,0.8);
+      color: var(--text);
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .services-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .services-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .service-card {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 10px 11px 9px;
+    }
+
+    .service-title {
+      font-size: 0.96rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .service-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .service-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .case-list {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr);
+      gap: 6px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .case-item {
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: #f9fafb;
+      padding: 7px 9px;
+    }
+
+    .case-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #111827;
+    }
+
+    .case-tagline {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .case-detail {
+      font-size: 0.82rem;
+    }
+
+    .quote-card {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border-left: 3px solid var(--primary);
+      background: #f9fafb;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .quote-author {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .form-group {
+      margin-bottom: 8px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #4b5563;
+    }
+
+    .label span.opt {
+      font-weight: 400;
+      color: #9ca3af;
+      font-size: 0.76rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      font-size: 0.86rem;
+      font-family: var(--sans);
+      outline: none;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+      background: #f9fafb;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37,99,235,0.2);
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: minmax(0,1.1fr) minmax(0,0.9fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .form-row {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .status {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .status.ok { color: #15803d; }
+    .status.warn { color: #b45309; }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .footer-left strong {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="logo">
+      <!-- Remplace "JL" par tes initiales -->
+      <div class="logo-mark">JL</div>
+      <div>
+        <div class="logo-text-title">Jean Lobby / Affaires publiques</div>
+        <div class="logo-text-sub">Conseil, représentation & dialogue institutionnel</div>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-link" type="button" onclick="scrollToId('expertises')">Expertises</button>
+      <button class="nav-link" type="button" onclick="scrollToId('realisations')">Réalisations</button>
+      <button class="nav-link" type="button" onclick="scrollToId('contact')">Contact</button>
+      <button class="nav-link primary" type="button" onclick="scrollToId('contact')">Demander un échange</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Colonne gauche : Présentation & expertises -->
+    <section class="card">
+      <div class="hero-header">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span>Affaires publiques · Relations institutionnelles · Conformité & transparence</span>
+        </div>
+      </div>
+
+      <h1 class="hero-title">
+        Défendre vos intérêts<br>
+        <span>dans le respect des règles et des acteurs.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Conseil en affaires publiques et lobbying responsable pour entreprises, associations, collectivités
+        et acteurs de l’économie sociale. De l’analyse à la mise en relation, je vous aide à <strong>faire entendre
+        votre voix</strong> auprès des décideurs publics, sans opacité ni sur-promesse.
+      </p>
+
+      <div class="hero-grid">
+        <div>
+          <h2 id="expertises" class="section-title">Domaines d’intervention</h2>
+          <p class="section-sub">
+            Une approche structurée, documentée, alignée avec les cadres déontologiques en vigueur.
+          </p>
+          <ul class="list">
+            <li>Veille réglementaire & cartographie des enjeux.</li>
+            <li>Stratégies d’affaires publiques & argumentaires.</li>
+            <li>Relations avec les institutions & parties prenantes.</li>
+            <li>Préparation d’auditions, rendez-vous et prises de parole.</li>
+            <li>Accompagnement à la transparence et à la conformité.</li>
+          </ul>
+          <div class="tags">
+            <span class="tag">Affaires publiques</span>
+            <span class="tag">Dialogue institutionnel</span>
+            <span class="tag">Réglementation</span>
+            <span class="tag">Éthique & transparence</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">En un coup d’œil</h2>
+          <div class="pill-stats">
+            <div class="pill">
+              <strong>+10 ans</strong>
+              d’expérience sur des dossiers publics complexes.
+            </div>
+            <div class="pill">
+              <strong>Multi-niveaux</strong>
+              local, national, européen selon les besoins.
+            </div>
+            <div class="pill">
+              <strong>Approche claire</strong>
+              dossiers structurés, factuels, vérifiables.
+            </div>
+          </div>
+
+          <button class="btn-main" type="button" onclick="scrollToId('contact')">
+            Présenter votre dossier
+          </button>
+          <p class="small">
+            Premier échange sans engagement pour comprendre vos enjeux et vérifier si je suis la bonne personne pour vous accompagner.
+          </p>
+        </div>
+      </div>
+
+      <section style="margin-top:16px;">
+        <h2 class="section-title">Expertises principales</h2>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-title">Analyse & veille</div>
+            <div class="service-desc">
+              Suivi des textes, des consultations, des prises de position et des signaux faibles qui impactent vos activités.
+            </div>
+            <div class="service-meta">
+              Notes de contexte, cartographie des acteurs, identification des fenêtres d’opportunité.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">Stratégie d’influence responsable</div>
+            <div class="service-desc">
+              Construction de positions argumentées et réalistes, adaptées à vos contraintes comme à celles des décideurs.
+            </div>
+            <div class="service-meta">
+              Messages clés, éléments de langage, supports pour rendez-vous ou auditions.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">Relations institutionnelles</div>
+            <div class="service-desc">
+              Organisation de rencontres, participation à des consultations, structuration de contributions écrites.
+            </div>
+            <div class="service-meta">
+              Mise en relation, suivi de relation, comptes-rendus et recommandations.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">Accompagnement à la conformité</div>
+            <div class="service-desc">
+              Conseils pour une pratique du lobbying alignée sur les registres, codes de conduite et attentes sociétales.
+            </div>
+            <div class="service-meta">
+              Process internes, documentation, transparence, pédagogie auprès des équipes.
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- Colonne droite : Réalisations & contact -->
+    <section class="card">
+      <section id="realisations">
+        <h2 class="section-title">Exemples de missions</h2>
+        <p class="section-sub">
+          Quelques illustrations de types d’accompagnement réalisés (les noms et détails sensibles sont systématiquement anonymisés).
+        </p>
+        <div class="case-list">
+          <div class="case-item">
+            <div class="case-title">Structurer une parole sectorielle dispersée</div>
+            <div class="case-tagline">Fédération professionnelle · Niveau national</div>
+            <div class="case-detail">
+              Coordination d’acteurs concurrents autour d’un diagnostic partagé, rédaction d’une plateforme de propositions communes,
+              préparation d’auditions parlementaires (notes de position, supports synthétiques).
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-title">Faire remonter le terrain au bon niveau</div>
+            <div class="case-tagline">Réseau associatif · Politiques publiques sociales</div>
+            <div class="case-detail">
+              Collecte de retours d’expérience, transformation en recommandations opérationnelles, accompagnement
+              dans le dialogue avec les services de l’État et les collectivités impliquées.
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-title">Mettre en conformité une pratique d’influence existante</div>
+            <div class="case-tagline">Entreprise de taille intermédiaire</div>
+            <div class="case-detail">
+              Cartographie des contacts et pratiques en cours, mise à jour des procédures internes, appui à l’inscription
+              sur les registres appropriés, sensibilisation des équipes commerciales et dirigeantes.
+            </div>
+          </div>
+        </div>
+
+        <div class="quote-card">
+          « Un bon lobbying, c’est d’abord du travail de fond, de la clarté et du respect
+          des contraintes de chacun. Le reste tient davantage de la fiction que de la pratique professionnelle. »
+          <div class="quote-author">— Position de principe</div>
+        </div>
+      </section>
+
+      <section id="contact" style="margin-top:16px;">
+        <h2 class="section-title">Entrer en contact</h2>
+        <p class="section-sub">
+          Décrivez en quelques lignes votre organisation, vos enjeux et ce que vous attendez d’un accompagnement en affaires publiques.
+          Vous recevrez un retour pour convenir d’un échange plus détaillé.
+        </p>
+
+        <form onsubmit="handleContact(event)">
+          <div class="form-group">
+            <div class="label">Nom / Prénom</div>
+            <input id="c-name" required placeholder="Votre nom complet">
+          </div>
+
+          <div class="form-group">
+            <div class="label">Email professionnel</div>
+            <input id="c-email" type="email" required placeholder="prenom.nom@organisation.fr">
+          </div>
+
+          <div class="form-group">
+            <div class="label">Organisation <span class="opt">(raison sociale, type d’acteur)</span></div>
+            <input id="c-org" required placeholder="Entreprise, association, collectivité, fédération…">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div class="label">Type de besoin principal</div>
+              <select id="c-type" required>
+                <option value="">Sélectionnez une option</option>
+                <option>Veille & analyse d’enjeux</option>
+                <option>Stratégie d’affaires publiques</option>
+                <option>Relations institutionnelles</option>
+                <option>Conformité & transparence</option>
+                <option>Autre / à préciser</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="label">Horizon temporel</div>
+              <select id="c-timing">
+                <option value="">À préciser</option>
+                <option>Décision d’ici 3 mois</option>
+                <option>Décision dans l’année</option>
+                <option>Exploration sans échéance précise</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label">Enjeux & contexte</div>
+            <textarea id="c-context" required placeholder="Synthèse de la situation actuelle, des enjeux (réglementaires, politiques, réputationnels…) et des objectifs que vous poursuivez."></textarea>
+          </div>
+
+          <div class="form-group">
+            <div class="label">Attentes vis-à-vis de l’accompagnement <span class="opt">(facultatif)</span></div>
+            <textarea id="c-expect" placeholder="Ex : aide à formaliser vos positions, préparation d’un cycle de rencontres, appui à une consultation officielle…"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div class="label">Budget indicatif <span class="opt">(si vous le souhaitez)</span></div>
+              <select id="c-budget">
+                <option value="">À discuter</option>
+                <option>Étude ponctuelle (format court)</option>
+                <option>Mission de plusieurs mois</option>
+                <option>Accompagnement annuel / récurrent</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="label">Autorisation de contact</div>
+              <select id="c-contact" required>
+                <option value="">Sélectionnez une option</option>
+                <option>Je souhaite être recontacté·e par email</option>
+                <option>Je souhaite être recontacté·e par téléphone (à préciser dans le message)</option>
+                <option>Je préfère un retour écrit dans un premier temps</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="small">
+            🔒 Ce formulaire ne stocke rien : il prépare un email sur votre propre messagerie à partir des informations saisies.
+          </p>
+
+          <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+            <button class="btn-main" type="submit">
+              Préparer un email de prise de contact
+            </button>
+            <div class="status" id="status-msg">
+              Un brouillon d’email sera généré : vous pourrez le relire et l’ajuster avant envoi.
+            </div>
+          </div>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <strong>Jean Lobby</strong> · Conseil en affaires publiques & relations institutionnelles.
+    </div>
+    <div>
+      Contact direct : <span id="footer-email">contact@votre-domaine.fr</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // 👉 À PERSONNALISER : mets ton adresse email ici
+  const LOBBY_EMAIL = "contact@votre-domaine.fr";
+
+  document.getElementById("footer-email").textContent = LOBBY_EMAIL;
+
+  function scrollToId(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const offset = window.scrollY + rect.top - 100;
+    window.scrollTo({ top: offset, behavior: "smooth" });
+  }
+
+  function handleContact(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("c-name").value.trim();
+    const email = document.getElementById("c-email").value.trim();
+    const org = document.getElementById("c-org").value.trim();
+    const type = document.getElementById("c-type").value;
+    const timing = document.getElementById("c-timing").value;
+    const context = document.getElementById("c-context").value.trim();
+    const expect = document.getElementById("c-expect").value.trim();
+    const budget = document.getElementById("c-budget").value;
+    const contactPref = document.getElementById("c-contact").value;
+
+    const statusEl = document.getElementById("status-msg");
+
+    if (!name || !email || !org || !type || !context || !contactPref) {
+      statusEl.textContent = "Merci de remplir les champs principaux : nom, email, organisation, type de besoin, enjeux et autorisation de contact.";
+      statusEl.classList.remove("ok");
+      statusEl.classList.add("warn");
+      return;
+    }
+
+    let subject = "Prise de contact – Affaires publiques / " + org;
+    let bodyLines = [];
+
+    bodyLines.push("Bonjour,");
+    bodyLines.push("");
+    bodyLines.push("Je vous contacte pour un premier échange concernant un possible accompagnement en affaires publiques / lobbying responsable.");
+    bodyLines.push("");
+    bodyLines.push("• Nom / Prénom : " + name);
+    bodyLines.push("• Email : " + email);
+    bodyLines.push("• Organisation : " + org);
+    bodyLines.push("• Type de besoin principal : " + type);
+    if (timing) bodyLines.push("• Horizon temporel : " + timing);
+    if (budget) bodyLines.push("• Budget indicatif : " + budget);
+    bodyLines.push("");
+    bodyLines.push("Enjeux & contexte :");
+    bodyLines.push(context);
+    bodyLines.push("");
+    if (expect) {
+      bodyLines.push("Attentes vis-à-vis de l’accompagnement :");
+      bodyLines.push(expect);
+      bodyLines.push("");
+    }
+    bodyLines.push("Préférence de contact :");
+    bodyLines.push(contactPref);
+    bodyLines.push("");
+    bodyLines.push("Merci d’avance pour votre retour.");
+    bodyLines.push("");
+    bodyLines.push("Cordialement,");
+    bodyLines.push(name);
+
+    const mailtoUrl =
+      "mailto:" + encodeURIComponent(LOBBY_EMAIL) +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(bodyLines.join("\n"));
+
+    statusEl.textContent = "Ouverture de votre messagerie… Si rien ne se passe, vérifiez qu’une application mail est configurée.";
+    statusEl.classList.remove("warn");
+    statusEl.classList.add("ok");
+
+    window.location.href = mailtoUrl;
+  }
+</script>
+</body>
+</html>
