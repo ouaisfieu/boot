@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Le site de ma vie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-2: #0b1020;
+      --bg-card: #080d1a;
+      --accent: #4ade80;
+      --accent-soft: rgba(74, 222, 128, 0.1);
+      --danger: #fb7185;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2933;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.45);
+      --shadow-glow: 0 0 30px rgba(74, 222, 128, 0.22);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #0b1220, #020617 55%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 16px 40px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 6, 23, 0.94),
+        rgba(2, 6, 23, 0.7),
+        transparent
+      );
+      margin: -18px -16px 12px;
+      padding: 16px 16px 14px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      justify-content: space-between;
+    }
+
+    .title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    h1 {
+      font-size: 1.45rem;
+      margin: 0;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chip {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+      background: radial-gradient(circle at top left, #1f2937, #020617);
+    }
+
+    .subtitle {
+      font-size: 0.86rem;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      font-size: 0.8rem;
+      padding: 7px 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #020617;
+      color: var(--text);
+    }
+
+    button span.icon { font-size: 0.95em; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #a3e635);
+      color: #022c22;
+      font-weight: 600;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-outline {
+      border-color: rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+
+    .btn-soft {
+      background: rgba(15, 23, 42, 0.9);
+      border-color: rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.2fr);
+      gap: 16px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 880px) {
+      main { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    section { margin-bottom: 16px; }
+
+    .card {
+      background: radial-gradient(circle at top left, #111827, #020617);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      padding: 14px 14px 12px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at top right,
+        rgba(74, 222, 128, 0.18),
+        transparent 55%
+      );
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease-out;
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-tag {
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 8px 9px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.82rem;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.4);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 4px 0 6px;
+    }
+
+    .pill {
+      font-size: 0.75rem;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .pill-highlight {
+      border-color: rgba(74, 222, 128, 0.7);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .columns-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .columns-2 { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 3px 9px;
+      color: var(--muted);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.25);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 700px) {
+      .timeline { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .timeline-col-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .mini-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .list-item {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .list-item span.bullet {
+      margin-top: 3px;
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.9);
+      flex-shrink: 0;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+
+    .checklist-item input[type="checkbox"] {
+      margin-top: 2px;
+      accent-color: var(--accent);
+    }
+
+    .small-input {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-size: 0.8rem;
+    }
+
+    .small-input:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.4);
+    }
+
+    .grid-life {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .life-pill {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 13px;
+      padding: 7px 9px 7px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+    }
+
+    .life-pill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      margin-bottom: 4px;
+      color: var(--muted);
+    }
+
+    .life-pill-title {
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: #111827;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.25);
+      border: 1px solid #022c22;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.25);
+      border: 1px solid #022c22;
+    }
+
+    .range-value {
+      font-size: 0.72rem;
+      color: var(--muted);
+      width: 30px;
+      text-align: right;
+    }
+
+    .badge-danger {
+      border-color: rgba(248, 113, 113, 0.8);
+      color: #fecaca;
+      background: radial-gradient(circle at left, rgba(248, 113, 113, 0.12), transparent);
+    }
+
+    footer {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: right;
+      opacity: 0.8;
+    }
+
+    .hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .tagline-strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .export-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 4px 0 4px;
+    }
+
+    .export-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-inner">
+        <div class="title-group">
+          <h1>
+            <span>Le site de ma vie</span>
+            <span class="chip">Version 0.2 • brouillon vivant exportable</span>
+          </h1>
+          <div class="subtitle">
+            Un tableau de bord ultra-simple pour <span class="tagline-strong">voir</span>,
+            <span class="tagline-strong">comprendre</span> et
+            <span class="tagline-strong">agir</span> sur ta vie – loin des absurdités
+            organisationnelles et des dystopies ambiantes.
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn-primary" id="btn-focus">
+            <span class="icon">🧠</span>
+            <span>Mode focus (cacher les aides)</span>
+          </button>
+          <button class="btn-outline" id="btn-reset">
+            <span class="icon">🧹</span>
+            <span>Réinitialiser ce brouillon</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Colonne principale -->
+      <div class="stack">
+
+        <!-- Vue d'ensemble -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Vue d’ensemble rapide</span>
+            </div>
+            <div class="badge">
+              <span class="badge-dot"></span>
+              <span>Mettre des mots sur maintenant</span>
+            </div>
+          </div>
+          <div class="columns-2">
+            <div class="stack">
+              <div class="mini-label">Aujourd’hui (climat intérieur)</div>
+              <textarea id="now"></textarea>
+              <div class="hint">
+                Quelques lignes sur ton énergie, ton humeur, ce qui te pèse ou te porte.
+              </div>
+            </div>
+            <div class="stack">
+              <div class="mini-label">Les 3 choses vraiment importantes pour moi</div>
+              <textarea id="top3"></textarea>
+              <div class="hint">
+                Pas besoin que ce soit noble ou parfait. Juste honnête.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ligne du temps -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Ma ligne du temps</span>
+            </div>
+            <div class="card-tag">Voir</div>
+          </div>
+          <div class="card-desc">
+            Résumer ta vie en trois blocs : ce qui t’a construit, ce qui se joue
+            maintenant, ce que tu sens venir ou que tu souhaites.
+          </div>
+          <div class="timeline">
+            <div>
+              <div class="timeline-col-label">Avant</div>
+              <textarea id="past" placeholder="Moments clés, blessures, apprentissages qui ont laissé une trace."></textarea>
+            </div>
+            <div>
+              <div class="timeline-col-label">Maintenant</div>
+              <textarea id="present" placeholder="Ce qui occupe ton temps, ton cerveau, ton cœur en ce moment."></textarea>
+            </div>
+            <div>
+              <div class="timeline-col-label">Après</div>
+              <textarea id="future" placeholder="Intuitions, désirs, directions possibles (même floues)."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pôles de vie -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Mes pôles de vie</span>
+            </div>
+            <div class="card-tag">Scan rapide</div>
+          </div>
+          <div class="card-desc">
+            Chaque curseur = comment tu te sens <strong>en ce moment</strong> sur ce pôle (0 = nul, 10 = j’adore).
+          </div>
+          <div class="grid-life">
+            <div class="life-pill">
+              <div class="life-pill-header">
+                <span class="life-pill-title">Travail / études</span>
+                <span id="life-work-value" class="mini-label">5/10</span>
+              </div>
+              <div class="range-row">
+                <input type="range" min="0" max="10" value="5" id="life-work" />
+              </div>
+            </div>
+            <div class="life-pill">
+              <div class="life-pill-header">
+                <span class="life-pill-title">Relations</span>
+                <span id="life-relations-value" class="mini-label">5/10</span>
+              </div>
+              <div class="range-row">
+                <input type="range" min="0" max="10" value="5" id="life-relations" />
+              </div>
+            </div>
+            <div class="life-pill">
+              <div class="life-pill-header">
+                <span class="life-pill-title">Corps / santé</span>
+                <span id="life-body-value" class="mini-label">5/10</span>
+              </div>
+              <div class="range-row">
+                <input type="range" min="0" max="10" value="5" id="life-body" />
+              </div>
+            </div>
+            <div class="life-pill">
+              <div class="life-pill-header">
+                <span class="life-pill-title">Créativité</span>
+                <span id="life-creative-value" class="mini-label">5/10</span>
+              </div>
+              <div class="range-row">
+                <input type="range" min="0" max="10" value="5" id="life-creative" />
+              </div>
+            </div>
+            <div class="life-pill">
+              <div class="life-pill-header">
+                <span class="life-pill-title">Sens / valeurs</span>
+                <span id="life-meaning-value" class="mini-label">5/10</span>
+              </div>
+              <div class="range-row">
+                <input type="range" min="0" max="10" value="5" id="life-meaning" />
+              </div>
+            </div>
+            <div class="life-pill">
+              <div class="life-pill-header">
+                <span class="life-pill-title">Liberté intérieure</span>
+                <span id="life-inner-value" class="mini-label">5/10</span>
+              </div>
+              <div class="range-row">
+                <input type="range" min="0" max="10" value="5" id="life-inner" />
+              </div>
+            </div>
+          </div>
+          <div class="hint">
+            Tu peux t’en servir comme “thermomètre” régulier et noter ce qui change.
+          </div>
+        </section>
+
+        <!-- Voir / Juger / Agir -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Voir • Juger • Agir</span>
+            </div>
+            <div class="card-tag">Structurer</div>
+          </div>
+          <div class="card-desc">
+            Inspiré de la méthode de plaidoyer citoyen <em>voir / juger / agir</em> :
+            d’abord observer, ensuite analyser, puis choisir des actions concrètes.
+          </div>
+          <div class="columns-2">
+            <div class="stack">
+              <div class="mini-label">Voir — constats bruts</div>
+              <textarea id="see" placeholder="Ce que tu constates dans ta vie (faits, situations, ressentis)."></textarea>
+            </div>
+            <div class="stack">
+              <div class="mini-label">Juger — comprendre</div>
+              <textarea id="judge" placeholder="Pourquoi c’est comme ça ? Qu’est-ce qui, dans le système autour de toi, produit ça ?"></textarea>
+            </div>
+          </div>
+          <div class="stack" style="margin-top:8px;">
+            <div class="mini-label">Agir — expériences concrètes à lancer</div>
+            <textarea id="act" placeholder="Petites expériences (réversibles) que tu peux tenter dans les 30 prochains jours."></textarea>
+          </div>
+        </section>
+
+        <!-- Prochaines expériences -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Mes 5 prochaines expériences</span>
+            </div>
+            <div class="card-tag">Agir</div>
+          </div>
+          <div class="card-desc">
+            Pas des “objectifs parfaits”, juste des essais pour déplacer légèrement ta trajectoire.
+          </div>
+          <div class="stack">
+            <div class="checklist-item">
+              <input type="checkbox" id="exp1-done" />
+              <input class="small-input" id="exp1" placeholder="Expérience 1 (ex : dire non une fois par semaine à une demande absurde)." />
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="exp2-done" />
+              <input class="small-input" id="exp2" placeholder="Expérience 2" />
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="exp3-done" />
+              <input class="small-input" id="exp3" placeholder="Expérience 3" />
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="exp4-done" />
+              <input class="small-input" id="exp4" placeholder="Expérience 4" />
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="exp5-done" />
+              <input class="small-input" id="exp5" placeholder="Expérience 5" />
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Colonne latérale -->
+      <div class="stack">
+
+        <!-- Radar absurdités / liberté -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Absurdimètre & liberté</span>
+            </div>
+            <div class="badge badge-danger">
+              <span class="badge-dot"></span>
+              <span>Zoom sur les non-sens</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            Repérer les absurdités qui mangent ton énergie
+            (bureaucratie, réunions, bullshit jobs, etc.) pour reprendre la main.
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <span class="bullet"></span>
+              <div>
+                <strong>Absurdités majeures dans ma vie</strong>
+                <textarea id="absurd" placeholder="Situations / tâches qui n’ont aucun sens mais prennent de la place."></textarea>
+              </div>
+            </div>
+            <div class="list-item">
+              <span class="bullet"></span>
+              <div>
+                <strong>Où je peux dire stop / non</strong>
+                <textarea id="boundaries" placeholder="Lieux où tu peux réduire la bureaucratie personnelle, refuser une réunion inutile, simplifier."></textarea>
+              </div>
+            </div>
+            <div class="list-item">
+              <span class="bullet"></span>
+              <div>
+                <strong>Espaces de vraie liberté</strong>
+                <textarea id="freedom" placeholder="Moments, lieux, personnes où tu te sens vraiment libre et aligné·e. À protéger."></textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dystopie & lucidité -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Dystopie & lucidité</span>
+            </div>
+            <div class="card-tag">Contexte du monde</div>
+          </div>
+          <div class="card-desc">
+            Le monde prend parfois un tournant dystopique (surveillance, propagande, écroulement…).
+            L’idée ici : voir clair sans se dissoudre dans l’angoisse.
+          </div>
+          <div class="stack">
+            <div>
+              <div class="mini-label">Ce qui m’inquiète dans le monde</div>
+              <textarea id="world-fears" placeholder="Surveillance, climat, dérives politiques, IA, etc."></textarea>
+            </div>
+            <div>
+              <div class="mini-label">Ce que je refuse de normaliser</div>
+              <textarea id="world-redlines" placeholder="Lignes rouges personnelles, choses que tu ne veux pas accepter comme “normales”."></textarea>
+            </div>
+            <div>
+              <div class="mini-label">Là où je peux agir, même petit</div>
+              <textarea id="world-actions" placeholder="Gestes, engagements, types de conversations que tu peux avoir."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Identité & symboles -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Qui je suis (aujourd’hui)</span>
+            </div>
+            <div class="card-tag">Identité en mouvement</div>
+          </div>
+          <div class="card-desc">
+            Des mots-clés plutôt qu’une définition figée. Tu peux les changer à volonté.
+          </div>
+          <div class="pill-row">
+            <input class="small-input" id="tag1" placeholder="mot-clé #1 (ex : dissident·e doux·ce)" />
+          </div>
+          <div class="pill-row">
+            <input class="small-input" id="tag2" placeholder="mot-clé #2 (ex : hacker d’organisation)" />
+          </div>
+          <div class="pill-row">
+            <input class="small-input" id="tag3" placeholder="mot-clé #3 (ex : gardien·ne du sens)" />
+          </div>
+          <div class="hint">
+            Tu peux aussi te choisir un symbole personnel qui ne soit pas récupéré par des idéologies toxiques.
+          </div>
+        </section>
+
+        <!-- Export des données -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Exporter mon brouillon</span>
+            </div>
+            <div class="card-tag">Données locales</div>
+          </div>
+          <div class="card-desc">
+            Ton texte reste sur ta machine. Ici, tu peux en faire un fichier à part
+            pour l’utiliser ailleurs (notes, mails, scripts…).
+          </div>
+          <div class="export-buttons">
+            <button class="btn-soft" id="btn-export-json">
+              <span class="icon">📦</span><span>JSON (brut, pour outils)</span>
+            </button>
+            <button class="btn-soft" id="btn-export-md">
+              <span class="icon">📓</span><span>Markdown (notes, Obsidian…)</span>
+            </button>
+            <button class="btn-soft" id="btn-export-txt">
+              <span class="icon">📄</span><span>Texte simple (mail, Word…)</span>
+            </button>
+          </div>
+          <div class="export-note">
+            • <strong>JSON</strong> : parfait si un jour tu veux coder un script, une app
+            ou recharger ces infos dans un autre outil.<br />
+            • <strong>Markdown</strong> : idéal pour un journal dans Obsidian / Notion / Git, ou pour partager avec une personne de confiance.<br />
+            • <strong>Texte simple</strong> : à coller dans un mail, un document à imprimer, etc.
+          </div>
+          <div class="hint">
+            Attention : ce sont des données intimes. Ne partage que dans un cercle où tu te sens
+            vraiment en sécurité, et pas via des outils dont tu ne maîtrises pas le stockage.
+          </div>
+        </section>
+
+        <!-- Mode d'emploi -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>Mode d’emploi</span>
+            </div>
+            <div class="card-tag">Technique</div>
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <span class="bullet"></span>
+              <div>
+                <strong>Sauvegarde locale automatique</strong><br />
+                Tout ce que tu écris est enregistré dans le navigateur via <em>localStorage</em>.
+                Si tu copies ce fichier sur une clé USB, chaque machine aura son brouillon séparé.
+              </div>
+            </div>
+            <div class="list-item">
+              <span class="bullet"></span>
+              <div>
+                <strong>Réinitialiser</strong><br />
+                Le bouton “Réinitialiser ce brouillon” efface toutes les données stockées pour cette page.
+              </div>
+            </div>
+            <div class="list-item">
+              <span class="bullet"></span>
+              <div>
+                <strong>Exporter</strong><br />
+                Les boutons ci-dessus créent un fichier sur ton ordinateur. Tu peux ensuite :<br />
+                – le glisser dans ton application de notes,<br />
+                – le mettre sur une clé USB,<br />
+                – le garder comme “snapshot” d’un moment de ta vie,<br />
+                – ou l’utiliser comme matière brute pour écrire / créer autre chose.
+              </div>
+            </div>
+            <div class="list-item">
+              <span class="bullet"></span>
+              <div>
+                <strong>État d’esprit</strong><br />
+                Ceci n’est pas un CV ni une vitrine. C’est un miroir de travail, pour clarifier ta vie
+                et décider où tu veux reprendre du pouvoir.
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      Ce fichier est 100&nbsp;% statique (HTML+CSS+JS) • Pas de tracking • Pensé pour tenir sur une clé USB.
+    </footer>
+  </div>
+
+  <script>
+    // --- Clé de stockage ---
+    const STORAGE_PREFIX = "site_de_ma_vie_v02_";
+
+    // Tous les champs à sauvegarde auto
+    const fieldIds = [
+      "now", "top3",
+      "past", "present", "future",
+      "see", "judge", "act",
+      "exp1", "exp2", "exp3", "exp4", "exp5",
+      "absurd", "boundaries", "freedom",
+      "world-fears", "world-redlines", "world-actions",
+      "tag1", "tag2", "tag3"
+    ];
+
+    const checkboxIds = [
+      "exp1-done", "exp2-done", "exp3-done", "exp4-done", "exp5-done"
+    ];
+
+    const rangeIds = [
+      "life-work", "life-relations", "life-body",
+      "life-creative", "life-meaning", "life-inner"
+    ];
+
+    function storageKey(id) {
+      return STORAGE_PREFIX + id;
+    }
+
+    function loadFields() {
+      fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const saved = localStorage.getItem(storageKey(id));
+        if (saved !== null) {
+          el.value = saved;
+        }
+      });
+
+      checkboxIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const saved = localStorage.getItem(storageKey(id));
+        if (saved !== null) {
+          el.checked = saved === "1";
+        }
+      });
+
+      rangeIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const saved = localStorage.getItem(storageKey(id));
+        if (saved !== null) {
+          el.value = saved;
+        }
+      });
+    }
+
+    function saveField(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      localStorage.setItem(storageKey(id), el.value);
+    }
+
+    function saveCheckbox(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      localStorage.setItem(storageKey(id), el.checked ? "1" : "0");
+    }
+
+    function saveRange(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      localStorage.setItem(storageKey(id), el.value);
+    }
+
+    function setupAutosave() {
+      fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("input", () => saveField(id));
+      });
+
+      checkboxIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("change", () => saveCheckbox(id));
+      });
+
+      rangeIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("input", () => {
+          saveRange(id);
+          updateRangeLabel(id);
+        });
+      });
+    }
+
+    function updateRangeLabel(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const value = el.value;
+      const labelId = id + "-value";
+      const labelEl = document.getElementById(labelId);
+      if (!labelEl) return;
+      labelEl.textContent = value + "/10";
+    }
+
+    function updateAllRangeLabels() {
+      rangeIds.forEach(id => updateRangeLabel(id));
+    }
+
+    function resetAll() {
+      if (!confirm("Tu es sûr·e de vouloir effacer tout ce brouillon ?")) return;
+      [...fieldIds, ...checkboxIds, ...rangeIds].forEach(id => {
+        localStorage.removeItem(storageKey(id));
+      });
+      window.location.reload();
+    }
+
+    function setupFocusMode() {
+      const btn = document.getElementById("btn-focus");
+      let focusOn = false;
+      btn.addEventListener("click", () => {
+        focusOn = !focusOn;
+        document.body.classList.toggle("focus-mode", focusOn);
+        btn.innerHTML = focusOn
+          ? '<span class="icon">👁️</span><span>Réafficher les aides</span>'
+          : '<span class="icon">🧠</span><span>Mode focus (cacher les aides)</span>';
+      });
+    }
+
+    // Mode focus : masque les .card-desc et .hint
+    const focusStyle = document.createElement("style");
+    focusStyle.innerHTML = `
+      body.focus-mode .card-desc,
+      body.focus-mode .hint {
+        display: none;
+      }
+    `;
+    document.head.appendChild(focusStyle);
+
+    // --- Export helpers ---
+
+    function collectData() {
+      // On lit les valeurs actuelles dans la page, pas directement le localStorage
+      const get = id => {
+        const el = document.getElementById(id);
+        return el ? el.value : "";
+      };
+      const getRange = id => {
+        const el = document.getElementById(id);
+        return el ? Number(el.value) : null;
+      };
+      const getCheck = id => {
+        const el = document.getElementById(id);
+        return el ? !!el.checked : false;
+      };
+
+      return {
+        meta: {
+          version: "0.2",
+          exportedAt: new Date().toISOString(),
+          storagePrefix: STORAGE_PREFIX
+        },
+        overview: {
+          now: get("now"),
+          top3: get("top3")
+        },
+        timeline: {
+          past: get("past"),
+          present: get("present"),
+          future: get("future")
+        },
+        lifePoles: {
+          work: getRange("life-work"),
+          relations: getRange("life-relations"),
+          body: getRange("life-body"),
+          creative: getRange("life-creative"),
+          meaning: getRange("life-meaning"),
+          innerFreedom: getRange("life-inner")
+        },
+        seeJudgeAct: {
+          see: get("see"),
+          judge: get("judge"),
+          act: get("act")
+        },
+        experiments: [
+          { text: get("exp1"), done: getCheck("exp1-done") },
+          { text: get("exp2"), done: getCheck("exp2-done") },
+          { text: get("exp3"), done: getCheck("exp3-done") },
+          { text: get("exp4"), done: getCheck("exp4-done") },
+          { text: get("exp5"), done: getCheck("exp5-done") }
+        ],
+        absurdityRadar: {
+          absurd: get("absurd"),
+          boundaries: get("boundaries"),
+          freedomSpaces: get("freedom")
+        },
+        world: {
+          fears: get("world-fears"),
+          redLines: get("world-redlines"),
+          actions: get("world-actions")
+        },
+        identity: {
+          tag1: get("tag1"),
+          tag2: get("tag2"),
+          tag3: get("tag3")
+        }
+      };
+    }
+
+    function downloadFile(filename, content, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportJSON() {
+      const data = collectData();
+      const content = JSON.stringify(data, null, 2);
+      downloadFile("site-de-ma-vie.json", content, "application/json");
+    }
+
+    function exportMarkdown() {
+      const d = collectData();
+      const lines = [];
+
+      lines.push("# Site de ma vie – Export");
+      lines.push("");
+      lines.push(`_Version ${d.meta.version} – exporté le ${d.meta.exportedAt}_`);
+      lines.push("");
+      lines.push("## Vue d’ensemble");
+      lines.push("");
+      lines.push("### Aujourd’hui (climat intérieur)");
+      lines.push("");
+      lines.push(d.overview.now || "_(vide)_");
+      lines.push("");
+      lines.push("### Les 3 choses vraiment importantes pour moi");
+      lines.push("");
+      lines.push(d.overview.top3 || "_(vide)_");
+      lines.push("");
+      lines.push("## Ligne du temps");
+      lines.push("");
+      lines.push("### Avant");
+      lines.push("");
+      lines.push(d.timeline.past || "_(vide)_");
+      lines.push("");
+      lines.push("### Maintenant");
+      lines.push("");
+      lines.push(d.timeline.present || "_(vide)_");
+      lines.push("");
+      lines.push("### Après");
+      lines.push("");
+      lines.push(d.timeline.future || "_(vide)_");
+      lines.push("");
+      lines.push("## Pôles de vie (0–10)");
+      lines.push("");
+      const lp = d.lifePoles;
+      const lpEntries = [
+        ["Travail / études", lp.work],
+        ["Relations", lp.relations],
+        ["Corps / santé", lp.body],
+        ["Créativité", lp.creative],
+        ["Sens / valeurs", lp.meaning],
+        ["Liberté intérieure", lp.innerFreedom]
+      ];
+      lpEntries.forEach(([label, value]) => {
+        lines.push(`- **${label}** : ${value !== null ? value + "/10" : "non renseigné"}`);
+      });
+      lines.push("");
+      lines.push("## Voir • Juger • Agir");
+      lines.push("");
+      lines.push("### Voir — constats bruts");
+      lines.push("");
+      lines.push(d.seeJudgeAct.see || "_(vide)_");
+      lines.push("");
+      lines.push("### Juger — comprendre");
+      lines.push("");
+      lines.push(d.seeJudgeAct.judge || "_(vide)_");
+      lines.push("");
+      lines.push("### Agir — expériences concrètes à lancer");
+      lines.push("");
+      lines.push(d.seeJudgeAct.act || "_(vide)_");
+      lines.push("");
+      lines.push("## Mes 5 prochaines expériences");
+      lines.push("");
+      d.experiments.forEach((exp, i) => {
+        if (!exp.text && !exp.done) return;
+        const checked = exp.done ? "x" : " ";
+        lines.push(`- [${checked}] Expérience ${i + 1} : ${exp.text || "(sans titre)"}`);
+      });
+      if (!d.experiments.some(e => e.text || e.done)) {
+        lines.push("_(aucune pour l’instant)_");
+      }
+      lines.push("");
+      lines.push("## Absurdimètre & liberté");
+      lines.push("");
+      lines.push("### Absurdités majeures dans ma vie");
+      lines.push("");
+      lines.push(d.absurdityRadar.absurd || "_(vide)_");
+      lines.push("");
+      lines.push("### Où je peux dire stop / non");
+      lines.push("");
+      lines.push(d.absurdityRadar.boundaries || "_(vide)_");
+      lines.push("");
+      lines.push("### Espaces de vraie liberté");
+      lines.push("");
+      lines.push(d.absurdityRadar.freedomSpaces || "_(vide)_");
+      lines.push("");
+      lines.push("## Dystopie & lucidité");
+      lines.push("");
+      lines.push("### Ce qui m’inquiète dans le monde");
+      lines.push("");
+      lines.push(d.world.fears || "_(vide)_");
+      lines.push("");
+      lines.push("### Ce que je refuse de normaliser");
+      lines.push("");
+      lines.push(d.world.redLines || "_(vide)_");
+      lines.push("");
+      lines.push("### Là où je peux agir, même petit");
+      lines.push("");
+      lines.push(d.world.actions || "_(vide)_");
+      lines.push("");
+      lines.push("## Qui je suis (aujourd’hui)");
+      lines.push("");
+      const tags = [d.identity.tag1, d.identity.tag2, d.identity.tag3].filter(Boolean);
+      if (tags.length === 0) {
+        lines.push("_(aucun mot-clé renseigné)_");
+      } else {
+        tags.forEach(t => lines.push(`- ${t}`));
+      }
+
+      const content = lines.join("\n");
+      downloadFile("site-de-ma-vie.md", content, "text/markdown;charset=utf-8");
+    }
+
+    function exportText() {
+      const d = collectData();
+      const parts = [];
+
+      parts.push("SITE DE MA VIE – EXPORT");
+      parts.push("");
+      parts.push(`Version ${d.meta.version} – exporté le ${d.meta.exportedAt}`);
+      parts.push("");
+      parts.push("=== VUE D’ENSEMBLE ===");
+      parts.push("");
+      parts.push("Aujourd’hui (climat intérieur) :");
+      parts.push(d.overview.now || "(vide)");
+      parts.push("");
+      parts.push("Les 3 choses vraiment importantes pour moi :");
+      parts.push(d.overview.top3 || "(vide)");
+      parts.push("");
+      parts.push("=== LIGNE DU TEMPS ===");
+      parts.push("");
+      parts.push("[Avant]");
+      parts.push(d.timeline.past || "(vide)");
+      parts.push("");
+      parts.push("[Maintenant]");
+      parts.push(d.timeline.present || "(vide)");
+      parts.push("");
+      parts.push("[Après]");
+      parts.push(d.timeline.future || "(vide)");
+      parts.push("");
+      parts.push("=== PÔLES DE VIE (0–10) ===");
+      const lp = d.lifePoles;
+      parts.push(`Travail / études : ${lp.work ?? "non renseigné"}`);
+      parts.push(`Relations : ${lp.relations ?? "non renseigné"}`);
+      parts.push(`Corps / santé : ${lp.body ?? "non renseigné"}`);
+      parts.push(`Créativité : ${lp.creative ?? "non renseigné"}`);
+      parts.push(`Sens / valeurs : ${lp.meaning ?? "non renseigné"}`);
+      parts.push(`Liberté intérieure : ${lp.innerFreedom ?? "non renseigné"}`);
+      parts.push("");
+      parts.push("=== VOIR / JUGER / AGIR ===");
+      parts.push("");
+      parts.push("[Voir]");
+      parts.push(d.seeJudgeAct.see || "(vide)");
+      parts.push("");
+      parts.push("[Juger]");
+      parts.push(d.seeJudgeAct.judge || "(vide)");
+      parts.push("");
+      parts.push("[Agir]");
+      parts.push(d.seeJudgeAct.act || "(vide)");
+      parts.push("");
+      parts.push("=== MES 5 PROCHAINES EXPÉRIENCES ===");
+      d.experiments.forEach((exp, i) => {
+        if (!exp.text && !exp.done) return;
+        parts.push(
+          `Expérience ${i + 1} : ${exp.text || "(sans titre)"} – ` +
+          (exp.done ? "FAITE" : "à faire")
+        );
+      });
+      if (!d.experiments.some(e => e.text || e.done)) {
+        parts.push("(aucune pour l’instant)");
+      }
+      parts.push("");
+      parts.push("=== ABSURDIMÈTRE & LIBERTÉ ===");
+      parts.push("");
+      parts.push("Absurdités majeures :");
+      parts.push(d.absurdityRadar.absurd || "(vide)");
+      parts.push("");
+      parts.push("Où je peux dire stop / non :");
+      parts.push(d.absurdityRadar.boundaries || "(vide)");
+      parts.push("");
+      parts.push("Espaces de vraie liberté :");
+      parts.push(d.absurdityRadar.freedomSpaces || "(vide)");
+      parts.push("");
+      parts.push("=== DYSTOPIE & LUCIDITÉ ===");
+      parts.push("");
+      parts.push("Ce qui m’inquiète dans le monde :");
+      parts.push(d.world.fears || "(vide)");
+      parts.push("");
+      parts.push("Ce que je refuse de normaliser :");
+      parts.push(d.world.redLines || "(vide)");
+      parts.push("");
+      parts.push("Là où je peux agir, même petit :");
+      parts.push(d.world.actions || "(vide)");
+      parts.push("");
+      parts.push("=== QUI JE SUIS (AUJOURD’HUI) ===");
+      const tags = [d.identity.tag1, d.identity.tag2, d.identity.tag3].filter(Boolean);
+      if (tags.length === 0) {
+        parts.push("(aucun mot-clé renseigné)");
+      } else {
+        parts.push("Mots-clés : " + tags.join(", "));
+      }
+
+      const content = parts.join("\n");
+      downloadFile("site-de-ma-vie.txt", content, "text/plain;charset=utf-8");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadFields();
+      setupAutosave();
+      updateAllRangeLabels();
+      document.getElementById("btn-reset").addEventListener("click", resetAll);
+      setupFocusMode();
+
+      const btnJson = document.getElementById("btn-export-json");
+      const btnMd = document.getElementById("btn-export-md");
+      const btnTxt = document.getElementById("btn-export-txt");
+
+      if (btnJson) btnJson.addEventListener("click", exportJSON);
+      if (btnMd) btnMd.addEventListener("click", exportMarkdown);
+      if (btnTxt) btnTxt.addEventListener("click", exportText);
+    });
+  </script>
+</body>
+</html>
