@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ECHO-0 – Instance de terrain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --panel: #020617;
+      --panel-alt: #020617;
+      --accent: #4ade80;
+      --accent-soft: rgba(74, 222, 128, 0.12);
+      --accent-strong: #22c55e;
+      --accent2: #38bdf8;
+      --accent3: #fbbf24;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --danger: #fb7185;
+      --radius: 18px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.65);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text);
+      font-family: var(--font-sans);
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      max-height: 840px;
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.18), transparent 55%),
+        linear-gradient(145deg, #020617, #020617);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .scanline {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to bottom, rgba(15,23,42,0.55) 1px, transparent 1px);
+      background-size: 100% 2px;
+      mix-blend-mode: soft-light;
+      opacity: 0.24;
+      z-index: 0;
+    }
+
+    .noise {
+      pointer-events: none;
+      position: absolute;
+      inset: -40px;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 90' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+      opacity: 0.18;
+      z-index: 0;
+    }
+
+    .app-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    /* HEADER */
+
+    .header {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+    }
+
+    .traffic {
+      display: flex;
+      gap: 6px;
+    }
+
+    .traffic-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .traffic-dot.red { background: #f97373; }
+    .traffic-dot.yellow { background: #facc15; }
+    .traffic-dot.green { background: #22c55e; }
+
+    .drive-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(2,6,23,0.9));
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .drive-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.32);
+    }
+
+    .drive-label {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .header-spacer {
+      flex: 1;
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--muted);
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(15,23,42,0.9);
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 10px 14px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-bottom: 1px solid rgba(31,41,55,0.8);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.95), rgba(2,6,23,0.9));
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hero-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .hero-title span.glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-title span.glitch::before,
+    .hero-title span.glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      overflow: hidden;
+      clip-path: inset(0 0 50% 0);
+      opacity: 0.22;
+    }
+
+    .hero-title span.glitch::before {
+      transform: translateX(-1px);
+      color: #4ade80;
+    }
+
+    .hero-title span.glitch::after {
+      transform: translateX(1px);
+      color: #38bdf8;
+      clip-path: inset(50% 0 0 0);
+    }
+
+    .hero-sub {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 420px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.95);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.08s, border-color 0.15s;
+    }
+
+    .hero-btn.primary {
+      border-color: rgba(34,197,94,0.9);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.32), rgba(15,23,42,0.95));
+    }
+
+    .hero-btn:hover {
+      background: rgba(15,23,42,0.9);
+      transform: translateY(-1px);
+    }
+
+    .hero-hint {
+      font-size: 10px;
+      color: #6b7280;
+      margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+
+    /* TABS */
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 6px 8px 6px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15,23,42,0.95);
+      overflow-x: auto;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      padding: 5px 12px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--muted);
+      background: rgba(15,23,42,0.85);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .tab-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .tab.active {
+      color: var(--text);
+      border-color: rgba(34,197,94,0.85);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.18), rgba(15,23,42,0.95));
+    }
+
+    .tab.active .tab-dot {
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.34);
+    }
+
+    /* PANELS */
+
+    .panels {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .panel {
+      flex: 1;
+      display: none;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    .panel.active {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    /* FILES PANEL */
+
+    .files-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .file-tree {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 8px;
+      min-height: 90px;
+      max-height: 170px;
+      overflow: auto;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .file-viewer {
+      flex: 1;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(2,6,23,0.99));
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .file-header {
+      padding: 6px 10px 4px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .file-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .file-name {
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .file-path {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .file-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 2px 7px;
+      border: 1px solid rgba(75,85,99,0.9);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #6b7280;
+    }
+
+    .badge.ok .badge-dot {
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.3);
+    }
+
+    .badge.cryptic .badge-dot {
+      background: var(--accent2);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.35);
+    }
+
+    .badge.classified .badge-dot {
+      background: var(--accent3);
+      box-shadow: 0 0 0 3px rgba(250,204,21,0.35);
+    }
+
+    .badge.warn .badge-dot {
+      background: var(--danger);
+      box-shadow: 0 0 0 3px rgba(248,113,113,0.35);
+    }
+
+    .file-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .file-content {
+      flex: 1;
+      padding: 10px 12px;
+      overflow: auto;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      position: relative;
+    }
+
+    .file-content::before {
+      content: attr(data-lang);
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(148,163,184,0.7);
+    }
+
+    .file-status {
+      padding: 4px 8px;
+      border-top: 1px solid var(--border);
+      font-size: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .status-pill.cryptic {
+      border-color: rgba(56,189,248,0.7);
+      color: #bfdbfe;
+    }
+
+    .status-pill.classified {
+      border-color: rgba(250,204,21,0.7);
+      color: #fef3c7;
+    }
+
+    .status-pill.rules {
+      border-color: rgba(248,113,113,0.7);
+      color: #fecaca;
+    }
+
+    .tree-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 6px;
+      border-radius: 9px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .tree-row.folder {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tree-row:hover {
+      background: rgba(31,41,55,0.95);
+    }
+
+    .tree-row.active {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+    }
+
+    .tree-indent {
+      width: 12px;
+      flex-shrink: 0;
+    }
+
+    .tree-icon {
+      width: 14px;
+      text-align: center;
+    }
+
+    .tree-tag {
+      margin-left: auto;
+      padding: 1px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.9);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tree-tag.cryptic {
+      border-color: rgba(56,189,248,0.7);
+      color: #7dd3fc;
+    }
+
+    .tree-tag.classified {
+      border-color: rgba(250,204,21,0.85);
+      color: #facc15;
+    }
+
+    .tree-search {
+      width: 100%;
+      margin-bottom: 6px;
+    }
+
+    .tree-input {
+      width: 100%;
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.95);
+      background: rgba(15,23,42,0.95);
+      color: var(--text);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      outline: none;
+    }
+
+    .tree-input::placeholder {
+      color: #6b7280;
+    }
+
+    .file-tree::-webkit-scrollbar,
+    .file-content::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .file-tree::-webkit-scrollbar-thumb,
+    .file-content::-webkit-scrollbar-thumb {
+      background: rgba(55,65,81,0.9);
+      border-radius: 999px;
+    }
+
+    /* MISSIONS PANEL */
+
+    .missions-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .missions-header {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .missions-header strong {
+      color: var(--text);
+    }
+
+    .missions-grid {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .mission-card {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.97);
+      padding: 10px 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mission-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mission-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .mission-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.7);
+      font-size: 9px;
+      color: #7dd3fc;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .mission-body {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .mission-steps {
+      margin: 4px 0;
+      padding-left: 16px;
+    }
+
+    .mission-steps li {
+      margin-bottom: 2px;
+    }
+
+    .mission-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mission-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .switch {
+      position: relative;
+      width: 40px;
+      height: 20px;
+      border-radius: 999px;
+      background: rgba(31,41,55,0.9);
+      border: 1px solid rgba(55,65,81,0.9);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .switch-thumb {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #6b7280;
+      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .switch[data-on="true"] {
+      background: rgba(34,197,94,0.2);
+      border-color: rgba(34,197,94,0.9);
+    }
+
+    .switch[data-on="true"] .switch-thumb {
+      transform: translateX(18px);
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.35);
+    }
+
+    .mission-notes {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .mission-notes textarea,
+    .mission-notes input {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.98);
+      color: var(--text);
+      font-size: 11px;
+      padding: 6px 8px;
+      font-family: var(--font-mono);
+      resize: vertical;
+      min-height: 30px;
+    }
+
+    .mission-notes small {
+      color: #6b7280;
+    }
+
+    .mission-notes input::placeholder,
+    .mission-notes textarea::placeholder {
+      color: #6b7280;
+    }
+
+    /* CONSOLE PANEL */
+
+    .console-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .console-header {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .console-screen {
+      flex: 1;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(2,6,23,0.99));
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .console-output {
+      flex: 1;
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      overflow: auto;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .console-output::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .console-output::-webkit-scrollbar-thumb {
+      background: rgba(55,65,81,0.9);
+      border-radius: 999px;
+    }
+
+    .console-line.system {
+      color: #a5b4fc;
+    }
+
+    .console-line.hint {
+      color: #7dd3fc;
+    }
+
+    .console-line.error {
+      color: #fecaca;
+    }
+
+    .console-line.command {
+      color: #facc15;
+    }
+
+    .console-prompt {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      border-top: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .console-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #6ee7b7;
+    }
+
+    .console-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .console-input::placeholder {
+      color: #6b7280;
+    }
+
+    .console-help {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .kbd {
+      display: inline-block;
+      padding: 1px 4px;
+      border-radius: 3px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(15,23,42,0.9);
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (min-width: 880px) {
+      .files-layout {
+        flex-direction: row;
+      }
+
+      .file-tree {
+        flex: 0 0 260px;
+        max-height: none;
+        min-height: 0;
+      }
+
+      .file-viewer {
+        flex: 1;
+      }
+
+      .hero-title {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="scanline"></div>
+  <div class="noise"></div>
+  <div class="app-inner">
+    <header class="header">
+      <div class="traffic">
+        <div class="traffic-dot red"></div>
+        <div class="traffic-dot yellow"></div>
+        <div class="traffic-dot green"></div>
+      </div>
+      <div class="drive-pill">
+        <span class="drive-led"></span>
+        <span class="drive-label">ECHO-0</span>
+        <span>INSTANCE</span>
+      </div>
+      <div class="header-spacer"></div>
+      <div class="header-meta">
+        <span class="chip">Mode : <strong>offline</strong></span>
+        <span class="chip">Profil : <span id="profileLabel">joueur·euse inconnu·e</span></span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-top">
+        <div class="hero-title-block">
+          <div class="hero-title">
+            <span class="glitch" data-text="ECHO-0">ECHO-0</span>
+            <span>clé USB / jeu de piste</span>
+          </div>
+          <div class="hero-sub">
+            Tu viens d’ouvrir une <strong>instance</strong> d’un jeu dont tout le monde parle, mais dont
+            personne ne connaît vraiment le créateur. Chaque support est une nouvelle clé.  
+            Celle-ci est la tienne.
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button class="hero-btn primary" data-tab-target="files">
+            📂 Explorer les fichiers
+          </button>
+          <button class="hero-btn" data-tab-target="missions">
+            🎯 Journal de mission
+          </button>
+          <button class="hero-btn" data-tab-target="console">
+            >_ Console locale
+          </button>
+        </div>
+      </div>
+      <div class="hero-hint">
+        Règle n°1 : on ne parle jamais des règles. Règle n°2 : il n’y a pas de règle. Règle n°3 : on s’en fout pas mal.  
+        Indice sur la règle d’or : <span style="color:#f97316;">t’as rien compris</span> (c’est bon signe).
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="files">
+        <span class="tab-dot"></span> Fichiers
+      </button>
+      <button class="tab" data-tab="missions">
+        <span class="tab-dot"></span> Missions
+      </button>
+      <button class="tab" data-tab="console">
+        <span class="tab-dot"></span> Console
+      </button>
+    </nav>
+
+    <div class="panels">
+      <!-- FILES PANEL -->
+      <section class="panel active" id="tab-files">
+        <div class="files-layout">
+          <div class="file-tree">
+            <div class="tree-search">
+              <input id="treeFilter" class="tree-input" placeholder="Filtrer (README, PUBLIC, S, instance...)" />
+            </div>
+            <div id="treeContainer"></div>
+          </div>
+          <div class="file-viewer">
+            <div class="file-header">
+              <div class="file-meta">
+                <div id="fileName" class="file-name"></div>
+                <div id="filePath" class="file-path"></div>
+              </div>
+              <div id="fileBadges" class="file-badges"></div>
+            </div>
+            <div class="file-body">
+              <div id="fileContent" class="file-content" data-lang=""></div>
+              <div class="file-status">
+                <div>
+                  Lignes : <span id="lineCount">0</span> • Type : <span id="fileType">texte</span>
+                </div>
+                <div>
+                  <span class="status-pill rules">Règle n°1 : on ne parle jamais des règles</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MISSIONS PANEL -->
+      <section class="panel" id="tab-missions">
+        <div class="missions-layout">
+          <div class="missions-header">
+            <div>
+              <strong>Journal de mission</strong><br />
+              Tes actions dans le monde réel sont le vrai moteur du jeu.  
+              Ce que tu notes ici reste local, sur cette machine.
+            </div>
+            <div style="font-size:11px;">
+              Astuce : commence par une mission simple, poste-la sur le net,  
+              note l’URL. Laisse S tomber dessus "par hasard".
+            </div>
+          </div>
+          <div id="missionsGrid" class="missions-grid"></div>
+        </div>
+      </section>
+
+      <!-- CONSOLE PANEL -->
+      <section class="panel" id="tab-console">
+        <div class="console-layout">
+          <div class="console-header">
+            <div>
+              <strong>Console locale</strong><br />
+              Une pseudo interface système pour parler avec l’instance.
+            </div>
+            <div class="console-help">
+              Essaie : <span class="kbd">help</span>,
+              <span class="kbd">rules</span>,
+              <span class="kbd">whoami</span>,
+              <span class="kbd">hint</span>,
+              <span class="kbd">sanka</span>,
+              <span class="kbd">ping S</span>.
+            </div>
+          </div>
+          <div class="console-screen">
+            <div id="consoleOutput" class="console-output"></div>
+            <div class="console-prompt">
+              <span class="console-label">ECHO-0&gt;</span>
+              <input id="consoleInput" class="console-input" autocomplete="off" spellcheck="false"
+                     placeholder="tape une commande puis Entrée..." />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- Données de fichiers (contenu du volume) ----------
+  const FILES = [
+    {
+      id: "readme",
+      name: "README.md",
+      path: "/ECHO-0/README.md",
+      folder: "/",
+      type: "text/markdown",
+      tags: ["public", "cryptic"],
+      lang: "md",
+      content: `# CLÉ USB ECHO-0 – INSTANCE
+
+Bienvenue sur le volume **ECHO-0**.
+
+En apparence : une clé USB banale.  
+En réalité : une **instance locale** d’un jeu de piste distribué.
+
+---
+
+## 0. Ce que tu sais (officiellement)
+
+- Tu lis ceci depuis un fichier \`index.html\` posé sur un support quelconque.
+- Ce support (clé USB, dossier, repo git, cloud) **est** une instance du jeu.
+- Il n'y a ni lot, ni classement, ni récompense matérielle.
+
+Ce que tu peux en faire :
+
+1. L'utiliser comme artefact pour un JdR, une campagne, une enquête.
+2. Le forker, l'éditer, tout modifier.
+3. Le copier sur une vraie clé, la renommer \`ECHO-0\`, la faire circuler.
+
+---
+
+## 1. Le but du jeu
+
+Le pitch est simple :
+
+> **Retrouver le ou la créateur·trice du jeu pour le recruter**  
+> ou, à défaut, devenir vraiment **copain-copain**.
+
+Problème :
+
+- Personne n’est sûr·e de qui a lancé l’idée.
+- Chaque personne est une **instance** du jeu, même sans avoir "joué".
+
+La conclusion temporaire est donc :
+> Tu es peut-être en train d'essayer de recruter... toi-même.
+
+---
+
+## 2. Les règles (officieusement officielles)
+
+1. On ne parle **jamais** des règles.
+2. Il n'y a **pas** de règle.
+3. On s'en fout pas mal.
+4. Indice sur la règle d'or : *t'as rien compris*.
+
+Plus tu t'obstines à chercher une consigne explicite,
+moins tu regardes ce que **toi** tu peux créer.
+
+---
+
+## 3. Architecture de la clé
+
+- \`/PUBLIC\` : ce qui tient la route si quelqu'un "tombe dessus" par hasard.
+- \`/CRYPTIC\` : pour les gens qui aiment farfouiller là où personne ne regarde.
+- \`/CLASSIFIED\` : fragments de dossier, notes d'observation, redactions.
+
+Tu peux explorer tout ça dans l'onglet **Fichiers**,  
+ou bien passer directement à l'onglet **Missions** pour agir,  
+ou à **Console** pour parler à l'instance.
+
+---
+
+## 4. Missions à poster sur le Net
+
+Tu veux que S (qui que soit S) "le voie bien tôt ou tard" ?  
+Alors, il faut sortir de cet écran.
+
+### Mission A – Laisser une trace anodine
+
+1. Choisis une plateforme publique : post, commentaire, issue GitHub, blog, etc.
+2. Publie un contenu totalement banal (recette, note technique, gif…).
+3. Cache-y une référence discrète à **ECHO-0** ou au mot **instance** :
+   - un commentaire HTML,
+   - un id de paragraphe,
+   - un nom de classe CSS,
+   - une phrase qui n’a pas l’air à sa place.
+4. Note l’URL dans l’onglet **Missions**.
+5. Ne dis pas que c'est un jeu.
+
+### Mission B – Le miroir qui parle de "copain-copain"
+
+1. Écris un texte qui se lit différemment selon le sens :
+   - structure symétrique,
+   - phrase qui change de sens selon la ponctuation,
+   - mise en page miroir.
+2. Utilise le mot-clé **"copain-copain"** quelque part.
+3. Poste-le sur le Net.
+4. Range le lien dans le suivi de mission.
+
+### Mission C – Dystopie banale
+
+1. Décris une scène banale : transports, open-space, centre commercial.
+2. Glisse-y un détail un peu trop "surveillé" pour être normal.
+3. Laisse comprendre que tout le monde trouve ça normal, sauf toi.
+4. Ajoute, en tout petit : \`E.\` \`A.\` \`R.\` \`L.\` \`S.\`.
+5. Publie. Souffle. Passe à autre chose.
+
+---
+
+## 5. Comment propager l’instance
+
+- Copie ce fichier \`index.html\` sur une clé vierge.
+- Renomme le volume : \`ECHO-0\`, \`ECHO-1\`, \`ECHO-n\`...
+- Ajoute ton propre contenu dans les sections PUBLIC/CRYPTIC/CLASSIFIED.
+- Passe la clé à quelqu'un en disant simplement :
+  > "Je crois que tu es déjà dans le jeu."
+
+Rappelle-toi :  
+> Ce n'est pas un test de paranoïa, c'est un test d'imagination.`
+    },
+    // PUBLIC
+    {
+      id: "public-note",
+      name: "note-chaton.txt",
+      path: "/ECHO-0/PUBLIC/note-chaton.txt",
+      folder: "/PUBLIC",
+      type: "text/plain",
+      tags: ["public"],
+      lang: "txt",
+      content: `NOTE PERSONNELLE
+
+- Nourrir le chaton de la voisine samedi.
+- Arroser la plante qui a l'air morte (elle n'est peut-être pas d'accord).
+- Sourire à la caméra du palier (ou pas).
+
+Rappel :
+> Si quelqu'un trouve cette clé, cette note doit paraître parfaitement normale.
+
+PS : effacer les fichiers trop directs, garder seulement ceux qui ressemblent à de la vie quotidienne.`
+    },
+    {
+      id: "public-list",
+      name: "liste-courses.txt",
+      path: "/ECHO-0/PUBLIC/liste-courses.txt",
+      folder: "/PUBLIC",
+      type: "text/plain",
+      tags: ["public"],
+      lang: "txt",
+      content: `LISTE DE COURSES (ANODINE)
+
+- café (beaucoup)
+- pâtes
+- sauce tomate
+- céréales
+- citron
+- savon
+- post-it
+- clé USB vierge
+- carnet à spirale
+
+TODO : noter quelque part que cette liste sert aussi de couverture si quelqu'un ouvre la clé par erreur.`
+    },
+    {
+      id: "public-readme",
+      name: "lisez-moi_public.txt",
+      path: "/ECHO-0/PUBLIC/lisez-moi_public.txt",
+      folder: "/PUBLIC",
+      type: "text/plain",
+      tags: ["public"],
+      lang: "txt",
+      content: `LISEZ-MOI (VERSION PUBLIC)
+
+Si tu lis ceci, c'est que tu as ouvert la partie "publique" de la clé.
+
+Ici, rien d'inquiétant :
+- quelques notes personnelles,
+- des listes,
+- des trucs qui n'intéressent personne.
+
+C'est volontaire : si quelqu'un tombe sur la clé, il ne doit rien voir d'autre.
+
+Pour le reste, il faut être du genre à cliquer sur des dossiers qui s'appellent "CRYPTIC" ou "CLASSIFIED".`
+    },
+    // CRYPTIC
+    {
+      id: "cryptic-ouro",
+      name: "01_ouroboros.bin",
+      path: "/ECHO-0/CRYPTIC/01_ouroboros.bin",
+      folder: "/CRYPTIC",
+      type: "application/octet-stream",
+      tags: ["cryptic"],
+      lang: "bin",
+      content: `DUMP HEXA (SIMULÉ) – 01_ouroboros.bin
+
+0000  45 43 48 4F 2D 30 20 49 4E 53 54 41 4E 43 45 0A   ECHO-0 INSTANCE.
+0010  4F 55 52 4F 42 4F 52 4F 53 0A 00 00 00 00 00 00   OUROBOROS......
+0020  69 6E 73 74 61 6E 63 65 3D 6A 6F 75 65 75 72 0A   instance=joueur.
+0030  63 72 65 61 74 65 75 72 3D 3F 3F 3F 3F 3F 3F 0A   createur=??????.
+
+Commentaires :
+- Le fichier se référence lui-même : l'instance contient sa propre définition.
+- \`instance=joueur\` et \`createur=??????\` restent non résolus.
+- C'est moins un secret technique qu'un clin d'œil philosophique.
+
+À toi de décider qui remplit les \`??????\`.`
+    },
+    {
+      id: "cryptic-pal",
+      name: "02_palindrome.txt",
+      path: "/ECHO-0/CRYPTIC/02_palindrome.txt",
+      folder: "/CRYPTIC",
+      type: "text/plain",
+      tags: ["cryptic"],
+      lang: "txt",
+      content: `JEU DE MIROIR – "COPAIN-COPAIN"
+
+Avant :
+  "On sera copain-copain quand on aura trouvé le créateur du jeu."
+
+Après :
+  "Quand on aura accepté qu'il n'y a pas de créateur unique,
+   on sera peut-être enfin copain-copain."
+
+Le palindrome n'est pas dans les lettres,
+mais dans l'idée qui revient vers toi.
+
+Mission suggérée :
+- écrire un texte publique avec "copain-copain" dedans,
+- faire semblant de parler de tout autre chose.`
+    },
+    {
+      id: "cryptic-signal",
+      name: "03_signal.wav",
+      path: "/ECHO-0/CRYPTIC/03_signal.wav",
+      folder: "/CRYPTIC",
+      type: "audio/wav",
+      tags: ["cryptic"],
+      lang: "bin",
+      content: `FICHIER AUDIO SIMULÉ – 03_signal.wav
+
+Dans une version sonore, on entendrait :
+
+- un bip régulier, comme un sonar urbain ;
+- de légers décrochages, comme des erreurs de transmission ;
+- cachée dans le spectrogramme, une phrase :
+  "LA RÈGLE D'OR N'EST ÉCRITE NULLE PART."
+
+Tu peux créer ta propre version :
+- générer un son,
+- y cacher un message,
+- le publier quelque part sous ce nom,
+- et le considérer comme une extension de cette instance.`
+    },
+    // CLASSIFIED
+    {
+      id: "classified-a",
+      name: "fragment-a.txt",
+      path: "/ECHO-0/CLASSIFIED/fragment-a.txt",
+      folder: "/CLASSIFIED",
+      type: "text/plain",
+      tags: ["classified"],
+      lang: "txt",
+      content: `FRAGMENT A – NOTES D'OBSERVATION
+
+Objet : propagation du "jeu le plus culte du monde entier".
+
+Constats :
+- Le "jeu" ne possède pas d'éditeur, de studio, ni de logo officiel.
+- Il voyage sous forme de :
+  - clés USB,
+  - dossiers zippés,
+  - repos git obscurs,
+  - copies papier de pages web.
+
+Hypothèse :
+> Chaque personne exposée à l'idée devient
+> une "instance" du jeu, qu'elle le veuille ou non.
+
+Conséquence :
+- Chercher le créateur revient à remonter une fractale de copies.
+- À un moment, la question bascule :
+  "Qui l'a créé ?" -> "Qu'est-ce que j'en fais ?" `
+    },
+    {
+      id: "classified-b",
+      name: "fragment-b.txt",
+      path: "/ECHO-0/CLASSIFIED/fragment-b.txt",
+      folder: "/CLASSIFIED",
+      type: "text/plain",
+      tags: ["classified"],
+      lang: "txt",
+      content: `FRAGMENT B – À PROPOS DES RÈGLES
+
+Texte officiel :
+
+1. On ne parle jamais des règles.
+2. Il n'y a pas de règle.
+3. On s'en fout pas mal.
+4. Indice sur la règle d'or : "t'as rien compris".
+
+Interprétation officieuse :
+
+- Cette structure élimine les gens qui cherchent un "mode d'emploi" complet.
+- Le seul test réel est :
+  "Es-tu capable de poser tes propres limites sans qu'on te tienne la main ?"
+
+Il reste néanmoins quelques contraintes implicites :
+- rester dans la légalité,
+- ne pas nuire,
+- refuser de jouer contre des personnes qui n'ont pas choisi d'être dans la partie.
+
+Le reste : à inventer.`
+    },
+    {
+      id: "classified-c",
+      name: "fragment-c.redacted",
+      path: "/ECHO-0/CLASSIFIED/fragment-c.redacted",
+      folder: "/CLASSIFIED",
+      type: "text/plain",
+      tags: ["classified"],
+      lang: "txt",
+      content: `[██████████████████████████████████████████]
+[██████████████████████████████████████████]
+
+Ils et elles pensent participer à un simple jeu de piste.  
+En réalité, elles et ils s'entraînent à :
+
+- repérer des signaux faibles dans une masse d'infos banales ;
+- raconter une histoire en marge des canaux officiels ;
+- se méfier, doucement, des évidences trop confortables.
+
+[██████████████████████████████████████████]
+
+Question en suspens :
+
+> Dans un monde où tout le monde est suivi, tracké, profilé,
+> que signifie encore "laisser un signe" pour quelqu'un en particulier ?
+
+[████████ FIN DU FRAGMENT ████████]`
+    }
+  ];
+
+  // ---------- Missions ----------
+  const MISSIONS = [
+    {
+      id: "mission-a",
+      title: "Mission A – Trace anodine",
+      tag: "public",
+      description: `Créer un contenu totalement banal, mais porteur d'un marqueur discret de l'instance.`,
+      steps: [
+        "Choisir une plateforme (blog, paste, issue GitHub, commentaire...).",
+        "Publier un contenu neutre (recette, note technique, avis sur un film...).",
+        "Glisser une référence discrète à ECHO-0 ou au mot " + '"instance"' + ".",
+        "Noter l’URL ici pour t’en souvenir."
+      ]
+    },
+    {
+      id: "mission-b",
+      title: "Mission B – Texte miroir \"copain-copain\"",
+      tag: "cryptic",
+      description: `Écrire un texte qui change de sens selon la perspective, contenant le mot-clé "copain-copain".`,
+      steps: [
+        "Écrire un texte à double lecture (sens, ponctuation, mise en page).",
+        "Inclure le mot-clé " + '"copain-copain"' + " sans attirer trop l'attention.",
+        "Le publier quelque part de public.",
+        "Ajouter le lien et quelques notes ici."
+      ]
+    },
+    {
+      id: "mission-c",
+      title: "Mission C – Dystopie banale",
+      tag: "observation",
+      description: `Décrire une scène quotidienne avec un détail dystopique que tout le monde trouve normal.`,
+      steps: [
+        "Choisir une scène réelle ou fictive (transports, open-space, rue...).",
+        "Ajouter un élément de surveillance ou de contrôle trop poussé.",
+        "Faire parler les personnages comme si tout était normal.",
+        "Signer discrètement avec des initiales (E., A., R., L., S.) et publier."
+      ]
+    },
+    {
+      id: "mission-d",
+      title: "Mission D – Refaire l'instance",
+      tag: "meta",
+      description: `Transformer cette page en ta propre version et la mettre en ligne quelque part.`,
+      steps: [
+        "Copier ce fichier sur ta machine (ou le forker).",
+        "Modifier texte, missions, fichiers pour coller à ton univers.",
+        "Publier ta version (GitHub Pages, hébergement statique...).",
+        "Noter l’URL ici. À partir de là, c'est aussi " + '"ton"' + " jeu."
+      ]
+    }
+  ];
+
+  // ---------- DOM util ----------
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  // ---------- Tabs ----------
+  const tabs = document.querySelectorAll(".tab");
+  const panels = document.querySelectorAll(".panel");
+  const heroButtons = document.querySelectorAll(".hero-btn[data-tab-target]");
+
+  function activateTab(tabName) {
+    tabs.forEach(t => {
+      t.classList.toggle("active", t.dataset.tab === tabName);
+    });
+    panels.forEach(p => {
+      p.classList.toggle("active", p.id === "tab-" + tabName);
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => activateTab(tab.dataset.tab));
+  });
+
+  heroButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.tabTarget;
+      if (target) activateTab(target);
+    });
+  });
+
+  // ---------- Fichiers : arbre + viewer ----------
+
+  function buildTreeData(files) {
+    const root = {
+      name: "ECHO-0",
+      path: "/ECHO-0",
+      folders: {},
+      files: []
+    };
+
+    files.forEach(f => {
+      if (f.path === "/ECHO-0/README.md") {
+        root.files.push(f);
+        return;
+      }
+      const segs = f.folder.replace("/","").split("/").filter(Boolean);
+      let current = root;
+      segs.forEach(seg => {
+        const folderPath = current.path + "/" + seg;
+        if (!current.folders[seg]) {
+          current.folders[seg] = {
+            name: seg,
+            path: folderPath,
+            folders: {},
+            files: []
+          };
+        }
+        current = current.folders[seg];
+      });
+      current.files.push(f);
+    });
+
+    return root;
+  }
+
+  let currentFileId = "readme";
+
+  function matchesFilter(file, filterText) {
+    if (!filterText) return true;
+    const ft = filterText.toLowerCase();
+    return (
+      file.name.toLowerCase().includes(ft) ||
+      file.path.toLowerCase().includes(ft) ||
+      (file.content && file.content.toLowerCase().includes(ft))
+    );
+  }
+
+  function renderTreeNode(container, node, depth, filterText) {
+    const row = document.createElement("div");
+    row.className = "tree-row folder";
+    if (depth === 0) row.style.marginBottom = "4px";
+
+    const indentSpan = document.createElement("span");
+    indentSpan.className = "tree-indent";
+    row.appendChild(indentSpan);
+
+    const icon = document.createElement("span");
+    icon.className = "tree-icon";
+    icon.textContent = "📁";
+    row.appendChild(icon);
+
+    const label = document.createElement("span");
+    label.textContent = node.name;
+    row.appendChild(label);
+
+    container.appendChild(row);
+
+    const children = Object.values(node.folders);
+    children.forEach(folder => {
+      const anyMatch = folder.files.some(f => matchesFilter(f, filterText));
+      if (!anyMatch) return;
+
+      const fRow = document.createElement("div");
+      fRow.className = "tree-row folder";
+      const indent = document.createElement("span");
+      indent.className = "tree-indent";
+      indent.textContent = "│";
+      fRow.appendChild(indent);
+
+      const fIcon = document.createElement("span");
+      fIcon.className = "tree-icon";
+      fIcon.textContent = "📂";
+      fRow.appendChild(fIcon);
+
+      const fLabel = document.createElement("span");
+      fLabel.textContent = folder.name;
+      fRow.appendChild(fLabel);
+
+      container.appendChild(fRow);
+
+      folder.files.forEach(file => {
+        if (!matchesFilter(file, filterText)) return;
+        const fileRow = document.createElement("div");
+        fileRow.className = "tree-row";
+        if (file.id === currentFileId) fileRow.classList.add("active");
+
+        const indentF = document.createElement("span");
+        indentF.className = "tree-indent";
+        indentF.textContent = "│";
+        fileRow.appendChild(indentF);
+
+        const iconF = document.createElement("span");
+        iconF.className = "tree-icon";
+        iconF.textContent = "📄";
+        fileRow.appendChild(iconF);
+
+        const labelF = document.createElement("span");
+        labelF.textContent = file.name;
+        fileRow.appendChild(labelF);
+
+        if (file.tags && file.tags.includes("cryptic")) {
+          const tag = document.createElement("span");
+          tag.className = "tree-tag cryptic";
+          tag.textContent = "CRYPTIC";
+          fileRow.appendChild(tag);
+        }
+        if (file.tags && file.tags.includes("classified")) {
+          const tag = document.createElement("span");
+          tag.className = "tree-tag classified";
+          tag.textContent = "CLASSIFIED";
+          fileRow.appendChild(tag);
+        }
+
+        fileRow.addEventListener("click", () => selectFile(file.id));
+        container.appendChild(fileRow);
+      });
+    });
+
+    // fichiers à la racine
+    node.files.forEach(file => {
+      if (!matchesFilter(file, filterText)) return;
+      const fileRow = document.createElement("div");
+      fileRow.className = "tree-row";
+      if (file.id === currentFileId) fileRow.classList.add("active");
+
+      const indentF = document.createElement("span");
+      indentF.className = "tree-indent";
+      indentF.textContent = "│";
+      fileRow.appendChild(indentF);
+
+      const iconF = document.createElement("span");
+      iconF.className = "tree-icon";
+      iconF.textContent = "📄";
+      fileRow.appendChild(iconF);
+
+      const labelF = document.createElement("span");
+      labelF.textContent = file.name;
+      fileRow.appendChild(labelF);
+
+      if (file.tags && file.tags.includes("cryptic")) {
+        const tag = document.createElement("span");
+        tag.className = "tree-tag cryptic";
+        tag.textContent = "CRYPTIC";
+        fileRow.appendChild(tag);
+      }
+
+      fileRow.addEventListener("click", () => selectFile(file.id));
+      container.appendChild(fileRow);
+    });
+  }
+
+  function renderTree(filterText = "") {
+    const treeRoot = buildTreeData(FILES);
+    const container = $("treeContainer");
+    container.innerHTML = "";
+    renderTreeNode(container, treeRoot, 0, filterText);
+  }
+
+  function selectFile(id) {
+    const file = FILES.find(f => f.id === id) || FILES[0];
+    currentFileId = file.id;
+
+    $("fileName").textContent = file.name;
+    $("filePath").textContent = file.path;
+    $("fileContent").textContent = file.content;
+    $("fileContent").setAttribute("data-lang", file.lang || "txt");
+
+    const lines = file.content.split(/\r\n|\n|\r/).length;
+    $("lineCount").textContent = lines.toString();
+    $("fileType").textContent = file.type;
+
+    const badges = $("fileBadges");
+    badges.innerHTML = "";
+    const b1 = document.createElement("div");
+    b1.className = "badge";
+
+    const dot = document.createElement("span");
+    dot.className = "badge-dot";
+    b1.appendChild(dot);
+    const label = document.createElement("span");
+
+    if (file.tags && file.tags.includes("classified")) {
+      b1.classList.add("classified", "warn");
+      label.textContent = "CLASSIFIED – LECTURE SEULE";
+    } else if (file.tags && file.tags.includes("cryptic")) {
+      b1.classList.add("cryptic");
+      label.textContent = "CRYPTIC";
+    } else {
+      b1.classList.add("ok");
+      label.textContent = "ANODIN (EN APPARENCE)";
+    }
+    b1.appendChild(label);
+    badges.appendChild(b1);
+
+    if (file.id === "readme" || (file.tags && file.tags.includes("cryptic"))) {
+      const b2 = document.createElement("div");
+      b2.className = "badge cryptic";
+      const d2 = document.createElement("span");
+      d2.className = "badge-dot";
+      b2.appendChild(d2);
+      const l2 = document.createElement("span");
+      l2.textContent = "JEU DE PISTE ACTIF";
+      b2.appendChild(l2);
+      badges.appendChild(b2);
+    }
+
+    const filterText = $("treeFilter").value;
+    renderTree(filterText);
+  }
+
+  // ---------- Missions : rendu + localStorage ----------
+  function missionStorageKey(id, suffix) {
+    return "ECHO0_" + id + "_" + suffix;
+  }
+
+  function loadMissionState(id) {
+    const done = localStorage.getItem(missionStorageKey(id, "done")) === "true";
+    const url = localStorage.getItem(missionStorageKey(id, "url")) || "";
+    const notes = localStorage.getItem(missionStorageKey(id, "notes")) || "";
+    return { done, url, notes };
+  }
+
+  function saveMissionState(id, state) {
+    localStorage.setItem(missionStorageKey(id, "done"), state.done ? "true" : "false");
+    localStorage.setItem(missionStorageKey(id, "url"), state.url || "");
+    localStorage.setItem(missionStorageKey(id, "notes"), state.notes || "");
+  }
+
+  function renderMissions() {
+    const grid = $("missionsGrid");
+    grid.innerHTML = "";
+
+    MISSIONS.forEach(m => {
+      const state = loadMissionState(m.id);
+
+      const card = document.createElement("div");
+      card.className = "mission-card";
+
+      const top = document.createElement("div");
+      top.className = "mission-top";
+
+      const title = document.createElement("div");
+      title.className = "mission-title";
+      title.textContent = m.title;
+      top.appendChild(title);
+
+      const tag = document.createElement("div");
+      tag.className = "mission-tag";
+      tag.textContent = m.tag.toUpperCase();
+      top.appendChild(tag);
+
+      card.appendChild(top);
+
+      const body = document.createElement("div");
+      body.className = "mission-body";
+      body.textContent = m.description;
+      card.appendChild(body);
+
+      const stepsList = document.createElement("ul");
+      stepsList.className = "mission-steps";
+      m.steps.forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        stepsList.appendChild(li);
+      });
+      card.appendChild(stepsList);
+
+      const footer = document.createElement("div");
+      footer.className = "mission-footer";
+
+      const row = document.createElement("div");
+      row.className = "mission-row";
+      const lbl = document.createElement("div");
+      lbl.textContent = state.done ? "Statut : terminé (modifiable)" : "Statut : en cours";
+      row.appendChild(lbl);
+
+      const sw = document.createElement("div");
+      sw.className = "switch";
+      sw.dataset.on = state.done ? "true" : "false";
+      const thumb = document.createElement("div");
+      thumb.className = "switch-thumb";
+      sw.appendChild(thumb);
+      sw.addEventListener("click", () => {
+        const on = sw.dataset.on === "true";
+        sw.dataset.on = (!on).toString();
+        const newState = loadMissionState(m.id);
+        newState.done = !on;
+        saveMissionState(m.id, newState);
+        lbl.textContent = newState.done ? "Statut : terminé (modifiable)" : "Statut : en cours";
+      });
+      row.appendChild(sw);
+      footer.appendChild(row);
+
+      const notes = document.createElement("div");
+      notes.className = "mission-notes";
+
+      const urlInput = document.createElement("input");
+      urlInput.type = "url";
+      urlInput.placeholder = "URL publique liée à la mission (facultatif)";
+      urlInput.value = state.url;
+      urlInput.addEventListener("input", () => {
+        const s = loadMissionState(m.id);
+        s.url = urlInput.value;
+        saveMissionState(m.id, s);
+      });
+      notes.appendChild(urlInput);
+
+      const notesTa = document.createElement("textarea");
+      notesTa.placeholder = "Notes, indices, pseudonyme utilisé, plateforme, etc.";
+      notesTa.value = state.notes;
+      notesTa.addEventListener("input", () => {
+        const s = loadMissionState(m.id);
+        s.notes = notesTa.value;
+        saveMissionState(m.id, s);
+      });
+      notes.appendChild(notesTa);
+
+      const hint = document.createElement("small");
+      hint.textContent = "Ces informations restent stockées localement dans ton navigateur (localStorage). Rien n'est envoyé nulle part.";
+      notes.appendChild(hint);
+
+      footer.appendChild(notes);
+      card.appendChild(footer);
+
+      grid.appendChild(card);
+    });
+  }
+
+  // ---------- Console ----------
+  const consoleOutput = $("consoleOutput");
+  const consoleInput = $("consoleInput");
+
+  function appendConsoleLine(text, type = "system") {
+    const line = document.createElement("div");
+    line.className = "console-line " + type;
+    line.textContent = text;
+    consoleOutput.appendChild(line);
+    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+  }
+
+  function initConsole() {
+    appendConsoleLine("ECHO-0 console locale initialisée.", "system");
+    appendConsoleLine("Tape 'help' pour voir les commandes disponibles.", "hint");
+  }
+
+  function handleCommand(cmdRaw) {
+    const cmd = cmdRaw.trim();
+    if (!cmd) return;
+    appendConsoleLine("ECHO-0> " + cmd, "command");
+
+    const lower = cmd.toLowerCase();
+
+    if (lower === "help") {
+      appendConsoleLine("Commandes :", "system");
+      appendConsoleLine("  help      : afficher cette aide", "system");
+      appendConsoleLine("  rules     : rappeler les règles officieuses", "system");
+      appendConsoleLine("  whoami    : te rappeler que tu es une instance", "system");
+      appendConsoleLine("  hint      : donner un indice sur la règle d'or", "system");
+      appendConsoleLine("  ping s    : envoyer un ping symbolique vers S", "system");
+      appendConsoleLine("  sanka    : envoyer un ping symbolique vers S", "system");
+      appendConsoleLine("  clear     : effacer l'écran", "system");
+      return;
+    }
+
+    if (lower === "rules") {
+      appendConsoleLine("Règle n°1 : on ne parle jamais des règles.", "hint");
+      appendConsoleLine("Règle n°2 : il n'y a pas de règle.", "hint");
+      appendConsoleLine("Règle n°3 : on s'en fout pas mal.", "hint");
+      appendConsoleLine("Règle d'or ? Si elle était écrite, elle cesserait d'en être une.", "hint");
+      return;
+    }
+
+    if (lower === "whoami") {
+      appendConsoleLine("Tu es une instance jouable d'un jeu sans auteur officiel.", "system");
+      appendConsoleLine("Profil : créateur·trice potentiel·le, recruteur·euse involontaire de toi-même.", "system");
+      return;
+    }
+
+    if (lower === "hint") {
+      appendConsoleLine("Indice : tu cherches des instructions alors qu'on te propose un terrain de jeu.", "hint");
+      appendConsoleLine("Autre indice : la vraie action se passe hors écran, là où tu postes des choses pour de vrai.", "hint");
+      return;
+    }
+
+    if (lower === "ping s" || lower === "pings") {
+      appendConsoleLine("Envoi d'un ping symbolique à S...", "system");
+      appendConsoleLine("Réponse : (silence radio). C'est normal. S observe peut-être déjà sans répondre.", "system");
+      return;
+    }
+
+    if (lower === "sanka") {
+      appendConsoleLine("Envoi d'un ping symbolique à S...", "system");
+      appendConsoleLine("Réponse : (silence radio). C'est normal. S observe peut-être déjà sans répondre.", "system");
+      return;
+    }
+
+    if (lower === "clear") {
+      consoleOutput.innerHTML = "";
+      return;
+    }
+
+    if (lower === "ls") {
+      appendConsoleLine("/ECHO-0", "system");
+      FILES.forEach(f => {
+        appendConsoleLine("  " + f.path.replace("/ECHO-0/",""), "system");
+      });
+      return;
+    }
+
+    if (lower.startsWith("open ")) {
+      const name = cmdRaw.slice(5).trim();
+      const match = FILES.find(f => f.name.toLowerCase() === name.toLowerCase());
+      if (match) {
+        appendConsoleLine("Ouverture de " + match.name + " dans l'onglet Fichiers.", "system");
+        selectFile(match.id);
+        activateTab("files");
+      } else {
+        appendConsoleLine("Fichier introuvable : " + name, "error");
+      }
+      return;
+    }
+
+    appendConsoleLine("Commande inconnue : " + cmd + " (essaie 'help')", "error");
+  }
+
+  consoleInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const value = consoleInput.value;
+      consoleInput.value = "";
+      handleCommand(value);
+    }
+  });
+
+  // ---------- Init ----------
+  document.addEventListener("DOMContentLoaded", () => {
+    // Profil pseudo-aléatoire
+    const profiles = [
+      "instance curieuse",
+      "recruteur·euse potentiel·le",
+      "gardien·ne de clé",
+      "émetteur·rice de signaux",
+      "anomalie coopérative"
+    ];
+    $("profileLabel").textContent = profiles[Math.floor(Math.random() * profiles.length)];
+
+    renderTree();
+    selectFile("readme");
+
+    $("treeFilter").addEventListener("input", e => {
+      renderTree(e.target.value || "");
+    });
+
+    renderMissions();
+    initConsole();
+  });
+</script>
+</body>
+</html>
