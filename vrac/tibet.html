@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Licorne & Ballon · Veux-tu vraiment jouer ?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #130926;
+      --bg-soft: #231339;
+      --card: #ffffff;
+      --accent: #ff6ad5;
+      --accent-soft: #ffe66a;
+      --accent-alt: #71f6ff;
+      --text-main: #222222;
+      --text-muted: #666666;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow: 0 16px 40px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, #ff6ad5 0, transparent 55%),
+        radial-gradient(circle at bottom right, #71f6ff 0, transparent 55%),
+        linear-gradient(135deg, #130926, #231339);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      color: #fff;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 1rem 1rem 0.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .confetti {
+      position: absolute;
+      inset: -30px;
+      pointer-events: none;
+      opacity: 0.12;
+      background-image:
+        radial-gradient(circle at 10% 20%, #ff6ad5 0 3px, transparent 3px),
+        radial-gradient(circle at 80% 30%, #71f6ff 0 3px, transparent 3px),
+        radial-gradient(circle at 30% 80%, #ffe66a 0 3px, transparent 3px),
+        radial-gradient(circle at 60% 70%, #9b5cff 0 3px, transparent 3px);
+      background-size: 80px 80px;
+      mix-blend-mode: multiply;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+    .bubble {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff6ad5, #ffe66a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    }
+    h1 {
+      font-size: 1rem;
+      line-height: 1.3;
+      color: var(--text-main);
+    }
+    .subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.7rem;
+      line-height: 1.4;
+    }
+
+    /* Difficulté */
+    .difficulty {
+      margin-bottom: 0.7rem;
+      border-radius: var(--radius-md);
+      background: #faf5ff;
+      padding: 0.4rem 0.5rem;
+    }
+    .difficulty-label {
+      font-size: 0.7rem;
+      color: #7a5ca8;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .difficulty-buttons {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+    .diff-btn {
+      border-radius: 999px;
+      border: 1px solid #e0ccff;
+      padding: 0.22rem 0.6rem;
+      font-size: 0.7rem;
+      background: #ffffff;
+      color: #7a5ca8;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: 0.1s ease-out;
+    }
+    .diff-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #e0ccff;
+    }
+    .diff-btn.active {
+      background: linear-gradient(135deg, #ff6ad5, #ffe66a);
+      border-color: transparent;
+      color: #2d104b;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    }
+    .diff-btn.active .diff-dot {
+      background: #2d104b;
+    }
+
+    /* Question */
+    .question-block {
+      border-radius: var(--radius-md);
+      background: #fdfbff;
+      padding: 0.6rem 0.6rem 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .q-progress {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .q-title {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+    }
+    .q-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .option-btn {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e3e3f0;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.78rem;
+      background: #ffffff;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: 0.1s ease-out;
+      text-align: left;
+    }
+    .option-emoji {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .option-text-main {
+      font-weight: 600;
+    }
+    .option-text-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .option-btn:hover {
+      border-color: var(--accent-soft);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
+    }
+    .option-btn.selected {
+      border-color: var(--accent);
+      box-shadow: 0 5px 14px rgba(255,106,213,0.3);
+      background: linear-gradient(135deg, #fff2fb, #fffbe3);
+    }
+
+    .progress-bar {
+      margin-top: 0.3rem;
+      height: 4px;
+      border-radius: 999px;
+      background: #ece8ff;
+      overflow: hidden;
+    }
+    .progress-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff6ad5, #ffe66a, #71f6ff);
+      transition: width 0.2s ease-out;
+    }
+
+    .actions {
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.3rem;
+    }
+    .btn {
+      border-radius: 999px;
+      border: 1px solid #e0e0f0;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.75rem;
+      background: #ffffff;
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: 0.08s ease-out;
+    }
+    .btn span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #d0c6ff;
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, #ff6ad5, #ffe66a);
+      border-color: transparent;
+      color: #2d104b;
+    }
+    .btn.primary span.dot {
+      background: #2d104b;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+    }
+    .btn:hover:not(:disabled) {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transform: translateY(-1px);
+    }
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    /* Résultat */
+    .result {
+      border-radius: var(--radius-md);
+      background: #fdfbff;
+      padding: 0.7rem 0.6rem 0.6rem;
+      margin-top: 0.3rem;
+    }
+    .result-head {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+    .result-emoji {
+      font-size: 1.6rem;
+    }
+    .result-title {
+      font-size: 0.92rem;
+      color: var(--text-main);
+      font-weight: 700;
+    }
+    .result-tagline {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .result-text {
+      font-size: 0.76rem;
+      color: var(--text-main);
+      line-height: 1.5;
+      margin-bottom: 0.4rem;
+    }
+    .result-links {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .result-links strong {
+      color: #444;
+    }
+    .result-links ul {
+      margin: 0.25rem 0 0;
+      padding-left: 1rem;
+    }
+
+    footer {
+      margin-top: 0.4rem;
+      text-align: center;
+      font-size: 0.68rem;
+      color: #d4cff5;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="card">
+    <div class="confetti"></div>
+    <div class="card-inner">
+      <header>
+        <div class="bubble">🦄</div>
+        <div>
+          <h1>Test Licorne & Ballon</h1>
+          <p class="subtitle">
+            Petit jeu pour savoir si tu veux monter dans l’aventure  
+            ou si tu préfères garder une distance de sécurité avec les licornes organisées.
+          </p>
+        </div>
+      </header>
+
+      <section class="difficulty">
+        <div class="difficulty-label">Choisis ton niveau de sérieux</div>
+        <div class="difficulty-buttons">
+          <button class="diff-btn active" data-level="soft">
+            <span class="diff-dot"></span> Ballon tranquille 🎈
+          </button>
+          <button class="diff-btn" data-level="medium">
+            <span class="diff-dot"></span> Licorne en balade 🦄
+          </button>
+          <button class="diff-btn" data-level="hard">
+            <span class="diff-dot"></span> Boss final cynical 💣
+          </button>
+        </div>
+      </section>
+
+      <section class="question-block" id="question-block">
+        <!-- Contenu injecté en JS -->
+      </section>
+
+      <div class="actions">
+        <button class="btn" id="btn-back">
+          <span class="dot"></span> Retour
+        </button>
+        <button class="btn primary" id="btn-next" disabled>
+          <span class="dot"></span> Suivant
+        </button>
+      </div>
+
+      <footer>
+        Ce test ne t’engage à rien. Même pas à aimer les licornes.  
+        Il aide juste à savoir si tu veux jouer avec nous (ou pas).
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Questions ultra simples, 3 types de réponses :
+  // YAY  = prêt à monter dans l’aventure
+  // MAYBE = curieux mais prudent
+  // NOPE  = pas pour l’instant (et c’est ok)
+  const QUESTIONS = [
+    {
+      title: "1. Quand tu vois un ‘grand projet un peu chelou’",
+      subtitle: "Nouveau truc participatif, plein de belles promesses, personne ne comprend vraiment tout.",
+      options: [
+        {
+          type: "YAY",
+          emoji: "🎉",
+          main: "Je me dis « pourquoi pas », je veux voir de l’intérieur.",
+          sub: "Au pire, ça fera une bonne histoire."
+        },
+        {
+          type: "MAYBE",
+          emoji: "👀",
+          main: "Je garde ça en tête, mais je ne saute pas dedans tout de suite.",
+          sub: "D’abord, je regarde comment ça tourne pour les autres."
+        },
+        {
+          type: "NOPE",
+          emoji: "🧯",
+          main: "Je m’éloigne doucement en faisant semblant de ne pas avoir vu.",
+          sub: "Les projets chelous, j’ai déjà donné."
+        }
+      ]
+    },
+    {
+      title: "2. On te propose un jeu avec des niveaux, des tests, des docs",
+      subtitle: "Parfois fun, parfois chiant, parfois utile, parfois juste… bizarre.",
+      options: [
+        {
+          type: "YAY",
+          emoji: "🕹️",
+          main: "Je veux bien tester, surtout si on peut arrêter quand on veut.",
+          sub: "Tant qu’on ne me vend pas ça comme magique."
+        },
+        {
+          type: "MAYBE",
+          emoji: "📎",
+          main: "Je veux d’abord comprendre à quoi ça sert concrètement.",
+          sub: "Pas juste ‘pour la gamification’, merci bien."
+        },
+        {
+          type: "NOPE",
+          emoji: "😴",
+          main: "J’ai déjà mon quota de tests, quizz et formulaires.",
+          sub: "Je veux lire un résumé, pas jouer un RPG administratif."
+        }
+      ]
+    },
+    {
+      title: "3. Les licornes et les ballons",
+      subtitle: "Tout le monde parle de ‘fun’, de ‘co-création’, de ‘communauté’…",
+      options: [
+        {
+          type: "YAY",
+          emoji: "🦄",
+          main: "J’aime bien les licornes, même quand elles sont un peu cassées.",
+          sub: "Je peux gérer le kawaii + le cynisme."
+        },
+        {
+          type: "MAYBE",
+          emoji: "🎈",
+          main: "Les ballons c’est sympa, mais je veux voir ce qu’il y a derrière la déco.",
+          sub: "S’il n’y a que du vernis, je me barre."
+        },
+        {
+          type: "NOPE",
+          emoji: "🪓",
+          main: "Si ça fait trop ‘licorne corporate’, ça me donne des boutons.",
+          sub: "Je préfère qu’on soit honnête sur le côté galère."
+        }
+      ]
+    },
+    {
+      title: "4. Ton énergie dispo en ce moment",
+      subtitle: "On parle de ton vrai stock de cuillères, pas de ton profil LinkedIn.",
+      options: [
+        {
+          type: "YAY",
+          emoji: "⚡",
+          main: "J’ai un peu d’énergie pour tester un truc à mon rythme.",
+          sub: "Pas tous les jours, mais assez pour une expérience."
+        },
+        {
+          type: "MAYBE",
+          emoji: "🌙",
+          main: "Je suis fatigué·e, mais j’aime bien avoir un petit truc à suivre en douceur.",
+          sub: "Mode flâneur, pas guerre totale."
+        },
+        {
+          type: "NOPE",
+          emoji: "🧘",
+          main: "Franchement, je suis en mode survie, pas en mode ‘aventure épique’.",
+          sub: "Si je participe, ce sera en fantôme."
+        }
+      ]
+    },
+    {
+      title: "5. Si cette aventure était un jeu vidéo",
+      subtitle: "Avec des niveaux, des choix, des boss et des passages chiants.",
+      options: [
+        {
+          type: "YAY",
+          emoji: "🏆",
+          main: "Je jouerais bien en mode histoire, avec possibilité de rage-quit.",
+          sub: "Et si ça me plaît, je passe en mode plus corsé."
+        },
+        {
+          type: "MAYBE",
+          emoji: "📖",
+          main: "Je regarderais d’abord un ‘let’s play’ avant d’acheter la manette.",
+          sub: "Je veux savoir dans quoi je mets mes neurones."
+        },
+        {
+          type: "NOPE",
+          emoji: "🚪",
+          main: "Je laisse les autres jouer et je passe voir plus tard si ça vaut le coup.",
+          sub: "Je garde ma sortie de secours à portée de main."
+        }
+      ]
+    }
+  ];
+
+  const questionBlock = document.getElementById('question-block');
+  const btnBack = document.getElementById('btn-back');
+  const btnNext = document.getElementById('btn-next');
+  const diffButtons = document.querySelectorAll('.diff-btn');
+
+  let currentIndex = 0;
+  let selectedOptionIndex = null;
+  let scores = { YAY: 0, MAYBE: 0, NOPE: 0 };
+  let level = 'soft'; // soft / medium / hard
+
+  function renderQuestion() {
+    const q = QUESTIONS[currentIndex];
+    selectedOptionIndex = null;
+
+    const total = QUESTIONS.length;
+    const progressPercent = ((currentIndex) / total) * 100;
+
+    questionBlock.innerHTML = `
+      <div class="q-progress">
+        <span>Question ${currentIndex + 1} / ${total}</span>
+        <span>${levelLabel()}</span>
+      </div>
+      <div class="q-title">${q.title}</div>
+      <div class="q-sub">${q.subtitle}</div>
+      <div class="options">
+        ${q.options.map((opt, i) => `
+          <button class="option-btn" data-index="${i}">
+            <div class="option-emoji">${opt.emoji}</div>
+            <div>
+              <div class="option-text-main">${opt.main}</div>
+              <div class="option-text-sub">${opt.sub}</div>
+            </div>
+          </button>
+        `).join('')}
+      </div>
+      <div class="progress-bar">
+        <div class="progress-inner" style="width:${progressPercent}%;"></div>
+      </div>
+    `;
+
+    btnNext.textContent = (currentIndex === total - 1) ? "Voir mon résultat" : "Suivant";
+    btnNext.disabled = true;
+    btnBack.disabled = (currentIndex === 0);
+
+    questionBlock.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        questionBlock.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedOptionIndex = parseInt(btn.getAttribute('data-index'), 10);
+        btnNext.disabled = false;
+      });
+    });
+  }
+
+  function levelLabel() {
+    if (level === 'soft') return "Mode ballon tranquille";
+    if (level === 'medium') return "Mode licorne en balade";
+    return "Mode boss final cynical";
+  }
+
+  function computeResult() {
+    // Décider de la tendance principale
+    const yay = scores.YAY;
+    const maybe = scores.MAYBE;
+    const nope = scores.NOPE;
+    const maxScore = Math.max(yay, maybe, nope);
+    let main;
+
+    if (yay === maxScore && yay > 0) main = 'YAY';
+    else if (maybe === maxScore && maybe > 0) main = 'MAYBE';
+    else if (nope === maxScore && nope > 0) main = 'NOPE';
+    else main = 'MAYBE'; // cas neutre
+
+    // Texte en fonction du résultat + niveau choisi
+    let emoji, title, tagline, text, links;
+
+    if (main === 'YAY') {
+      emoji = "🦄🎈";
+      title = "Tu es prêt·e pour l’aventure (avec lucidité)";
+      tagline = "Licorne fonctionnelle, cinique mais partante.";
+      text = (level === 'hard')
+        ? "Tu peux clairement encaisser un mode plus corsé : docs, tests, petites missions, un peu de chaos organisé. Tant qu’on ne te prend pas pour un pigeon rose, tu es prêt·e à jouer sérieusement."
+        : "Tu as envie de tester, sans te faire d’illusions magiques. Tu peux rejoindre l’aventure à ton rythme, dire stop quand tu veux, et participer à fabriquer quelque chose d’utile (et un peu bancal).";
+      links = `
+        <ul>
+          <li><strong>Option 1 :</strong> Rejoindre le jeu complet et tester les prochains niveaux.</li>
+          <li><strong>Option 2 :</strong> Observer un peu, puis choisir une petite mission de test.</li>
+          <li><strong>Option 3 :</strong> Garder le lien pour plus tard, mais rester en veille.</li>
+        </ul>
+      `;
+    } else if (main === 'NOPE') {
+      emoji = "🧱🦄";
+      title = "Pas le moment, et c’est respectable";
+      tagline = "Licorne en RTT, ballon percé assumé.";
+      text = "Tu as déjà ton quota de projets, de tests ou de galères. L’idée d’une aventure de plus te fatigue plus qu’elle ne t’excite. Ce n’est pas un problème : parfois, la décision la plus saine, c’est de ne pas embarquer.";
+      links = `
+        <ul>
+          <li><strong>Option 1 :</strong> Rester spectateur·ice complet, sans engagement.</li>
+          <li><strong>Option 2 :</strong> Revenir un jour où tu auras plus d’énergie (ou plus de colère à canaliser).</li>
+          <li><strong>Option 3 :</strong> Partager ce test à quelqu’un que ça pourrait amuser / intéresser.</li>
+        </ul>
+      `;
+    } else {
+      emoji = "🎈🤨";
+      title = "Curieux·se mais prudent·e";
+      tagline = "Ballon méfiant, licorne en veille.";
+      text = "Tu n’es pas fermé·e, mais tu veux comprendre à quoi ça sert, combien ça prend d’énergie, et qui tient vraiment la boutique. Tu es le profil parfait pour tester sans te laisser embobiner : observateur·ice actif·ve.";
+      links = `
+        <ul>
+          <li><strong>Option 1 :</strong> Demander d’abord un aperçu clair avant de te lancer à fond.</li>
+          <li><strong>Option 2 :</strong> Entrer dans l’aventure en mode ‘flâneur’ : une étape à la fois.</li>
+          <li><strong>Option 3 :</strong> Te réserver un droit de veto permanent : tu peux quitter le jeu dès que ce n’est plus aligné avec toi.</li>
+        </ul>
+      `;
+    }
+
+    questionBlock.innerHTML = `
+      <div class="result">
+        <div class="result-head">
+          <div class="result-emoji">${emoji}</div>
+          <div>
+            <div class="result-title">${title}</div>
+            <div class="result-tagline">${tagline}</div>
+          </div>
+        </div>
+        <div class="result-text">
+          ${text}
+        </div>
+        <div class="result-links">
+          <strong>Concrètement, tu peux :</strong>
+          ${links}
+          <p style="margin-top:0.35rem;">
+            Dans la vraie vie, ça pourra devenir : des liens vers des pages de présentation,  
+            un bouton “Je veux participer”, ou juste un “Merci, mais pas pour moi (pour l’instant)”.
+          </p>
+        </div>
+      </div>
+    `;
+
+    btnBack.disabled = false;
+    btnNext.textContent = "Recommencer";
+    btnNext.disabled = false;
+  }
+
+  // Navigation
+  btnNext.addEventListener('click', () => {
+    const total = QUESTIONS.length;
+
+    // Si on est en mode résultat -> reset
+    if (currentIndex >= total) {
+      currentIndex = 0;
+      scores = { YAY: 0, MAYBE: 0, NOPE: 0 };
+      renderQuestion();
+      return;
+    }
+
+    if (selectedOptionIndex === null) return;
+    const q = QUESTIONS[currentIndex];
+    const chosen = q.options[selectedOptionIndex];
+    scores[chosen.type]++;
+
+    if (currentIndex === total - 1) {
+      currentIndex = total;
+      computeResult();
+    } else {
+      currentIndex++;
+      renderQuestion();
+    }
+  });
+
+  btnBack.addEventListener('click', () => {
+    if (currentIndex === 0) return;
+
+    const total = QUESTIONS.length;
+    if (currentIndex >= total) {
+      // Revenir à la dernière question
+      currentIndex = total - 1;
+      renderQuestion();
+      return;
+    }
+
+    // On recule d'une question & on retire le score précédent
+    // (simple : on ne garde pas l’historique précis, mais pour ce jeu c’est suffisant
+    // si on fait juste "recommencer" pour changer la vraie réponse).
+    currentIndex--;
+    renderQuestion();
+  });
+
+  // Choix du niveau (influence uniquement le ton du résultat)
+  diffButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      diffButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      level = btn.getAttribute('data-level');
+      // On met à jour le label de progression sans casser la question
+      const lbl = document.querySelector('.q-progress span:last-child');
+      if (lbl) lbl.textContent = levelLabel();
+    });
+  });
+
+  // Premier rendu
+  renderQuestion();
+</script>
+</body>
+</html>
