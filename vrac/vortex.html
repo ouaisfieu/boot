@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>vortex.html – Portail général & commandement par mission</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Police lisible -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --accent-1: #38bdf8;
+      --accent-2: #22c55e;
+      --accent-3: #fbbf24;
+      --accent-4: #f97316;
+      --accent-5: #a855f7;
+      --text-main: #f9fafb;
+      --text-muted: #cbd5f5;
+      --border: rgba(148,163,184,0.9);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.3), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(168,85,247,0.25), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.8rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1080px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.96), transparent 60%),
+        var(--card);
+      border-radius: 30px;
+      border: 2px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.95);
+      padding: 1.3rem 1rem 1.9rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.7rem 1.6rem 2.3rem; }
+    }
+
+    .page::before {
+      content: "vortex.html · Portail & commandement par mission";
+      position: absolute;
+      top: 0.4rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+    }
+
+    header {
+      border-bottom: 2px dashed rgba(148,163,184,0.7);
+      padding-bottom: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 999px;
+      padding: 0.22rem 0.7rem;
+      border: 2px solid var(--accent-1);
+      background: #020617;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-1);
+      box-shadow: 0 0 16px rgba(56,189,248,0.8);
+    }
+
+    .tag-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent-1);
+      box-shadow: 0 0 10px rgba(56,189,248,1);
+    }
+
+    h1 {
+      margin-top: 0.5rem;
+      font-size: clamp(2rem, 4.6vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #38bdf8, #22c55e, #fbbf24, #f97316);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.4rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 860px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .chips {
+      margin-top: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 0.22rem 0.7rem;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #020617;
+      color: var(--text-muted);
+    }
+
+    .layout {
+      margin-top: 1.1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 960px) {
+      .layout {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        align-items: flex-start;
+      }
+    }
+
+    section {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.98);
+      padding: 0.9rem 0.9rem 1.1rem;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    section.full {
+      grid-column: 1 / -1;
+    }
+
+    h2 {
+      font-size: 1.02rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    h2 span.icon { font-size: 1.2rem; }
+
+    p {
+      margin-bottom: 0.25rem;
+      line-height: 1.6;
+    }
+
+    ul {
+      margin-left: 1.1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    li { margin-bottom: 0.16rem; }
+
+    .step-list {
+      margin-top: 0.4rem;
+      border-radius: 16px;
+      border: 1px dashed rgba(148,163,184,0.9);
+      background: #020617;
+      padding: 0.5rem 0.7rem;
+      font-size: 0.83rem;
+    }
+
+    .step-item + .step-item {
+      margin-top: 0.35rem;
+      padding-top: 0.35rem;
+      border-top: 1px dashed rgba(148,163,184,0.5);
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .grid {
+      margin-top: 0.5rem;
+      display: grid;
+      grid-template-columns: minmax(0,1fr);
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 700px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      padding: 0.55rem 0.6rem 0.6rem;
+      font-size: 0.83rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.18), transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.98);
+      border-color: var(--accent-1);
+      background: #020617;
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .card-tag {
+      font-size: 0.72rem;
+      padding: 0.09rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      color: rgba(226,232,240,0.9);
+    }
+
+    .card-body {
+      color: var(--text-muted);
+    }
+
+    .card-links {
+      margin-top: 0.2rem;
+      font-size: 0.78rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .card-links a {
+      color: var(--accent-1);
+      text-decoration: none;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      padding: 0.12rem 0.55rem;
+      background: #020617;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      border-radius: 999px;
+      padding: 0.16rem 0.65rem;
+      border: 1px solid rgba(34,197,94,0.9);
+      font-size: 0.78rem;
+      color: #bbf7d0;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.3rem;
+    }
+
+    .pill span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,1);
+    }
+
+    a { color: var(--accent-1); }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+      font-family: monospace;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.7rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.8);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="tag">
+      <span class="tag-dot"></span>
+      <span>VORTEX · Portail de toutes les pages & intention de mission</span>
+    </div>
+    <h1>
+      Bienvenue dans le <span>Vortex</span>
+    </h1>
+    <p class="subtitle">
+      Cette page est le <strong>point de gravité commun</strong> de tout ton kit :
+      tests de recrutement, pages de l’Organisation, Conspi, Sharky, Mastodon, business,
+      clé USB, etc.  
+      Elle explique pour le grand public le principe de <strong>commandement par mission</strong> :
+      on donne une <strong>intention claire</strong>, on propose des <strong>outils</strong>,
+      et chacun·e choisit comment s’en servir.
+    </p>
+    <div class="chips">
+      <div class="chip">🧭 Intention plutôt qu’ordre détaillé</div>
+      <div class="chip">💾 Tout tient sur une clé USB (ou un dossier)</div>
+      <div class="chip">🌀 Cette page = carte du Vortex</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Explication commandement par mission -->
+    <section>
+      <h2><span class="icon">🧭</span> 1. Commandement par mission, c’est quoi ?</h2>
+      <p>
+        Au lieu de dire aux gens <em>exactement</em> quoi faire, le commandement par mission
+        part d’une idée simple :
+      </p>
+      <ul>
+        <li>on donne une <strong>intention claire</strong> (“pourquoi on fait ça”) ;</li>
+        <li>on partage <strong>les limites</strong> (ce qu’on ne veut pas faire) ;</li>
+        <li>on met à disposition <strong>des outils</strong> (tests, tutos, pages, jeux) ;</li>
+        <li>on laisse les personnes décider <strong>comment</strong> elles s’y prennent.</li>
+      </ul>
+      <p>
+        Ici, l’intention de base est :
+      </p>
+      <p style="margin-left:0.6rem; font-style:italic;">
+        “Créer une intelligence citoyenne distribuée, ludique et critique,  
+        que n’importe qui peut s’approprier, répliquer ou détourner
+        à partir d’une simple clé USB, d’un dossier ou d’un site statique.”
+      </p>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-title">Étape A — Comprendre</div>
+          <div>Lire les pages de présentation, les tests, les explications techniques.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-title">Étape B — Se situer</div>
+          <div>Faire les tests de recrutement, les examens, les quizz (Mastodon, symboles, etc.).</div>
+        </div>
+        <div class="step-item">
+          <div class="step-title">Étape C — Agir</div>
+          <div>
+            Choisir : contribuer à cette Organisation, créer sa propre instance, lancer son clonage
+            de kit, ou juste piocher des idées pour un autre projet.
+          </div>
+        </div>
+      </div>
+
+      <div class="pill">
+        <span class="dot"></span>
+        <span>Le Vortex = la carte générale. Chaque autre page = une pièce du puzzle.</span>
+      </div>
+    </section>
+
+    <!-- Comment utiliser le vortex -->
+    <section>
+      <h2><span class="icon">🧪</span> 2. Comment utiliser ce Vortex ?</h2>
+      <p>
+        Tu peux aborder ce kit comme :
+      </p>
+      <ul>
+        <li><strong>candidat·e</strong> qui veut voir si ce délire est fait pour toi ;</li>
+        <li><strong>allié·e</strong> qui veut soutenir l’Organisation (ou en créer une autre) ;</li>
+        <li><strong>concurrent·e / Conspi</strong> qui veut copier, détourner, tester les limites ;</li>
+        <li><strong>curieux·se</strong> qui veut juste comprendre comment tout ça s’articule.</li>
+      </ul>
+      <p>
+        Choisis une des portes d’entrée :
+      </p>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-title">1️⃣ “Je veux voir à quoi je m’engage”</div>
+          <div>Commence par les <strong>tests de recrutement</strong> et les pages de préparation.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-title">2️⃣ “Je veux le mode d’emploi complet”</div>
+          <div>Va voir les <strong>pages techniques</strong> (clé USB, FAQ, tutos, Mastodon, etc.).</div>
+        </div>
+        <div class="step-item">
+          <div class="step-title">3️⃣ “Je veux du lore, du mordor et de la Conspi”</div>
+          <div>
+            Explore les pages <strong>Sharky / Conspi / S.</strong> pour comprendre l’adversaire
+            (et comment le retourner).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cartes de navigation thématique -->
+    <section class="full">
+      <h2><span class="icon">🗂️</span> 3. Les grandes familles de pages (et leurs liens)</h2>
+      <p>
+        Ci-dessous, les pages sont regroupées en grandes familles.  
+        Les noms de fichiers sont indiqués pour que tu puisses les retrouver sur ta clé USB
+        ou dans ton dépôt Git.
+      </p>
+
+      <div class="grid">
+        <!-- Recrutement & tests -->
+        <article class="card">
+          <div class="card-title">
+            <span>Recrutement & tests</span>
+            <span class="card-tag">Candidature & auto-évaluation</span>
+          </div>
+          <div class="card-body">
+            Tout ce qui sert à tester si tu as envie, si tu es prêt·e, et si tu comprends
+            à peu près dans quel genre de bateau tu montes.
+          </div>
+          <div class="card-links">
+            <a href="portail-0.html">portail-0.html – Portail des tests</a>
+            <a href="SAS.html">SAS.html – Sas d’entrée des tests</a>
+            <a href="carte-0.html">carte-0.html – Carte de départ du jeu</a>
+            <a href="phase-0.html">phase-0.html – Phase 0 / mise en condition</a>
+            <a href="test-0.html">test-0.html – Test Obsidian / docs</a>
+            <a href="test-1.html">test-1.html – Test veille citoyenne</a>
+            <a href="exam.html">exam.html – Examen général délirant</a>
+            <a href="exam-topo.html">exam-topo.html – Examen “puissance des symboles”</a>
+            <a href="jalon-0.html">jalon-0.html – Bilan d’étape / jalon</a>
+          </div>
+        </article>
+
+        <!-- L'Organisation & lore -->
+        <article class="card">
+          <div class="card-title">
+            <span>L’Organisation & le lore</span>
+            <span class="card-tag">Univers & contexte</span>
+          </div>
+          <div class="card-body">
+            Les pages qui racontent ce qu’est l’Organisation, ses bureaux, ses organigrammes,
+            ses paradoxes démocratiques et ses clins d’œil.
+          </div>
+          <div class="card-links">
+            <a href="about.html">about.html – À propos du projet</a>
+            <a href="recrutement.html">recrutement.html – Page de recrutement officielle</a>
+            <a href="bureau.html">bureau.html – “Bureau” de l’Organisation</a>
+            <a href="organigramme-obs.html">organigramme-obs.html – Organigramme façon Obsidian</a>
+            <a href="etdonc.html">etdonc.html – Explications additionnelles</a>
+            <a href="power.html">power.html – Cercles de puissance & vision</a>
+            <a href="ultime.html">ultime.html – Page pour les lier toutes</a>
+            <a href="debrief.html">debrief.html – Débrief & quickstart kit</a>
+          </div>
+        </article>
+
+        <!-- Technique, clé USB & autotests tech -->
+        <article class="card">
+          <div class="card-title">
+            <span>Technique, clé USB & usages</span>
+            <span class="card-tag">Kit en dur & bidouille</span>
+          </div>
+          <div class="card-body">
+            Comment tout tient sur une clé USB, comment comprendre les pages, jouer avec
+            le navigateur, les cookies, le localStorage et répliquer ton instance.
+          </div>
+          <div class="card-links">
+            <a href="faq-tech.html">faq-tech.html – FAQ technique grand public</a>
+            <a href="tuto-T999.html">tuto-T999.html – Tuto copie / duplication du kit</a>
+            <a href="brownies-0.html">brownies-0.html – Page embarquée de test</a>
+            <a href="browniz-politik.html">browniz-politik.html – Politique de cookies & copier/coller</a>
+            <a href="mission-1.html">mission-1.html – Jeu des marques & modales</a>
+            <a href="cashback.html">cashback.html – Cashback & contribution</a>
+          </div>
+        </article>
+
+        <!-- Argent, business, Linux, Pomme, Sharky -->
+        <article class="card">
+          <div class="card-title">
+            <span>Argent, modèles & détournements</span>
+            <span class="card-tag">Économie, libre & tentations</span>
+          </div>
+          <div class="card-body">
+            Le versant argent : comment soutenir le projet, copier les modèles du libre,
+            voir ce qu’il ne faut pas faire… et regarder Sharky dans les yeux.
+          </div>
+          <div class="card-links">
+            <a href="cashback.html">cashback.html – Cashback & don 12,50 €/an</a>
+            <a href="linux.html">linux.html – Dossier “économie du libre / Linux”</a>
+            <a href="pomme.html">pomme.html – Scénarios “ce qu’il ne faut pas faire”</a>
+            <a href="sharky.html">sharky.html – Mode argent maximal (si tu le crées)</a>
+            <a href="linux.html">linux.html – Version cartoon pingouins & business libre</a>
+          </div>
+        </article>
+
+        <!-- Mastodon / Fediverse -->
+        <article class="card">
+          <div class="card-title">
+            <span>Mastodon & Fediverse</span>
+            <span class="card-tag">Réseau distribué & mission</span>
+          </div>
+          <div class="card-body">
+            Comment utiliser Mastodon comme rallonge de ton kit : quizz “envie/bénéfices”,
+            paliers d’avancement, et feuille de route vers une éventuelle instance dédiée.
+          </div>
+          <div class="card-links">
+            <a href="mastodon.html">mastodon.html – Quizz envie/bénéfices & paliers</a>
+            <a href="readme.html">readme.html – Roadmap vers une instance Mastodon</a>
+          </div>
+        </article>
+
+        <!-- Conspi, S., Mordor -->
+        <article class="card">
+          <div class="card-title">
+            <span>Conspi, S., Mordor & contre-pouvoirs</span>
+            <span class="card-tag">Adversaires fictifs (mais pas tant)</span>
+          </div>
+          <div class="card-body">
+            Les pages qui explorent la version “Mordor” du projet : la Conspi qui copie tout,
+            S. qui sabote, et les clones de portails façon Yahoo/Yohoo.
+          </div>
+          <div class="card-links">
+            <a href="conspii.html">conspii.html – Site de la Conspi</a>
+            <a href="faq-o0-yohoo.html">faq-o0-yohoo.html – Portail Yohoo de la Conspi</a>
+            <a href="s.html">s.html – Dossier S. / Sauron & sabotage</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Commandement par mission appliqué au kit -->
+    <section class="full">
+      <h2><span class="icon">🧱</span> 4. Commandement par mission appliqué à toi</h2>
+      <p>
+        Tu peux t’approprier ce Vortex de plusieurs façons. Voici quelques exemples de “missions”
+        que tu peux te donner à toi-même, à ton rythme.
+      </p>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-title">Mission 1 – “Je teste si ce projet est pour moi”</div>
+          <div>
+            <ul>
+              <li>Lire <a href="about.html">about.html</a> et <a href="recrutement.html">recrutement.html</a>.</li>
+              <li>Faire au moins un test : <a href="test-0.html">test-0.html</a> ou <a href="test-1.html">test-1.html</a>.</li>
+              <li>Terminer par un passage dans <a href="exam.html">exam.html</a> ou <a href="exam-topo.html">exam-topo.html</a>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-title">Mission 2 – “Je veux mon propre kit sur clé”</div>
+          <div>
+            <ul>
+              <li>Suivre les indications de <a href="tuto-T999.html">tuto-T999.html</a> et <a href="browniz-politik.html">browniz-politik.html</a>.</li>
+              <li>Copier <code>vortex.html</code> et les pages essentielles sur ta clé USB.</li>
+              <li>Adapter les textes à ton contexte (ville, asso, collectif).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-title">Mission 3 – “Je veux lancer ma mini-Organisation”</div>
+          <div>
+            <ul>
+              <li>Étudier <a href="ultime.html">ultime.html</a>, <a href="power.html">power.html</a>, <a href="debrief.html">debrief.html</a>.</li>
+              <li>Décider comment tu finances (voir <a href="cashback.html">cashback.html</a>, <a href="linux.html">linux.html</a>, <a href="pomme.html">pomme.html</a>).</li>
+              <li>Réfléchir à ton rapport aux plateformes (voir <a href="mastodon.html">mastodon.html</a> et <a href="readme.html">readme.html</a>).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-title">Mission 4 – “Je veux comprendre l’adversité (Mordor/Conspi)”</div>
+          <div>
+            <ul>
+              <li>Explorer <a href="conspii.html">conspii.html</a> et <a href="faq-o0-yohoo.html">faq-o0-yohoo.html</a>.</li>
+              <li>Lire <a href="s.html">s.html</a> pour voir les plans de sabotage de S.</li>
+              <li>Imaginer tes propres cartes “Plan de S. / Contre-plan” adaptées à ta réalité.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top:0.5rem;">
+        Le commandement par mission, ici, c’est :
+        <strong>tu choisis ta mission</strong>, tu te sers dans le Vortex,
+        tu adaptes, tu transformes, tu critiques, tu répliques ailleurs.
+      </p>
+    </section>
+  </div>
+
+  <footer>
+    <span>
+      <strong>vortex.html</strong> peut devenir la page d’accueil de ton kit (clé USB, site statique, dépôt),
+      ou être dupliqué et modifié pour d’autres projets proches.
+    </span>
+    <code>vortex.html · portail général · navigation · mission command</code>
+  </footer>
+
+  <div class="badge-corner">
+    VORTEX · HUB DE TOUTES LES PAGES
+  </div>
+</div>
+</body>
+</html>
