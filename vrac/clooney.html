@@ -1,0 +1,867 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Campagne clonée · écolo & PTB en mieux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--
+    Campagne clonée du MR EN MIEUX
+    Version parodique "écolo ENCORE MIEUX" & "PTB EN MIEUX"
+    Univers de jeu / satire politique, non officiel.
+  -->
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --border: #1f2937;
+      --border-soft: #111827;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --text-softer: #6b7280;
+
+      --mr-blue: #0f5fdc;
+      --mr-pink: #fb7185;
+      --ecolo-green: #22c55e;
+      --ecolo-soft: rgba(34, 197, 94, 0.18);
+      --ptb-red: #ef4444;
+      --ptb-soft: rgba(239, 68, 68, 0.18);
+
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.7);
+      --transition-fast: 0.15s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 50%, #000 100%);
+      color: var(--text);
+    }
+
+    a {
+      color: #bfdbfe;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+
+    .topbar {
+      background: linear-gradient(90deg, #16a34a, #22c55e, #22c55e, #ef4444, #b91c1c);
+      color: #f9fafb;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.9);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    @media (min-width: 960px) {
+      .topbar {
+        padding: 10px 18px;
+      }
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-logo-ecolo,
+    .brand-logo-ptb {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.7);
+    }
+
+    .brand-logo-ecolo {
+      background: radial-gradient(circle at 30% 0, #bbf7d0, #22c55e 40%, #166534 100%);
+      color: #022c22;
+    }
+
+    .brand-logo-ptb {
+      background: radial-gradient(circle at 30% 0, #fecaca, #ef4444 40%, #7f1d1d 100%);
+      color: #450a0a;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .topbar-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .clone-banner {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(248, 250, 252, 0.7);
+      background: rgba(15, 23, 42, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .clone-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fde047;
+      box-shadow: 0 0 10px rgba(250, 204, 21, 0.9);
+    }
+
+    .topbar-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 11px;
+    }
+
+    .btn-mini {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(15, 23, 42, 0.7);
+      background: #facc15;
+      color: #111827;
+      padding: 3px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.8);
+    }
+
+    /* LAYOUT PRINCIPAL */
+
+    .layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      padding: 10px;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto 18px;
+    }
+
+    @media (min-width: 1024px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 14px;
+        padding: 16px 18px 20px;
+      }
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .col-header {
+      font-size: 12px;
+      color: var(--text-softer);
+      margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .col-header strong {
+      color: var(--text);
+    }
+
+    /* CARDS GÉNÉRIQUES */
+
+    .card {
+      background: radial-gradient(circle at top left, #020617 0, #020617 60%, #000 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title span.icon {
+      font-size: 16px;
+    }
+
+    .badge {
+      font-size: 10px;
+      border-radius: var(--radius-pill);
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      color: var(--text-softer);
+    }
+
+    .badge-ecolo {
+      border-color: #bbf7d0;
+      color: #bbf7d0;
+      background: var(--ecolo-soft);
+    }
+
+    .badge-ptb {
+      border-color: #fecaca;
+      color: #fecaca;
+      background: var(--ptb-soft);
+    }
+
+    .badge-mrclone {
+      border-color: var(--mr-blue);
+      color: #bfdbfe;
+      background: rgba(59, 130, 246, 0.2);
+    }
+
+    /* FEED STYLE “BOOK” */
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .profile-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow:
+        0 0 0 2px rgba(15, 23, 42, 0.8),
+        0 0 16px rgba(15, 23, 42, 0.9);
+    }
+
+    .profile-avatar.ecolo {
+      background: radial-gradient(circle at 30% 0, #bbf7d0, #22c55e 40%, #166534 100%);
+      color: #022c22;
+    }
+
+    .profile-avatar.ptb {
+      background: radial-gradient(circle at 30% 0, #fecaca, #ef4444 40%, #7f1d1d 100%);
+      color: #450a0a;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .profile-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .profile-handle {
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .profile-meta {
+      font-size: 11px;
+      color: var(--text-softer);
+      margin-top: 4px;
+    }
+
+    .profile-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-right: 6px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-softer);
+    }
+
+    .chip.ecolo {
+      border-color: var(--ecolo-green);
+      color: #bbf7d0;
+      background: var(--ecolo-soft);
+    }
+
+    .chip.ptb {
+      border-color: var(--ptb-red);
+      color: #fecaca;
+      background: var(--ptb-soft);
+    }
+
+    .post {
+      background: #020617;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .post-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .post-avatar.ecolo {
+      background: radial-gradient(circle at 30% 0, #bbf7d0, #22c55e 40%, #166534 100%);
+      color: #022c22;
+    }
+
+    .post-avatar.ptb {
+      background: radial-gradient(circle at 30% 0, #fecaca, #ef4444 40%, #7f1d1d 100%);
+      color: #450a0a;
+    }
+
+    .post-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .post-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .post-handle {
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .post-time {
+      font-size: 10px;
+      color: var(--text-softer);
+    }
+
+    .post-body {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .post-body p {
+      margin: 0 0 4px;
+    }
+
+    .post-highlight {
+      margin-top: 4px;
+      padding: 6px 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 12px;
+    }
+
+    .hashtag-row {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .hashtag {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-softer);
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-softer);
+      border-top: 1px solid var(--border-soft);
+      padding-top: 4px;
+    }
+
+    .post-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .post-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .post-btn:hover {
+      border-color: var(--border);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .post-counters {
+      font-size: 10px;
+    }
+
+    /* PIED DE PAGE */
+
+    .footer {
+      font-size: 10px;
+      color: var(--text-softer);
+      padding: 10px 16px 16px;
+      border-top: 1px solid var(--border-soft);
+      background: #020617;
+    }
+
+    .footer strong {
+      color: var(--text-soft);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-logo-ecolo">EC+</div>
+        <div class="brand-text">
+          <div class="brand-title">écolo ENCORE MIEUX</div>
+          <div class="brand-sub">fork “woke” du site de campagne MR</div>
+        </div>
+      </div>
+      <div class="topbar-center">
+        <div class="clone-banner">
+          <div class="clone-dot"></div>
+          <span>clones de campagne · même code, autre univers</span>
+        </div>
+      </div>
+      <div class="brand-block" style="justify-content:flex-end;">
+        <div class="brand-text" style="text-align:right;">
+          <div class="brand-title">PTB EN MIEUX</div>
+          <div class="brand-sub">fork rouge & social du même bazar</div>
+        </div>
+        <div class="brand-logo-ptb">PT+</div>
+      </div>
+    </header>
+
+    <!-- LAYOUT -->
+    <main class="layout">
+      <!-- COL ECOLO -->
+      <section class="col">
+        <div class="col-header">
+          <span><strong>écolo ENCORE MIEUX</strong> · timeline “woke / climat / care”</span>
+          <button class="btn-mini" onclick="location.href='mr-campagne.html'">
+            👀 Voir l’original MR EN MIEUX
+          </button>
+        </div>
+
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">🌿</span>
+              Profil cloné depuis MRbook
+            </div>
+            <span class="badge badge-ecolo badge-mrclone">clone du site de campagne</span>
+          </div>
+          <div class="profile-header">
+            <div class="profile-avatar ecolo">EC</div>
+            <div class="profile-info">
+              <div class="profile-name">écolo ENCORE MIEUX – Mouvement Radicalement Vert</div>
+              <div class="profile-handle">@ecolo.en.mieux</div>
+            </div>
+          </div>
+          <div class="profile-meta">
+            <span>🍃 Campagne : décarbonée, mais pas déconnectée</span>
+            <span>📦 Code source : cloné de <a href="mr-campagne.html">mr-campagne.html</a></span>
+          </div>
+          <div class="chip-row">
+            <span class="chip ecol o">#Climat</span>
+            <span class="chip ecol o">#JusticeSociale</span>
+            <span class="chip ecol o">#Intersectionnalité</span>
+            <span class="chip">#ForkDuMR</span>
+          </div>
+
+          <!-- Post 1 ECOLO -->
+          <div class="post">
+            <div class="post-header">
+              <div class="post-avatar ecolo">EC</div>
+              <div class="post-meta">
+                <div class="post-name">écolo ENCORE MIEUX</div>
+                <div class="post-handle">@ecolo.en.mieux · timeline woke</div>
+                <div class="post-time">il y a 5 minutes · clonage réussi</div>
+              </div>
+            </div>
+            <div class="post-body">
+              <p>
+                🌱 <strong>On a pris le site du MR EN MIEUX, on a retiré les “réformes marketées”</strong>
+                et on a gardé juste ce qui nous intéresse : la possibilité de parler aux gens
+                sans les prendre pour des chiffres dans un tableau Excel.
+              </p>
+              <p>
+                Ici, chaque clic te fait gagner des points de <em>care</em>, pas de cynisme.
+                Le compteur de gamification est recyclé en compteur de solidarité.
+              </p>
+              <div class="post-highlight">
+                ✊ <strong>Quête du jour :</strong><br />
+                remplacer une indignation abstraite par une action concrète
+                dans ton quartier. Bonus : +12,5 XP de cohérence.
+              </div>
+              <div class="hashtag-row">
+                <span class="hashtag">#ForkResponsable</span>
+                <span class="hashtag">#GamificationDuCare</span>
+                <span class="hashtag">#OnARienInventéOnACopiéMieux</span>
+              </div>
+            </div>
+            <div class="post-footer">
+              <div class="post-actions">
+                <div class="post-btn">💚 Soutenir une asbl locale</div>
+                <div class="post-btn">🧵 Lire un thread sur l’éco-anxiété</div>
+                <div class="post-btn">📎 Ouvrir un PDF qui parle de climat et de salaires</div>
+              </div>
+              <div class="post-counters">
+                12,5k gestes minuscules · 0 promesse magique
+              </div>
+            </div>
+          </div>
+
+          <!-- Post 2 ECOLO -->
+          <div class="post">
+            <div class="post-header">
+              <div class="post-avatar ecolo">EC</div>
+              <div class="post-meta">
+                <div class="post-name">écolo ENCORE MIEUX</div>
+                <div class="post-handle">@ecolo.en.mieux · API du réel</div>
+                <div class="post-time">il y a 42 minutes · flux non sponsorisé</div>
+              </div>
+            </div>
+            <div class="post-body">
+              <p>
+                🧬 On a gardé le scoreboard de campagne du MR mais on l’a recablé&nbsp;:
+              </p>
+              <ul style="margin:0 0 4px 18px; padding:0;">
+                <li>XP de campagne → <strong>XP d’écoute</strong></li>
+                <li>Points d’indignation → <strong>points de remise en question</strong></li>
+                <li>Confusion politique → <strong>compréhension lente mais réelle</strong></li>
+              </ul>
+              <p>
+                Les boutons “s’indigner très fort” donnent maintenant accès à des ressources
+                pédagogiques, pas à des threads toxiques.
+              </p>
+              <div class="post-highlight">
+                📚 <strong>Envie de tester ?</strong><br />
+                Va voir <a href="test-plaidoyer.html">test-plaidoyer.html</a>
+                et joue-le comme un atelier de débat, pas comme un examen.
+              </div>
+            </div>
+            <div class="post-footer">
+              <div class="post-actions">
+                <div class="post-btn">🌍 Cartographier les inégalités</div>
+                <div class="post-btn">🧩 Croiser climat, social & santé</div>
+              </div>
+              <div class="post-counters">
+                XP de pédagogie : 12,50 (simulation locale)
+              </div>
+            </div>
+          </div>
+
+          <!-- Post 3 ECOLO -->
+          <div class="post">
+            <div class="post-header">
+              <div class="post-avatar ecolo">EC</div>
+              <div class="post-meta">
+                <div class="post-name">écolo ENCORE MIEUX</div>
+                <div class="post-handle">@ecolo.en.mieux · liens croisés</div>
+                <div class="post-time">il y a 3 heures · univers partagé</div>
+              </div>
+            </div>
+            <div class="post-body">
+              <p>
+                🔗 On a recopié la section “liens en vrac” du MR et on l’a détournée en
+                parcours citoyen&nbsp;:
+              </p>
+              <ul style="margin:0 0 4px 18px; padding:0;">
+                <li><a href="bilan.html">bilan.html</a> – prendre au sérieux les vies cramées</li>
+                <li><a href="pac.html">pac.html</a> – regarder ce que font déjà les autres mouvements</li>
+                <li><a href="organisation.html">organisation.html</a> – imaginer un intranet d’intérêt général</li>
+                <li><a href="jeu-arcade.html">jeu-arcade.html</a> – transformer tout ça en jeu coopératif</li>
+              </ul>
+            </div>
+            <div class="post-footer">
+              <div class="post-actions">
+                <div class="post-btn">🍲 Parler cantine, pas seulement carbone</div>
+              </div>
+              <div class="post-counters">
+                Campagne clonée, mais pas que : tout est en HTML statique.
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- COL PTB -->
+      <section class="col">
+        <div class="col-header">
+          <span><strong>PTB EN MIEUX</strong> · timeline “anticapitalisme social / trolls”</span>
+          <button class="btn-mini" onclick="location.href='mr-campagne.html'">
+            🧱 Retourner voir la version MR
+          </button>
+        </div>
+
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">🚩</span>
+              Profil cloné depuis MRbook
+            </div>
+            <span class="badge badge-ptb badge-mrclone">copier-coller assumé</span>
+          </div>
+          <div class="profile-header">
+            <div class="profile-avatar ptb">PT</div>
+            <div class="profile-info">
+              <div class="profile-name">PTB EN MIEUX – Parti Totalement Bifurqué</div>
+              <div class="profile-handle">@ptb.en.mieux</div>
+            </div>
+          </div>
+          <div class="profile-meta">
+            <span>🧱 Campagne : “woke” mais avec des chiffres</span>
+            <span>💾 Fork : basé sur <a href="mr-campagne.html">mr-campagne.html</a></span>
+          </div>
+          <div class="chip-row">
+            <span class="chip ptb">#SalaireEtClimat</span>
+            <span class="chip ptb">#SécuSociale</span>
+            <span class="chip">#AntiGreenwashing</span>
+            <span class="chip">#TrollageConstructif</span>
+          </div>
+
+          <!-- Post 1 PTB -->
+          <div class="post">
+            <div class="post-header">
+              <div class="post-avatar ptb">PT</div>
+              <div class="post-meta">
+                <div class="post-name">PTB EN MIEUX</div>
+                <div class="post-handle">@ptb.en.mieux · mur de classe</div>
+                <div class="post-time">il y a 7 minutes · copier/coller + stats</div>
+              </div>
+            </div>
+            <div class="post-body">
+              <p>
+                💸 On a gardé la <strong>gamification toxique du MR</strong>, mais à chaque fois que tu
+                cliques sur un bouton, ça te rappelle une réalité très terre-à-terre&nbsp;:
+              </p>
+              <ul style="margin:0 0 4px 18px; padding:0;">
+                <li>Combien coûte un loyer réaliste à Bruxelles.</li>
+                <li>Combien de temps on passe à bosser pour payer ses factures.</li>
+                <li>Combien d’énergie il reste pour “participer” au débat public.</li>
+              </ul>
+              <div class="post-highlight">
+                🧮 <strong>Mini-quête :</strong> ouvrir <a href="bilan.html">bilan.html</a>
+                et y coller sa propre réalité, pas celle d’une présentation PowerPoint.
+              </div>
+              <div class="hashtag-row">
+                <span class="hashtag">#LaVraieVie</span>
+                <span class="hashtag">#PasQueDesSlogans</span>
+              </div>
+            </div>
+            <div class="post-footer">
+              <div class="post-actions">
+                <div class="post-btn">📊 Voir le coût du panier de base</div>
+                <div class="post-btn">🏥 Parler de sécu sociale</div>
+              </div>
+              <div class="post-counters">
+                Likes symboliques : 12,50 · Raison de la colère : structurelle
+              </div>
+            </div>
+          </div>
+
+          <!-- Post 2 PTB -->
+          <div class="post">
+            <div class="post-header">
+              <div class="post-avatar ptb">PT</div>
+              <div class="post-meta">
+                <div class="post-name">PTB EN MIEUX</div>
+                <div class="post-handle">@ptb.en.mieux · mode woke & rouge</div>
+                <div class="post-time">il y a 1 heure · flux non sponsorisé</div>
+              </div>
+            </div>
+            <div class="post-body">
+              <p>
+                🚨 Le bouton “s’indigner très fort” du MR renvoyait à du clic vide.
+                Ici, on le recycle en&nbsp;:
+              </p>
+              <div class="post-highlight">
+                📌 <strong>“S’indigner, OK. Mais ensuite ?”</strong><br />
+                → Un lien vers un <a href="test-plaidoyer.html">test de plaidoyer citoyen</a>  
+                → Des liens vers des syndicats, associations, collectifs  
+                → Un calendrier de luttes en HTML simple.
+              </div>
+              <p>
+                Le but, ce n’est pas de faire culpabiliser, c’est de montrer qu’on peut faire
+                autre chose que scroller.
+              </p>
+            </div>
+            <div class="post-footer">
+              <div class="post-actions">
+                <div class="post-btn">✊ Rejoindre une action locale</div>
+                <div class="post-btn">📅 Installer un “calendrier des luttes”</div>
+              </div>
+              <div class="post-counters">
+                Scroll infini désactivé : 0 · Points de repère : +12,50
+              </div>
+            </div>
+          </div>
+
+          <!-- Post 3 PTB -->
+          <div class="post">
+            <div class="post-header">
+              <div class="post-avatar ptb">PT</div>
+              <div class="post-meta">
+                <div class="post-name">PTB EN MIEUX</div>
+                <div class="post-handle">@ptb.en.mieux · mode développeur</div>
+                <div class="post-time">il y a 3 heures · dev branch</div>
+              </div>
+            </div>
+            <div class="post-body">
+              <p>
+                🧑‍💻 Pour les nerds militant·es :
+                ce site est un <strong>fork HTML/CSS/JS</strong> du
+                <a href="mr-campagne.html">mr-campagne.html</a>, bricolé pour montrer
+                qu’on peut retourner les mécaniques de la com’ politique.
+              </p>
+              <p>
+                Tu peux l’intégrer dans ton arcade comme un niveau
+                “campagne clonée” :
+              </p>
+              <ul style="margin:0 0 4px 18px; padding:0;">
+                <li><a href="jeu-arcade.html">jeu-arcade.html</a> – le hub global</li>
+                <li><a href="mr-en-mieux.html">mr-en-mieux.html</a> – le communiqué MR EN MIEUX</li>
+                <li><a href="mr-campagne.html">mr-campagne.html</a> – la campagne originale</li>
+                <li><a href="campagne-clones.html">campagne-clones.html</a> – cette page</li>
+              </ul>
+            </div>
+            <div class="post-footer">
+              <div class="post-actions">
+                <div class="post-btn">🧪 Tester d’autres forks</div>
+                <div class="post-btn">🕹️ Lancer la version arcade</div>
+              </div>
+              <div class="post-counters">
+                Commits politiques : 0 · Commits symboliques : 12,50
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div>
+        <strong>Important :</strong>
+        cette page est une <em>fiction satirique</em> intégrée à un univers de jeu
+        en HTML statique. Ce n’est pas un site officiel d’un parti réel.
+        Toutes les références à des partis existants (MR, écolo, PTB…) sont
+        détournées à des fins critiques & ludiques, pas pour faire de la
+        vraie campagne ni de la persuasion ciblée.
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
