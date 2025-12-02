@@ -1,0 +1,690 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Étagère Universelle · Univers 12,50</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+:root {
+  --bg: #020617;
+  --panel: #020617;
+  --panel2: #020617;
+  --border: #1f2937;
+  --border-soft: #111827;
+  --text: #e5e7eb;
+  --text-soft: #9ca3af;
+  --accent: #22c55e;
+  --accent2: #a855f7;
+  --radius: 16px;
+  --shadow: 0 18px 45px rgba(0,0,0,0.85);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 60%, #000 100%);
+  color: var(--text);
+}
+
+/* HEADER */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  background: rgba(15,23,42,0.98);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: radial-gradient(circle at 30% 0,
+    #bbf7d0 0, #22c55e 40%, #0ea5e9 70%, #020617 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #020617;
+  font-weight: 900;
+  font-size: 15px;
+  box-shadow:
+    0 0 0 2px #020617,
+    0 0 16px rgba(34,197,94,0.9);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 15px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.header-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11px;
+  align-items: center;
+}
+
+.tag {
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #020617;
+  color: var(--text-soft);
+}
+
+.tag-green {
+  border-color: #22c55e;
+  color: #bbf7d0;
+  background: rgba(22,163,74,0.25);
+}
+
+.tag-purple {
+  border-color: #a855f7;
+  color: #e9d5ff;
+  background: rgba(129,140,248,0.25);
+}
+
+/* NAV UNIVERS */
+
+.universe-nav {
+  max-width: 1100px;
+  margin: 10px auto 0;
+  padding: 6px 14px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.universe-nav a {
+  padding: 3px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #020617;
+  color: var(--text-soft);
+  text-decoration: none;
+}
+
+.universe-nav a:hover {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+/* LAYOUT */
+
+main {
+  max-width: 1100px;
+  margin: 8px auto 16px;
+  padding: 0 14px 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1.4fr);
+  gap: 14px;
+}
+
+@media(max-width: 900px) {
+  main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.card {
+  background: var(--panel);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.card h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+/* FILTRE / TABS */
+
+.filter-row {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.filter-btn {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #020617;
+  color: var(--text-soft);
+  padding: 4px 9px;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  border-color: #22c55e;
+  background: rgba(22,163,74,0.3);
+  color: #bbf7d0;
+}
+
+/* LISTE DE RESSOURCES */
+
+.resource-list {
+  margin-top: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  max-height: 330px;
+  overflow-y: auto;
+}
+
+.resource-item {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.resource-item:last-child {
+  border-bottom: none;
+}
+
+.res-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.res-title {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.res-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.badge-type {
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.badge-cat {
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px dashed var(--border);
+}
+
+.res-link {
+  font-size: 12px;
+  color: #38bdf8;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.res-link:hover {
+  text-decoration: underline;
+}
+
+/* FORMULAIRE FICHIERS PERSO */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.form-field label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-soft);
+  margin-bottom: 2px;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #020617;
+  color: var(--text);
+  padding: 5px 9px;
+  font-size: 12px;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #22c55e;
+}
+
+/* BOUTONS */
+
+.btn-row {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.btn {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #020617;
+  color: var(--text-soft);
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg,#22c55e,#a855f7);
+  border-color: transparent;
+  color: #020617;
+  font-weight: 600;
+}
+
+.btn.danger {
+  border-color: #f97316;
+  color: #fed7aa;
+}
+
+.btn:hover {
+  filter: brightness(1.05);
+}
+
+/* LISTE FICHIERS PERSO */
+
+.personal-list {
+  margin-top: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.personal-item {
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 12px;
+}
+
+.personal-item:last-child {
+  border-bottom: none;
+}
+
+.personal-item a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+.personal-item a:hover {
+  text-decoration: underline;
+}
+
+.personal-meta {
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+/* FOOTER */
+
+footer {
+  font-size: 10px;
+  color: var(--text-soft);
+  border-top: 1px solid var(--border-soft);
+  padding: 10px 16px 14px;
+  background: #020617;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">FS</div>
+    <div class="brand-text">
+      <div class="brand-title">Étagère</div>
+      <div class="brand-sub">Explorateur d’univers · Univers 12,50</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="tag tag-green">Hub central</span>
+    <span class="tag tag-purple">Jeu sérieux</span>
+  </div>
+</header>
+
+<nav class="universe-nav">
+  <a href="index.html">🏠 Arcade</a>
+  <a href="tu-raques-ou-pas.html">💸 Tu Raques Ou Pas</a>
+  <a href="belgilikjes.html">💾 Belgilikjes</a>
+  <a href="mr-campagne.html">🔵 MR En Mieux</a>
+  <a href="campagne-clones.html">🎭 Clones Ecolo/PTB</a>
+  <a href="organisation.html">🕵️ L’Organisation</a>
+</nav>
+
+<main>
+  <!-- COL GAUCHE : ÉTAGÈRE UNIVERS -->
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h2>📚 Étagère de l’univers 12,50</h2>
+        <div style="font-size:11px; color:var(--text-soft);">
+          Tous les “gros” fichiers logiques de ton univers, classés par type de monde.
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-btn active" data-filter="all" type="button">Tout</button>
+      <button class="filter-btn" data-filter="jeu" type="button">Jeux</button>
+      <button class="filter-btn" data-filter="politique" type="button">Politique</button>
+      <button class="filter-btn" data-filter="leaks" type="button">Leaks / Data</button>
+      <button class="filter-btn" data-filter="intranet" type="button">Intranet / Org</button>
+      <button class="filter-btn" data-filter="autre" type="button">Autres</button>
+    </div>
+
+    <div id="resource-list" class="resource-list"></div>
+
+    <p style="font-size:11px; color:var(--text-soft); margin-top:6px;">
+      Les liens ci-dessus supposent que les fichiers <code>.html</code> existent à la racine de ton projet.
+      Tu peux ajouter autant d’entrées que tu veux en adaptant la liste dans le script.
+    </p>
+  </section>
+
+  <!-- COL DROITE : FICHIERS PERSO -->
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h2>💾 Mes fichiers perso</h2>
+        <div style="font-size:11px; color:var(--text-soft);">
+          Ajoute tes propres fichiers (markdown, PDF, images, vidéos, etc.). Stocké dans ton navigateur.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="pf-title">Titre / Nom</label>
+        <input id="pf-title" type="text" placeholder="ex : dossier-ccplc.md">
+      </div>
+      <div class="form-field">
+        <label for="pf-type">Type</label>
+        <select id="pf-type">
+          <option value="md">Markdown / notes</option>
+          <option value="pdf">PDF</option>
+          <option value="img">Image</option>
+          <option value="video">Vidéo</option>
+          <option value="html">Page HTML</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="pf-path">Chemin ou URL</label>
+        <input id="pf-path" type="text" placeholder="ex : docs/dossier-ccplc.md ou https://…">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn primary" id="btn-add" type="button">
+        ➕ Ajouter dans l’étagère perso
+      </button>
+      <button class="btn danger" id="btn-clear" type="button">
+        🗑️ Vider l’étagère perso (localStorage)
+      </button>
+    </div>
+
+    <div id="personal-list" class="personal-list"></div>
+
+    <p style="font-size:11px; color:var(--text-soft); margin-top:6px;">
+      ⚠️ Pour des raisons de sécurité des navigateurs, un site HTML ne peut pas scanner ton disque dur automatiquement.  
+      Ici, tu déclares toi-même les chemins/URLs utiles, et ils restent dans ton <strong>localStorage</strong>.
+    </p>
+  </section>
+</main>
+
+<footer>
+  Étagère Universelle · Hub de fichiers & mondes · Univers 12,50.  
+  Tout est fictif, mais l’organisation peut être très réelle.
+</footer>
+
+<script>
+// ------------------------
+// RESSOURCES “SYSTÈME”
+// ------------------------
+const resources = [
+  {
+    title: "Hub arcade central",
+    file: "index.html",
+    cat: "jeu",
+    type: "HTML",
+    desc: "Point d’entrée vers tous les mondes du projet."
+  },
+  {
+    title: "Tu Raques Ou Pas ?",
+    file: "tu-raques-ou-pas.html",
+    cat: "jeu",
+    type: "HTML",
+    desc: "Jeu principal, XP, pilule rouge/bleue, profil joueur."
+  },
+  {
+    title: "Belgilikjes · Fuite massive",
+    file: "belgilikjes.html",
+    cat: "leaks",
+    type: "HTML",
+    desc: "Plateforme de crypto-fuites dystopiques."
+  },
+  {
+    title: "MR EN MIEUX · Tableau de campagne",
+    file: "mr-campagne.html",
+    cat: "politique",
+    type: "HTML",
+    desc: "Dashboard de campagne radicalisée, notifications 24/7."
+  },
+  {
+    title: "Campagne Clones · Ecolo & PTB",
+    file: "campagne-clones.html",
+    cat: "politique",
+    type: "HTML",
+    desc: "Forks parodiques du site de campagne."
+  },
+  {
+    title: "L’Organisation · Intranet",
+    file: "organisation.html",
+    cat: "intranet",
+    type: "HTML",
+    desc: "Société Anonyme Sociale, organigramme & test d’entrée."
+  },
+  {
+    title: "Étagère Universelle",
+    file: "etagere.html",
+    cat: "autre",
+    type: "HTML",
+    desc: "Cette page, hub fichier de l’univers."
+  },
+  {
+  title: "VSSE* · Module de veille fictif",
+  file: "vsse.html",
+  cat: "intranet",
+  type: "HTML",
+  desc: "Test d’orientation et salle d’analyse pour la veille citoyenne."
+}
+
+];
+
+const resListEl = document.getElementById("resource-list");
+const filterBtns = document.querySelectorAll(".filter-btn");
+
+function renderResources(filter = "all") {
+  resListEl.innerHTML = "";
+  const filtered = resources.filter(r => filter === "all" || r.cat === filter);
+  filtered.forEach(r => {
+    const div = document.createElement("div");
+    div.className = "resource-item";
+    div.innerHTML = `
+      <div class="res-top">
+        <div class="res-title">${r.title}</div>
+        <div class="res-meta">
+          <span class="badge-type">${r.type}</span>
+          <span class="badge-cat">${r.cat}</span>
+        </div>
+      </div>
+      <a class="res-link" href="${r.file}" target="_blank" rel="noopener noreferrer">${r.file}</a>
+      <div style="font-size:11px; color:var(--text-soft); margin-top:2px;">
+        ${r.desc}
+      </div>
+    `;
+    resListEl.appendChild(div);
+  });
+}
+
+// Filtre boutons
+filterBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const f = btn.getAttribute("data-filter");
+    filterBtns.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderResources(f === "all" ? "all" : f);
+  });
+});
+
+// ------------------------
+// FICHIERS PERSO
+// ------------------------
+const PF_STORAGE_KEY = "etagere_personal_files_v1";
+
+const pfTitle = document.getElementById("pf-title");
+const pfType = document.getElementById("pf-type");
+const pfPath = document.getElementById("pf-path");
+const pfAdd = document.getElementById("btn-add");
+const pfClear = document.getElementById("btn-clear");
+const pfList = document.getElementById("personal-list");
+
+function loadPersonalFiles() {
+  try {
+    const raw = localStorage.getItem(PF_STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw);
+  } catch (e) {
+    console.warn("Erreur localStorage", e);
+    return [];
+  }
+}
+
+function savePersonalFiles(files) {
+  try {
+    localStorage.setItem(PF_STORAGE_KEY, JSON.stringify(files));
+  } catch (e) {
+    console.warn("Erreur save localStorage", e);
+  }
+}
+
+function renderPersonalFiles() {
+  const files = loadPersonalFiles();
+  pfList.innerHTML = "";
+  if (!files.length) {
+    pfList.innerHTML = `<div class="personal-item" style="font-size:11px; color:var(--text-soft);">
+      Aucune entrée perso pour l’instant. Ajoute un fichier ci-dessus.
+    </div>`;
+    return;
+  }
+  files.forEach((f, idx) => {
+    const div = document.createElement("div");
+    div.className = "personal-item";
+    div.innerHTML = `
+      <div>
+        <strong>${f.title || "(sans titre)"}</strong>
+        ${f.path ? ` – <a href="${f.path}" target="_blank" rel="noopener noreferrer">ouvrir</a>` : ""}
+      </div>
+      <div class="personal-meta">
+        type: ${f.type || "?"} · index: ${idx}
+      </div>
+    `;
+    pfList.appendChild(div);
+  });
+}
+
+// Ajout
+pfAdd.addEventListener("click", () => {
+  const title = pfTitle.value.trim();
+  const type = pfType.value;
+  const path = pfPath.value.trim();
+
+  if (!title && !path) {
+    alert("Ajoute au minimum un titre ou un chemin/URL.");
+    return;
+  }
+
+  const files = loadPersonalFiles();
+  files.push({ title, type, path });
+  savePersonalFiles(files);
+  renderPersonalFiles();
+
+  pfTitle.value = "";
+  pfPath.value = "";
+});
+
+// Reset
+pfClear.addEventListener("click", () => {
+  if (confirm("Tu es sûr·e de vouloir vider l’étagère perso (localStorage) ?")) {
+    localStorage.removeItem(PF_STORAGE_KEY);
+    renderPersonalFiles();
+  }
+});
+
+// INIT
+renderResources("all");
+renderPersonalFiles();
+</script>
+
+</body>
+</html>
