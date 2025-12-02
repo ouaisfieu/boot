@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Intelligence stratégique & investigations – Portefeuille</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --bg-alt: #ffffff;
+      --primary: #0f766e;
+      --primary-soft: rgba(15,118,110,0.08);
+      --accent: #f97316;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 18px 45px rgba(15,23,42,0.15);
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top, #def7ec 0, #f4f6fb 45%, #edf1f8 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(209,213,219,0.9);
+      box-shadow: 0 10px 30px rgba(148,163,184,0.35);
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+    }
+
+    @media (max-width: 800px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        border-radius: 18px;
+      }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0f766e, #047857);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 10px 25px rgba(15,118,110,0.6);
+    }
+
+    .logo-text-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .logo-text-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.88rem;
+    }
+
+    .nav-link {
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      color: var(--muted);
+      background: transparent;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      background: var(--primary-soft);
+      border-color: rgba(148,163,184,0.7);
+      color: var(--text);
+    }
+
+    .nav-link.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    main {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 960px) {
+      main {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 17px;
+    }
+
+    .hero-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #16a34a;
+    }
+
+    .hero-title {
+      margin-top: 4px;
+      font-size: 1.8rem;
+      line-height: 1.25;
+    }
+
+    .hero-title span {
+      color: var(--primary);
+    }
+
+    .hero-sub {
+      margin-top: 8px;
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+
+    .hero-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,0.9fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .hero-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .pill-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .pill-stats {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .pill strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .list {
+      margin: 2px 0 8px;
+      padding-left: 18px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .list li { margin-bottom: 4px; }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #ecfdf5;
+      font-size: 0.75rem;
+      color: #064e3b;
+    }
+
+    .btn-main {
+      margin-top: 10px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 26px rgba(15,118,110,0.45);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      box-shadow: 0 14px 32px rgba(15,118,110,0.5);
+    }
+
+    .btn-main:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 7px 18px rgba(15,23,42,0.4);
+    }
+
+    .btn-ghost {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      color: var(--muted);
+      font-size: 0.84rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    }
+
+    .btn-ghost:hover {
+      background: #ecfdf5;
+      border-color: rgba(34,197,94,0.6);
+      color: var(--text);
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .services-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .services-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .service-card {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 10px 11px 9px;
+    }
+
+    .service-title {
+      font-size: 0.96rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .service-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .service-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .case-list {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr);
+      gap: 6px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .case-item {
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: #f9fafb;
+      padding: 7px 9px;
+    }
+
+    .case-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #111827;
+    }
+
+    .case-tagline {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .case-detail { font-size: 0.82rem; }
+
+    .quote-card {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border-left: 3px solid var(--primary);
+      background: #f9fafb;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .quote-author {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .form-group { margin-bottom: 8px; }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #4b5563;
+    }
+
+    .label span.opt {
+      font-weight: 400;
+      color: #9ca3af;
+      font-size: 0.76rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      font-size: 0.86rem;
+      font-family: var(--sans);
+      outline: none;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+      background: #f9fafb;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(5,150,105,0.2);
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: minmax(0,1.1fr) minmax(0,0.9fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .form-row {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .status {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .status.ok { color: #15803d; }
+    .status.warn { color: #b45309; }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .footer-left strong { color: var(--primary); }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="logo">
+      <!-- Remplace "IS" par tes initiales -->
+      <div class="logo-mark">IS</div>
+      <div>
+        <div class="logo-text-title">Intelligence stratégique / Votre Nom</div>
+        <div class="logo-text-sub">Enquêtes, analyse & veille, dans un cadre légal et éthique strict</div>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-link" type="button" onclick="scrollToId('expertises')">Expertises</button>
+      <button class="nav-link" type="button" onclick="scrollToId('missions')">Missions</button>
+      <button class="nav-link" type="button" onclick="scrollToId('method')">Méthode</button>
+      <button class="nav-link primary" type="button" onclick="scrollToId('contact')">Prendre contact</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Colonne gauche : Présentation & expertises -->
+    <section class="card">
+      <div class="hero-header">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span>Intelligence stratégique · Enquêtes économiques · Due diligence éthique</span>
+        </div>
+      </div>
+
+      <h1 class="hero-title">
+        Rassembler les bonnes informations,<br>
+        <span>avant de prendre des décisions engageantes.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Conseil en intelligence stratégique, enquêtes documentaires et due diligence pour entreprises, cabinets d’avocats,
+        investisseurs et organisations publiques. Mon rôle&nbsp;: <strong>éclairer vos décisions</strong> en apportant des
+        informations vérifiables, structurées et obtenues <strong>dans le respect du droit et des personnes</strong>.
+      </p>
+
+      <div class="hero-grid">
+        <div>
+          <h2 id="expertises" class="section-title">Domaines d’intervention</h2>
+          <p class="section-sub">
+            Une approche d’« espion légal » : recherche d’information, recoupement, analyse et synthèse, sans
+            intrusion ni techniques illicites.
+          </p>
+          <ul class="list">
+            <li>Veille & cartographie d’acteurs (entreprises, réseaux, écosystèmes).</li>
+            <li>Due diligence de partenaires, fournisseurs ou cibles d’acquisition.</li>
+            <li>Enquêtes documentaires & reconstitution de contexte.</li>
+            <li>Analyse de risques (réputationnels, réglementaires, géopolitiques).</li>
+            <li>Accompagnement à la décision (notes de synthèse et scénarios).</li>
+          </ul>
+          <div class="tags">
+            <span class="tag">OSINT & sources ouvertes</span>
+            <span class="tag">Due diligence</span>
+            <span class="tag">Risques & conformité</span>
+            <span class="tag">Analyse d’écosystèmes</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">En un coup d’œil</h2>
+          <div class="pill-stats">
+            <div class="pill">
+              <strong>+X ans</strong>
+              d’enquêtes documentaires et économiques.
+            </div>
+            <div class="pill">
+              <strong>Clients</strong>
+              PME, ETI, avocats, fonds, acteurs publics.
+            </div>
+            <div class="pill">
+              <strong>Cadre</strong>
+              respect strict du droit, du secret pro & des données.
+            </div>
+          </div>
+
+          <button class="btn-main" type="button" onclick="scrollToId('contact')">
+            Présenter votre besoin
+          </button>
+          <p class="small">
+            Premier échange sans engagement pour préciser la faisabilité, le périmètre et les limites éthiques de la mission.
+          </p>
+        </div>
+      </div>
+
+      <section id="method" style="margin-top:16px;">
+        <h2 class="section-title">Méthode de travail</h2>
+        <p class="section-sub">
+          Un cadre clair, documenté, conçu pour être défendable face à un conseil juridique, un comité d’éthique ou un comité de crédit.
+        </p>
+        <ul class="list">
+          <li><strong>01 — Clarification de la demande.</strong> Ce que vous cherchez à savoir, pourquoi, et dans quel cadre décisionnel.</li>
+          <li><strong>02 — Validation du périmètre et des limites.</strong> Ce qui est faisable légalement, techniquement et éthiquement.</li>
+          <li><strong>03 — Collecte d’information.</strong> Sources ouvertes, bases spécialisées, documentation, entretiens si nécessaire.</li>
+          <li><strong>04 — Analyse & recoupement.</strong> Tri, vérification, identification des contradictions et des angles morts.</li>
+          <li><strong>05 — Restitution.</strong> Note écrite structurée, carte d’acteurs, scénarios et recommandations opérationnelles.</li>
+        </ul>
+      </section>
+
+      <section style="margin-top:16px;">
+        <h2 class="section-title">Types de prestations</h2>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-title">Due diligence de partenaires / cibles</div>
+            <div class="service-desc">
+              Vérification d’antécédents, réputation, environnement juridique et signaux faibles avant un engagement important.
+            </div>
+            <div class="service-meta">
+              Adapté aux prises de participation, grands contrats, alliances stratégiques.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">Enquêtes documentaires ciblées</div>
+            <div class="service-desc">
+              Recherche d’informations factuelles sur des situations complexes, pour éclairer un contentieux ou une décision interne.
+            </div>
+            <div class="service-meta">
+              Synthèse sourcée, bibliographie, pistes complémentaires.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">Cartographie d’acteurs & d’enjeux</div>
+            <div class="service-desc">
+              Identification des parties prenantes clés, de leurs positions et de leurs liens, sur un sujet précis.
+            </div>
+            <div class="service-meta">
+              Utile pour préparer une stratégie d’approche ou de communication.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">Veille stratégique & notes régulières</div>
+            <div class="service-desc">
+              Suivi régulier d’un secteur, d’un cadre réglementaire ou d’un environnement pays.
+            </div>
+            <div class="service-meta">
+              Notes périodiques, alertes, points d’attention pour décideurs.
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- Colonne droite : missions & contact -->
+    <section class="card">
+      <section id="missions">
+        <h2 class="section-title">Exemples de missions</h2>
+        <p class="section-sub">
+          Exemples anonymisés pour illustrer des contextes typiques. Les identités, lieux et montants sont systématiquement
+          floutés ou recomposés.
+        </p>
+        <div class="case-list">
+          <div class="case-item">
+            <div class="case-title">Évaluer le sérieux d’un partenaire international</div>
+            <div class="case-tagline">PME industrielle · Europe / pays tiers</div>
+            <div class="case-detail">
+              Analyse d’antécédents judiciaires, médiatiques et réglementaires, examen des structures de propriété,
+              recoupement de signaux faibles locaux. Recommandation argumentée sur le niveau de risque et les clauses de protection à prévoir.
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-title">Comprendre un écosystème d’influence autour d’un projet sensible</div>
+            <div class="case-tagline">Collectivité territoriale · Projet d’infrastructure</div>
+            <div class="case-detail">
+              Cartographie des acteurs impliqués (publics, privés, associatifs), analyse des relations, intérêts et
+              positions, identification des zones de tension pour préparer une stratégie de dialogue et de prévention des crises.
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-title">Appuyer un cabinet d’avocats dans un dossier complexe</div>
+            <div class="case-tagline">Contentieux économique · Contexte international</div>
+            <div class="case-detail">
+              Enquêtes documentaires approfondies sur des sociétés-écrans, reconstitution de chronologies et de liens,
+              mise à disposition de documentation sourcée pour étayer des argumentaires.
+            </div>
+          </div>
+        </div>
+
+        <div class="quote-card">
+          « Mon rôle n’est pas de tout savoir, mais de dire clairement ce que l’on sait, ce que l’on ne sait pas encore,
+          et ce qu’il serait imprudent de prétendre savoir. »
+          <div class="quote-author">— Position de principe</div>
+        </div>
+      </section>
+
+      <section id="contact" style="margin-top:16px;">
+        <h2 class="section-title">Prise de contact</h2>
+        <p class="section-sub">
+          Décrivez en quelques lignes votre organisation, votre besoin et les décisions que cette mission doit éclairer.
+          Vous recevrez un retour pour convenir d’un échange confidentiel.
+        </p>
+
+        <form onsubmit="handleContact(event)">
+          <div class="form-group">
+            <div class="label">Nom / Prénom</div>
+            <input id="c-name" required placeholder="Votre nom complet">
+          </div>
+
+          <div class="form-group">
+            <div class="label">Email professionnel</div>
+            <input id="c-email" type="email" required placeholder="prenom.nom@organisation.fr">
+          </div>
+
+          <div class="form-group">
+            <div class="label">Organisation <span class="opt">(raison sociale, type d’acteur)</span></div>
+            <input id="c-org" required placeholder="Entreprise, cabinet, collectivité, fonds, etc.">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div class="label">Type de besoin principal</div>
+              <select id="c-type" required>
+                <option value="">Sélectionnez une option</option>
+                <option>Due diligence (partenaire, cible, fournisseur)</option>
+                <option>Enquête documentaire / contexte</option>
+                <option>Veille & cartographie d’acteurs</option>
+                <option>Analyse de risques</option>
+                <option>Autre / à préciser</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="label">Horizon de décision</div>
+              <select id="c-timing">
+                <option value="">À préciser</option>
+                <option>Décision sous 1 mois</option>
+                <option>Décision sous 3 à 6 mois</option>
+                <option>Exploration sans échéance stricte</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label">Enjeux & questions à éclairer</div>
+            <textarea id="c-context" required placeholder="Synthèse de la situation actuelle : qui / quoi est en jeu, quelles sont les décisions à prendre, quels risques vous souhaitez mieux comprendre."></textarea>
+          </div>
+
+          <div class="form-group">
+            <div class="label">Contraintes & limites <span class="opt">(facultatif)</span></div>
+            <textarea id="c-expect" placeholder="Ex : territoire concerné, langues, budgets, délais, exigences de conformité, données sensibles à ne pas traiter, etc."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div class="label">Niveau de sensibilité</div>
+              <select id="c-sens">
+                <option value="">À évaluer ensemble</option>
+                <option>Dossier peu sensible (communication possible en interne élargie)</option>
+                <option>Dossier sensible (gouvernance restreinte)</option>
+                <option>Dossier très sensible (accès limité à quelques personnes)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="label">Préférence de contact</div>
+              <select id="c-contact" required>
+                <option value="">Sélectionnez une option</option>
+                <option>Je souhaite un retour écrit dans un premier temps</option>
+                <option>Je souhaite un entretien téléphonique / visio</option>
+                <option>Je préfère discuter via mon conseil (avocat, etc.)</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="small">
+            🔒 Ce formulaire ne stocke rien&nbsp;: il prépare un email sur votre propre messagerie avec les informations ci-dessus.
+            Les détails les plus sensibles pourront être partagés ensuite, dans un cadre plus sécurisé.
+          </p>
+
+          <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+            <button class="btn-main" type="submit">
+              Préparer un email de prise de contact
+            </button>
+            <div class="status" id="status-msg">
+              Un brouillon d’email sera généré : vous pourrez le relire, l’ajuster, puis l’envoyer.
+            </div>
+          </div>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <strong>Votre Nom</strong> · Intelligence stratégique, enquêtes documentaires & due diligence éthique.
+    </div>
+    <div>
+      Contact direct : <span id="footer-email">contact@votre-domaine.fr</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // 👉 À PERSONNALISER : mets ton adresse email ici
+  const INTEL_EMAIL = "contact@votre-domaine.fr";
+
+  document.getElementById("footer-email").textContent = INTEL_EMAIL;
+
+  function scrollToId(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const offset = window.scrollY + rect.top - 100;
+    window.scrollTo({ top: offset, behavior: "smooth" });
+  }
+
+  function handleContact(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("c-name").value.trim();
+    const email = document.getElementById("c-email").value.trim();
+    const org = document.getElementById("c-org").value.trim();
+    const type = document.getElementById("c-type").value;
+    const timing = document.getElementById("c-timing").value;
+    const context = document.getElementById("c-context").value.trim();
+    const expect = document.getElementById("c-expect").value.trim();
+    const sens = document.getElementById("c-sens").value;
+    const contactPref = document.getElementById("c-contact").value;
+
+    const statusEl = document.getElementById("status-msg");
+
+    if (!name || !email || !org || !type || !context || !contactPref) {
+      statusEl.textContent = "Merci de remplir les champs principaux : nom, email, organisation, type de besoin, enjeux et préférence de contact.";
+      statusEl.classList.remove("ok");
+      statusEl.classList.add("warn");
+      return;
+    }
+
+    let subject = "Prise de contact – Intelligence stratégique / " + org;
+    let bodyLines = [];
+
+    bodyLines.push("Bonjour,");
+    bodyLines.push("");
+    bodyLines.push("Je vous contacte pour un premier échange concernant une mission d’intelligence stratégique / investigation documentaire.");
+    bodyLines.push("");
+    bodyLines.push("• Nom / Prénom : " + name);
+    bodyLines.push("• Email : " + email);
+    bodyLines.push("• Organisation : " + org);
+    bodyLines.push("• Type de besoin principal : " + type);
+    if (timing) bodyLines.push("• Horizon de décision : " + timing);
+    if (sens) bodyLines.push("• Niveau de sensibilité estimé : " + sens);
+    bodyLines.push("");
+    bodyLines.push("Enjeux & questions à éclairer :");
+    bodyLines.push(context);
+    bodyLines.push("");
+    if (expect) {
+      bodyLines.push("Contraintes & limites à prendre en compte :");
+      bodyLines.push(expect);
+      bodyLines.push("");
+    }
+    bodyLines.push("Préférence de contact :");
+    bodyLines.push(contactPref);
+    bodyLines.push("");
+    bodyLines.push("Merci d’avance pour votre retour et pour les informations complémentaires dont vous aurez besoin pour évaluer la mission.");
+    bodyLines.push("");
+    bodyLines.push("Cordialement,");
+    bodyLines.push(name);
+
+    const mailtoUrl =
+      "mailto:" + encodeURIComponent(INTEL_EMAIL) +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(bodyLines.join("\\n"));
+
+    statusEl.textContent = "Ouverture de votre messagerie… Si rien ne se passe, vérifiez qu’une application mail est configurée.";
+    statusEl.classList.remove("warn");
+    statusEl.classList.add("ok");
+
+    window.location.href = mailtoUrl;
+  }
+</script>
+</body>
+</html>
