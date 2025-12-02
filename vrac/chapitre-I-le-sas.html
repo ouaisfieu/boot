@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Clé de Recrutement & Veille Citoyenne – Portail</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #050818;
+      --card: #020617;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.18);
+      --accent2: #38bdf8;
+      --accent3: #a855f7;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(148,163,184,0.7);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56,189,248,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(168,85,247,0.2), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1200px;
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.16), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.95), transparent 60%),
+        var(--bg-alt);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      padding: 1.2rem 0.9rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.8rem 1.6rem 2.2rem; }
+    }
+
+    .page::before {
+      content: "index.html · Portail de la clé de recrutement & veille citoyenne";
+      position: absolute;
+      top: 0.4rem;
+      right: 1.2rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      pointer-events: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .header-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: var(--accent-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(34,197,94,0.8);
+    }
+
+    .header-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      max-width: 290px;
+    }
+
+    h1 {
+      margin-top: 0.4rem;
+      font-size: clamp(1.8rem, 4.4vw, 2.7rem);
+      line-height: 1.05;
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #22c55e, #38bdf8, #a855f7);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 840px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .notice {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 0.5rem 0.7rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .notice strong { color: var(--accent2); }
+
+    /* Barre de filtrage */
+
+    .toolbar {
+      margin-top: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    @media (min-width: 768px) {
+      .toolbar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.28rem 0.7rem;
+      background: rgba(15,23,42,0.98);
+      max-width: 360px;
+    }
+
+    .search-box span {
+      font-size: 0.9rem;
+      color: var(--accent2);
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 0.86rem;
+      width: 100%;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .filter-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.22rem 0.7rem;
+      font-size: 0.78rem;
+      background: rgba(15,23,42,0.96);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      border-color: var(--accent2);
+      background: rgba(56,189,248,0.18);
+      color: var(--accent2);
+    }
+
+    /* Grille des pages */
+
+    .grid {
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    @media (min-width: 640px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .card-link {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.18), transparent 70%),
+        var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.8rem 0.85rem 0.95rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, border-color 0.15s ease-out;
+    }
+
+    .card-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 36px rgba(15,23,42,0.85);
+      border-color: var(--accent2);
+    }
+
+    .card-link h2 {
+      font-size: 0.98rem;
+      margin-bottom: 0.18rem;
+      color: var(--text-main);
+    }
+
+    .card-link p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 0.3rem;
+    }
+
+    .tag-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: auto;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .tag {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      padding: 0.1rem 0.5rem;
+      font-size: 0.72rem;
+    }
+
+    .tag.cat-recrutement {
+      border-color: var(--accent3);
+      color: var(--accent3);
+    }
+    .tag.cat-test {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+    .tag.cat-cyber {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .tag.cat-doc {
+      border-color: #eab308;
+      color: #eab308;
+    }
+    .tag.cat-tech {
+      border-color: #f97316;
+      color: #f97316;
+    }
+    .tag.cat-meta {
+      border-color: #f97373;
+      color: #f97373;
+    }
+
+    .mini-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      padding: 0.1rem 0.45rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.45rem;
+      right: 0.6rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.75);
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-row">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>Clé de recrutement & veille citoyenne</span>
+          </div>
+          <h1>Portail des <span>tests, labs & dossiers</span></h1>
+        </div>
+        <div class="header-meta">
+          Ce fichier <strong>index.html</strong> est la page d’accueil de ta clé USB / serveur.  
+          Il donne accès à toutes les expériences : tests de recrutement, cyberlab, examens, jalons,
+          docs techniques et pages “Organisation”.
+        </div>
+      </div>
+      <p class="subtitle">
+        Mode d’emploi : choisis une carte selon ton humeur (<strong>recrutement</strong>, <strong>tests</strong>,
+        <strong>cyber</strong>, <strong>docs</strong>, <strong>technique</strong>, <strong>méta</strong>).  
+        Certains liens peuvent encore être en chantier : dans ce cas, considère-les comme des <em>missions à venir</em>.
+      </p>
+      <div class="notice">
+        <strong>Important :</strong> tout tourne en local (clé USB ou simple hébergement statique).  
+        Rien n’est collecté automatiquement. L’objectif est de tester ta curiosité, tes réflexes 
+        et ta capacité à te repérer dans un écosystème de veille citoyenne gamifiée.
+      </div>
+
+      <div class="toolbar">
+        <div class="search-box">
+          <span>🔎</span>
+          <input type="search" id="searchInput" placeholder="Rechercher dans les pages (ex: cyber, symboles, recrutement)…">
+        </div>
+        <div class="filters" id="filters">
+          <button class="filter-btn active" data-filter="all">Tous</button>
+          <button class="filter-btn" data-filter="recrutement">Recrutement</button>
+          <button class="filter-btn" data-filter="test">Tests / Examens</button>
+          <button class="filter-btn" data-filter="cyber">Cyber</button>
+          <button class="filter-btn" data-filter="doc">Dossiers & topo</button>
+          <button class="filter-btn" data-filter="tech">Technique</button>
+          <button class="filter-btn" data-filter="meta">Méta / Organisation</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="grid" id="cardsGrid">
+      <!-- Recrutement / intro -->
+      <a href="SAS.html" class="card-link" data-cat="recrutement meta" data-title="sas sas d'accueil sas de recrutement">
+        <h2>SAS d’accueil – Recrutement</h2>
+        <p>
+          Point d’entrée de l’Organisation. Présente les règles du jeu, les avertissements et
+          la logique générale de la réserve de recrutement citoyenne.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-recrutement">Recrutement</span>
+          <span class="mini-hint">Commencer par ici est recommandé.</span>
+        </div>
+      </a>
+
+      <a href="carte-0.html" class="card-link" data-cat="recrutement meta test" data-title="carte 0 avertissement jeu risque">
+        <h2>Carte 0 – Avertissement & méta-jeu</h2>
+        <p>
+          Carte d’introduction façon jeu de société grandeur nature : risques, enjeux, bénéfices
+          et clin d’œil à l’idée de “prendre le pouvoir” en restant citoyen.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-meta">Méta / Story</span>
+          <span class="mini-hint">Pour se mettre dans l’ambiance.</span>
+        </div>
+      </a>
+
+      <a href="phase-0.html" class="card-link" data-cat="meta doc" data-title="phase 0 phase zero historique contexte">
+        <h2>Phase 0 – Contexte général</h2>
+        <p>
+          Topo général sur le projet, son contexte, ses influences (éducation populaire, veille,
+          OSINT, “cinquième pouvoir”) et les principaux choix méthodologiques.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-doc">Dossier / Contexte</span>
+          <span class="mini-hint">Situer le projet dans l’ensemble.</span>
+        </div>
+      </a>
+
+      <a href="portail-0.html" class="card-link" data-cat="doc meta" data-title="portail dossiers documentation index documentaire">
+        <h2>Portail 0 – Dossiers documentaires</h2>
+        <p>
+          Hub de tous les dossiers (propagande, symboles, guerre narrative, veille citoyenne…).
+          Sert de “bibliothèque centrale” pour les tests et examens.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-doc">Dossiers</span>
+          <span class="mini-hint">Accès aux PDF, vidéos, annexes.</span>
+        </div>
+      </a>
+
+      <!-- Tests & examens thématiques -->
+      <a href="test-index.html" class="card-link" data-cat="test recrutement" data-title="index des tests test index accueil tests">
+        <h2>Index des tests – Recrutement auto-guidé</h2>
+        <p>
+          Présentation de l’ensemble des tests disponibles (par thématique) et conseils pour
+          se situer dans le parcours de recrutement / formation.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-test">Tests</span>
+          <span class="mini-hint">Vue d’ensemble de la phase “tests”.</span>
+        </div>
+      </a>
+
+      <a href="test-0.html" class="card-link" data-cat="test doc" data-title="test obsidian outil prise de notes obsidian">
+        <h2>Test 0 – Obsidian & prise de notes</h2>
+        <p>
+          Test à partir des tutoriels Obsidian : vérifier ta capacité à t’approprier un outil
+          de prise de notes avancé pour ta veille.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-test">Test</span>
+          <span class="mini-hint">Dossier : tutoriels Obsidian.</span>
+        </div>
+      </a>
+
+      <a href="test-1.html" class="card-link" data-cat="test doc" data-title="test 1 veille citoyenne reseau veille enjeux">
+        <h2>Test 1 – Veille citoyenne & réseaux</h2>
+        <p>
+          Questionnaire basé sur les dossiers “veille citoyenne” & “réseaux de veille” :
+          enjeux, risques, potentialités, articulation avec l’éducation permanente.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-test">Test</span>
+          <span class="mini-hint">Dossiers : veille citoyenne, réseau de veille.</span>
+        </div>
+      </a>
+
+      <a href="test-symboles.html" class="card-link" data-cat="test doc" data-title="test symboles svastika pictogrammes modernes">
+        <h2>Test – Puissance des symboles & détournements</h2>
+        <p>
+          Test interactif avec galerie d’images, embeds et quiz autour de la svastika, des
+          pictogrammes modernes et de leurs détournements idéologiques.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-test">Test</span>
+          <span class="mini-hint">Dossier : symboles visuels.</span>
+        </div>
+      </a>
+
+      <a href="exam-topo.html" class="card-link" data-cat="test doc" data-title="examen topo symboles visuels svastika pictogrammes">
+        <h2>Examen guidé – Topo symboles visuels</h2>
+        <p>
+          Examen structuré (facile → difficile) sur “La puissance des symboles visuels” :
+          bases historiques, analyse, cas limites et positionnement personnel.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-test">Examen</span>
+          <span class="mini-hint">Pour consolider le dossier symboles.</span>
+        </div>
+      </a>
+
+      <a href="exam.html" class="card-link" data-cat="test meta" data-title="examen general grand mix recrutement projet">
+        <h2>Examen général – “Est-ce que ce projet est pour toi ?”</h2>
+        <p>
+          Grand examen croisé sur l’ensemble des thématiques vues (propagande, symboles,
+          veille, projet global) pour vérifier si tu as envie de candidater pour de vrai.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-test">Examen global</span>
+          <span class="mini-hint">Filtre final avant candidature spontanée.</span>
+        </div>
+      </a>
+
+      <!-- Cyberlab -->
+      <a href="cyberlab-0.html" class="card-link" data-cat="cyber test" data-title="cyberlab cyber securite ransomware simulation faux hacker">
+        <h2>Cyberlab-0 – Simulation de panique & hygiène numérique</h2>
+        <p>
+          Site interactif de faux hacking : faux terminal, faux ransomware, vrais
+          réflexes de défense. Sensibilisation niveau école de guerre économique, accessible.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-cyber">Cyber</span>
+          <span class="mini-hint">À tester calmement… puis à montrer aux autres.</span>
+        </div>
+      </a>
+
+      <!-- Business / jalon / power -->
+      <a href="power.html" class="card-link" data-cat="meta doc" data-title="power cercles vertueux business modele potentiel projet">
+        <h2>Power – Potentiel & cercles vertueux</h2>
+        <p>
+          Visualisation du potentiel du projet par cercles concentriques : impact citoyen,
+          modèles économiques possibles, contribution des membres, montée en puissance.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-meta">Méta / Vision</span>
+          <span class="mini-hint">Voir la “tsar bomba” d’éducation populaire en devenir.</span>
+        </div>
+      </a>
+
+      <a href="jalon-0.html" class="card-link" data-cat="meta doc test" data-title="jalon 0 bilan projet auto evaluation">
+        <h2>Jalon 0 – Bilan & recalage du projet</h2>
+        <p>
+          Page d’auto-évaluation : timeline, curseurs de clarté / énergie / faisabilité,
+          examen guidé pour voir si le projet reste souhaitable et réaliste pour toi.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-meta">Bilan</span>
+          <span class="mini-hint">À revisiter régulièrement.</span>
+        </div>
+      </a>
+
+      <a href="business.html" class="card-link" data-cat="doc meta" data-title="business modele 12,50 economie sociale">
+        <h2>Business modèle – 12,50 €/an/personne</h2>
+        <p>
+          Explication du modèle économique de base : contribution annuelle modeste, multi-râteliers
+          possibles (subsides, formations, événements, merch) et garde-fous éthiques.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-doc">Dossier / Modèle</span>
+          <span class="mini-hint">Si la page n’existe pas encore : à créer sur ce modèle.</span>
+        </div>
+      </a>
+
+      <!-- Organisation / back-office -->
+      <a href="about.html" class="card-link" data-cat="meta doc" data-title="about a propos qui sommes nous">
+        <h2>À propos – Qui est derrière tout ça ?</h2>
+        <p>
+          Présentation narrative de l’Organisation, de la logique d’AISBL de fait,
+          et du cadre global (éducation populaire, citoyenneté, expérimentation).
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-meta">À propos</span>
+          <span class="mini-hint">À adapter à ta propre “instance”.</span>
+        </div>
+      </a>
+
+      <a href="recrutement.html" class="card-link" data-cat="recrutement" data-title="recrutement reserve candidatures spontanee">
+        <h2>Recrutement – Réserve & candidatures spontanées</h2>
+        <p>
+          Page officielle de recrutement : comment candidater (même fictivement),
+          conditions, état d’esprit attendu, ce que tu promets… et ce que tu ne promets pas.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-recrutement">Recrutement</span>
+          <span class="mini-hint">À lier depuis les examens et tests réussis.</span>
+        </div>
+      </a>
+
+      <a href="bureau.html" class="card-link" data-cat="meta" data-title="bureau back office administration fictive">
+        <h2>Bureau – Back-office fictif</h2>
+        <p>
+          Espace pour simuler la “direction” / le bureau de l’AISBL de veille citoyenne :
+          décisions, comptes, transparence radicale… ou théâtre assumé selon ton choix.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-meta">Organisation</span>
+          <span class="mini-hint">Pour mettre en scène la gouvernance.</span>
+        </div>
+      </a>
+
+      <a href="organigramme-obs.html" class="card-link" data-cat="meta doc" data-title="organigramme observatoire veille graphe roles">
+        <h2>Organigramme – Observatoire & rôles</h2>
+        <p>
+          Visualisation (type graph view) des rôles possibles : archivistes, veilleurs,
+          développeurs, formateurs, joueurs… et la place de chaque “cellule”.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-meta">Organisation</span>
+          <span class="mini-hint">Utile pour expliquer “qui fait quoi”.</span>
+        </div>
+      </a>
+
+      <!-- Technique -->
+      <a href="faq-tech.html" class="card-link" data-cat="tech doc" data-title="faq technique markdown serveur cle usb">
+        <h2>FAQ technique – Clé USB, serveur & Markdown</h2>
+        <p>
+          FAQ pour comprendre comment reproduire le dispositif : structure des fichiers,
+          index.html, hébergement simple, fonctionnement hors-ligne, etc.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-tech">Technique</span>
+          <span class="mini-hint">Pour cloner / adapter le kit.</span>
+        </div>
+      </a>
+
+      <a href="etdonc.html" class="card-link" data-cat="meta tech" data-title="et donc synthese prochaine etapes">
+        <h2>Et donc… – Synthèse & prochaines étapes</h2>
+        <p>
+          Page de synthèse : ce que tu as entre les mains, ce qu’il reste à faire,
+          les options pour passer du prototype à une cellule de veille citoyenne active.
+        </p>
+        <div class="tag-line">
+          <span class="tag cat-meta">Synthèse</span>
+          <span class="mini-hint">À mettre à jour au fil des jalons.</span>
+        </div>
+      </a>
+    </main>
+
+    <footer>
+      <span>
+        Si une carte mène à une page vide ou 404 : c’est une <em>mission en attente</em>, pas un échec.  
+        Tu peux modifier ce fichier index.html à la main pour adapter les liens.
+      </span>
+      <code>index.html · portail unique · mobile first · pur HTML/CSS/JS</code>
+    </footer>
+
+    <div class="badge-corner">
+      LOCAL SANDBOX · V1
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const searchInput = document.getElementById('searchInput');
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.card-link');
+
+      let currentFilter = 'all';
+
+      function applyFilters() {
+        const term = (searchInput.value || '').toLowerCase().trim();
+
+        cards.forEach(card => {
+          const cat = card.getAttribute('data-cat') || '';
+          const title = card.getAttribute('data-title') || '';
+          const text = (title + ' ' + card.innerText).toLowerCase();
+
+          const matchFilter = currentFilter === 'all' || cat.split(/\s+/).includes(currentFilter);
+          const matchSearch = !term || text.includes(term);
+
+          if (matchFilter && matchSearch) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      }
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.getAttribute('data-filter') || 'all';
+          applyFilters();
+        });
+      });
+
+      searchInput.addEventListener('input', applyFilters);
+
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>
