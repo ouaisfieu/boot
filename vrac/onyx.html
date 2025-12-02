@@ -1,0 +1,1527 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ONYX – Bloc-notes Markdown local</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* RESET & VARIABLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #05060a;
+      --bg-alt: #101321;
+      --sidebar: #050712;
+      --accent: #00e0ff;
+      --accent-soft: rgba(0, 224, 255, 0.2);
+      --danger: #ff5f7a;
+      --text: #f5f7ff;
+      --muted: #9ba3c3;
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+      --radius-lg: 16px;
+      --radius-sm: 10px;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      --mono: "Fira Code", SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", monospace;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #151a32 0, #05060a 55%);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* APP LAYOUT */
+
+    .onyx-app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .onyx-header {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5, 6, 15, 0.96);
+      backdrop-filter: blur(10px);
+    }
+
+    .onyx-logo {
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .onyx-logo span {
+      color: var(--accent);
+    }
+
+    .onyx-header-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .onyx-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    /* SIDEBAR */
+
+    .onyx-sidebar {
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 0.7rem;
+    }
+
+    .onyx-sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .onyx-vault-name {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .onyx-controls-top {
+      display: flex;
+      gap: 0.3rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .onyx-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.7rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .onyx-btn-primary {
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--accent), #7b61ff);
+      color: #02030a;
+      font-weight: 600;
+    }
+
+    .onyx-btn-danger {
+      border-color: rgba(255, 95, 122, 0.6);
+      color: var(--danger);
+    }
+
+    .onyx-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .onyx-search-wrap {
+      position: relative;
+      margin-bottom: 0.6rem;
+    }
+
+    .onyx-search {
+      width: 100%;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.7rem;
+      padding-left: 1.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text);
+    }
+
+    .onyx-search-icon {
+      position: absolute;
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .onyx-notes-list {
+      list-style: none;
+      max-height: 55vh;
+      overflow-y: auto;
+      padding-right: 0.2rem;
+    }
+
+    .onyx-note-item {
+      border-radius: 10px;
+      padding: 0.35rem 0.45rem;
+      margin-bottom: 0.25rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .onyx-note-item-title {
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .onyx-note-item-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .onyx-note-item-active {
+      background: rgba(0, 224, 255, 0.18);
+      border: 1px solid var(--accent-soft);
+    }
+
+    .onyx-note-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .onyx-sidebar-footer {
+      margin-top: 0.4rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    /* EDITOR AREA */
+
+    .onyx-editor-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 0.7rem;
+    }
+
+    .onyx-note-header {
+      margin-bottom: 0.4rem;
+    }
+
+    .onyx-note-title {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.25rem 0.3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .onyx-note-title::placeholder {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .onyx-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0.4rem 0 0.5rem;
+    }
+
+    .onyx-toolbar-group {
+      display: inline-flex;
+      gap: 0.3rem;
+      padding-right: 0.2rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .onyx-toolbar-group:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    .onyx-toolbar-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      cursor: pointer;
+    }
+
+    .onyx-toolbar-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .onyx-toolbar-toggle-active {
+      border-color: var(--accent-soft);
+      background: rgba(0, 224, 255, 0.18);
+    }
+
+    .onyx-split {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      gap: 0.4rem;
+    }
+
+    .onyx-pane {
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid var(--border);
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .onyx-pane-header {
+      padding: 0.3rem 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .onyx-pane-body {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .onyx-editor {
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      padding: 0.5rem 0.6rem;
+      resize: none;
+    }
+
+    .onyx-preview {
+      padding: 0.5rem 0.6rem;
+      font-size: 0.88rem;
+    }
+
+    /* SPLIT VIEW DESKTOP */
+
+    @media (min-width: 900px) {
+      .onyx-main {
+        flex-direction: row;
+      }
+
+      .onyx-sidebar {
+        width: 260px;
+        flex-shrink: 0;
+      }
+
+      .onyx-editor-wrap {
+        min-width: 0;
+      }
+
+      .onyx-split {
+        flex-direction: row;
+      }
+
+      .onyx-pane {
+        width: 50%;
+      }
+    }
+
+    /* PREVIEW MARKDOWN STYLES */
+
+    .onyx-preview h1,
+    .onyx-preview h2,
+    .onyx-preview h3,
+    .onyx-preview h4 {
+      margin: 0.4rem 0 0.2rem;
+    }
+
+    .onyx-preview h1 {
+      font-size: 1.3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.2rem;
+    }
+
+    .onyx-preview h2 {
+      font-size: 1.15rem;
+    }
+
+    .onyx-preview h3 {
+      font-size: 1rem;
+    }
+
+    .onyx-preview p {
+      margin: 0.2rem 0;
+      line-height: 1.4;
+    }
+
+    .onyx-preview ul,
+    .onyx-preview ol {
+      margin: 0.25rem 0 0.25rem 1.1rem;
+      padding-left: 0.4rem;
+    }
+
+    .onyx-preview li {
+      margin: 0.15rem 0;
+    }
+
+    .onyx-preview code {
+      font-family: var(--mono);
+      font-size: 0.83rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0.05rem 0.25rem;
+      border-radius: 4px;
+    }
+
+    .onyx-preview pre {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 0.4rem 0.5rem;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      margin: 0.3rem 0;
+    }
+
+    .onyx-preview a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .onyx-preview a:hover {
+      text-decoration: underline;
+    }
+
+    .onyx-preview blockquote {
+      border-left: 3px solid var(--accent-soft);
+      padding-left: 0.5rem;
+      margin: 0.25rem 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .onyx-preview hr {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      margin: 0.5rem 0;
+    }
+
+    .onyx-meta-bottom {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .onyx-wikilink {
+      color: var(--accent);
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .onyx-wikilink:hover {
+      text-decoration: underline;
+    }
+
+    /* GRAPH INLINE */
+
+    .onyx-graph-container {
+      margin-top: 0.6rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.4rem 0.5rem 0.5rem;
+    }
+
+    .onyx-graph-header-inline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .onyx-graph-controls {
+      display: inline-flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .onyx-graph-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--muted);
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      cursor: pointer;
+    }
+
+    .onyx-graph-btn-active {
+      border-color: var(--accent-soft);
+      background: rgba(0, 224, 255, 0.18);
+      color: var(--text);
+    }
+
+    .onyx-graph-svg {
+      width: 100%;
+      height: 280px;
+      background: radial-gradient(circle at top, #141931 0, #05060a 60%);
+      border-radius: 10px;
+    }
+
+    @media (min-width: 900px) {
+      .onyx-graph-svg {
+        height: 340px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="onyx-app">
+    <header class="onyx-header">
+      <div class="onyx-logo">ONYX<span>.md</span></div>
+      <div class="onyx-header-meta">
+        Bloc-notes Markdown local – aucune donnée ne quitte ce navigateur.
+      </div>
+    </header>
+
+    <main class="onyx-main">
+      <!-- SIDEBAR -->
+      <aside class="onyx-sidebar">
+        <div class="onyx-sidebar-header">
+          <div class="onyx-vault-name">Coffre local : <strong>ONYX</strong></div>
+        </div>
+
+        <div class="onyx-controls-top">
+          <button id="onyx-new-note" class="onyx-btn onyx-btn-primary">
+            + Nouvelle note
+          </button>
+          <button id="onyx-delete-note" class="onyx-btn onyx-btn-danger">
+            Supprimer
+          </button>
+        </div>
+
+        <div class="onyx-controls-top">
+          <button id="onyx-export-md" class="onyx-btn">
+            Exporter .md
+          </button>
+          <button id="onyx-import-md" class="onyx-btn">
+            Importer .md
+          </button>
+        </div>
+
+        <div class="onyx-controls-top">
+          <button id="onyx-backup-json" class="onyx-btn">
+            Sauvegarde .json
+          </button>
+          <button id="onyx-restore-json" class="onyx-btn">
+            Restaurer .json
+          </button>
+        </div>
+
+        <div class="onyx-search-wrap">
+          <span class="onyx-search-icon">🔍</span>
+          <input
+            id="onyx-search"
+            class="onyx-search"
+            type="search"
+            placeholder="Rechercher une note..."
+          />
+        </div>
+
+        <ul id="onyx-notes-list" class="onyx-notes-list"></ul>
+
+        <div class="onyx-sidebar-footer">
+          <div>Stockage : localStorage du navigateur.</div>
+          <div>Utilise la sauvegarde .json pour migrer vers une autre machine.</div>
+        </div>
+
+        <!-- Hidden file inputs -->
+        <input
+          id="onyx-file-md"
+          type="file"
+          accept=".md,.markdown,.txt"
+          multiple
+          style="display:none"
+        />
+        <input
+          id="onyx-file-json"
+          type="file"
+          accept=".json"
+          style="display:none"
+        />
+      </aside>
+
+      <!-- EDITOR / PREVIEW / GRAPH -->
+      <section class="onyx-editor-wrap">
+        <div class="onyx-note-header">
+          <input
+            id="onyx-title"
+            class="onyx-note-title"
+            type="text"
+            placeholder="Titre de la note"
+          />
+        </div>
+
+        <div class="onyx-toolbar">
+          <div class="onyx-toolbar-group">
+            <button class="onyx-toolbar-btn" data-md="h1">H1</button>
+            <button class="onyx-toolbar-btn" data-md="h2">H2</button>
+            <button class="onyx-toolbar-btn" data-md="bold">**Gras**</button>
+            <button class="onyx-toolbar-btn" data-md="italic">*Italique*</button>
+          </div>
+          <div class="onyx-toolbar-group">
+            <button class="onyx-toolbar-btn" data-md="ul">Liste</button>
+            <button class="onyx-toolbar-btn" data-md="code">Code</button>
+            <button class="onyx-toolbar-btn" data-md="quote">Citation</button>
+            <button class="onyx-toolbar-btn" data-md="link">Lien</button>
+          </div>
+          <div class="onyx-toolbar-group">
+            <button
+              id="onyx-toggle-preview"
+              class="onyx-toolbar-btn onyx-toolbar-toggle-active"
+            >
+              Aperçu
+            </button>
+            <button
+              id="onyx-toggle-split"
+              class="onyx-toolbar-btn onyx-toolbar-toggle-active"
+            >
+              Double vue
+            </button>
+            <button
+              id="onyx-toggle-graph"
+              class="onyx-toolbar-btn"
+            >
+              Graph
+            </button>
+          </div>
+        </div>
+
+        <div class="onyx-split" id="onyx-split">
+          <div class="onyx-pane" id="onyx-pane-editor">
+            <div class="onyx-pane-header">
+              <span>Éditeur Markdown</span>
+            </div>
+            <div class="onyx-pane-body">
+              <textarea
+                id="onyx-editor"
+                class="onyx-editor"
+                spellcheck="false"
+              ></textarea>
+            </div>
+          </div>
+          <div class="onyx-pane" id="onyx-pane-preview">
+            <div class="onyx-pane-header">
+              <span>Prévisualisation</span>
+            </div>
+            <div class="onyx-pane-body">
+              <div id="onyx-preview" class="onyx-preview"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="onyx-meta-bottom" id="onyx-meta-bottom"></div>
+
+        <!-- GRAPH INLINE -->
+        <div id="onyx-graph-container" class="onyx-graph-container" style="display:none">
+          <div class="onyx-graph-header-inline">
+            <span>
+              Graphe des notes : nœuds = notes, liens = wikilinks <code>[[Titre de note]]</code>
+            </span>
+            <div class="onyx-graph-controls">
+              <button id="onyx-graph-mode-global" class="onyx-graph-btn onyx-graph-btn-active">
+                Global
+              </button>
+              <button id="onyx-graph-mode-local" class="onyx-graph-btn">
+                Local (note courante)
+              </button>
+              <span id="onyx-graph-info" class="onyx-meta-bottom"></span>
+            </div>
+          </div>
+          <svg id="onyx-graph-svg" class="onyx-graph-svg"></svg>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // ================ MARKDOWN PARSER (simplifié) ================
+    (function () {
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function parseInline(text) {
+        // wikilinks [[Titre]]
+        text = text.replace(
+          /\[\[([^\]]+)\]\]/g,
+          '<span class="onyx-wikilink">[[<strong>$1</strong>]]</span>'
+        );
+        // code inline
+        text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
+        // bold
+        text = text.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+        // italic
+        text = text.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+        // links [txt](url)
+        text = text.replace(
+          /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+          '<a href="$2" target="_blank" rel="noopener">$1</a>'
+        );
+        return text;
+      }
+
+      function parseMarkdown(md) {
+        const lines = md.replace(/\r\n/g, "\n").split("\n");
+        let html = "";
+        let inList = false;
+        let listType = null;
+        let inCodeBlock = false;
+        let codeBuffer = [];
+
+        function closeList() {
+          if (!inList) return;
+          html += listType === "ol" ? "</ol>" : "</ul>";
+          inList = false;
+          listType = null;
+        }
+
+        function closeCodeBlock() {
+          if (!inCodeBlock) return;
+          html += "<pre><code>" + escapeHtml(codeBuffer.join("\n")) + "</code></pre>";
+          inCodeBlock = false;
+          codeBuffer = [];
+        }
+
+        lines.forEach(function (rawLine) {
+          const line = rawLine;
+
+          // Code block fences
+          if (line.trim().startsWith("```")) {
+            if (inCodeBlock) {
+              closeCodeBlock();
+            } else {
+              closeList();
+              inCodeBlock = true;
+              codeBuffer = [];
+            }
+            return;
+          }
+
+          if (inCodeBlock) {
+            codeBuffer.push(line);
+            return;
+          }
+
+          // Heading
+          const hMatch = line.match(/^(#{1,6})\s+(.*)$/);
+          if (hMatch) {
+            closeList();
+            const level = hMatch[1].length;
+            const content = parseInline(escapeHtml(hMatch[2]));
+            html += "<h" + level + ">" + content + "</h" + level + ">";
+            return;
+          }
+
+          // Blockquote
+          const qMatch = line.match(/^\s*>\s*(.+)$/);
+          if (qMatch) {
+            closeList();
+            html +=
+              "<blockquote>" + parseInline(escapeHtml(qMatch[1])) + "</blockquote>";
+            return;
+          }
+
+          // Lists
+          const ulMatch = line.match(/^\s*[-*+]\s+(.+)$/);
+          const olMatch = line.match(/^\s*\d+\.\s+(.+)$/);
+
+          if (ulMatch || olMatch) {
+            const item = parseInline(escapeHtml((ulMatch || olMatch)[1]));
+            const currentType = ulMatch ? "ul" : "ol";
+
+            if (!inList || listType !== currentType) {
+              closeList();
+              html += currentType === "ul" ? "<ul>" : "<ol>";
+              inList = true;
+              listType = currentType;
+            }
+            html += "<li>" + item + "</li>";
+            return;
+          }
+
+          // Horizontal rule
+          if (/^\s*---\s*$/.test(line)) {
+            closeList();
+            html += "<hr/>";
+            return;
+          }
+
+          // Blank
+          if (!line.trim()) {
+            closeList();
+            html += "<br/>";
+            return;
+          }
+
+          // Paragraph
+          closeList();
+          html += "<p>" + parseInline(escapeHtml(line)) + "</p>";
+        });
+
+        closeList();
+        closeCodeBlock();
+        return html;
+      }
+
+      window.ONYX_MARKDOWN = {
+        parse: parseMarkdown,
+      };
+    })();
+
+    // ================ ONYX APP LOGIC + GRAPH INLINE ================
+    document.addEventListener("DOMContentLoaded", () => {
+      const STORAGE_KEY = "onyx_notes_v1";
+
+      const listEl = document.getElementById("onyx-notes-list");
+      const titleEl = document.getElementById("onyx-title");
+      const editorEl = document.getElementById("onyx-editor");
+      const previewEl = document.getElementById("onyx-preview");
+      const metaBottomEl = document.getElementById("onyx-meta-bottom");
+      const searchEl = document.getElementById("onyx-search");
+
+      const btnNew = document.getElementById("onyx-new-note");
+      const btnDelete = document.getElementById("onyx-delete-note");
+      const btnExportMd = document.getElementById("onyx-export-md");
+      const btnImportMd = document.getElementById("onyx-import-md");
+      const btnBackupJson = document.getElementById("onyx-backup-json");
+      const btnRestoreJson = document.getElementById("onyx-restore-json");
+
+      const fileMdInput = document.getElementById("onyx-file-md");
+      const fileJsonInput = document.getElementById("onyx-file-json");
+
+      const btnTogglePreview = document.getElementById("onyx-toggle-preview");
+      const btnToggleSplit = document.getElementById("onyx-toggle-split");
+      const btnToggleGraph = document.getElementById("onyx-toggle-graph");
+      const paneEditor = document.getElementById("onyx-pane-editor");
+      const panePreview = document.getElementById("onyx-pane-preview");
+
+      const graphContainer = document.getElementById("onyx-graph-container");
+      const graphSvg = document.getElementById("onyx-graph-svg");
+      const graphInfo = document.getElementById("onyx-graph-info");
+      const graphModeGlobalBtn = document.getElementById("onyx-graph-mode-global");
+      const graphModeLocalBtn = document.getElementById("onyx-graph-mode-local");
+
+      let notes = [];
+      let currentId = null;
+      let autosaveTimer = null;
+      let graphVisible = false;
+      let graphMode = "global"; // "global" | "local"
+
+      // ---------- helpers ----------
+      function normalizeTitle(t) {
+        return (t || "").trim().toLowerCase();
+      }
+
+      // ---- stockage ----
+      function loadNotes() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) {
+            notes = [];
+            createInitialNote();
+            return;
+          }
+          const parsed = JSON.parse(raw);
+          notes = Array.isArray(parsed) ? parsed : [];
+          if (!notes.length) createInitialNote();
+        } catch (e) {
+          console.warn("Impossible de charger les notes ONYX :", e);
+          notes = [];
+          createInitialNote();
+        }
+      }
+
+      function saveNotes() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+        } catch (e) {
+          console.warn("Impossible d'enregistrer les notes ONYX :", e);
+        }
+      }
+
+      function createInitialNote() {
+        const now = Date.now();
+        const initial = {
+          id: "note-" + now,
+          title: "Bienvenue dans ONYX",
+          content:
+            "# Bienvenue dans ONYX\n\n" +
+            "Ce mini-bloc-notes Markdown fonctionne entièrement **hors ligne**.\n\n" +
+            "- Toutes les notes sont stockées dans `localStorage` du navigateur\n" +
+            "- Utilise les boutons *Sauvegarde .json* et *Restaurer .json* pour migrer entre machines\n" +
+            "- Le bouton *Exporter .md* permet d'enregistrer la note actuelle\n\n" +
+            "Tu peux utiliser `[[des liens]]` de type Obsidian pour relier tes notes.\n",
+          updatedAt: now,
+        };
+        notes.push(initial);
+        currentId = initial.id;
+      }
+
+      function formatDate(ts) {
+        if (!ts) return "";
+        const d = new Date(ts);
+        return d.toLocaleDateString() + " " + d.toLocaleTimeString().slice(0, 5);
+      }
+
+      function getCurrentNote() {
+        return notes.find((n) => n.id === currentId);
+      }
+
+      // ---- rendu liste / éditeur ----
+      function renderList() {
+        const q = (searchEl.value || "").toLowerCase();
+        listEl.innerHTML = "";
+
+        const sorted = notes
+          .slice()
+          .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
+          .filter((n) => {
+            if (!q) return true;
+            return (
+              (n.title || "").toLowerCase().includes(q) ||
+              (n.content || "").toLowerCase().includes(q)
+            );
+          });
+
+        if (!sorted.length) {
+          const empty = document.createElement("div");
+          empty.className = "onyx-note-item-meta";
+          empty.textContent =
+            "Aucune note trouvée. Crée une nouvelle note pour commencer.";
+          listEl.appendChild(empty);
+          return;
+        }
+
+        sorted.forEach((note) => {
+          const li = document.createElement("li");
+          li.className = "onyx-note-item";
+          if (note.id === currentId) li.classList.add("onyx-note-item-active");
+
+          const title = document.createElement("div");
+          title.className = "onyx-note-item-title";
+          title.textContent = note.title || "(Sans titre)";
+
+          const meta = document.createElement("div");
+          meta.className = "onyx-note-item-meta";
+          meta.textContent = "Modifiée : " + formatDate(note.updatedAt);
+
+          li.appendChild(title);
+          li.appendChild(meta);
+          li.addEventListener("click", () => selectNote(note.id));
+
+          listEl.appendChild(li);
+        });
+      }
+
+      function renderEditor() {
+        const note = getCurrentNote();
+        if (!note) {
+          titleEl.value = "";
+          editorEl.value = "";
+          previewEl.innerHTML = "";
+          metaBottomEl.textContent = "";
+          return;
+        }
+        titleEl.value = note.title || "";
+        editorEl.value = note.content || "";
+        previewEl.innerHTML = window.ONYX_MARKDOWN.parse(note.content || "");
+        metaBottomEl.textContent =
+          "Dernière modification : " + formatDate(note.updatedAt);
+        if (graphVisible) renderGraphView(); // graph à jour si visible
+      }
+
+      function selectNote(id) {
+        currentId = id;
+        renderList();
+        renderEditor();
+      }
+
+      function newNote() {
+        const now = Date.now();
+        const note = {
+          id: "note-" + now + "-" + Math.floor(Math.random() * 100000),
+          title: "Nouvelle note",
+          content: "",
+          updatedAt: now,
+        };
+        notes.push(note);
+        currentId = note.id;
+        saveNotes();
+        renderList();
+        renderEditor();
+        titleEl.focus();
+      }
+
+      function deleteCurrentNote() {
+        const note = getCurrentNote();
+        if (!note) return;
+        if (!confirm("Supprimer définitivement cette note ?")) return;
+        notes = notes.filter((n) => n.id !== note.id);
+        if (!notes.length) createInitialNote();
+        currentId = notes[0].id;
+        saveNotes();
+        renderList();
+        renderEditor();
+      }
+
+      function scheduleSave() {
+        if (autosaveTimer) clearTimeout(autosaveTimer);
+        autosaveTimer = setTimeout(() => {
+          saveNotes();
+          renderList();
+          const note = getCurrentNote();
+          if (note) {
+            metaBottomEl.textContent =
+              "Dernière modification : " + formatDate(note.updatedAt);
+          }
+          if (graphVisible) renderGraphView();
+        }, 400);
+      }
+
+      function handleTitleChange() {
+        const note = getCurrentNote();
+        if (!note) return;
+        note.title = titleEl.value;
+        note.updatedAt = Date.now();
+        scheduleSave();
+      }
+
+      function handleContentChange() {
+        const note = getCurrentNote();
+        if (!note) return;
+        note.content = editorEl.value;
+        note.updatedAt = Date.now();
+        previewEl.innerHTML = window.ONYX_MARKDOWN.parse(note.content || "");
+        scheduleSave();
+      }
+
+      // ---- Toolbar Markdown ----
+      function surroundSelection(before, after) {
+        const start = editorEl.selectionStart;
+        const end = editorEl.selectionEnd;
+        const value = editorEl.value;
+        const selected = value.slice(start, end);
+        const newText = before + selected + after;
+        editorEl.value = value.slice(0, start) + newText + value.slice(end);
+        editorEl.focus();
+        editorEl.selectionStart = start + before.length;
+        editorEl.selectionEnd = start + before.length + selected.length;
+        handleContentChange();
+      }
+
+      function insertAtLineStart(prefix) {
+        const start = editorEl.selectionStart;
+        const value = editorEl.value;
+        const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+        editorEl.value =
+          value.slice(0, lineStart) + prefix + value.slice(lineStart);
+        editorEl.focus();
+        editorEl.selectionStart = editorEl.selectionEnd =
+          start + prefix.length;
+        handleContentChange();
+      }
+
+      function setupToolbar() {
+        const toolbar = document.querySelector(".onyx-toolbar");
+        toolbar.addEventListener("click", (e) => {
+          const btn = e.target.closest("[data-md]");
+          if (!btn) return;
+          const action = btn.getAttribute("data-md");
+          switch (action) {
+            case "h1":
+              insertAtLineStart("# ");
+              break;
+            case "h2":
+              insertAtLineStart("## ");
+              break;
+            case "bold":
+              surroundSelection("**", "**");
+              break;
+            case "italic":
+              surroundSelection("*", "*");
+              break;
+            case "ul":
+              insertAtLineStart("- ");
+              break;
+            case "code":
+              surroundSelection("`", "`");
+              break;
+            case "quote":
+              insertAtLineStart("> ");
+              break;
+            case "link":
+              surroundSelection("[texte](", ")");
+              break;
+          }
+        });
+      }
+
+      // ---- Import / export ----
+      function exportCurrentNoteAsMd() {
+        const note = getCurrentNote();
+        if (!note) return;
+        const blob = new Blob([note.content || ""], { type: "text/markdown" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        const safeTitle = (note.title || "note-sans-titre")
+          .replace(/[^\w\-]+/g, "-")
+          .toLowerCase();
+        a.href = url;
+        a.download = safeTitle + ".md";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function backupAllAsJson() {
+        const blob = new Blob([JSON.stringify(notes, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "onyx-backup.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function importMdFiles(files) {
+        Array.from(files).forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const content = e.target.result;
+            const now = Date.now();
+            const title = file.name.replace(/\.(md|markdown|txt)$/i, "");
+            const note = {
+              id: "note-import-" + now + "-" + Math.floor(Math.random() * 100000),
+              title,
+              content,
+              updatedAt: now,
+            };
+            notes.push(note);
+            currentId = note.id;
+            saveNotes();
+            renderList();
+            renderEditor();
+          };
+          reader.readAsText(file);
+        });
+      }
+
+      function restoreFromJsonFile(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (!Array.isArray(data)) {
+              alert("Sauvegarde non valide (pas un tableau de notes).");
+              return;
+            }
+            if (!confirm("Remplacer toutes les notes par cette sauvegarde ?"))
+              return;
+            notes = data;
+            if (!notes.length) createInitialNote();
+            currentId = notes[0].id;
+            saveNotes();
+            renderList();
+            renderEditor();
+          } catch (err) {
+            console.error(err);
+            alert("Erreur lors de la lecture de la sauvegarde.");
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function setupImportExport() {
+        btnExportMd.addEventListener("click", exportCurrentNoteAsMd);
+        btnBackupJson.addEventListener("click", backupAllAsJson);
+
+        btnImportMd.addEventListener("click", () => fileMdInput.click());
+        fileMdInput.addEventListener("change", () => {
+          const files = fileMdInput.files;
+          if (!files || !files.length) return;
+          importMdFiles(files);
+          fileMdInput.value = "";
+        });
+
+        btnRestoreJson.addEventListener("click", () => fileJsonInput.click());
+        fileJsonInput.addEventListener("change", () => {
+          const file = fileJsonInput.files[0];
+          if (!file) return;
+          restoreFromJsonFile(file);
+          fileJsonInput.value = "";
+        });
+      }
+
+      // ---- Vue (éditeur / preview) ----
+      function setupViewToggles() {
+        let previewVisible = true;
+        let splitView = true;
+
+        function applyViewState() {
+          if (!previewVisible) {
+            panePreview.style.display = "none";
+          } else {
+            panePreview.style.display = "";
+          }
+
+          if (!splitView) {
+            paneEditor.style.width = "100%";
+            panePreview.style.width = "100%";
+            document.getElementById("onyx-split").style.flexDirection = "column";
+          } else {
+            document.getElementById("onyx-split").style.flexDirection = "";
+            paneEditor.style.width = "";
+            panePreview.style.width = "";
+          }
+
+          btnTogglePreview.classList.toggle(
+            "onyx-toolbar-toggle-active",
+            previewVisible
+          );
+          btnToggleSplit.classList.toggle(
+            "onyx-toolbar-toggle-active",
+            splitView
+          );
+        }
+
+        btnTogglePreview.addEventListener("click", () => {
+          previewVisible = !previewVisible;
+          applyViewState();
+        });
+
+        btnToggleSplit.addEventListener("click", () => {
+          splitView = !splitView;
+          applyViewState();
+        });
+
+        applyViewState();
+      }
+
+      // ---- GRAPH INLINE (wikilinks [[Titre de note]]) ----
+      function buildGraphData() {
+        const nodes = notes.map((n) => ({
+          id: n.id,
+          title: n.title || "(Sans titre)",
+        }));
+
+        const titleToId = {};
+        notes.forEach((n) => {
+          titleToId[normalizeTitle(n.title)] = n.id;
+        });
+
+        const edgesSet = new Set();
+        const neighbors = {};
+        notes.forEach((n) => {
+          neighbors[n.id] = new Set();
+        });
+
+        const linkRegex = /\[\[([^\]]+)\]\]/g;
+
+        notes.forEach((n) => {
+          const content = n.content || "";
+          let match;
+          while ((match = linkRegex.exec(content))) {
+            const rawTarget = match[1];
+            const targetId = titleToId[normalizeTitle(rawTarget)];
+            if (!targetId) continue;
+            if (targetId === n.id) continue;
+            const key =
+              n.id < targetId ? n.id + "->" + targetId : targetId + "->" + n.id;
+            if (!edgesSet.has(key)) {
+              edgesSet.add(key);
+              neighbors[n.id].add(targetId);
+              neighbors[targetId].add(n.id);
+            }
+          }
+        });
+
+        const edges = Array.from(edgesSet).map((key) => {
+          const [from, to] = key.split("->");
+          return { from, to };
+        });
+
+        return { nodes, edges, neighbors };
+      }
+
+      function renderGraphView() {
+        if (!graphSvg) return;
+        const { nodes, edges, neighbors } = buildGraphData();
+
+        while (graphSvg.firstChild) graphSvg.removeChild(graphSvg.firstChild);
+
+        if (!nodes.length) {
+          graphInfo.textContent = "Aucune note.";
+          return;
+        }
+
+        let nodesToRender = nodes;
+        let edgesToRender = edges;
+
+        if (graphMode === "local" && currentId) {
+          const set = new Set();
+          set.add(currentId);
+          if (neighbors[currentId]) {
+            neighbors[currentId].forEach((id) => set.add(id));
+          }
+          nodesToRender = nodes.filter((n) => set.has(n.id));
+          edgesToRender = edges.filter(
+            (e) => set.has(e.from) || set.has(e.to)
+          );
+          graphInfo.textContent =
+            "Local : " +
+            nodesToRender.length +
+            " nœud(s), " +
+            edgesToRender.length +
+            " lien(s) autour de la note courante.";
+        } else {
+          graphInfo.textContent =
+            "Global : " +
+            nodes.length +
+            " nœud(s), " +
+            edges.length +
+            " lien(s) via [[wikilinks]].";
+        }
+
+        const bbox = graphSvg.getBoundingClientRect();
+        const width = bbox.width || 800;
+        const height = bbox.height || 280;
+        const cx = width / 2;
+        const cy = height / 2;
+        const radius = Math.min(width, height) * 0.35;
+
+        const positions = {};
+        const nCount = nodesToRender.length || 1;
+
+        nodesToRender.forEach((node, index) => {
+          const angle = (2 * Math.PI * index) / nCount;
+          const x = cx + radius * Math.cos(angle);
+          const y = cy + radius * Math.sin(angle);
+          positions[node.id] = { x, y };
+        });
+
+        // edges
+        edgesToRender.forEach((edge) => {
+          const fromPos = positions[edge.from];
+          const toPos = positions[edge.to];
+          if (!fromPos || !toPos) return;
+
+          const line = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "line"
+          );
+          line.setAttribute("x1", fromPos.x);
+          line.setAttribute("y1", fromPos.y);
+          line.setAttribute("x2", toPos.x);
+          line.setAttribute("y2", toPos.y);
+          line.setAttribute(
+            "stroke",
+            graphMode === "local" ? "#00e0ff" : "rgba(0, 224, 255, 0.7)"
+          );
+          line.setAttribute("stroke-width", graphMode === "local" ? "2.2" : "1.6");
+          line.setAttribute("stroke-linecap", "round");
+          graphSvg.appendChild(line);
+        });
+
+        // nodes
+        nodesToRender.forEach((node) => {
+          const pos = positions[node.id];
+          if (!pos) return;
+
+          const g = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g"
+          );
+          g.dataset.noteId = node.id;
+
+          const isCurrent = node.id === currentId;
+
+          const circle = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+          );
+          circle.setAttribute("cx", pos.x);
+          circle.setAttribute("cy", pos.y);
+          circle.setAttribute("r", isCurrent ? 20 : 15);
+          circle.setAttribute(
+            "fill",
+            isCurrent
+              ? "rgba(0,224,255,0.55)"
+              : "rgba(0,224,255,0.22)"
+          );
+          circle.setAttribute("stroke", "#00e0ff");
+          circle.setAttribute("stroke-width", isCurrent ? "2" : "1.3");
+
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          text.setAttribute("x", pos.x);
+          text.setAttribute("y", pos.y - (isCurrent ? 26 : 22));
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("fill", "#f5f7ff");
+          text.setAttribute("font-size", "10");
+          text.textContent = node.title;
+
+          g.appendChild(circle);
+          g.appendChild(text);
+          graphSvg.appendChild(g);
+
+          g.addEventListener("click", () => {
+            selectNote(node.id);
+          });
+        });
+      }
+
+      function toggleGraph() {
+        graphVisible = !graphVisible;
+        if (graphVisible) {
+          graphContainer.style.display = "block";
+          btnToggleGraph.classList.add("onyx-toolbar-toggle-active");
+          renderGraphView();
+        } else {
+          graphContainer.style.display = "none";
+          btnToggleGraph.classList.remove("onyx-toolbar-toggle-active");
+        }
+      }
+
+      function setGraphMode(mode) {
+        graphMode = mode;
+        if (graphMode === "global") {
+          graphModeGlobalBtn.classList.add("onyx-graph-btn-active");
+          graphModeLocalBtn.classList.remove("onyx-graph-btn-active");
+        } else {
+          graphModeLocalBtn.classList.add("onyx-graph-btn-active");
+          graphModeGlobalBtn.classList.remove("onyx-graph-btn-active");
+        }
+        if (graphVisible) renderGraphView();
+      }
+
+      function setupGraphInline() {
+        if (!btnToggleGraph || !graphContainer) return;
+        btnToggleGraph.addEventListener("click", toggleGraph);
+        graphModeGlobalBtn.addEventListener("click", () => setGraphMode("global"));
+        graphModeLocalBtn.addEventListener("click", () => setGraphMode("local"));
+      }
+
+      // ---- Wikilinks cliquables dans la preview ----
+      function followWikilink(label) {
+        if (!label) return;
+        const norm = normalizeTitle(label);
+        let target = notes.find((n) => normalizeTitle(n.title) === norm);
+        if (target) {
+          selectNote(target.id);
+          return;
+        }
+        if (
+          !confirm(
+            'Aucune note ne s\'appelle "' +
+              label +
+              '".\nCréer une nouvelle note avec ce titre ?'
+          )
+        ) {
+          return;
+        }
+        const now = Date.now();
+        const note = {
+          id: "note-wiki-" + now + "-" + Math.floor(Math.random() * 100000),
+          title: label,
+          content: "",
+          updatedAt: now,
+        };
+        notes.push(note);
+        currentId = note.id;
+        saveNotes();
+        renderList();
+        renderEditor();
+      }
+
+      function setupWikilinkClicks() {
+        previewEl.addEventListener("click", (e) => {
+          const span = e.target.closest(".onyx-wikilink");
+          if (!span) return;
+          const raw = span.textContent || "";
+          const inner = raw.replace(/^\[\[/, "").replace(/\]\]$/, "").trim();
+          if (!inner) return;
+          followWikilink(inner);
+        });
+      }
+
+      // ---- init ----
+      function init() {
+        loadNotes();
+        if (!currentId && notes.length) currentId = notes[0].id;
+
+        renderList();
+        renderEditor();
+
+        setupToolbar();
+        setupImportExport();
+        setupViewToggles();
+        setupGraphInline();
+        setupWikilinkClicks();
+
+        btnNew.addEventListener("click", newNote);
+        btnDelete.addEventListener("click", deleteCurrentNote);
+
+        titleEl.addEventListener("input", handleTitleChange);
+        editorEl.addEventListener("input", handleContentChange);
+        searchEl.addEventListener("input", renderList);
+      }
+
+      init();
+    });
+  </script>
+</body>
+</html>
