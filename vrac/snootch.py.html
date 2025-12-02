@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Citoyen Engine – Demo HTML/CSS/JS pur</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Police sobre -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --surface: #020617;
+      --surface-soft: #020617;
+      --accent-1: #38bdf8;
+      --accent-2: #22c55e;
+      --accent-3: #f97316;
+      --accent-danger: #ef4444;
+      --border: rgba(148,163,184,0.8);
+      --text-main: #f9fafb;
+      --text-muted: #94a3b8;
+      --shadow-soft: 0 22px 60px rgba(15,23,42,0.9);
+      --radius: 18px;
+    }
+
+    /* Thème clair (switch en JS) */
+    .theme-light {
+      --bg: #e5e7eb;
+      --bg-soft: #e5e7eb;
+      --surface: #ffffff;
+      --surface-soft: #f3f4f6;
+      --border: rgba(148,163,184,0.6);
+      --text-main: #020617;
+      --text-muted: #6b7280;
+      --shadow-soft: 0 16px 40px rgba(148,163,184,0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.26), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.24), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1180px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.98), transparent 60%),
+        var(--surface);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 1.1rem 1.1rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .app { padding: 1.4rem 1.5rem 2rem; }
+    }
+
+    .app::before {
+      content: "Citoyen Engine · Demo HTML/CSS/JS pur";
+      position: absolute;
+      top: 0.4rem;
+      right: 1.2rem;
+      font-size: 0.63rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    header {
+      padding-bottom: 0.8rem;
+      border-bottom: 1px dashed rgba(148,163,184,0.8);
+      margin-bottom: 0.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background:
+        conic-gradient(from 210deg,
+          rgba(56,189,248,0.0),
+          rgba(56,189,248,0.6),
+          rgba(34,197,94,0.7),
+          rgba(250,204,21,0.8),
+          rgba(56,189,248,0.0));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 0 18px rgba(56,189,248,0.8);
+    }
+
+    h1 {
+      font-size: clamp(1.6rem, 3.9vw, 2.2rem);
+      line-height: 1.1;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg,#38bdf8,#22c55e,#f97316);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      font-size: 0.92rem;
+      max-width: 720px;
+      color: var(--text-muted);
+    }
+
+    .subtitle strong {
+      color: var(--text-main);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      padding: 0.16rem 0.6rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.9);
+    }
+
+    .btn-theme {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      padding: 0.2rem 0.7rem;
+      background: #020617;
+      font-size: 0.78rem;
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .btn-theme span.icon { font-size: 1rem; }
+
+    /* Navigation */
+    nav {
+      margin-top: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      padding: 0.4rem 0.9rem;
+      font-size: 0.82rem;
+      background: rgba(15,23,42,0.9);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent-1);
+      color: var(--text-main);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg,#38bdf8,#22c55e);
+      color: #020617;
+      border-color: transparent;
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.85);
+    }
+
+    .nav-btn span.icon { font-size: 1.1rem; }
+
+    /* Layout principal */
+    main {
+      margin-top: 0.9rem;
+    }
+
+    .view {
+      animation: fadeIn 0.22s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grilles & cartes */
+    .grid {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    @media (min-width: 880px) {
+      .grid-2 {
+        grid-template-columns: minmax(0,1.1fr) minmax(0,1fr);
+      }
+    }
+
+    .card {
+      border-radius: var(--radius);
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.96);
+      padding: 0.8rem 0.85rem 0.9rem;
+      box-shadow: 0 14px 36px rgba(15,23,42,0.96);
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-title {
+      font-size: 0.98rem;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .card-title span.icon { font-size: 1.2rem; }
+
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.9);
+      padding: 0.08rem 0.5rem;
+      font-size: 0.74rem;
+      color: rgba(226,232,240,0.98);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.24rem;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #38bdf8;
+      box-shadow: 0 0 8px rgba(56,189,248,1);
+    }
+
+    /* Dashboard metrics */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+
+    .metric {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      padding: 0.45rem 0.55rem;
+      font-size: 0.8rem;
+    }
+
+    .metric-label {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+    }
+
+    .metric-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .metric-note {
+      font-size: 0.72rem;
+      color: rgba(148,163,184,0.95);
+      margin-top: 0.05rem;
+    }
+
+    /* Boutons & champs */
+    button {
+      font-family: inherit;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.35rem 0.8rem;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: linear-gradient(135deg,#22c55e,#38bdf8);
+      color: #020617;
+      box-shadow: 0 10px 26px rgba(15,23,42,0.95);
+    }
+
+    .btn-outline {
+      background: #020617;
+      color: var(--text-muted);
+      border: 1px solid rgba(148,163,184,0.9);
+      box-shadow: none;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg,#ef4444,#f97316);
+      color: #020617;
+    }
+
+    .btn-sm {
+      padding: 0.22rem 0.55rem;
+      font-size: 0.78rem;
+    }
+
+    .btn + .btn { margin-left: 0.3rem; }
+
+    textarea, input, select {
+      font-family: inherit;
+      font-size: 0.83rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      color: var(--text-main);
+      padding: 0.3rem 0.5rem;
+      width: 100%;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    textarea:focus, input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-1);
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.8);
+    }
+
+    .field {
+      margin-bottom: 0.4rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.12rem;
+    }
+
+    .hint {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    /* Quiz */
+    .quiz-question {
+      margin: 0.3rem 0;
+      font-size: 0.88rem;
+      color: var(--text-main);
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 0.25rem;
+      margin-top: 0.25rem;
+    }
+
+    .quiz-option {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      padding: 0.25rem 0.55rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      background: #020617;
+    }
+
+    .quiz-option input {
+      width: auto;
+    }
+
+    .quiz-option.correct {
+      border-color: #22c55e;
+      background: rgba(22,163,74,0.18);
+    }
+
+    .quiz-option.wrong {
+      border-color: #ef4444;
+      background: rgba(239,68,68,0.18);
+    }
+
+    .quiz-result {
+      margin-top: 0.35rem;
+      font-size: 0.84rem;
+    }
+
+    /* Markdown preview */
+    .md-container {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    @media (min-width: 760px) {
+      .md-container {
+        grid-template-columns: minmax(0,1.05fr) minmax(0,1.1fr);
+      }
+    }
+
+    .md-preview {
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.85rem;
+      max-height: 210px;
+      overflow: auto;
+    }
+
+    .md-preview h1 {
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+    }
+    .md-preview h2 {
+      font-size: 1rem;
+      margin-top: 0.2rem;
+      margin-bottom: 0.2rem;
+    }
+    .md-preview ul {
+      margin-left: 1.1rem;
+      margin-bottom: 0.2rem;
+    }
+    .md-preview strong { color: var(--accent-2); }
+
+    /* Data Lab table */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 0.35rem;
+    }
+
+    .table th, .table td {
+      border-bottom: 1px solid rgba(148,163,184,0.7);
+      padding: 0.3rem 0.4rem;
+      text-align: left;
+    }
+
+    .table th {
+      color: var(--text-main);
+      font-weight: 600;
+      background: rgba(15,23,42,0.98);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .table-container {
+      max-height: 200px;
+      overflow: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      margin-top: 0.35rem;
+    }
+
+    .json-error {
+      margin-top: 0.25rem;
+      font-size: 0.78rem;
+      color: var(--accent-danger);
+    }
+
+    /* Export preview */
+    .export-area {
+      font-family: monospace;
+      font-size: 0.8rem;
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      padding: 0.4rem 0.5rem;
+      max-height: 230px;
+      overflow: auto;
+      margin-top: 0.35rem;
+      white-space: pre;
+    }
+
+    .footer {
+      margin-top: 0.9rem;
+      border-top: 1px dashed rgba(148,163,184,0.8);
+      padding-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .footer code {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      padding: 0.1rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1rem;
+      transform: translateX(-50%);
+      background: #020617;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.9);
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      color: #e0f2fe;
+      box-shadow: 0 20px 40px rgba(15,23,42,0.96);
+      display: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+<div class="app" id="appRoot">
+  <header>
+    <div class="header-top">
+      <div class="logo-title">
+        <div class="logo">⚙️</div>
+        <div>
+          <h1>Citoyen <span>Engine</span></h1>
+          <p class="subtitle">
+            Mini-moteur d’outils citoyens : <strong>dashboard</strong>, <strong>lab</strong>, <strong>data</strong>,
+            <strong>export</strong> – 100% <strong>HTML/CSS/JS</strong>, aucune lib externe.
+          </p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span id="pillStatus">Session locale · vierge</span>
+        </div>
+        <button class="btn-theme" id="themeToggle" type="button">
+          <span class="icon" id="themeIcon">🌙</span>
+          <span id="themeLabel">Mode sombre</span>
+        </button>
+      </div>
+    </div>
+
+    <nav>
+      <button class="nav-btn active" data-route="dashboard"><span class="icon">📊</span><span>Dashboard</span></button>
+      <button class="nav-btn" data-route="lab"><span class="icon">🧪</span><span>Knowledge Lab</span></button>
+      <button class="nav-btn" data-route="data"><span class="icon">🧬</span><span>Data Lab</span></button>
+      <button class="nav-btn" data-route="system"><span class="icon">🛠️</span><span>Système & Export</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <div id="view" class="view"></div>
+  </main>
+
+  <div class="footer">
+    <span>
+      Tout tourne côté navigateur · clé USB compatible · données persos dans <strong>localStorage</strong>.
+    </span>
+    <code>Demo : génie logiciel front · SPA artisanale</code>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  const STORAGE_KEY = "citoyen_engine_state_v1";
+
+  const App = {
+    state: {
+      theme: "dark",
+      visits: 0,
+      lastExport: null,
+      quiz: {
+        answered: false,
+        correct: 0,
+        total: 3,
+        lastResult: null
+      },
+      markdownDraft: "# Notes rapides\\n- Ce brouillon est local\\n- Pas de serveur",
+      dataLab: {
+        input: JSON.stringify([
+          { name: "Exemple PNJ", camp: "citoyen", role: "Allié", tags: ["veille","local"] },
+          { name: "Exemple Institution", camp: "systeme", role: "Opposant", tags: ["fédéral"] }
+        ], null, 2),
+        parsed: [],
+        error: null
+      },
+      createdAt: null,
+      updatedAt: null
+    },
+
+    init() {
+      this.loadState();
+      this.state.visits += 1;
+      this.saveState();
+      this.applyTheme(this.state.theme || "dark", false);
+
+      this.bindGlobalEvents();
+      const initialRoute = this.getRouteFromHash() || "dashboard";
+      this.renderRoute(initialRoute);
+      this.updatePillStatus();
+    },
+
+    bindGlobalEvents() {
+      document.querySelectorAll("button.nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const route = btn.dataset.route;
+          this.setRoute(route);
+        });
+      });
+
+      document.getElementById("themeToggle").addEventListener("click", () => {
+        const next = this.state.theme === "dark" ? "light" : "dark";
+        this.applyTheme(next, true);
+      });
+
+      window.addEventListener("hashchange", () => {
+        const route = this.getRouteFromHash();
+        if (route) this.renderRoute(route);
+      });
+    },
+
+    setRoute(route) {
+      window.location.hash = "#" + route;
+      this.renderRoute(route);
+    },
+
+    getRouteFromHash() {
+      const hash = window.location.hash.replace("#", "").trim();
+      return hash || null;
+    },
+
+    renderRoute(route) {
+      const view = document.getElementById("view");
+      const tpl = Views[route] || Views["dashboard"];
+      view.innerHTML = tpl(this.state);
+      this.activateNav(route);
+      RouteHandlers[route]?.(this);
+    },
+
+    activateNav(route) {
+      document.querySelectorAll("button.nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.route === route);
+      });
+    },
+
+    loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          this.state.createdAt = new Date().toISOString();
+          this.state.updatedAt = this.state.createdAt;
+          return;
+        }
+        const parsed = JSON.parse(raw);
+        this.state = Object.assign({}, this.state, parsed);
+      } catch (e) {
+        console.warn("Échec chargement state, utilisation valeurs par défaut.", e);
+      }
+    },
+
+    saveState() {
+      this.state.updatedAt = new Date().toISOString();
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+      } catch (e) {
+        console.warn("Impossible de sauvegarder dans localStorage", e);
+      }
+      this.updatePillStatus();
+    },
+
+    clearState() {
+      localStorage.removeItem(STORAGE_KEY);
+      this.state = {
+        theme: "dark",
+        visits: 0,
+        lastExport: null,
+        quiz: { answered: false, correct: 0, total: 3, lastResult: null },
+        markdownDraft: "# Notes rapides\\n- Ce brouillon est local\\n- Pas de serveur",
+        dataLab: { input: "", parsed: [], error: null },
+        createdAt: new Date().toISOString(),
+        updatedAt: null
+      };
+      this.saveState();
+      showToast("État réinitialisé (localStorage vidé).");
+      this.renderRoute("dashboard");
+    },
+
+    applyTheme(theme, persist) {
+      this.state.theme = theme;
+      const root = document.getElementById("appRoot");
+      if (theme === "light") {
+        root.classList.add("theme-light");
+      } else {
+        root.classList.remove("theme-light");
+      }
+
+      const icon = document.getElementById("themeIcon");
+      const label = document.getElementById("themeLabel");
+      if (theme === "light") {
+        icon.textContent = "☀️";
+        label.textContent = "Mode clair";
+      } else {
+        icon.textContent = "🌙";
+        label.textContent = "Mode sombre";
+      }
+
+      if (persist) {
+        this.saveState();
+        showToast(`Thème : ${theme === "light" ? "clair" : "sombre"}`);
+      }
+    },
+
+    updatePillStatus() {
+      const pill = document.getElementById("pillStatus");
+      const visits = this.state.visits || 0;
+      const isFresh = !this.state.updatedAt;
+      if (isFresh || visits <= 1) {
+        pill.textContent = "Session locale · vierge";
+      } else {
+        const date = new Date(this.state.updatedAt);
+        pill.textContent = `Session locale · maj ${date.toLocaleTimeString("fr-FR")}`;
+      }
+    }
+  };
+
+  /* ----------- VUES (templates HTML) ----------- */
+
+  const Views = {
+    dashboard(state) {
+      const visits = state.visits || 0;
+      const quiz = state.quiz || { correct: 0, total: 0 };
+      const lastExport = state.lastExport ? new Date(state.lastExport).toLocaleString("fr-FR") : "jamais";
+
+      return `
+        <div class="grid">
+          <section class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="icon">📊</span>
+                <span>Vue d’ensemble</span>
+              </div>
+              <div class="badge">
+                <span class="badge-dot"></span>
+                <span>Génie logiciel · front pur</span>
+              </div>
+            </div>
+            <p>
+              Cette démo montre une mini-appli <strong>SPA</strong> :
+              routing léger, store, persistance, lab de connaissances et data-lab –
+              sans framework, sans build, juste <strong>HTML/CSS/JS</strong>.
+            </p>
+            <div class="metrics">
+              <div class="metric">
+                <div class="metric-label">Visites de cette instance</div>
+                <div class="metric-value">${visits}</div>
+                <div class="metric-note">Compteur stocké dans localStorage.</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Quiz – bonnes réponses</div>
+                <div class="metric-value">${quiz.correct}/${quiz.total}</div>
+                <div class="metric-note">${quiz.lastResult ? "Dernier résultat : " + quiz.lastResult : "Pas encore tenté."}</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Dernier export</div>
+                <div class="metric-value" style="font-size:0.8rem;">${lastExport}</div>
+                <div class="metric-note">Système & Export → JSON / Markdown / HTML.</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Thème</div>
+                <div class="metric-value">${state.theme === "light" ? "Clair" : "Sombre"}</div>
+                <div class="metric-note">Toggle en haut à droite.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="icon">🧠</span>
+                <span>Concept d’architecture</span>
+              </div>
+            </div>
+            <p>
+              Architecture en trois couches :
+            </p>
+            <ul style="margin-left:1.1rem; margin-top:0.2rem;">
+              <li><strong>Store</strong> : objet <code>App.state</code> + persistance <code>localStorage</code>.</li>
+              <li><strong>Routing</strong> : vues déclaratives dans <code>Views</code>, handlers dans <code>RouteHandlers</code>.</li>
+              <li><strong>UI</strong> : composants HTML générés par template-strings, évènements rebindés à chaque route.</li>
+            </ul>
+            <p style="margin-top:0.4rem;">
+              Le but : montrer qu’on peut faire une <em>vraie</em> appli modulaire sans
+              dépendre d’un framework, tout en restant lisible.
+            </p>
+          </section>
+        </div>
+      `;
+    },
+
+    lab(state) {
+      const md = state.markdownDraft || "";
+      return `
+        <div class="grid-2">
+          <section class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="icon">🧪</span>
+                <span>Quiz – culture web & citoyenne</span>
+              </div>
+            </div>
+            <p>3 questions, correction instantanée, score persistant dans le store.</p>
+            <div id="quizContainer">
+              ${QuizView()}
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="icon">✍️</span>
+                <span>Bloc-notes Markdown</span>
+              </div>
+            </div>
+            <div class="md-container">
+              <div>
+                <div class="field">
+                  <label for="mdInput">Brouillon (Markdown de base)</label>
+                  <textarea id="mdInput">${escapeHtml(md)}</textarea>
+                  <div class="hint">Ex : <code># Titre</code>, <code>**gras**</code>, listes <code>- élément</code>.</div>
+                </div>
+              </div>
+              <div>
+                <div class="field">
+                  <label>Aperçu rendu</label>
+                  <div id="mdPreview" class="md-preview"></div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:0.4rem; display:flex; gap:0.35rem; flex-wrap:wrap;">
+              <button class="btn btn-sm" type="button" id="btnSaveMd">
+                <span>💾</span><span>Sauvegarder le brouillon</span>
+              </button>
+              <button class="btn btn-outline btn-sm" type="button" id="btnResetMd">
+                <span>🧹</span><span>Réinitialiser</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      `;
+    },
+
+    data(state) {
+      const input = state.dataLab.input || "";
+      return `
+        <div class="grid-2">
+          <section class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="icon">🧬</span>
+                <span>Data Lab – JSON → table</span>
+              </div>
+            </div>
+            <p>
+              Colle un tableau JSON d’objets (ex : PNJ, organisations…) pour le visualiser
+              dans une table. Aucun envoi serveur, tout est local.
+            </p>
+            <div class="field" style="margin-top:0.3rem;">
+              <label for="jsonInput">Entrée JSON</label>
+              <textarea id="jsonInput" spellcheck="false">${escapeHtml(input)}</textarea>
+            </div>
+            <div style="display:flex; gap:0.35rem; margin-top:0.3rem; flex-wrap:wrap;">
+              <button class="btn btn-sm" type="button" id="btnParseJson">
+                <span>🧮</span><span>Analyser</span>
+              </button>
+              <button class="btn btn-outline btn-sm" type="button" id="btnSampleJson">
+                <span>📥</span><span>Charger un exemple</span>
+              </button>
+            </div>
+            <div id="jsonError" class="json-error"></div>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="icon">📋</span>
+                <span>Tableau de données</span>
+              </div>
+            </div>
+            <div id="jsonTableContainer">
+              ${DataTableView(state.dataLab.parsed || [])}
+            </div>
+          </section>
+        </div>
+      `;
+    },
+
+    system(state) {
+      const prettyState = JSON.stringify(state, null, 2);
+      return `
+        <div class="grid-2">
+          <section class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="icon">🛠️</span>
+                <span>Système & Maintenance</span>
+              </div>
+            </div>
+            <p>
+              Ici tu vois l’état interne de l’application (store), tu peux :
+              <strong>exporter</strong>, <strong>importer</strong>, ou <strong>réinitialiser</strong>.
+            </p>
+            <div class="field" style="margin-top:0.3rem;">
+              <label>Export JSON</label>
+              <div class="export-area" id="stateExport">${escapeHtml(prettyState)}</div>
+            </div>
+            <div style="margin-top:0.35rem; display:flex; gap:0.35rem; flex-wrap:wrap;">
+              <button class="btn btn-sm" type="button" id="btnDownloadJson">
+                <span>📦</span><span>Télécharger JSON</span>
+              </button>
+              <button class="btn btn-outline btn-sm" type="button" id="btnCopyJson">
+                <span>📋</span><span>Copier</span>
+              </button>
+              <button class="btn btn-danger btn-sm" type="button" id="btnResetState">
+                <span>🧨</span><span>Reset complet</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="icon">📥</span>
+                <span>Import d’état</span>
+              </div>
+            </div>
+            <p>Tu peux coller ici un JSON exporté d’une autre instance (clé USB, Git, etc.).</p>
+            <div class="field" style="margin-top:0.3rem;">
+              <label for="stateImport">JSON à importer</label>
+              <textarea id="stateImport" spellcheck="false" placeholder="{ ... }"></textarea>
+            </div>
+            <div style="display:flex; gap:0.35rem; margin-top:0.3rem; flex-wrap:wrap;">
+              <button class="btn btn-sm" type="button" id="btnImportJson">
+                <span>✅</span><span>Valider l’import</span>
+              </button>
+            </div>
+            <div class="hint" style="margin-top:0.3rem;">
+              Astuce : tu peux brancher ça sur d’autres modules (tests de recrutement, QG PNJ, viewer JSON, etc.)
+              en partageant le même format d’état.
+            </div>
+          </section>
+        </div>
+      `;
+    }
+  };
+
+  /* ----------- SOUS-VUES ----------- */
+
+  function QuizView() {
+    return `
+      <div>
+        <div class="quiz-question">
+          1. Que signifie “localStorage” dans le navigateur ?
+        </div>
+        <div class="quiz-options" data-q="0">
+          <label class="quiz-option">
+            <input type="radio" name="q0" value="a">
+            <span>Une base de données partagée entre tous les internautes.</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q0" value="b">
+            <span>Un stockage clé-valeur local sur ton navigateur.</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q0" value="c">
+            <span>Un serveur secret de la NSA.</span>
+          </label>
+        </div>
+
+        <div class="quiz-question" style="margin-top:0.4rem;">
+          2. Qu’est-ce qu’une SPA (Single Page Application) ?
+        </div>
+        <div class="quiz-options" data-q="1">
+          <label class="quiz-option">
+            <input type="radio" name="q1" value="a">
+            <span>Un site qui recharge la page entière à chaque clic.</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q1" value="b">
+            <span>Une appli qui gère plusieurs vues dans un seul HTML avec du JS.</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q1" value="c">
+            <span>Un spa de relaxation pour développeurs.</span>
+          </label>
+        </div>
+
+        <div class="quiz-question" style="margin-top:0.4rem;">
+          3. Pourquoi éviter de tout envoyer sur un serveur quand c’est inutile ?
+        </div>
+        <div class="quiz-options" data-q="2">
+          <label class="quiz-option">
+            <input type="radio" name="q2" value="a">
+            <span>Pour préserver la vie privée et limiter la surface d’attaque.</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q2" value="b">
+            <span>Parce que les serveurs détestent recevoir des données.</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q2" value="c">
+            <span>Ça ne change rien, c’est pareil.</span>
+          </label>
+        </div>
+
+        <div style="margin-top:0.4rem; display:flex; gap:0.35rem; flex-wrap:wrap;">
+          <button class="btn btn-sm" type="button" id="btnQuizSubmit">
+            <span>✅</span><span>Corriger</span>
+          </button>
+          <button class="btn btn-outline btn-sm" type="button" id="btnQuizReset">
+            <span>🔁</span><span>Recommencer</span>
+          </button>
+        </div>
+        <div id="quizResult" class="quiz-result"></div>
+      </div>
+    `;
+  }
+
+  function DataTableView(data) {
+    if (!data || !data.length) {
+      return `
+        <p style="margin-top:0.3rem; font-size:0.82rem; color:var(--text-muted);">
+          Aucun tableau JSON analysé pour l’instant.
+        </p>
+      `;
+    }
+
+    const keys = Object.keys(data[0]);
+    const header = keys.map(k => `<th>${escapeHtml(k)}</th>`).join("");
+    const rows = data.map(row => {
+      const cells = keys.map(k => `<td>${escapeHtml(String(row[k]))}</td>`).join("");
+      return `<tr>${cells}</tr>`;
+    }).join("");
+
+    return `
+      <div class="table-container">
+        <table class="table">
+          <thead><tr>${header}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div class="hint" style="margin-top:0.3rem;">
+        Astuce : aligne ton schéma JSON avec celui de tes autres modules (QG PNJ, viewer JSON, tests).
+      </div>
+    `;
+  }
+
+  /* ----------- ROUTE HANDLERS (bind des events) ----------- */
+
+  const RouteHandlers = {
+    dashboard(app) {
+      // Rien de spécial ici pour l’instant.
+    },
+
+    lab(app) {
+      // Quiz
+      const btnSubmit = document.getElementById("btnQuizSubmit");
+      const btnReset = document.getElementById("btnQuizReset");
+      const resultEl = document.getElementById("quizResult");
+
+      const correctAnswers = ["b","b","a"];
+
+      btnSubmit.addEventListener("click", () => {
+        const groups = document.querySelectorAll(".quiz-options");
+        let correct = 0;
+        let answered = 0;
+
+        groups.forEach((g, idx) => {
+          const name = "q" + idx;
+          const selected = g.querySelector(`input[name="${name}"]:checked`);
+          const options = g.querySelectorAll(".quiz-option");
+          options.forEach(o => o.classList.remove("correct","wrong"));
+
+          if (!selected) return;
+          answered++;
+          const val = selected.value;
+          const parentLabel = selected.closest(".quiz-option");
+          if (val === correctAnswers[idx]) {
+            correct++;
+            parentLabel.classList.add("correct");
+          } else {
+            parentLabel.classList.add("wrong");
+          }
+        });
+
+        if (answered < correctAnswers.length) {
+          resultEl.textContent = "Réponds à toutes les questions avant de corriger.";
+          resultEl.style.color = "var(--accent-danger)";
+          return;
+        }
+
+        app.state.quiz.correct = correct;
+        app.state.quiz.total = correctAnswers.length;
+        app.state.quiz.answered = true;
+        app.state.quiz.lastResult = `${correct}/${correctAnswers.length}`;
+        app.saveState();
+
+        resultEl.textContent = `Score : ${correct}/${correctAnswers.length}. ` + 
+          (correct === correctAnswers.length
+            ? "Parfait, tu maîtrises la logique de base !"
+            : "Tu peux retenter en ajustant tes réponses.");
+        resultEl.style.color = correct === correctAnswers.length ? "var(--accent-2)" : "var(--text-main)";
+      });
+
+      btnReset.addEventListener("click", () => {
+        document.querySelectorAll(".quiz-option").forEach(o => {
+          o.classList.remove("correct","wrong");
+        });
+        document.querySelectorAll(".quiz-options input[type=radio]").forEach(i => i.checked = false);
+        resultEl.textContent = "";
+      });
+
+      // Markdown preview
+      const mdInput = document.getElementById("mdInput");
+      const mdPreview = document.getElementById("mdPreview");
+      const btnSave = document.getElementById("btnSaveMd");
+      const btnResetMd = document.getElementById("btnResetMd");
+
+      const renderMd = () => {
+        const text = mdInput.value;
+        mdPreview.innerHTML = renderMarkdown(text);
+      };
+
+      mdInput.addEventListener("input", renderMd);
+      renderMd();
+
+      btnSave.addEventListener("click", () => {
+        app.state.markdownDraft = mdInput.value;
+        app.saveState();
+        showToast("Brouillon Markdown sauvegardé dans la session locale.");
+      });
+
+      btnResetMd.addEventListener("click", () => {
+        mdInput.value = "# Notes rapides\n- Ce brouillon est local\n- Pas de serveur";
+        renderMd();
+      });
+    },
+
+    data(app) {
+      const jsonInput = document.getElementById("jsonInput");
+      const btnParse = document.getElementById("btnParseJson");
+      const btnSample = document.getElementById("btnSampleJson");
+      const errorEl = document.getElementById("jsonError");
+      const tableContainer = document.getElementById("jsonTableContainer");
+
+      const sample = [
+        { name: "PNJ 1", camp: "citoyen", role: "Allié", tags: "local, veille" },
+        { name: "PNJ 2", camp: "systeme", role: "Adversaire", tags: "fédéral" },
+        { name: "Collectif X", camp: "citoyen", role: "Groupe", tags: "terrain, action" }
+      ];
+
+      btnSample.addEventListener("click", () => {
+        jsonInput.value = JSON.stringify(sample, null, 2);
+        errorEl.textContent = "";
+        tableContainer.innerHTML = DataTableView(sample);
+        app.state.dataLab.input = jsonInput.value;
+        app.state.dataLab.parsed = sample;
+        app.state.dataLab.error = null;
+        app.saveState();
+      });
+
+      btnParse.addEventListener("click", () => {
+        const raw = jsonInput.value.trim();
+        app.state.dataLab.input = raw;
+        if (!raw) {
+          errorEl.textContent = "Zone JSON vide.";
+          tableContainer.innerHTML = DataTableView([]);
+          app.state.dataLab.parsed = [];
+          app.state.dataLab.error = "Zone vide";
+          app.saveState();
+          return;
+        }
+        try {
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) {
+            throw new Error("Le JSON doit être un tableau d’objets.");
+          }
+          if (!parsed.length || typeof parsed[0] !== "object") {
+            throw new Error("Le tableau doit contenir au moins un objet.");
+          }
+          errorEl.textContent = "";
+          tableContainer.innerHTML = DataTableView(parsed);
+          app.state.dataLab.parsed = parsed;
+          app.state.dataLab.error = null;
+          app.saveState();
+        } catch (e) {
+          errorEl.textContent = "Erreur JSON : " + e.message;
+          tableContainer.innerHTML = DataTableView([]);
+          app.state.dataLab.parsed = [];
+          app.state.dataLab.error = e.message;
+          app.saveState();
+        }
+      });
+
+      // au chargement de la route, re-rendre table si on a déjà des données
+      if (app.state.dataLab.parsed && app.state.dataLab.parsed.length) {
+        tableContainer.innerHTML = DataTableView(app.state.dataLab.parsed);
+      }
+      if (app.state.dataLab.error) {
+        errorEl.textContent = "Erreur JSON : " + app.state.dataLab.error;
+      }
+    },
+
+    system(app) {
+      const btnDownload = document.getElementById("btnDownloadJson");
+      const btnCopy = document.getElementById("btnCopyJson");
+      const btnReset = document.getElementById("btnResetState");
+      const btnImport = document.getElementById("btnImportJson");
+      const importArea = document.getElementById("stateImport");
+      const exportArea = document.getElementById("stateExport");
+
+      btnDownload.addEventListener("click", () => {
+        const dataStr = JSON.stringify(app.state, null, 2);
+        downloadFile("citoyen-engine-state.json", dataStr, "application/json");
+        app.state.lastExport = new Date().toISOString();
+        app.saveState();
+        showToast("JSON téléchargé.");
+      });
+
+      btnCopy.addEventListener("click", () => {
+        const text = exportArea.textContent || exportArea.innerText || "";
+        copyToClipboard(text, () => {
+          showToast("Copié dans le presse-papiers.");
+        });
+      });
+
+      btnReset.addEventListener("click", () => {
+        if (confirm("Réinitialiser l’état et vider le localStorage ?")) {
+          app.clearState();
+        }
+      });
+
+      btnImport.addEventListener("click", () => {
+        const raw = importArea.value.trim();
+        if (!raw) {
+          showToast("Zone d’import vide.");
+          return;
+        }
+        try {
+          const parsed = JSON.parse(raw);
+          if (typeof parsed !== "object" || parsed === null) {
+            throw new Error("Le JSON doit représenter un objet.");
+          }
+          app.state = Object.assign({}, app.state, parsed);
+          app.saveState();
+          showToast("État importé avec succès.");
+          App.renderRoute("dashboard");
+        } catch (e) {
+          showToast("Erreur d’import JSON : " + e.message);
+        }
+      });
+    }
+  };
+
+  /* ----------- UTILITAIRES ----------- */
+
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.style.display = "block";
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => {
+      toast.style.display = "none";
+    }, 2300);
+  }
+
+  function downloadFile(filename, content, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function copyToClipboard(text, cb) {
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(cb).catch(() => {
+        fallbackCopy(text, cb);
+      });
+    } else {
+      fallbackCopy(text, cb);
+    }
+  }
+
+  function fallbackCopy(text, cb) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    cb();
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;");
+  }
+
+  // mini renderer Markdown
+  function renderMarkdown(text) {
+    const escaped = escapeHtml(text || "");
+    const lines = escaped.split(/\r?\n/);
+    const out = [];
+    let inList = false;
+
+    for (let line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        continue;
+      }
+      if (trimmed.startsWith("### ")) {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push("<h3>" + inlineMarkdown(trimmed.slice(4)) + "</h3>");
+      } else if (trimmed.startsWith("## ")) {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push("<h2>" + inlineMarkdown(trimmed.slice(3)) + "</h2>");
+      } else if (trimmed.startsWith("# ")) {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push("<h1>" + inlineMarkdown(trimmed.slice(2)) + "</h1>");
+      } else if (trimmed.startsWith("- ")) {
+        if (!inList) {
+          out.push("<ul>");
+          inList = true;
+        }
+        out.push("<li>" + inlineMarkdown(trimmed.slice(2)) + "</li>");
+      } else {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push("<p>" + inlineMarkdown(trimmed) + "</p>");
+      }
+    }
+    if (inList) out.push("</ul>");
+    return out.join("\n");
+  }
+
+  function inlineMarkdown(str) {
+    // **gras**
+    return str.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  }
+
+  /* ----------- LANCEMENT ----------- */
+
+  document.addEventListener("DOMContentLoaded", () => {
+    App.init();
+  });
+
+})();
+</script>
+</body>
+</html>
