@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>index.html – Portail du Kit de Recrutement Citoyen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #050818;
+      --card: #020617;
+      --accent-blue: #38bdf8;
+      --accent-green: #22c55e;
+      --accent-amber: #fbbf24;
+      --accent-red: #fb7185;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(148,163,184,0.7);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56,189,248,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.18), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1200px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.16), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.96), transparent 60%),
+        var(--bg-alt);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      padding: 1.2rem 0.9rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.8rem 1.6rem 2.2rem; }
+    }
+
+    .page::before {
+      content: "index.html · Portail du kit · USB / Git / hébergement statique";
+      position: absolute;
+      top: 0.45rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      pointer-events: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .header-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-blue);
+      background: rgba(15,23,42,0.98);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      box-shadow: 0 0 18px rgba(56,189,248,0.4);
+    }
+
+    .badge-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent-blue);
+      box-shadow: 0 0 14px rgba(56,189,248,0.8);
+    }
+
+    .header-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 360px;
+    }
+
+    h1 {
+      margin-top: 0.4rem;
+      font-size: clamp(2rem, 4.6vw, 2.9rem);
+      line-height: 1.05;
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #38bdf8, #22c55e, #fbbf24, #fb7185);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 880px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .notice {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 0.55rem 0.7rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 0.4rem;
+      align-items: flex-start;
+    }
+
+    .notice-icon { font-size: 1.4rem; }
+    .notice strong { color: var(--accent-blue); }
+
+    main {
+      margin-top: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 980px) {
+      main {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+        align-items: flex-start;
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at 50% 0, rgba(56,189,248,0.13), transparent 65%), var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 0.9rem 0.95rem 1.1rem;
+      position: relative;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .panel h2 {
+      font-size: 1.05rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-main);
+    }
+
+    .panel h3 {
+      font-size: 0.9rem;
+      margin: 0.45rem 0 0.25rem;
+      color: var(--text-main);
+    }
+
+    .panel p {
+      margin-bottom: 0.25rem;
+      line-height: 1.6;
+    }
+
+    .mono {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.8rem;
+    }
+
+    pre {
+      margin-top: 0.35rem;
+      padding: 0.5rem 0.6rem;
+      border-radius: 14px;
+      border: 1px solid rgba(30,41,59,0.9);
+      background: rgba(2,6,23,0.98);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .hint strong { color: var(--accent-green); }
+
+    /* Cartes de navigation */
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0,1fr));
+      gap: 0.6rem;
+      margin-top: 0.4rem;
+    }
+
+    @media (min-width: 640px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .nav-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: radial-gradient(circle at 50% 0, rgba(56,189,248,0.16), transparent 60%), #020617;
+      padding: 0.55rem 0.55rem 0.6rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      border-color: var(--accent-blue);
+    }
+
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .nav-emoji {
+      font-size: 1.4rem;
+    }
+
+    .nav-body {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .nav-footer {
+      margin-top: 0.2rem;
+      font-size: 0.7rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      color: var(--text-muted);
+    }
+
+    .pill-mini {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      padding: 0.06rem 0.45rem;
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+
+    .pill-mini.primary {
+      border-color: var(--accent-green);
+      color: #bbf7d0;
+    }
+
+    .pill-mini.warn {
+      border-color: var(--accent-amber);
+      color: #fef9c3;
+    }
+
+    .pill-mini.dark {
+      border-color: var(--accent-blue);
+      color: #e0f2fe;
+    }
+
+    /* Étapes */
+
+    .steps {
+      margin-top: 0.4rem;
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      padding-left: 1.9rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.03rem;
+      width: 1.3rem;
+      height: 1.3rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--accent-blue);
+      background: rgba(15,23,42,0.96);
+      box-shadow: 0 0 12px rgba(56,189,248,0.4);
+    }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.45rem;
+      right: 0.6rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.75);
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-row">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>Portail du Kit – Recrutement & Veille citoyenne</span>
+          </div>
+          <h1>
+            Construire ton <span>kit sur clé</span>
+          </h1>
+        </div>
+        <div class="header-meta">
+          Tous les tests, missions, jeux et FAQ réunis sur une seule page,
+          avec une arbo standard et des noms de fichiers propres pour ton kit USB / Git.
+        </div>
+      </div>
+      <p class="subtitle">
+        Idée : tu peux copier ce dossier sur une clé USB, un dépôt Git ou un hébergement statique
+        et <strong>reproduire ton “Agence de Recrutement Citoyenne”</strong> n’importe où,
+        avec ou sans connexion, avec ou sans IA.
+      </p>
+      <div class="notice">
+        <div class="notice-icon">📂</div>
+        <div>
+          <strong>Mode d’emploi express</strong> :  
+          1) Respecter l’<strong>arborescence</strong> ci-dessous (ou l’adapter proprement).  
+          2) Tout commence ici avec <span class="mono">index.html</span>.  
+          3) Les pages internes restent de simples fichiers <span class="mono">.html</span>, clonables et modifiables.
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Colonne gauche : arborescence -->
+      <section class="panel">
+        <h2>1. Arborescence recommandée du kit</h2>
+        <p>
+          Structure propre pour une clé USB ou un dépôt Git.  
+          Tu peux adapter les noms, mais l’idée est de garder :
+          <strong>/tests</strong>, <strong>/missions</strong>, <strong>/docs</strong>, <strong>/lore</strong>.
+        </p>
+
+        <pre><code>/
+├─ index.html                &lt;-- Portail principal (cette page)
+├─ README.md                 &lt;-- Explication générale du kit
+│
+├─ /tests/                   &lt;-- Tous les tests & examens
+│  ├─ test-index.html        &lt;-- Page d'accueil des tests
+│  ├─ test-0-obsidian.html   &lt;-- Test sur tutoriels & usage Obsidian
+│  ├─ test-1-veille.html     &lt;-- Test sur veille citoyenne & réseaux
+│  ├─ exam.html              &lt;-- Examen général “rejoindre ou pas l’Organisation”
+│  ├─ jalon-0.html           &lt;-- Jalon pédagogique / bilan de parcours
+│  └─ sas.html               &lt;-- SAS d’entrée / carte 0 / avertissements
+│
+├─ /missions/                &lt;-- Jeux & simulations “éco-système”
+│  ├─ mission-1-marques.html         &lt;-- Qui-est-ce des marques & sponsors
+│  ├─ mission-2-ressources-sel-vps.html
+│  │                               &lt;-- Marché “sel de cuisine → VPS” + budget/recettes
+│  └─ mission-3-storage-cookies.html
+│                                  &lt;-- LocalStorage, cookies, export & console
+│
+├─ /docs/                    &lt;-- Annexes, FAQ, dossiers explicatifs
+│  ├─ faq-tech.html          &lt;-- FAQ technique (Markdown, serveur, clé USB…)
+│  ├─ faq-kit.html           &lt;-- Guide clé en main pour créer sa propre instance
+│  ├─ power.html             &lt;-- Page “potentiel du projet” (cercles vertueux, impact)
+│  ├─ budget-scenario.html   &lt;-- Scénarios de budget / sponsors / cagnottes
+│  ├─ linux.html             &lt;-- Économie du libre façon Linux, en version cartoon
+│  └─ pomme.html             &lt;-- Scénarios “ce qu’il ne faut pas faire” + juste milieu
+│
+├─ /lore/                    &lt;-- Univers narratif & business parallèle
+│  ├─ conspii.html           &lt;-- “La Conspi” (clone gore qui copie tout)
+│  ├─ sharky.html            &lt;-- Page purement business (faire du pognon)
+│  └─ ultime.html            &lt;-- Page “business canevas” pour toutes les parties prenantes
+│
+└─ /assets/                  &lt;-- Images, pdf, sons, etc.
+   ├─ /img/                  &lt;-- Logos, illustrations, cartoons
+   ├─ /pdf/                  &lt;-- Dossiers pédagogiques & annexes
+   └─ /media/                &lt;-- Autres (sons, vidéos embarquées localement éventuelles)</code></pre>
+
+        <p class="hint">
+          <strong>Astuce :</strong> si tu as déjà des fichiers existants avec d’autres noms
+          (par ex. <span class="mono">test-0.html</span>, <span class="mono">mission-2.html</span>),
+          tu peux soit les renommer en suivant ce canevas, soit simplement adapter les liens de ce portail.
+        </p>
+      </section>
+
+      <!-- Colonne droite : navigation & mode d'emploi -->
+      <section class="panel">
+        <h2>2. Portes d’entrée du kit (navigation)</h2>
+        <p>
+          Les fichiers ci-dessous sont les <strong>points de départ</strong> les plus importants
+          pour quelqu’un qui découvre ton kit sur une clé, un Git ou un hébergement.
+        </p>
+
+        <div class="cards-grid">
+          <!-- SAS / Carte 0 -->
+          <a href="tests/sas.html" class="nav-card">
+            <div class="nav-header">
+              <div class="nav-title">SAS d’entrée · Carte 0</div>
+              <div class="nav-emoji">🚪</div>
+            </div>
+            <div class="nav-body">
+              Avertissements, contexte, “tu sais dans quoi tu mets les pieds”.
+              C’est la porte officielle vers tous les tests & missions.
+            </div>
+            <div class="nav-footer">
+              <span class="pill-mini primary">tests/sas.html</span>
+              <span class="pill-mini dark">entrée recommandée</span>
+            </div>
+          </a>
+
+          <!-- Index des tests -->
+          <a href="tests/test-index.html" class="nav-card">
+            <div class="nav-header">
+              <div class="nav-title">Index des tests</div>
+              <div class="nav-emoji">🧪</div>
+            </div>
+            <div class="nav-body">
+              Choix entre les différents tests documentaires (Obsidian, veille citoyenne, etc.),
+              avec niveau de difficulté et consignes.
+            </div>
+            <div class="nav-footer">
+              <span class="pill-mini primary">tests/test-index.html</span>
+              <span class="pill-mini">tests & auto-évaluation</span>
+            </div>
+          </a>
+
+          <!-- Missions écosystème -->
+          <a href="missions/mission-1-marques.html" class="nav-card">
+            <div class="nav-header">
+              <div class="nav-title">Missions “éco-système”</div>
+              <div class="nav-emoji">🎯</div>
+            </div>
+            <div class="nav-body">
+              Des mini-jeux pour comprendre ton rapport aux marques, aux ressources matérielles
+              et aux flux financiers (marques, sel, VPS, storage).
+            </div>
+            <div class="nav-footer">
+              <span class="pill-mini dark">missions/mission-1-marques.html</span>
+              <span class="pill-mini">missions 1 · 2 · 3</span>
+            </div>
+          </a>
+
+          <!-- FAQ technique / kit -->
+          <a href="docs/faq-tech.html" class="nav-card">
+            <div class="nav-header">
+              <div class="nav-title">FAQ technique & kit</div>
+              <div class="nav-emoji">🛠️</div>
+            </div>
+            <div class="nav-body">
+              Comment ça marche techniquement : HTML, Markdown, serveur, Git, clé USB.
+              Et surtout : comment cloner ou adapter le kit pour une autre structure.
+            </div>
+            <div class="nav-footer">
+              <span class="pill-mini primary">docs/faq-tech.html</span>
+              <span class="pill-mini">docs/faq-kit.html</span>
+            </div>
+          </a>
+
+          <!-- Business / sponsors -->
+          <a href="docs/budget-scenario.html" class="nav-card">
+            <div class="nav-header">
+              <div class="nav-title">Scénarios budget & sponsors</div>
+              <div class="nav-emoji">💶</div>
+            </div>
+            <div class="nav-body">
+              Simulations de budgets, types de sponsors, niveaux de soutiens et effets
+              sur la gouvernance de ton “Organisation”.
+            </div>
+            <div class="nav-footer">
+              <span class="pill-mini warn">docs/budget-scenario.html</span>
+              <span class="pill-mini">à manier avec recul</span>
+            </div>
+          </a>
+
+          <!-- Lore -->
+          <a href="lore/conspii.html" class="nav-card">
+            <div class="nav-header">
+              <div class="nav-title">Lore & univers parallèle</div>
+              <div class="nav-emoji">🕵️‍♂️</div>
+            </div>
+            <div class="nav-body">
+              La Conspi, Sharky, Linux, Pomme, Ultime… tout le versant narratif, satirique
+              et “Mordor inversé” autour de l’Organisation.
+            </div>
+            <div class="nav-footer">
+              <span class="pill-mini dark">lore/conspii.html</span>
+              <span class="pill-mini">lore/sharky.html · lore/ultime.html</span>
+            </div>
+          </a>
+        </div>
+
+        <h3>3. Construire ton kit : les étapes</h3>
+        <div class="steps">
+          <div class="step">
+            Copier l’arborescence ci-contre (ou l’adapter proprement) dans un dossier :
+            <span class="mono">/mon-kit/</span> sur ton ordi, ta clé USB, ou ton dépôt Git.
+          </div>
+          <div class="step">
+            Placer toutes les pages déjà produites (tests, missions, FAQ, lore) dans
+            les bons dossiers en renommant les fichiers si besoin pour coller au canevas.
+          </div>
+          <div class="step">
+            Ouvrir <span class="mono">index.html</span> dans un navigateur, vérifier que les liens principaux
+            vers <span class="mono">/tests</span>, <span class="mono">/missions</span>, <span class="mono">/docs</span> et <span class="mono">/lore</span> fonctionnent.
+          </div>
+          <div class="step">
+            Compléter les contenus au fur et à mesure :
+            ajouter des PDF dans <span class="mono">/assets/pdf</span>, des images dans <span class="mono">/assets/img</span>,
+            et adapter les textes pour ta réalité (ville, asso, public).
+          </div>
+          <div class="step">
+            Quand tout tient la route :  
+            – Copier le dossier sur une clé USB et tester sur une machine “neuve”.  
+            – Mettre le dossier sur GitHub / GitLab pour partage.  
+            – Éventuellement déposer le tout sur un hébergement statique (GitHub Pages, Vercel…).
+          </div>
+        </div>
+
+        <p class="hint">
+          <strong>Principe :</strong> une instance = un dossier complet qui respecte grossièrement ce canevas.  
+          Ensuite, chacun peut forker, adapter, localiser et enrichir son propre kit
+          tout en gardant une structure reconnaissable.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        Ce portail sert de “table des matières vivante” de ton multivers de tests, missions,
+        dossiers & jeux autour de la veille citoyenne et du recrutement inversé.
+      </span>
+      <code>index.html · portail du kit · structure : /tests · /missions · /docs · /lore · /assets</code>
+    </footer>
+
+    <div class="badge-corner">
+      KIT · PORTAIL GLOBAL
+    </div>
+  </div>
+</body>
+</html>
