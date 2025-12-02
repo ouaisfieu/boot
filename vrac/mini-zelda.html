@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Donjon · Zelda-like</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <style>
+    :root {
+      --bg: #05040b;
+      --panel: #141221;
+      --accent: #42ffb2;
+      --accent2: #ffdd55;
+      --danger: #ff5370;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #27224f 0, #05040b 55%);
+      color: #f8f8ff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+    }
+    .frame {
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.04), rgba(0,0,0,0.95));
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.9);
+      padding: 0.8rem;
+      max-width: 480px;
+      width: 100%;
+    }
+    .title {
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+    .title h1 {
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0 12px rgba(66,255,178,0.8);
+    }
+    .title p {
+      font-size: 0.75rem;
+      color: #b4b4dd;
+      margin-top: 0.15rem;
+    }
+    .canvas-wrap {
+      background: #05040b;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      overflow: hidden;
+      position: relative;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+      background: #000;
+    }
+    .hud {
+      margin-top: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #c6c6f0;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .hud strong {
+      color: var(--accent2);
+    }
+    .message {
+      margin-top: 0.3rem;
+      font-size: 0.75rem;
+      color: #e0e0ff;
+      min-height: 1.3em;
+    }
+
+    /* Contrôles tactiles */
+    .controls {
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 40px);
+      grid-template-rows: repeat(3, 40px);
+      gap: 0.15rem;
+    }
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.12), rgba(0,0,0,0.95));
+      color: #f5f5ff;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.8);
+      opacity: 0.86;
+      transition: transform 0.06s ease-out, box-shadow 0.06s ease-out, opacity 0.06s;
+    }
+    .btn.dir {
+      --col: var(--accent);
+      box-shadow: 0 0 12px rgba(66,255,178,0.4);
+      border-color: rgba(66,255,178,0.7);
+    }
+    .btn.action {
+      --col: var(--accent2);
+      box-shadow: 0 0 12px rgba(255,221,85,0.4);
+      border-color: rgba(255,221,85,0.7);
+      width: 52px;
+      height: 52px;
+      font-size: 0.7rem;
+    }
+    .btn::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--col, #fff);
+      box-shadow: 0 0 10px var(--col, #fff);
+      margin-right: 0.2rem;
+    }
+    .btn.empty {
+      visibility: hidden;
+      box-shadow: none;
+      border: none;
+      background: transparent;
+    }
+    .btn:active, .btn.active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.9);
+      opacity: 1;
+    }
+
+    @media (max-width: 400px) {
+      .frame {
+        padding: 0.6rem;
+      }
+      .dpad {
+        grid-template-columns: repeat(3, 34px);
+        grid-template-rows: repeat(3, 34px);
+      }
+      .btn.action {
+        width: 44px;
+        height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="frame">
+    <div class="title">
+      <h1>Mini Donjon · Orga</h1>
+      <p>
+        Genre Zelda 2D : trouve la <strong>clé</strong>, ouvre la <strong>porte</strong>, rejoins la <strong>sortie</strong>.
+        Flèches / ZQSD ou boutons.
+      </p>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="game" width="320" height="240"></canvas>
+    </div>
+
+    <div class="hud">
+      <div>Clé : <strong id="hud-key">❌</strong></div>
+      <div>Étape : <strong id="hud-step">Entrée du donjon</strong></div>
+    </div>
+    <div class="message" id="message"></div>
+
+    <div class="controls" aria-label="Contrôles tactiles">
+      <div class="dpad">
+        <div class="btn empty"></div>
+        <button class="btn dir" data-dir="up">▲</button>
+        <div class="btn empty"></div>
+
+        <button class="btn dir" data-dir="left">◀</button>
+        <div class="btn empty"></div>
+        <button class="btn dir" data-dir="right">▶</button>
+
+        <div class="btn empty"></div>
+        <button class="btn dir" data-dir="down">▼</button>
+        <div class="btn empty"></div>
+      </div>
+      <button class="btn action" id="btn-reset">↺<span style="margin-left:0.2rem;">RESET</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // === Base canvas ===
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+
+  const TILE = 16;
+  const COLS = canvas.width / TILE;
+  const ROWS = canvas.height / TILE;
+
+  // Carte du donjon
+  // # = mur, . = sol, K = clé, D = porte fermée, G = sortie
+  const mapData = [
+    "####################",
+    "#.....#............#",
+    "#.###.#.######.####G",
+    "#.#...#.#....#.....#",
+    "#.#.###.#.##.###.#.#",
+    "#.#.....#K.#.....#.#",
+    "#.#####.###.#####.#D",
+    "#.....#.....#.....##",
+    "###.#.#######.###..#",
+    "#...#.........#...##",
+    "#.###.#########.###.",
+    "#P................##",
+    "####################"
+  ];
+
+  // Joueur
+  const player = {
+    x: 0,
+    y: 0,
+    w: 12,
+    h: 12,
+    speed: 1.3
+  };
+
+  let hasKey = false;
+  let finished = false;
+  let doorOpened = false;
+
+  const hudKey = document.getElementById("hud-key");
+  const hudStep = document.getElementById("hud-step");
+  const msgEl = document.getElementById("message");
+
+  const keys = {
+    up: false,
+    down: false,
+    left: false,
+    right: false
+  };
+
+  // Trouver la position de départ (P)
+  function initPlayerPosition() {
+    for (let y = 0; y < mapData.length; y++) {
+      for (let x = 0; x < mapData[y].length; x++) {
+        if (mapData[y][x] === "P") {
+          player.x = x * TILE + (TILE - player.w) / 2;
+          player.y = y * TILE + (TILE - player.h) / 2;
+          return;
+        }
+      }
+    }
+  }
+
+  function resetGame() {
+    hasKey = false;
+    finished = false;
+    doorOpened = false;
+    hudKey.textContent = "❌";
+    hudStep.textContent = "Entrée du donjon";
+    msgEl.textContent = "";
+    initPlayerPosition();
+  }
+
+  initPlayerPosition();
+
+  // Utilitaires carte
+  function getTileAt(px, py) {
+    const tx = Math.floor(px / TILE);
+    const ty = Math.floor(py / TILE);
+    if (tx < 0 || ty < 0 || ty >= mapData.length || tx >= mapData[ty].length) {
+      return "#";
+    }
+    return mapData[ty][tx];
+  }
+
+  function isWallAt(px, py) {
+    const t = getTileAt(px, py);
+    if (t === "#") return true;
+    if (t === "D" && !doorOpened) return true; // porte fermée
+    return false;
+  }
+
+  function rectCollidesWithWalls(nx, ny, w, h) {
+    // On teste les 4 coins
+    const points = [
+      [nx, ny],
+      [nx + w, ny],
+      [nx, ny + h],
+      [nx + w, ny + h]
+    ];
+    for (const [px, py] of points) {
+      if (isWallAt(px, py)) return true;
+    }
+    return false;
+  }
+
+  // Entrée clavier
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowUp" || e.key === "z" || e.key === "Z") keys.up = true;
+    if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") keys.down = true;
+    if (e.key === "ArrowLeft" || e.key === "q" || e.key === "Q" || e.key === "a") keys.left = true;
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.right = true;
+  });
+
+  window.addEventListener("keyup", (e) => {
+    if (e.key === "ArrowUp" || e.key === "z" || e.key === "Z") keys.up = false;
+    if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") keys.down = false;
+    if (e.key === "ArrowLeft" || e.key === "q" || e.key === "Q" || e.key === "a") keys.left = false;
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.right = false;
+  });
+
+  // Contrôles tactiles
+  const dpadButtons = document.querySelectorAll(".btn.dir");
+  function toggleDir(dir, pressed) {
+    keys[dir] = pressed;
+    dpadButtons.forEach(btn => {
+      if (btn.dataset.dir === dir) {
+        if (pressed) btn.classList.add("active");
+        else btn.classList.remove("active");
+      }
+    });
+  }
+
+  dpadButtons.forEach(btn => {
+    const dir = btn.dataset.dir;
+    const on = (e) => { e.preventDefault(); toggleDir(dir, true); };
+    const off = (e) => { e.preventDefault(); toggleDir(dir, false); };
+
+    btn.addEventListener("mousedown", on);
+    btn.addEventListener("touchstart", on, { passive: false });
+
+    window.addEventListener("mouseup", off);
+    window.addEventListener("touchend", off);
+    window.addEventListener("touchcancel", off);
+  });
+
+  document.getElementById("btn-reset").addEventListener("click", () => {
+    resetGame();
+  });
+
+  // Update joueur
+  function updatePlayer() {
+    if (finished) return;
+
+    let vx = 0, vy = 0;
+    if (keys.up && !keys.down) vy = -player.speed;
+    if (keys.down && !keys.up) vy = player.speed;
+    if (keys.left && !keys.right) vx = -player.speed;
+    if (keys.right && !keys.left) vx = player.speed;
+
+    // Mouvement séparé X / Y pour éviter de traverser les murs en diagonale
+    let nx = player.x + vx;
+    let ny = player.y;
+
+    if (!rectCollidesWithWalls(nx, ny, player.w, player.h)) {
+      player.x = nx;
+    }
+
+    nx = player.x;
+    ny = player.y + vy;
+
+    if (!rectCollidesWithWalls(nx, ny, player.w, player.h)) {
+      player.y = ny;
+    }
+
+    checkInteractions();
+  }
+
+  // Vérifier clé / porte / sortie
+  function checkInteractions() {
+    const centerX = player.x + player.w / 2;
+    const centerY = player.y + player.h / 2;
+    const tile = getTileAt(centerX, centerY);
+
+    if (tile === "K" && !hasKey) {
+      hasKey = true;
+      hudKey.textContent = "✅";
+      hudStep.textContent = "Tu as la clé";
+      msgEl.textContent = "Tu entends un cliquetis au loin. La porte a dû bouger...";
+      doorOpened = true;
+    }
+
+    if (tile === "G" && doorOpened && !finished) {
+      finished = true;
+      hudStep.textContent = "Sortie atteinte";
+      msgEl.innerHTML = "Tu sors du mini-donjon.&nbsp;La suite de la <strong>procédure</strong> sera transmise par l'Orga…";
+    } else if (tile === "G" && !doorOpened) {
+      msgEl.textContent = "La sortie est scellée. Il te manque quelque chose.";
+    }
+  }
+
+  // Dessin carte
+  function drawMap() {
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        const t = mapData[y][x] || "#";
+        const px = x * TILE;
+        const py = y * TILE;
+
+        // fond
+        ctx.fillStyle = "#061418";
+        ctx.fillRect(px, py, TILE, TILE);
+
+        if (t === "#") {
+          ctx.fillStyle = "#111827";
+          ctx.fillRect(px, py, TILE, TILE);
+          ctx.fillStyle = "#1f2937";
+          ctx.fillRect(px + 1, py + 1, TILE - 2, TILE - 2);
+        } else {
+          // sol
+          ctx.fillStyle = "#071b23";
+          ctx.fillRect(px, py, TILE, TILE);
+          ctx.fillStyle = "#0b2530";
+          ctx.fillRect(px + 1, py + 1, TILE - 2, TILE - 2);
+        }
+
+        if (t === "K" && !hasKey) {
+          ctx.fillStyle = "#ffd166";
+          ctx.fillRect(px + 4, py + 6, 8, 4);
+          ctx.fillRect(px + 10, py + 4, 4, 4);
+        }
+
+        if (t === "D") {
+          ctx.fillStyle = doorOpened ? "#14532d" : "#4b5563";
+          ctx.fillRect(px + 2, py + 2, TILE - 4, TILE - 4);
+          if (!doorOpened) {
+            ctx.fillStyle = "#f97316";
+            ctx.fillRect(px + 7, py + 6, 2, 4);
+          }
+        }
+
+        if (t === "G") {
+          ctx.fillStyle = "#22c55e";
+          ctx.fillRect(px + 4, py + 4, TILE - 8, TILE - 8);
+          ctx.fillStyle = "#bbf7d0";
+          ctx.fillRect(px + 7, py + 7, TILE - 14, TILE - 14);
+        }
+      }
+    }
+  }
+
+  // Dessin joueur
+  function drawPlayer() {
+    ctx.save();
+    ctx.translate(player.x, player.y);
+
+    // Ombre
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.beginPath();
+    ctx.ellipse(player.w/2, player.h/2 + 4, player.w/2, 4, 0, 0, Math.PI*2);
+    ctx.fill();
+
+    // Corps
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillRect(2, 4, player.w - 4, player.h - 6);
+
+    // Tête
+    ctx.fillStyle = "#fde68a";
+    ctx.fillRect(3, 0, player.w - 6, 6);
+
+    // Capuche / cheveux
+    ctx.fillStyle = "#22c55e";
+    ctx.fillRect(2, 0, player.w - 4, 3);
+
+    // Épée / badge (optionnel)
+    ctx.fillStyle = "#e5e7eb";
+    ctx.fillRect(player.w - 4, 6, 2, 6);
+
+    ctx.restore();
+  }
+
+  function loop() {
+    updatePlayer();
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMap();
+    drawPlayer();
+
+    requestAnimationFrame(loop);
+  }
+
+  resetGame();
+  loop();
+</script>
+</body>
+</html>
