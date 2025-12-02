@@ -1,0 +1,499 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CCPLC – Centre Citoyen, Participation & Lien Commun</title>
+    <meta name="description" content="Page d'accueil responsive de l'AISBL CCPLC : programmes citoyens, accompagnement, calendrier d'événements et informations pratiques pour votre participation locale.">
+    <link rel="canonical" href="https://ccplc.eu/">
+    <meta name="robots" content="index,follow">
+
+    <meta property="og:site_name" content="CCPLC AISBL">
+    <meta property="og:title" content="CCPLC – Centre Citoyen, Participation & Lien Commun">
+    <meta property="og:description" content="Découvrez les actions, services et événements du CCPLC pour renforcer le lien citoyen." />
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ccplc.eu/">
+    <meta property="og:image" content="assets/CCPLC.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CCPLC – Centre Citoyen, Participation & Lien Commun">
+    <meta name="twitter:description" content="Une AISBL dédiée à la participation citoyenne, aux initiatives solidaires et à l'accompagnement local.">
+    <meta name="twitter:image" content="assets/CCPLC.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f7fb;
+            --card: #ffffff;
+            --text: #1d1f2b;
+            --muted: #5a6072;
+            --accent: #0d7b8a;
+            --accent-2: #ffb703;
+            --shadow: 0 12px 40px rgba(13, 123, 138, 0.12);
+            --radius: 18px;
+            --max-width: 1100px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at 10% 10%, rgba(13, 123, 138, 0.08), transparent 35%),
+                        radial-gradient(circle at 90% 20%, rgba(255, 183, 3, 0.12), transparent 30%),
+                        var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            background: rgba(246, 247, 251, 0.85);
+            border-bottom: 1px solid rgba(13, 123, 138, 0.08);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0.85rem 1.25rem;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+        }
+
+        .logo span { letter-spacing: 0.3px; }
+
+        .nav-links {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            color: var(--accent);
+            background: rgba(13, 123, 138, 0.08);
+            outline: none;
+        }
+
+        .cta {
+            background: linear-gradient(120deg, var(--accent), #0b5f6b);
+            color: #fff !important;
+            padding: 0.6rem 0.95rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero {
+            max-width: var(--max-width);
+            margin: 1rem auto 0;
+            padding: 1.25rem;
+            display: grid;
+            gap: 1.25rem;
+            grid-template-columns: 1fr;
+        }
+
+        .hero-card {
+            background: var(--card);
+            border-radius: 26px;
+            padding: clamp(1.25rem, 4vw, 2.25rem);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 90% 10%, rgba(13, 123, 138, 0.15), transparent 30%),
+                        radial-gradient(circle at 15% 80%, rgba(255, 183, 3, 0.18), transparent 35%);
+            z-index: -1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.7rem;
+            background: rgba(13, 123, 138, 0.1);
+            color: var(--accent);
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        h1 { margin: 0.6rem 0 0.35rem; font-size: clamp(1.9rem, 5vw, 2.8rem); line-height: 1.2; }
+        h2 { margin: 0; font-size: 1.15rem; color: var(--muted); }
+        p  { margin: 0.4rem 0 1rem; color: var(--muted); }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 0.9rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.65rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(13, 123, 138, 0.18);
+            background: #fff;
+            color: var(--text);
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn.primary { background: linear-gradient(120deg, var(--accent), #0a5560); color: #fff; box-shadow: var(--shadow); border: none; }
+        .btn.secondary { background: rgba(13, 123, 138, 0.08); }
+
+        .btn:hover,
+        .btn:focus-visible { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(13, 123, 138, 0.16); outline: none; }
+
+        .badges {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-top: 1.1rem;
+        }
+        .badge {
+            padding: 0.35rem 0.7rem;
+            background: rgba(13, 123, 138, 0.08);
+            color: var(--text);
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .cards-grid {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 1.25rem 2rem;
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 1.1rem 1.15rem;
+            box-shadow: 0 18px 42px rgba(0,0,0,0.06);
+            border: 1px solid rgba(13, 123, 138, 0.08);
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        .card small { color: var(--accent); font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; }
+
+        .card ul { margin: 0; padding-left: 1rem; color: var(--muted); display: grid; gap: 0.3rem; }
+
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+        .event {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+        .event-date {
+            min-width: 66px;
+            text-align: center;
+            background: rgba(13, 123, 138, 0.1);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 0.5rem 0.35rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+        .event-date span { display: block; font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+
+        .contact {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+            align-items: start;
+        }
+
+        form {
+            display: grid;
+            gap: 0.7rem;
+        }
+        label { font-weight: 600; color: var(--text); }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 12px;
+            border: 1px solid rgba(13, 123, 138, 0.22);
+            background: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        textarea { resize: vertical; min-height: 120px; }
+
+        .info-block {
+            background: linear-gradient(135deg, rgba(13, 123, 138, 0.08), rgba(13, 123, 138, 0.02));
+            border-radius: var(--radius);
+            padding: 1rem;
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        footer {
+            padding: 1.4rem 1.25rem 1.6rem;
+            background: #0a2f35;
+            color: #dce7ec;
+            margin-top: 2rem;
+        }
+        footer .footer-inner { max-width: var(--max-width); margin: 0 auto; display: grid; gap: 0.4rem; }
+        footer a { color: #ffdd8f; text-decoration: none; font-weight: 600; }
+
+        .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            border: 1px solid rgba(13, 123, 138, 0.2);
+            background: #fff;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: grid;
+                position: absolute;
+                inset: 64px 1rem auto 1rem;
+                background: #fff;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                padding: 0.5rem;
+                z-index: 12;
+            }
+            .nav-links a { padding: 0.8rem; border-radius: 10px; }
+            .hero { margin-top: 0.5rem; }
+        }
+
+        @media (min-width: 900px) {
+            .hero { grid-template-columns: 3fr 2fr; align-items: center; }
+            .hero-visual { justify-self: end; }
+            .contact { grid-template-columns: 3fr 2fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav">
+            <a class="logo" href="#top">
+                <img src="assets/CCPLC.png" alt="Logo CCPLC">
+                <span>CCPLC · AISBL</span>
+            </a>
+            <button class="menu-toggle" aria-label="Ouvrir le menu" id="menuToggle">☰</button>
+            <nav class="nav-links" aria-label="Navigation principale" id="navLinks">
+                <a href="#programmes">Programmes</a>
+                <a href="#services">Services</a>
+                <a href="#agenda">Agenda</a>
+                <a href="#contact" class="cta">Nous contacter</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="top">
+            <div class="hero-card">
+                <div class="eyebrow">AISBL reconnue · ccplc.eu</div>
+                <h1>Nous facilitons la participation citoyenne et la solidarité locale.</h1>
+                <h2>CCPLC rassemble habitants, associations et acteurs publics pour co-créer des solutions durables dans les quartiers.</h2>
+                <div class="hero-actions">
+                    <a class="btn primary" href="#contact">Planifier un rendez-vous</a>
+                    <a class="btn" href="#services">Découvrir nos services</a>
+                </div>
+                <div class="badges">
+                    <span class="badge">Maison de projet</span>
+                    <span class="badge">Facilitation & médiation</span>
+                    <span class="badge">Ateliers & formations</span>
+                    <span class="badge">Équipe multilingue</span>
+                </div>
+            </div>
+            <div class="hero-visual card">
+                <small>En bref</small>
+                <strong>CCPLC AISBL</strong>
+                <p>Une structure agile, au service de la participation citoyenne, de la lutte contre l'isolement et du développement d'initiatives locales.</p>
+                <ul>
+                    <li>Accompagnement des comités de quartier & conseils citoyens.</li>
+                    <li>Coaching de projets associatifs et incubateur d'idées solidaires.</li>
+                    <li>Espaces partagés : salle polyvalente, studio média, coworking social.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="cards-grid grid-3" id="programmes" aria-labelledby="programmes-title">
+            <div class="card">
+                <small id="programmes-title">Programmes phares</small>
+                <h3>Voix des Quartiers</h3>
+                <p>Diagnostic participatif, tables rondes citoyennes et plan d'action co-construit avec les habitants.</p>
+            </div>
+            <div class="card">
+                <small>Jeunesse & Inclusion</small>
+                <h3>Parcours Tremplin</h3>
+                <p>Coaching pour jeunes 15-25 ans : orientation, jobs étudiants, mentorat par des bénévoles et ateliers créatifs.</p>
+            </div>
+            <div class="card">
+                <small>Transition</small>
+                <h3>Lab Climat & Solidarités</h3>
+                <p>Micro-projets énergie, alimentation locale, mobilité douce et soutien aux publics précarisés.</p>
+            </div>
+        </section>
+
+        <section class="cards-grid grid-2" id="services" aria-labelledby="services-title">
+            <div class="card">
+                <small id="services-title">Services aux organisations</small>
+                <ul>
+                    <li>Facilitation de réunions, médiation et gestion collaborative.</li>
+                    <li>Formations : gouvernance partagée, gestion de projets, communication inclusive.</li>
+                    <li>Prêt d'espaces : salles équipées, studio audio/vidéo, matériel événementiel léger.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <small>Services aux citoyens</small>
+                <ul>
+                    <li>Point Info droits sociaux et accompagnement digital.</li>
+                    <li>Coaching projets citoyens, démarches subventions et labellisation.</li>
+                    <li>Calendrier d'activités hebdomadaires : café papote, repair café, ateliers parents.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="cards-grid" id="agenda" aria-labelledby="agenda-title">
+            <div class="card">
+                <small id="agenda-title">Agenda</small>
+                <div class="event">
+                    <div class="event-date">12<br><span>oct</span></div>
+                    <div>
+                        <h3>Café Citoyen · Mobilité & sécurité</h3>
+                        <p>19h00 · Salle Agora · Inscription libre, interprétation FR/NL/EN disponible.</p>
+                    </div>
+                </div>
+                <div class="event">
+                    <div class="event-date">18<br><span>oct</span></div>
+                    <div>
+                        <h3>Atelier numérique solidaire</h3>
+                        <p>Initiation aux services en ligne essentiels & accompagnement dossiers en présence d'un médiateur.</p>
+                    </div>
+                </div>
+                <div class="event">
+                    <div class="event-date">25<br><span>oct</span></div>
+                    <div>
+                        <h3>Formation courte : gouvernance partagée</h3>
+                        <p>3h pour passer en pratique : rôles, décisions, outils et documentation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cards-grid" id="contact" aria-labelledby="contact-title">
+            <div class="card contact">
+                <div>
+                    <small id="contact-title">Contact & rendez-vous</small>
+                    <form>
+                        <label for="objet">Objet</label>
+                        <select id="objet" name="objet">
+                            <option>Prendre rendez-vous</option>
+                            <option>Réserver un espace</option>
+                            <option>Proposer un projet</option>
+                            <option>Devenir bénévole</option>
+                        </select>
+
+                        <label for="nom">Nom et organisation</label>
+                        <input id="nom" name="nom" type="text" placeholder="Votre nom complet" required>
+
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" placeholder="prenom@exemple.be" required>
+
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Décrivez votre besoin, vos disponibilités ou votre idée."></textarea>
+
+                        <button type="submit" class="btn primary" aria-live="polite">Envoyer ma demande</button>
+                        <small>Réponse sous 48h ouvrables. Vos données restent strictement confidentielles.</small>
+                    </form>
+                </div>
+                <div class="info-block">
+                    <strong>Coordonnées directes</strong>
+                    <p><strong>Email :</strong> contact@ccplc.eu<br><strong>Téléphone :</strong> +32 (0)2 000 00 00</p>
+                    <p><strong>Adresse :</strong><br>Maison CCPLC · Rue des Communes 12<br>1000 Bruxelles</p>
+                    <p><strong>Horaires :</strong><br>Lun-Ven · 9h00 - 18h30 · Accueil libre le mercredi après-midi.</p>
+                    <p><strong>Accès :</strong> Tram 3/4, Métro Parc · Parking vélo et accès PMR disponibles.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <strong>CCPLC AISBL · BE0 000 000 000</strong>
+            <span>Page d'accueil mobile-first pour ccplc.eu — dernière mise à jour 2025.</span>
+            <span>Besoin d'un support ou d'une intervention ? <a href="#contact">Contactez l'équipe</a>.</span>
+        </div>
+    </footer>
+
+    <script>
+        const navLinks = document.getElementById('navLinks');
+        const toggle = document.getElementById('menuToggle');
+        toggle?.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+        });
+
+        // Ferme le menu au clic sur un lien en mobile
+        navLinks?.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => navLinks.classList.remove('open'));
+        });
+    </script>
+</body>
+</html>
