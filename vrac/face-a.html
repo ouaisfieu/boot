@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Intranet – Organisation derrière l’organisation · P. Seudo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --bg-alt: #ffffff;
+      --primary: #1f4ed8;
+      --primary-soft: rgba(37,99,235,0.08);
+      --accent: #f97316;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 18px 45px rgba(15,23,42,0.15);
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top, #dbeafe 0, #f4f6fb 45%, #e5e7eb 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 999px;
+      border: 1px solid rgba(209,213,219,0.9);
+      box-shadow: 0 10px 30px rgba(148,163,184,0.35);
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+    }
+
+    @media (max-width: 820px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        border-radius: 18px;
+      }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 10px 25px rgba(37,99,235,0.6);
+    }
+
+    .logo-text-title { font-size: 1rem; font-weight: 600; }
+    .logo-text-sub { font-size: 0.78rem; color: var(--muted); }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .nav-btn {
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      color: var(--muted);
+      background: transparent;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .nav-btn:hover {
+      background: var(--primary-soft);
+      border-color: rgba(148,163,184,0.7);
+      color: var(--text);
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    main {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,0.9fr);
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 960px) {
+      main { grid-template-columns: minmax(0,1fr); }
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 17px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    h1 span { color: var(--primary); }
+
+    p { font-size: 0.96rem; color: var(--muted); }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .small { font-size: 0.78rem; color: var(--muted); }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .pill strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .layer-indicator {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .layer-indicator span {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      margin-right: 4px;
+      font-size: 0.75rem;
+    }
+
+    .layer-public { background: #ecfdf3; color: #166534; border-color: #bbf7d0; }
+    .layer-private { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .layer-conf { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: minmax(0,1fr); }
+    }
+
+    .link-card {
+      display: block;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 10px 11px 9px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.12s, box-shadow 0.12s, transform 0.12s, border-color 0.12s;
+    }
+
+    .link-card:hover {
+      background: #eef2ff;
+      border-color: rgba(37,99,235,0.5);
+      box-shadow: 0 10px 25px rgba(148,163,184,0.4);
+      transform: translateY(-1px);
+    }
+
+    .link-title {
+      font-size: 0.96rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .link-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .link-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #eff6ff;
+      font-size: 0.74rem;
+      color: #1e293b;
+      margin-right: 4px;
+    }
+
+    .conf-block {
+      border-radius: 12px;
+      border: 1px solid #fcd34d;
+      background: #fffbeb;
+      padding: 9px 10px;
+      font-size: 0.86rem;
+      color: #78350f;
+      margin-top: 8px;
+    }
+
+    .conf-note {
+      font-size: 0.78rem;
+      color: #92400e;
+      margin-top: 4px;
+    }
+
+    .warning {
+      font-size: 0.8rem;
+      color: #b45309;
+      margin-top: 6px;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .footer-left strong { color: var(--primary); }
+
+    /* sections pour les couches */
+    .layer-section { display: none; }
+    .layer-section.active { display: block; }
+
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="logo">
+      <div class="logo-mark">PS</div>
+      <div>
+        <div class="logo-text-title">P. Seudo</div>
+        <div class="logo-text-sub">Organisation derrière l’organisation de S. Harky</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-layer="public">Couche publique</button>
+      <button class="nav-btn" data-layer="private">Couche privée</button>
+      <button class="nav-btn" data-layer="conf">Couche confidentielle</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Colonne gauche : contenu niveau courant -->
+    <section class="card">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Intranet multi-couches · Organisation P. Seudo · Autonome sur clé USB</span>
+      </div>
+
+      <!-- SECTION PUBLIQUE -->
+      <div class="layer-section active" id="layer-public">
+        <h1>
+          Couche publique<br>
+          <span>ce que S. Harky montre au monde.</span>
+        </h1>
+        <p>
+          Ici, on trouve la façade officielle&nbsp;: présentation, services, formulaires de contact sérieux.
+          C’est ce que voient les employeurs, financeurs, partenaires qui n’ont pas (encore) besoin de tout savoir.
+        </p>
+
+        <div class="layer-indicator">
+          <span class="layer-public">Visible par tous</span>
+        </div>
+
+        <section style="margin-top:12px;">
+          <h2 class="section-title">Vitrine & acquisition</h2>
+          <p class="section-sub">
+            Ces pages peuvent être exposées publiquement (site vitrine, lien dans une signature mail, CV, etc.).
+            Place-les dans le même dossier que ce fichier, et renomme les liens au besoin.
+          </p>
+
+          <div class="grid-2">
+            <a href="services-devis.html" class="link-card">
+              <div class="link-title">Services & demande de devis</div>
+              <div class="link-desc">
+                Page hyper pro qui présente tes services et permet de faire une demande de devis en ligne.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Vitrine</span>
+                <span class="tag">Formulaire</span>
+              </div>
+            </a>
+
+            <a href="bountyrepo.html" class="link-card">
+              <div class="link-title">BountyRepo – Tête à prix sur GitHub</div>
+              <div class="link-desc">
+                Initiative à but lucratif : les employeurs créent un dépôt GitHub, tu prends la mission comme une bounty.
+              </div>
+              <div class="link-meta">
+                <span class="tag">GitHub</span>
+                <span class="tag">Modèle lucratif</span>
+              </div>
+            </a>
+
+            <a href="portfolio-lobbyiste.html" class="link-card">
+              <div class="link-title">Portefeuille – Affaires publiques</div>
+              <div class="link-desc">
+                Le “lobbyiste parfait” version pro : dialogue institutionnel, conformité, influence responsable.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Affaires publiques</span>
+                <span class="tag">Institutionnel</span>
+              </div>
+            </a>
+
+            <a href="portfolio-espion.html" class="link-card">
+              <div class="link-title">Portefeuille – Intelligence stratégique</div>
+              <div class="link-desc">
+                Ton profil “espion légal” : due diligence, enquêtes documentaires, risque & conformité.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Intelligence stratégique</span>
+                <span class="tag">Enquêtes</span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section style="margin-top:14px;">
+          <h2 class="section-title">Devis & cadrage formel</h2>
+          <div class="grid-2">
+            <a href="devis-pro.html" class="link-card">
+              <div class="link-title">Générateur de devis professionnel</div>
+              <div class="link-desc">
+                Outil de devis neutre, compatible clients, banques, financeurs et réponses à appels d’offres.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Devis</span>
+                <span class="tag">PDF-friendly</span>
+              </div>
+            </a>
+
+            <a href="demande-devis.html" class="link-card">
+              <div class="link-title">Formulaire de demande de devis</div>
+              <div class="link-desc">
+                Page qui permet à un prospect sérieux de t’envoyer une demande structurée via email.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Lead</span>
+                <span class="tag">Email structuré</span>
+              </div>
+            </a>
+          </div>
+
+          <p class="small" style="margin-top:6px;">
+            🔧 Astuce : tu peux utiliser ces pages telles quelles ou les adapter pour que la façade “S. Harky”
+            reste bien lisse, pendant que P. Seudo coordonne tout depuis les couches internes.
+          </p>
+        </section>
+      </div>
+
+      <!-- SECTION PRIVÉE -->
+      <div class="layer-section" id="layer-private">
+        <h1>
+          Couche privée<br>
+          <span>l’intranet opérationnel de P. Seudo.</span>
+        </h1>
+        <p>
+          Ici, c’est le vrai centre de contrôle. On ne parle plus seulement d’image, mais de
+          missions, de flux d’argent, de dossiers, de jeu sérieux sur la dystopie organisationnelle.
+        </p>
+
+        <div class="layer-indicator">
+          <span class="layer-private">Réservé à l’équipe P. Seudo</span>
+        </div>
+
+        <section style="margin-top:12px;">
+          <h2 class="section-title">Outils métier internes</h2>
+          <p class="section-sub">
+            Tous les modules que tu as construits trouvent ici leur place. L’idée : un seul hub,
+            et tu cliques pour ouvrir l’app dont tu as besoin.
+          </p>
+
+          <div class="grid-2">
+            <a href="devis-deeporga.html" class="link-card">
+              <div class="link-title">Devis DeepOrga / absurdités organisationnelles</div>
+              <div class="link-desc">
+                Générateur de devis fantôme pour facturer l’absurde aux organisations, en restant pro côté facture.
+              </div>
+              <div class="link-meta">
+                <span class="tag">DeepOrga</span>
+                <span class="tag">Audit d’absurdités</span>
+              </div>
+            </a>
+
+            <a href="nobrainer-hub.html" class="link-card">
+              <div class="link-title">NoBrainer Hub – jeu anarcho-geek</div>
+              <div class="link-desc">
+                Le hub du jeu culte : modules, références, surprises, mode hacker sous amphé (mais cadré).
+              </div>
+              <div class="link-meta">
+                <span class="tag">Jeu</span>
+                <span class="tag">Expériences</span>
+              </div>
+            </a>
+
+            <a href="bountyrepo.html" class="link-card">
+              <div class="link-title">BountyRepo – suivi des bounties</div>
+              <div class="link-desc">
+                Là tu gères les projets par dépôt GitHub, primes à la tête, clients, budgets, fichiers Markdown.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Bounty</span>
+                <span class="tag">GitHub</span>
+              </div>
+            </a>
+
+            <a href="portfolio-espion.html" class="link-card">
+              <div class="link-title">Dossiers d’intelligence stratégique</div>
+              <div class="link-desc">
+                Pour chaque client, tu peux dupliquer ce modèle et l’adapter comme dossier de mission.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Due diligence</span>
+                <span class="tag">Enquêtes</span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section style="margin-top:12px;">
+          <h2 class="section-title">Organisation derrière l’organisation</h2>
+          <p class="section-sub">
+            La couche privée, c’est aussi l’endroit où tu documentes explicitement ce que l’organisation
+            officielle ne veut pas voir – mais que tu as besoin de cartographier pour travailler.
+          </p>
+          <div class="grid-2">
+            <div class="link-card">
+              <div class="link-title">Cartographie des couches & comités fantômes</div>
+              <div class="link-desc">
+                Un simple fichier Markdown ou un mindmap peut suffire : qui décide vraiment, où, quand, avec qui.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Meta-org</span>
+              </div>
+            </div>
+            <div class="link-card" onclick="alert('À toi de créer ce fichier : par ex. notes-dystopie.md dans un dépôt GitHub privé.')">
+              <div class="link-title">Journal d’absurdités & signaux faibles</div>
+              <div class="link-desc">
+                Un log des situations absurdes ou inquiétantes que tu observes chez tes clients, anonymisé.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Dystopie</span>
+                <span class="tag">REX</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="small" style="margin-top:6px;">
+            💾 Techniquement : tous ces liens peuvent pointer vers des fichiers locaux, d’autres pages HTML
+            ou des dépôts GitHub privés. Tant que tout est dans le même dossier, l’intranet fonctionne hors ligne.
+          </p>
+        </section>
+      </div>
+
+      <!-- SECTION CONFIDENTIELLE -->
+      <div class="layer-section" id="layer-conf">
+        <h1>
+          Couche confidentielle<br>
+          <span>ce que P. Seudo sait… que S. Harky ne doit pas assumer.</span>
+        </h1>
+        <p>
+          Cette couche n’est pas là pour le spectacle. C’est la zone où tu analyses la dystopie,
+          les mécaniques de propagande, les absurdités structurelles – et où tu prépares tes contre-stratégies.
+        </p>
+
+        <div class="layer-indicator">
+          <span class="layer-conf">Accès ultra-restreint</span>
+        </div>
+
+        <div class="conf-block">
+          <strong>Principe de base :</strong><br>
+          Tout ce qui est écrit ici doit pouvoir être relu un jour par un avocat, un lanceur d’alerte ou un comité d’éthique,
+          sans que tu aies honte de ce que tu as fait – seulement peut-être de ce que tu as vu.
+          <div class="conf-note">
+            ⛔ Pas de plans douteux, pas de trucs illégaux ici. Juste de la lucidité, de l’analyse et du design de jeu.
+          </div>
+        </div>
+
+        <section style="margin-top:12px;">
+          <h2 class="section-title">Zone “dystopie & propagande”</h2>
+          <p class="section-sub">
+            Ici tu peux recopier ou synthétiser tes textes sur la dystopie rampante, les absurdités organisationnelles,
+            les mécanismes de propagande, etc. (les PDF et notes que tu as déjà).
+          </p>
+
+          <div class="grid-2">
+            <div class="link-card" onclick="alert('Par ex. ouvre dystopie.pdf avec ton lecteur, ou crée une page dystopie.html pour en faire un digest.')">
+              <div class="link-title">Dystopie organisationnelle</div>
+              <div class="link-desc">
+                Notes, schémas, extraits de textes sur la dystopie qui s’installe par les procédures et les outils.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Analyse</span>
+              </div>
+            </div>
+            <div class="link-card" onclick="alert('Même principe : tu peux lier vers propaganda.html ou un dépôt contenant tes textes.')">
+              <div class="link-title">Propagande & récit officiel</div>
+              <div class="link-desc">
+                Comment les organisations réécrivent la réalité pour rendre l’absurde acceptable.
+              </div>
+              <div class="link-meta">
+                <span class="tag">Narratif</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="warning">
+            🧠 Cette couche est ton “espace de recul”. Elle ne doit pas être partagée telle quelle avec un client,
+            mais elle sert à éclairer la conception de tes jeux, de tes offres, et de ta manière de les raconter.
+          </p>
+        </section>
+
+        <section style="margin-top:12px;">
+          <h2 class="section-title">Interface avec le monde réel</h2>
+          <p class="section-sub">
+            Ta force, c’est de faire le pont entre le jeu, la lucidité et le business. Cette couche confidentielle
+            sert à synthétiser ce pont : quelles questions tu poses, jusqu’où tu vas, quelles limites tu te fixes.
+          </p>
+
+          <div class="conf-block">
+            <strong>À documenter par toi :</strong><br>
+            – Tes lignes rouges (ce que tu refuses de faire pour de l’argent).<br>
+            – Tes lignes vertes (ce que tu encourages : lucidité, humour, recul).<br>
+            – Les signaux qui te font dire “là, c’est trop dystopique, on arrête le jeu et on parle sérieux”.
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Colonne droite : aide technique / mémo GitHub -->
+    <section class="card">
+      <h2 class="section-title">Guide express : comment tout ça tient ensemble</h2>
+      <p class="section-sub">
+        L’intranet de P. Seudo est pensé pour tenir sur une clé USB, un hébergement statique ou un dépôt GitHub Pages.
+        Pas de base de données, pas de backend : juste des fichiers.
+      </p>
+
+      <h3 class="section-title" style="margin-top:8px;">1. Arborescence minimale</h3>
+      <p class="small">
+        Place tous tes fichiers au même endroit. Par exemple :
+      </p>
+      <pre style="margin-top:4px; font-size:0.78rem; background:#020617;color:#e5e7eb;padding:8px 10px;border-radius:10px;overflow-x:auto;">
+intranet/
+├─ intranet-pseudo.html          &lt;-- ce fichier (hub multi-couches)
+├─ services-devis.html           &lt;-- vitrine services + demande de devis
+├─ devis-pro.html                &lt;-- générateur de devis professionnel
+├─ devis-deeporga.html           &lt;-- générateur de devis DeepOrga
+├─ portfolio-lobbyiste.html      &lt;-- portfolio lobbyiste
+├─ portfolio-espion.html         &lt;-- portfolio intelligence stratégique
+├─ bountyrepo.html               &lt;-- BountyRepo (tête à prix GitHub)
+├─ nobrainer-hub.html            &lt;-- hub du jeu NoBrainer (si tu l’as déjà)
+└─ docs/                         &lt;-- PDFs, notes, etc. (optionnel)
+      </pre>
+
+      <h3 class="section-title" style="margin-top:10px;">2. GitHub pour stocker et publier</h3>
+      <p class="small">
+        GitHub te sert à deux choses :
+      </p>
+      <ul class="small" style="margin-top:4px; padding-left:16px;">
+        <li><strong>Stocker ton intranet</strong> dans un dépôt privé (sauvegarde, historique).</li>
+        <li><strong>Publier la couche publique</strong> avec GitHub Pages (ou autre hébergeur statique).</li>
+      </ul>
+
+      <p class="small" style="margin-top:6px;">
+        1. Crée un dépôt sur <code>github.com</code> (privé si tu veux).<br>
+        2. Ajoute tous ces fichiers dans le dépôt, pousse les changements.<br>
+        3. Si tu veux une vitrine publique, active GitHub Pages sur une branche
+           qui ne contient que la couche publique (par ex. une version allégée de tes pages).
+      </p>
+
+      <h3 class="section-title" style="margin-top:10px;">3. Accès aux couches</h3>
+      <p class="small">
+        Ce fichier ne fait pas d’authentification &mdash; c’est du HTML pur.
+        La séparation des couches se fait par :
+      </p>
+      <ul class="small" style="margin-top:4px; padding-left:16px;">
+        <li><strong>Organisation des fichiers</strong> (ce que tu publies ou non en ligne).</li>
+        <li><strong>Discipline sociale</strong> : qui a accès à l’intranet complet, qui n’a que la façade.</li>
+      </ul>
+      <p class="small" style="margin-top:4px;">
+        Si tu as besoin “d’un vrai login”, on peut le simuler côté front (mot de passe en JS),
+        mais pour un usage sur clé USB + cercle de confiance, c’est souvent overkill.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <strong>P. Seudo · Intranet</strong> — orchestration de l’organisation derrière l’organisation de S. Harky.
+    </div>
+    <div>
+      Mode : <span id="mode-label">Couche publique</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const navButtons = document.querySelectorAll(".nav-btn");
+  const sections = {
+    public: document.getElementById("layer-public"),
+    private: document.getElementById("layer-private"),
+    conf: document.getElementById("layer-conf")
+  };
+  const modeLabel = document.getElementById("mode-label");
+
+  function setLayer(layer) {
+    Object.keys(sections).forEach(key => {
+      sections[key].classList.toggle("active", key === layer);
+    });
+    navButtons.forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.layer === layer);
+    });
+    if (layer === "public") modeLabel.textContent = "Couche publique";
+    if (layer === "private") modeLabel.textContent = "Couche privée";
+    if (layer === "conf") modeLabel.textContent = "Couche confidentielle";
+  }
+
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => setLayer(btn.dataset.layer));
+  });
+</script>
+</body>
+</html>
