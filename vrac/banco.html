@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>ultime.html – Dossier de vente multi-publics (vu par un banquier)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #050818;
+      --card: #020617;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.15);
+      --accent2: #38bdf8;
+      --accent3: #f97316;
+      --accent4: #eab308;
+      --danger: #fb7185;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(148,163,184,0.7);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56,189,248,0.20), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.18), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1180px;
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.16), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.96), transparent 60%),
+        var(--bg-alt);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      padding: 1.2rem 0.9rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.8rem 1.6rem 2.2rem; }
+    }
+
+    .page::before {
+      content: "ultime.html · Dossier synthèse multi-publics – lecture banquier";
+      position: absolute;
+      top: 0.45rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      pointer-events: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .header-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: rgba(15,23,42,0.98);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      box-shadow: 0 0 18px rgba(34,197,94,0.4);
+    }
+
+    .badge-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 14px rgba(34,197,94,0.8);
+    }
+
+    .header-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 320px;
+    }
+
+    h1 {
+      margin-top: 0.4rem;
+      font-size: clamp(2rem, 4.6vw, 2.9rem);
+      line-height: 1.05;
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #22c55e, #38bdf8, #f97316, #eab308);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 880px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .notice {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 0.55rem 0.7rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 0.4rem;
+      align-items: flex-start;
+    }
+
+    .notice-icon { font-size: 1.4rem; }
+
+    .notice strong { color: var(--accent2); }
+
+    .layout {
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 980px) {
+      .layout {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.05fr);
+        align-items: flex-start;
+      }
+    }
+
+    section {
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.18), transparent 65%),
+        var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.9rem 0.95rem 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      section { padding: 1.1rem 1.15rem 1.35rem; }
+    }
+
+    section h2 {
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-main);
+    }
+
+    section p {
+      line-height: 1.6;
+      margin-bottom: 0.25rem;
+    }
+
+    ul { margin-left: 1.1rem; margin-bottom: 0.25rem; }
+    li { margin-bottom: 0.18rem; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      padding: 0.12rem 0.55rem;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .pill span {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .mono {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.78rem;
+    }
+
+    /* Bloc banquier */
+
+    .bank-block {
+      margin-top: 0.4rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.98);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    .bank-title {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+
+    .bank-row {
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 0.25rem 0.4rem;
+      margin-bottom: 0.15rem;
+      align-items: flex-start;
+    }
+
+    .bank-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .bank-value {
+      font-size: 0.8rem;
+      color: var(--text-main);
+    }
+
+    /* Tabs parties prenantes */
+
+    .tabs {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.22rem 0.7rem;
+      font-size: 0.78rem;
+      background: rgba(15,23,42,0.96);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent2);
+      background: rgba(56,189,248,0.18);
+      color: var(--accent2);
+    }
+
+    .tab-panel {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.6rem;
+      background: rgba(15,23,42,0.96);
+      font-size: 0.84rem;
+      display: none;
+    }
+
+    .tab-panel.active { display: block; }
+
+    .tab-panel h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+      color: var(--text-main);
+    }
+
+    .tab-panel ul { margin-top: 0.15rem; }
+
+    /* Risques / atténuation */
+
+    .risk-grid {
+      margin-top: 0.4rem;
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    @media (min-width: 640px) {
+      .risk-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .risk-card {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.5rem;
+      font-size: 0.8rem;
+      background: #020617;
+    }
+
+    .risk-title {
+      font-size: 0.86rem;
+      color: var(--danger);
+      margin-bottom: 0.06rem;
+    }
+
+    .risk-body {
+      color: var(--text-muted);
+    }
+
+    .risk-ok .risk-title {
+      color: var(--accent);
+    }
+
+    /* Mini tableau des revenus */
+
+    .rev-table {
+      margin-top: 0.5rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      font-size: 0.8rem;
+    }
+
+    .rev-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      padding: 0.32rem 0.5rem;
+      border-bottom: 1px solid rgba(30,41,59,0.9);
+    }
+
+    .rev-row.header {
+      background: rgba(15,23,42,0.98);
+      font-weight: 600;
+      color: var(--accent2);
+    }
+
+    .rev-row:last-child { border-bottom: none; }
+
+    .rev-cell {
+      padding-right: 0.4rem;
+    }
+
+    .rev-cell:nth-child(2) {
+      text-align: right;
+      font-family: "Share Tech Mono", monospace;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.45rem;
+      right: 0.6rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.75);
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-row">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>ultime.html – Pitch multi-publics, regard de banquier</span>
+          </div>
+          <h1>
+            Un projet <span>bankable</span>  
+            pour élus, marques, écoles & collectifs
+          </h1>
+        </div>
+        <div class="header-meta">
+          Lecture rédigée comme si un <strong>banquier de métier</strong> présentait le projet
+          à différents partenaires :  
+          “Est-ce que ça tient la route ? Où est la valeur ? Où sont les risques ?”
+        </div>
+      </div>
+      <p class="subtitle">
+        Le projet met en place des <strong>instances de veille citoyenne gamifiées</strong> :
+        tests, dossiers, cyber-labs, portails documentaires et outils pédagogiques  
+        réplicables sur clé USB ou serveur.  
+        Du point de vue d’une banque, on parle d’un <strong>actif immatériel</strong> :
+        une plateforme de contenus, une méthode, une marque, un réseau.
+      </p>
+      <div class="notice">
+        <div class="notice-icon">🏦</div>
+        <div>
+          <strong>Positionnement :</strong>  
+          “Je ne suis pas là pour juger la politique du projet, mais pour évaluer :
+          la viabilité économique, la lisibilité pour les partenaires,  
+          et la capacité du porteur à tenir sur la durée sans faire n’importe quoi.”
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- Colonne gauche : synthèse banquier + risques -->
+      <section>
+        <h2>1. Synthèse du banquier : pourquoi ce projet est finançable</h2>
+        <p>
+          En langage de banque, ce projet coche plusieurs cases importantes :
+        </p>
+        <ul>
+          <li><strong>Marché réel :</strong> demande croissante en éducation aux médias, cybersécurité,
+              participation citoyenne, chez les écoles, les villes, les associations, les marques responsables.</li>
+          <li><strong>Produit clair :</strong> un ensemble de tests, de sites et d’instances modulables,
+              déjà opérationnels, qui peuvent être déployés “clé en main”.</li>
+          <li><strong>Modèle économique modulable :</strong> de la cagnotte citoyenne au contrat pro
+              (cf. <span class="mono">linux.html</span>, <span class="mono">sharky.html</span>, <span class="mono">business-canvas.html</span>).</li>
+          <li><strong>Risque technologique limité :</strong> HTML/CSS/JS, clés USB, serveurs simples,
+              pas de dépendance à une plateforme propriétaire unique.</li>
+        </ul>
+
+        <div class="pill">
+          <span>Traduction banquier :</span> on n’est pas sur une “appli miracle”, mais sur un <strong>fonds de commerce pédagogique</strong> qui peut se décliner.
+        </div>
+
+        <div class="bank-block">
+          <div class="bank-title">Lecture en 6 lignes (langage banquier)</div>
+          <div class="bank-row">
+            <div class="bank-label">Clientèle cible</div>
+            <div class="bank-value">
+              Élus locaux, réseaux associatifs, établissements scolaires, marques en quête de sens,
+              collectifs citoyens structurés.
+            </div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">Sources de revenus</div>
+            <div class="bank-value">
+              Prestations pédagogiques, création d’instances, hébergement, formations, merchandising utile,
+              cagnottes récurrentes.
+            </div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">Investissements</div>
+            <div class="bank-value">
+              Temps de conception, communication, petites dépenses serveurs, déplacements.
+              Niveau d’investissement initial modéré.
+            </div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">Risque</div>
+            <div class="bank-value">
+              Principalement : surcharge du porteur, lenteur commerciale, incompréhension du concept.
+              Risque financier “dur” relativement faible.
+            </div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">Points forts</div>
+            <div class="bank-value">
+              Cohérence éthique, adaptabilité, faible coût marginal par nouvelle instance.
+            </div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">Point de vigilance</div>
+            <div class="bank-value">
+              Nécessité de traduire l’univers “jeu / conspi / sharky” en langage rassurant
+              pour les interlocuteurs institutionnels.
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:0.9rem;">2. Risques & atténuation (ce que voit un banquier)</h2>
+        <p>
+          Aucun projet n’est sans risque. L’important est de montrer comment ils sont <strong>anticipés et gérés</strong>.
+        </p>
+
+        <div class="risk-grid">
+          <div class="risk-card">
+            <div class="risk-title">Risque de “non-compréhension” du projet</div>
+            <div class="risk-body">
+              Concept jugé trop complexe ou trop “geek” par certains décideurs.  
+              <strong>Atténuation :</strong> existence de pages synthétiques (SAS, jalon, business-canvas),
+              discours adaptés par public, démonstrations concrètes sur clé USB.
+            </div>
+          </div>
+          <div class="risk-card">
+            <div class="risk-title">Risque réputationnel (thématiques sensibles)</div>
+            <div class="risk-body">
+              Travail sur la propagande, les symboles, la surveillance, etc.  
+              <strong>Atténuation :</strong> dossiers rigoureux, positionnement éducation populaire,
+              transparence sur les objectifs, garde-fous éthiques visibles (cf. <span class="mono">pomme.html</span>).
+            </div>
+          </div>
+          <div class="risk-card risk-ok">
+            <div class="risk-title">Risque financier limité</div>
+            <div class="risk-body">
+              Peu de charges fixes lourdes, modèle déployable progressivement.  
+              En termes bancaires, <strong>risque de perte sèche limité</strong> si le projet évolue ou ralentit.
+            </div>
+          </div>
+          <div class="risk-card risk-ok">
+            <div class="risk-title">Risque technologique maîtrisé</div>
+            <div class="risk-body">
+              Tech simple (HTML/CSS/JS, hébergements classiques, clés USB).  
+              <strong>Pas de dépendance majeure</strong> à un SaaS opaque ou une app mobile coûteuse.
+            </div>
+          </div>
+        </div>
+
+        <div class="rev-table">
+          <div class="rev-row header">
+            <div class="rev-cell">Principales lignes de revenus</div>
+            <div class="rev-cell">Ordre de grandeur</div>
+          </div>
+          <div class="rev-row">
+            <div class="rev-cell">Ateliers / formations</div>
+            <div class="rev-cell">400–800 € / séance</div>
+          </div>
+          <div class="rev-row">
+            <div class="rev-cell">Instances “clé en main”</div>
+            <div class="rev-cell">900–2000 € / instance</div>
+          </div>
+          <div class="rev-row">
+            <div class="rev-cell">Hébergement & support annuel</div>
+            <div class="rev-cell">200–800 € / an / client</div>
+          </div>
+          <div class="rev-row">
+            <div class="rev-cell">Merchandising & supports</div>
+            <div class="rev-cell">variable (événements, boutiques)</div>
+          </div>
+        </div>
+
+        <p class="hint">
+          Ces montants restent indicatifs : l’idée est de montrer qu’il existe des <strong>lignes de revenus réalistes</strong>
+          qui peuvent intéresser des financeurs, sans transformer le projet en usine à gaz.
+        </p>
+      </section>
+
+      <!-- Colonne droite : pitch par public (tabs) -->
+      <section>
+        <h2>3. Argumentaire par public (vu de la banque)</h2>
+        <p>
+          Même projet, <strong>cinq discours</strong> : élus, marques, écoles, collectifs, autres.  
+          L’idée : parler leur langage tout en gardant la même colonne vertébrale.
+        </p>
+
+        <div class="tabs" id="tabs">
+          <button type="button" class="tab-btn active" data-tab="elus">Élus & pouvoirs publics</button>
+          <button type="button" class="tab-btn" data-tab="marques">Marques & entreprises</button>
+          <button type="button" class="tab-btn" data-tab="ecoles">Écoles & universités</button>
+          <button type="button" class="tab-btn" data-tab="collectifs">Collectifs & asso</button>
+          <button type="button" class="tab-btn" data-tab="autres">Autres (fondations, médias, etc.)</button>
+        </div>
+
+        <!-- Élus -->
+        <div class="tab-panel active" data-tab-panel="elus">
+          <h3>Élus & pouvoirs publics – Ce que voit la banque</h3>
+          <p>
+            Pour un élu local, une commune, une région, le projet est un <strong>outil clé en main</strong> pour :
+          </p>
+          <ul>
+            <li>renforcer l’<strong>éducation citoyenne</strong> sans devoir tout inventer,</li>
+            <li>animer des <strong>processus participatifs</strong> (ateliers, débats, cyber-labs),</li>
+            <li>valoriser une image de <strong>transparence & innovation démocratique</strong>,</li>
+            <li>mesurer l’impact (nombre de tests, participation, retours). </li>
+          </ul>
+          <p>
+            En tant que banquier, je vois ici un client potentiel <strong>solvable</strong>, avec des lignes budgétaires
+            possibles : cohésion sociale, éducation permanente, citoyenneté numérique, politique de la ville.
+          </p>
+          <p>
+            Argument-clé à mettre en avant auprès d’eux :
+          </p>
+          <ul>
+            <li>coût <strong>maîtrisé</strong> (pack par école, par quartier, par maison de jeunes),</li>
+            <li>impact <strong>documentable</strong> (rapports, bilans, dashboards simples),</li>
+            <li>possibilité de <strong>co-branding discret</strong> ou de mise en avant de la commune,
+                sans confisquer le projet aux citoyens.</li>
+          </ul>
+          <p class="hint">
+            Référence interne : <span class="mono">business-canvas.html</span> + tes dossiers sur la veille citoyenne & la démocratie.
+          </p>
+        </div>
+
+        <!-- Marques -->
+        <div class="tab-panel" data-tab-panel="marques">
+          <h3>Marques & entreprises – Ce que voit la banque</h3>
+          <p>
+            Beaucoup de marques cherchent aujourd’hui des projets à soutenir pour prouver qu’elles ont un
+            <strong>impact social positif</strong>, sans tomber dans le greenwashing / social washing grossier.
+          </p>
+          <ul>
+            <li>Tu proposes un <strong>programme concret</strong> : cyber-sécurité, éducation aux médias,
+                citoyenneté numérique pour leurs publics ou leurs salariés.</li>
+            <li>Tu peux offrir des <strong>ateliers internes</strong> (sensibilisation des équipes) ou co-financer
+                des instances dans des écoles, quartiers, tiers-lieux.</li>
+            <li>La marque peut être visible dans les <strong>remerciements, rapports, supports physiques</strong>,
+                sans être au cœur du discours citoyen.</li>
+          </ul>
+          <p>
+            En tant que banquier, j’y vois un modèle de <strong>partenariats RSE</strong> : contrats pluriannuels,
+            budgets marketing responsable, mécénat de compétences. C’est une ligne de revenus <strong>intéressante</strong>
+            si elle reste encadrée par tes garde-fous éthiques.
+          </p>
+          <p class="hint">
+            Référence interne : <span class="mono">sharky.html</span> (packs & offres), <span class="mono">pomme.html</span> (limites à ne pas franchir).
+          </p>
+        </div>
+
+        <!-- Écoles -->
+        <div class="tab-panel" data-tab-panel="ecoles">
+          <h3>Écoles & universités – Ce que voit la banque</h3>
+          <p>
+            Pour un établissement scolaire, ton projet est un <strong>kit pédagogique complet</strong> :
+          </p>
+          <ul>
+            <li>tests de recrutement ludiques pour parler de <strong>sens critique</strong>,</li>
+            <li>parcours sur la propagande, les symboles, la guerre de l’information,</li>
+            <li>cyber-labs pour parler de <strong>sécurité numérique</strong>, mots de passe, phishing, etc.,</li>
+            <li>possibilité de faire participer les élèves à la création de contenus.</li>
+          </ul>
+          <p>
+            En tant que banquier, je sais que les écoles ont peu de moyens, mais souvent un budget pour
+            des <strong>interventions ciblées</strong> : journées thématiques, semaines citoyennes, projets innovants.
+            Tu peux proposer des <strong>formats modulables</strong> (½ journée, journée, cycle).
+          </p>
+          <p class="hint">
+            Référence interne : tous tes fichiers de tests (<span class="mono">test-0.html</span>, <span class="mono">test-1.html</span>, etc.),
+            plus <span class="mono">faq-tech.html</span> et <span class="mono">instance.html</span> pour la partie technique.
+          </p>
+        </div>
+
+        <!-- Collectifs -->
+        <div class="tab-panel" data-tab-panel="collectifs">
+          <h3>Collectifs & associations – Ce que voit la banque</h3>
+          <p>
+            Pour un collectif militant, une asbl, un syndicat, ton projet est une <strong>boîte à outils</strong> :
+          </p>
+          <ul>
+            <li>méthodes pour faire de la veille citoyenne sans être noyé dans l’information,</li>
+            <li>supports de débat pour des AG, des week-ends de formation, des campagnes,</li>
+            <li>modèle pour créer leur <strong>propre instance</strong> (locale, thématique, de branche),</li>
+            <li>possibilité de co-produire de nouveaux modules (dossiers, tests, cartes, jeux).</li>
+          </ul>
+          <p>
+            En tant que banquier, je suppose que ces publics ne seront pas les plus solvables,
+            mais ils peuvent constituer le <strong>cœur vivant</strong> du projet, celui qui le rend crédible
+            aux yeux des autres (élus, médias, fondations).
+          </p>
+          <p class="hint">
+            Référence interne : <span class="mono">instance.html</span> (créer sa propre instance),
+            <span class="mono">guide-instance.html</span> si tu en crées un, plus tes dossiers de veille citoyenne.
+          </p>
+        </div>
+
+        <!-- Autres -->
+        <div class="tab-panel" data-tab-panel="autres">
+          <h3>Autres : fondations, médias, citoyens individuels – Ce que voit la banque</h3>
+          <p>
+            Au-delà des quatre grands publics, il existe d’autres relais possibles :
+          </p>
+          <ul>
+            <li><strong>Fondations & mécènes :</strong> financement de versions “open” du projet,
+                soutien à des déploiements dans des territoires pilotes.</li>
+            <li><strong>Médias :</strong> co-production de contenus pédagogiques,
+                séries d’articles ou d’émissions basées sur tes dossiers, tests grand public.</li>
+            <li><strong>Citoyens individuels :</strong> soutien via cagnotte, participation à des ateliers,
+                création de micro-instances “de quartier”.</li>
+          </ul>
+          <p>
+            En tant que banquier, je vois là un <strong>écosystème de co-financement</strong> :
+            pas un seul gros financeur, mais une multitude de petits et moyens soutiens,
+            ce qui réduit la dépendance à un acteur unique.
+          </p>
+          <p class="hint">
+            Référence interne : <span class="mono">cagnotte.html</span>, <span class="mono">viral.html</span>, <span class="mono">ultime.html</span> (cette page).
+          </p>
+        </div>
+
+        <h2 style="margin-top:0.9rem;">4. Comment un banquier présenterait le projet à son comité</h2>
+        <p>
+          Si je devais présenter ce dossier en comité de crédit ou d’investissement sociétal, je résumerais ainsi :
+        </p>
+        <ul>
+          <li><strong>Nature du projet :</strong> plateforme pédagogique et ludique de veille citoyenne,
+              déployable par instances locales, avec une forte dimension d’éducation populaire.</li>
+          <li><strong>Portage :</strong> initié par une personne ou un petit noyau très impliqué,
+              avec potentiel de structuration en asbl / coop / structure mixte.</li>
+          <li><strong>Modèle économique :</strong> combinaison de contrats de prestations, partenariats,
+              petites récurrences, soutiens citoyens. Viable à condition d’être développé progressivement.</li>
+          <li><strong>Impact :</strong> montée en compétences citoyennes, meilleure compréhension
+              des enjeux numériques & informationnels, création de réseaux locaux de veille.</li>
+          <li><strong>Recommandation :</strong> financement raisonnable, étalé, éventuellement couplé
+              à un accompagnement (gestion, gouvernance, communication), plutôt qu’un gros chèque unique.</li>
+        </ul>
+
+        <p class="hint">
+          Tu peux adapter ce discours en diaporama, en PDF ou en pitch oral pour un rendez-vous avec élus,
+          sponsors, écoles, coopératives, etc.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        <strong>ultime.html</strong> est la “fiche produit” vue depuis la banque :  
+        là où ton univers ludique, critique et citoyen devient lisible en termes de risque, rendement et impact.
+      </span>
+      <code>ultime.html · mobile first · pur HTML/CSS/JS · pitch banquier multi-publics</code>
+    </footer>
+
+    <div class="badge-corner">
+      ULTIMATE PITCH · V1
+    </div>
+  </div>
+
+  <script>
+    // Tabs
+    (function() {
+      const btns = document.querySelectorAll('.tab-btn');
+      const panels = document.querySelectorAll('.tab-panel');
+
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.getAttribute('data-tab');
+          btns.forEach(b => b.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          const panel = document.querySelector(`.tab-panel[data-tab-panel="${tab}"]`);
+          if (panel) panel.classList.add('active');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
