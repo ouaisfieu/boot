@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio – Analyste en renseignement & sécurité de l’information</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #f5f6fb;
+      --bg-alt: #ffffff;
+      --fg: #111827;
+      --muted: #6b7280;
+      --accent: #0f766e;
+      --accent-soft: #d1fae5;
+      --border: #e5e7eb;
+      --radius: 10px;
+      --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --shadow-strong: 0 18px 40px rgba(15, 23, 42, 0.16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; scroll-behavior: smooth; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* HEADER */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(248, 249, 255, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(209, 213, 219, 0.8);
+    }
+
+    .nav {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0.75rem 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.9rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 25% 20%, #34d399, transparent 55%),
+        radial-gradient(circle at 70% 80%, #0f766e, transparent 55%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #ecfdf5;
+      box-shadow:
+        0 0 0 2px white,
+        0 10px 20px rgba(15, 118, 110, 0.55);
+    }
+
+    .brand-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-right a {
+      font-size: 0.8rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: #4b5563;
+      transition:
+        background 0.15s ease-out,
+        border-color 0.15s ease-out,
+        color 0.15s ease-out;
+    }
+
+    .nav-right a:hover {
+      background: #d1fae5;
+      border-color: #6ee7b7;
+      color: #064e3b;
+    }
+
+    .nav-right a.primary-link {
+      border-color: #0f766e;
+      background: #0f766e;
+      color: white;
+      font-weight: 500;
+    }
+
+    .nav-right a.primary-link:hover {
+      background: #064e3b;
+      border-color: #064e3b;
+    }
+
+    @media (max-width: 640px) {
+      .brand-sub { display: none; }
+      .nav { padding-inline: 0.8rem; }
+    }
+
+    /* LAYOUT */
+
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 1.6rem 1.1rem 2.4rem;
+    }
+
+    section + section {
+      margin-top: 2.3rem;
+    }
+
+    .section-header {
+      margin-bottom: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .section-header h2 {
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #111827;
+    }
+
+    .section-header p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 28rem;
+    }
+
+    /* HERO */
+
+    .hero {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    @media (min-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2.3fr);
+        align-items: center;
+      }
+    }
+
+    .hero-main {
+      background: var(--bg-alt);
+      border-radius: 18px;
+      padding: 1.4rem 1.4rem 1.2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+    }
+
+    .hero-kicker {
+      font-size: 0.78rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #0f766e;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.6rem, 3vw + 1rem, 2.3rem);
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero h1 span {
+      color: #0f766e;
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .hero-pill {
+      font-size: 0.78rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      color: #374151;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+      margin-top: 0.3rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.65rem 1.3rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-main {
+      background: #0f766e;
+      color: #ecfdf5;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn-main:hover {
+      background: #064e3b;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #d1d5db;
+      color: #374151;
+    }
+
+    .btn-ghost:hover {
+      background: #e5f9f3;
+      border-color: #6ee7b7;
+    }
+
+    .hero-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    .hero-side {
+      background: #020617;
+      color: #e5e7eb;
+      border-radius: 18px;
+      padding: 1.1rem 1.1rem 1.0rem;
+      box-shadow: var(--shadow-strong);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-side::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at top left, rgba(52,211,153,0.25), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(45,212,191,0.3), transparent 55%);
+      opacity: 0.9;
+      mix-blend-mode: screen;
+    }
+
+    .hero-side-inner {
+      position: relative;
+      z-index: 1;
+      font-size: 0.85rem;
+    }
+
+    .hero-side h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-side ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.3rem 0 0.5rem;
+    }
+
+    .hero-side li {
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+
+    .hero-side li span.bullet {
+      font-size: 0.8rem;
+      margin-top: 0.05rem;
+      color: #6ee7b7;
+    }
+
+    .hero-side-foot {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin-top: 0.4rem;
+    }
+
+    /* COMPÉTENCES */
+
+    .skills-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 900px) {
+      .skills-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .skill-card {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.85rem 0.9rem;
+      font-size: 0.86rem;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+    }
+
+    .skill-card h3 {
+      font-size: 0.94rem;
+      margin-bottom: 0.3rem;
+      color: #111827;
+    }
+
+    .skill-card p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .skill-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .skill-list li {
+      font-size: 0.82rem;
+      color: #4b5563;
+      margin-bottom: 0.2rem;
+    }
+
+    /* MISSIONS / CAS */
+
+    .case-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 900px) {
+      .case-grid {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
+      }
+    }
+
+    .case-card {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.9rem 1rem;
+      font-size: 0.86rem;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+    }
+
+    .case-badge {
+      display: inline-block;
+      font-size: 0.74rem;
+      border-radius: 999px;
+      padding: 0.15rem 0.55rem;
+      background: #ecfdf5;
+      color: #0f766e;
+      margin-bottom: 0.3rem;
+    }
+
+    .case-card h3 {
+      font-size: 0.96rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .case-metadata {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .case-card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .case-card li {
+      font-size: 0.84rem;
+      color: #4b5563;
+      margin-bottom: 0.25rem;
+    }
+
+    /* ÉTHIQUE */
+
+    .ethics-card {
+      background: #020617;
+      color: #e5e7eb;
+      border-radius: 16px;
+      padding: 1.0rem 1.1rem 0.9rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid #020617;
+      font-size: 0.86rem;
+    }
+
+    .ethics-card h3 {
+      font-size: 0.96rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .ethics-card p {
+      color: #d1d5db;
+      margin-bottom: 0.4rem;
+    }
+
+    .ethics-card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .ethics-card li {
+      margin-bottom: 0.25rem;
+      display: flex;
+      gap: 0.35rem;
+      align-items: flex-start;
+      font-size: 0.84rem;
+    }
+
+    .ethics-card li span.bullet {
+      font-size: 0.9rem;
+      margin-top: 0.02rem;
+      color: #6ee7b7;
+    }
+
+    .ethics-note {
+      font-size: 0.76rem;
+      color: #9ca3af;
+      margin-top: 0.35rem;
+    }
+
+    /* CONTACT */
+
+    .contact-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 900px) {
+      .contact-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.6fr);
+      }
+    }
+
+    .contact-card {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.9rem 1rem;
+      font-size: 0.86rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.6rem;
+      font-size: 0.86rem;
+      font-family: inherit;
+      background: #ffffff;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 1px rgba(16,185,129,0.3);
+    }
+
+    textarea {
+      min-height: 6rem;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      gap: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    @media (min-width: 640px) {
+      .row-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    .message {
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+      display: none;
+    }
+
+    .message.ok { color: #16a34a; }
+    .message.error { color: #b91c1c; }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid rgba(209, 213, 219, 0.9);
+      padding: 1rem 1.1rem 1.4rem;
+      margin-top: 2rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="logo">E</div>
+      <div>
+        <div class="brand-title">Renseignement & sécurité de l’information</div>
+        <div class="brand-sub">Portfolio professionnel – Profil d’analyste (“l’espion” côté légal)</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <a href="#competences">Compétences</a>
+      <a href="#missions">Missions</a>
+      <a href="#ethique">Éthique</a>
+      <a href="#contact" class="primary-link">Demande de contact</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-main">
+      <div class="hero-kicker">Profil professionnel</div>
+      <h1>
+        Analyste en <span>renseignement</span> & sécurité de l’information
+      </h1>
+      <p class="hero-sub">
+        Observation, recoupement et analyse d’informations pour aider les organisations
+        à mieux comprendre leur environnement, leurs risques et leurs marges de manœuvre –
+        exclusivement dans un cadre légal et transparent.
+      </p>
+
+      <div class="hero-meta">
+        <div class="hero-pill">Veille & analyse de risques</div>
+        <div class="hero-pill">OSINT, documentation, cartographie d’acteurs</div>
+        <div class="hero-pill">Secteur associatif, ONG, pouvoirs locaux</div>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn btn-main" type="button" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+          Planifier un échange exploratoire
+        </button>
+        <button class="btn btn-ghost" type="button" onclick="document.getElementById('competences').scrollIntoView({behavior:'smooth'})">
+          Voir le détail des compétences
+        </button>
+      </div>
+
+      <p class="hero-note">
+        L’idée n’est pas d’“espionner” les personnes, mais de lire le contexte : signaux faibles,
+        évolutions, jeux d’acteurs et risques organisationnels, pour mieux décider en interne.
+      </p>
+    </div>
+
+    <aside class="hero-side">
+      <div class="hero-side-inner">
+        <h3>Ce que recouvre “l’espion” ici</h3>
+        <ul>
+          <li>
+            <span class="bullet">•</span>
+            <span>
+              Travail de renseignement à partir de <strong>sources ouvertes</strong> (OSINT) : documents publics,
+              sites officiels, rapports, presse, publications sectorielles.
+            </span>
+          </li>
+          <li>
+            <span class="bullet">•</span>
+            <span>
+              Capacités de <strong>mise en cohérence</strong> : faire le lien entre ce qui se dit, ce qui se fait,
+              et ce qui est écrit noir sur blanc dans les textes et les budgets.
+            </span>
+          </li>
+          <li>
+            <span class="bullet">•</span>
+            <span>
+              Attention permanente à la <strong>protection des personnes</strong>, au secret professionnel
+              et aux cadres légaux (vie privée, données sensibles, sécurité).
+            </span>
+          </li>
+        </ul>
+        <p class="hero-side-foot">
+          C’est une posture d’observateur rigoureux qui essaye d’éclairer les décisions, pas de les
+          manipuler dans l’ombre.
+        </p>
+      </div>
+    </aside>
+  </section>
+
+  <!-- COMPÉTENCES -->
+  <section id="competences">
+    <div class="section-header">
+      <h2>Compétences clés</h2>
+      <p>
+        Un socle mêlant culture associative, sens du détail administratif et réflexes d’analyse
+        “renseignement” orientés vers la protection et la lucidité.
+      </p>
+    </div>
+
+    <div class="skills-grid">
+      <article class="skill-card">
+        <h3>Veille & OSINT</h3>
+        <p>Observer le contexte sans intrusion.</p>
+        <ul class="skill-list">
+          <li>Recherche d’informations à partir de sources ouvertes.</li>
+          <li>Suivi de la presse, des sites institutionnels, des rapports officiels.</li>
+          <li>Repérage de signaux faibles et d’évolutions structurantes.</li>
+          <li>Organisation d’une veille exploitable par les équipes.</li>
+        </ul>
+      </article>
+
+      <article class="skill-card">
+        <h3>Cartographie d’acteurs & enjeux</h3>
+        <p>Voir qui fait quoi autour de vous.</p>
+        <ul class="skill-list">
+          <li>Identification des acteurs clés (alliés, opposants, régulateurs).</li>
+          <li>Analyse des intérêts, contraintes et marges de manœuvre des acteurs.</li>
+          <li>Visualisation simple de “qui parle à qui” et sur quels sujets.</li>
+          <li>Repérage des opportunités de dialogue ou de coopération.</li>
+        </ul>
+      </article>
+
+      <article class="skill-card">
+        <h3>Analyse de risques</h3>
+        <p>Mettre des mots sur les vulnérabilités.</p>
+        <ul class="skill-list">
+          <li>Repérage des points de fragilité (informationnels, organisationnels).</li>
+          <li>Traduction des risques en scénarios concrets et compréhensibles.</li>
+          <li>Hiérarchisation : quoi traiter d’abord, avec quels moyens.</li>
+          <li>Recommandations réalistes pour limiter l’exposition.</li>
+        </ul>
+      </article>
+
+      <article class="skill-card">
+        <h3>Documentation & synthèse</h3>
+        <p>Rendre l’information lisible et partageable.</p>
+        <ul class="skill-list">
+          <li>Synthèse de dossiers, documents techniques ou juridiques.</li>
+          <li>Notes courtes pour directions, CA, partenaires.</li>
+          <li>Fiches pratiques pour les équipes de terrain.</li>
+          <li>Structuration d’archives utiles pour le long terme.</li>
+        </ul>
+      </article>
+
+      <article class="skill-card">
+        <h3>Culture organisationnelle & données</h3>
+        <p>Connaître les contraintes internes.</p>
+        <ul class="skill-list">
+          <li>Expérience du travail administratif dans le non-marchand.</li>
+          <li>Sensibilité à la confidentialité des données et des personnes.</li>
+          <li>Capacité à dialoguer avec des profils très différents (direction, terrain, IT…).</li>
+          <li>Attention aux impacts humains (charge mentale, burnout, tensions).</li>
+        </ul>
+      </article>
+
+      <article class="skill-card">
+        <h3>Interface avec la sécurité / IT</h3>
+        <p>Faire le lien sans jargon inutile.</p>
+        <ul class="skill-list">
+          <li>Traduction des enjeux de sécurité en impacts concrets pour les équipes.</li>
+          <li>Appui à la communication interne sur les bonnes pratiques.</li>
+          <li>Relais entre besoins opérationnels et contraintes techniques.</li>
+          <li>Recherche de solutions proportionnées plutôt que de “paranoïa”.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- MISSIONS -->
+  <section id="missions">
+    <div class="section-header">
+      <h2>Types de missions</h2>
+      <p>
+        Quelques formats possibles, modulables selon la taille de votre structure
+        et votre maturité en matière de sécurité et de veille.
+      </p>
+    </div>
+
+    <div class="case-grid">
+      <article class="case-card">
+        <span class="case-badge">Veille & contexte</span>
+        <h3>Comprendre l’environnement de votre organisation</h3>
+        <p class="case-metadata">
+          Pour directions, coordinations, CA qui ont besoin d’un tableau de bord minimal mais solide.
+        </p>
+        <ul>
+          <li>Cartographie des acteurs clés liés à vos thématiques.</li>
+          <li>Repérage des évolutions réglementaires et politiques pertinentes.</li>
+          <li>Identification des zones d’incertitude et des questions à surveiller.</li>
+          <li>Proposition d’une routine de veille réaliste et soutenable.</li>
+        </ul>
+      </article>
+
+      <article class="case-card">
+        <span class="case-badge">Risques & vulnérabilités</span>
+        <h3>Faire le point sur vos fragilités informationnelles</h3>
+        <p class="case-metadata">
+          Pour structures qui commencent à se poser des questions sur leurs données et leurs pratiques.
+        </p>
+        <ul>
+          <li>Inventaire des informations sensibles (personnes, finances, stratégie…).</li>
+          <li>Analyse des circuits informels par lesquels circule l’information.</li>
+          <li>Repérage des situations à risque (perte de données, fuites, erreurs). </li>
+          <li>Pistes d’amélioration proportionnées à vos moyens (pas de grand soir technologique).</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="case-grid" style="margin-top:0.9rem;">
+      <article class="case-card">
+        <span class="case-badge">Scénarios & anticipations</span>
+        <h3>Se préparer avant que la crise n’arrive</h3>
+        <p class="case-metadata">
+          Pour organisations confrontées à des controverses, changements rapides ou tensions récurrentes.
+        </p>
+        <ul>
+          <li>Identification de quelques scénarios crédibles (pas de catastrophisme gratuit).</li>
+          <li>Analyse des conséquences possibles pour vos publics et vos équipes.</li>
+          <li>Préparation de pistes de réponse et de messages cohérents.</li>
+          <li>Capitalisation après coup : ce qu’on a appris, ce qu’on ajuste.</li>
+        </ul>
+      </article>
+
+      <article class="case-card">
+        <span class="case-badge">Sensibilisation interne</span>
+        <h3>Installer une culture de vigilance raisonnable</h3>
+        <p class="case-metadata">
+          Pour équipes qui veulent se renforcer sans basculer dans la méfiance généralisée.
+        </p>
+        <ul>
+          <li>Ateliers sur les bons réflexes (phishing, partage de documents, mots de passe…).</li>
+          <li>Exemples de cas concrets adaptés à votre réalité.</li>
+          <li>Supports simples pour prolonger la sensibilisation en interne.</li>
+          <li>Dialogue ouvert sur les limites : on ne peut pas tout contrôler, et ce n’est pas le but.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- ÉTHIQUE -->
+  <section id="ethique">
+    <div class="section-header">
+      <h2>Éthique & cadre de travail</h2>
+      <p>
+        Le mot “espion” peut faire fantasmer. Ici, il est assumé dans une version claire :
+        droit, proportionné, orienté protection et lucidité, jamais intrusion illégale.
+      </p>
+    </div>
+
+    <div class="ethics-card">
+      <h3>Lignes rouges explicites</h3>
+      <p>
+        Le travail de renseignement ne vaut que s’il est compatible avec la loi, les droits fondamentaux
+        et la confiance des personnes concernées. Les principes ci-dessous sont non négociables.
+      </p>
+      <ul>
+        <li>
+          <span class="bullet">✔</span>
+          <span><strong>Sources ouvertes uniquement</strong> : pas d’accès illégal à des systèmes, pas de piratage, pas d’intrusion.</span>
+        </li>
+        <li>
+          <span class="bullet">✔</span>
+          <span><strong>Respect des personnes</strong> : pas de surveillance ciblée d’individus, pas de collecte intrusive sur la vie privée.</span>
+        </li>
+        <li>
+          <span class="bullet">✔</span>
+          <span><strong>Conformité légale</strong> : respect des cadres en vigueur (protection des données, secret professionnel, droits humains).</span>
+        </li>
+        <li>
+          <span class="bullet">✔</span>
+          <span><strong>Transparence envers le commanditaire</strong> : explicitation des méthodes, des limites et des incertitudes.</span>
+        </li>
+        <li>
+          <span class="bullet">✔</span>
+          <span><strong>Finalité de protection</strong> : contribuer à sécuriser les personnes, les projets et les structures, pas à les instrumentaliser.</span>
+        </li>
+      </ul>
+
+      <p class="ethics-note">
+        Concrètement : toute demande d’“espionnage” de personnes, de concurrence déloyale ou d’action illégale
+        est refusée. Le travail porte sur l’analyse d’information et la réduction des angles morts, pas sur la
+        violation de droits.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header">
+      <h2>Demande de contact</h2>
+      <p>
+        Un premier pas peut être un simple échange exploratoire : clarifier votre besoin,
+        vérifier si un appui en renseignement & analyse fait sens pour vous, et sous quelles formes.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <form id="contactForm">
+          <div class="row row-2">
+            <div>
+              <label for="org">Organisation</label>
+              <input id="org" type="text" placeholder="Nom de la structure" />
+            </div>
+            <div>
+              <label for="role">Fonction</label>
+              <input id="role" type="text" placeholder="Direction, coordination, animation…" />
+            </div>
+          </div>
+
+          <div class="row row-2">
+            <div>
+              <label for="name">Nom / Prénom</label>
+              <input id="name" type="text" placeholder="Personne de contact" />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="email@exemple.org" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="topic">Type de demande</label>
+              <select id="topic">
+                <option value="Veille & contexte">Veille & compréhension du contexte</option>
+                <option value="Risques">Analyse de risques / vulnérabilités</option>
+                <option value="Scénarios">Scénarios & anticipations</option>
+                <option value="Sensibilisation">Sensibilisation interne</option>
+                <option value="Exploratoire">Simple entretien exploratoire</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="message">Quelques lignes sur votre situation</label>
+              <textarea id="message" placeholder="Ce qui vous inquiète, ce que vous voudriez éclairer, vos contraintes de temps…"></textarea>
+              <p class="hint">
+                Ce formulaire ne déclenche aucun envoi automatique : il génère un brouillon de mail
+                que vous pouvez adapter et envoyer depuis votre messagerie habituelle.
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <button class="btn btn-main" type="submit">Générer un mail type</button>
+          </div>
+
+          <div id="formMessage" class="message"></div>
+        </form>
+      </div>
+
+      <div class="contact-card">
+        <label for="mailPreview">Mail type à copier-coller</label>
+        <textarea id="mailPreview" readonly placeholder="Remplissez le formulaire à gauche pour générer un brouillon de mail."></textarea>
+        <p class="small">
+          Ensuite : copiez-collez ce texte dans un mail, complétez les informations manquantes
+          et ajoutez les coordonnées du destinataire de votre choix.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Portfolio statique HTML/CSS/JS – Profil d’analyste en renseignement & sécurité de l’information.  
+  Ce site présente un positionnement professionnel strictement conforme aux cadres légaux et éthiques.
+</footer>
+
+<script>
+  const form = document.getElementById('contactForm');
+  const msgBox = document.getElementById('formMessage');
+  const mailPreview = document.getElementById('mailPreview');
+
+  function sanitize(v) {
+    return (v || '').toString().trim();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msgBox.style.display = 'none';
+    msgBox.textContent = '';
+
+    const org = sanitize(document.getElementById('org').value);
+    const role = sanitize(document.getElementById('role').value);
+    const name = sanitize(document.getElementById('name').value);
+    const email = sanitize(document.getElementById('email').value);
+    const topic = sanitize(document.getElementById('topic').value);
+    const message = sanitize(document.getElementById('message').value);
+
+    if (!email || !name) {
+      msgBox.className = 'message error';
+      msgBox.textContent = "Merci de renseigner au minimum un nom et un email pour générer le mail type.";
+      msgBox.style.display = 'block';
+      return;
+    }
+
+    let text = "";
+
+    text += "Objet : Demande de contact – " + topic + "\n\n";
+    text += "Bonjour,\n\n";
+    text += "Nous souhaiterions envisager un échange autour des questions de renseignement et de sécurité de l’information, plus spécifiquement sur le volet suivant : " + topic.toLowerCase() + ".\n\n";
+
+    text += "Quelques informations sur notre structure :\n";
+    text += "  • Organisation : " + (org || "(à préciser)") + "\n";
+    if (role) text += "  • Fonction de la personne de contact : " + role + "\n";
+    text += "\n";
+
+    if (message) {
+      text += "Contexte / éléments de départ :\n";
+      text += "  " + message.replace(/\n/g, "\n  ") + "\n\n";
+    } else {
+      text += "Contexte / éléments de départ :\n";
+      text += "  (à préciser : situation actuelle, préoccupations, objectifs, échéances éventuelles…)\n\n";
+    }
+
+    text += "L’idée serait dans un premier temps de fixer un entretien exploratoire (en ligne ou en présentiel) pour clarifier nos besoins, vérifier s’ils entrent dans votre cadre éthique et légal, et voir comment une collaboration pourrait être envisagée.\n\n";
+    text += "Bien à vous,\n";
+    text += name + "\n";
+    if (role) text += role + "\n";
+    if (org) text += org + "\n";
+    text += "Email : " + email + "\n";
+
+    mailPreview.value = text;
+
+    msgBox.className = 'message ok';
+    msgBox.textContent = "Brouillon de mail généré. Vous pouvez le copier-coller dans votre messagerie.";
+    msgBox.style.display = 'block';
+  });
+</script>
+</body>
+</html>
