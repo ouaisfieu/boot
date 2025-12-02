@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Univers 12,50 · Hub Arcade Central</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+  :root {
+    --bg: #0a0f1a;
+    --bg2: #111827;
+    --panel: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --text-soft: #94a3b8;
+    --accent: #22c55e;
+    --accent2: #a855f7;
+    --radius: 14px;
+    --shadow: 0 12px 35px rgba(0,0,0,0.5);
+  }
+
+  body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: radial-gradient(circle at top, #1e293b 0%, #0a0f1a 70%);
+    color: var(--text);
+    padding: 0;
+  }
+
+  header {
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,15,26,0.8);
+    backdrop-filter: blur(6px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  h1 {
+    margin: 0 0 4px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 22px auto;
+    padding: 0 16px;
+    display: grid;
+    gap: 16px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @media(min-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media(min-width: 1100px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.7);
+  }
+
+  .card h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .card p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+
+  .btn {
+    margin-top: auto;
+    display: inline-block;
+    text-decoration: none;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #0f172a;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .btn:hover {
+    opacity: 0.85;
+  }
+
+  footer {
+    margin-top: 30px;
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--text-soft);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Univers 12,50 – Hub Arcade</h1>
+  <div class="subtitle">Explore le multivers anarcho-technogeek, satire politique & fuites dystopiques</div>
+</header>
+
+<div class="container">
+
+  <div class="grid">
+
+    <!-- Jeu central -->
+    <div class="card">
+      <h2>🎮 Tu Raques Ou Pas ?</h2>
+      <p>Le jeu central : XP, mini-quiz, pilule rouge/bleue, export du profil, progression narrative.</p>
+      <a class="btn" href="tu-raques-ou-pas.html">Lancer ▶</a>
+    </div>
+
+    <!-- Belgilikjes -->
+    <div class="card">
+      <h2>💾 Belgilikjes</h2>
+      <p>La grande fuite de données du royaume. Tous les secteurs. Toutes les casseroles. Toutes les failles.</p>
+      <a class="btn" href="belgilikjes.html">Voir les leaks ▶</a>
+    </div>
+
+    <!-- MR en mieux -->
+    <div class="card">
+      <h2>🔵 MR En Mieux™</h2>
+      <p>Communiqué de presse d’un MR radicalisé qui s’autoproclame Mouvement Radical “en mieux”.</p>
+      <a class="btn" href="mr-campagne.html">Accéder ▶</a>
+    </div>
+
+    <!-- Clones Ecolo/PTB -->
+    <div class="card">
+      <h2>💚❤️ Ecolo/PTB CLONES</h2>
+      <p>Parodie de sites de campagne clonés, twisting woke, ping-pong trollesque.</p>
+      <a class="btn" href="campagne-clones.html">Explorer ▶</a>
+    </div>
+
+    <!-- Organisation -->
+    <div class="card">
+      <h2>🕵️ L’Organisation</h2>
+      <p>L’intranet fictif d’une agence de renseignement belge trop zélée pour être réelle.</p>
+      <a class="btn" href="organisation.html">Entrer ▶</a>
+    </div>
+
+    <!-- Étagère universelle -->
+    <div class="card">
+      <h2>📚 Étagère universelle</h2>
+      <p>Une étagère full-option pour parcourir tous les fichiers et mondes du projet.</p>
+      <a class="btn" href="etagere.html">Afficher ▶</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Univers 12,50 · Fable techno-politique · 100% HTML/CSS/JS statique · Aucun tracking, aucune collecte, tout est fictif.
+</footer>
+
+</body>
+</html>
