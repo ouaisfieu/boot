@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>budget-2029.html – Budget de dingue & sponsors jusqu’à Noël 2029</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #050818;
+      --card: #020617;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.18);
+      --accent2: #38bdf8;
+      --accent3: #f97316;
+      --accent4: #eab308;
+      --danger: #fb7185;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(148,163,184,0.7);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56,189,248,0.20), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.18), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1180px;
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.16), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.96), transparent 60%),
+        var(--bg-alt);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      padding: 1.2rem 0.9rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.8rem 1.6rem 2.2rem; }
+    }
+
+    .page::before {
+      content: "budget-2029.html · Simulation mondiale, sponsors & jeu de combinaisons cachées";
+      position: absolute;
+      top: 0.45rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      pointer-events: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .header-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: rgba(15,23,42,0.98);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      box-shadow: 0 0 18px rgba(34,197,94,0.4);
+    }
+
+    .badge-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 14px rgba(34,197,94,0.8);
+    }
+
+    .header-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 320px;
+    }
+
+    h1 {
+      margin-top: 0.4rem;
+      font-size: clamp(2rem, 4.6vw, 2.9rem);
+      line-height: 1.05;
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #22c55e, #38bdf8, #f97316, #eab308);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 880px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .notice {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 0.55rem 0.7rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 0.4rem;
+      align-items: flex-start;
+    }
+
+    .notice-icon { font-size: 1.4rem; }
+
+    .notice strong { color: var(--accent2); }
+
+    .layout {
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 980px) {
+      .layout {
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+        align-items: flex-start;
+      }
+    }
+
+    section {
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.18), transparent 65%),
+        var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.9rem 0.95rem 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      section { padding: 1.1rem 1.15rem 1.35rem; }
+    }
+
+    section h2 {
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-main);
+    }
+
+    section p {
+      line-height: 1.6;
+      margin-bottom: 0.25rem;
+    }
+
+    ul { margin-left: 1.1rem; margin-bottom: 0.25rem; }
+    li { margin-bottom: 0.18rem; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      padding: 0.12rem 0.55rem;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .pill span {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .mono {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.78rem;
+    }
+
+    /* Timeline / horizon */
+
+    .horizon {
+      margin-top: 0.4rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.6rem;
+      background: rgba(15,23,42,0.96);
+      font-size: 0.84rem;
+    }
+
+    .horizon-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .horizon-row span:last-child {
+      color: var(--accent3);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent4);
+      cursor: pointer;
+    }
+
+    .horizon-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* Sponsors table */
+
+    .sponsors {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.98);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    .sponsors-header {
+      font-size: 0.86rem;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .sponsor-row {
+      display: grid;
+      grid-template-columns: 1.6fr 0.9fr 1.1fr;
+      gap: 0.25rem 0.35rem;
+      align-items: center;
+      padding: 0.24rem 0;
+      border-bottom: 1px solid rgba(30,41,59,0.9);
+    }
+
+    .sponsor-row:last-child {
+      border-bottom: none;
+    }
+
+    .sponsor-label {
+      font-size: 0.8rem;
+      color: var(--text-main);
+    }
+
+    .sponsor-help {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .sponsor-input input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.22rem 0.5rem;
+      background: #020617;
+      color: var(--text-main);
+      font-size: 0.8rem;
+    }
+
+    .sponsor-tag {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.08rem;
+    }
+
+    .sponsor-total {
+      font-size: 0.8rem;
+      color: var(--accent2);
+      text-align: right;
+      font-family: "Share Tech Mono", monospace;
+    }
+
+    /* Résumé budget & brouillage */
+
+    .summary {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.98);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    .summary-title {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      gap: 0.25rem;
+    }
+
+    @media (min-width: 640px) {
+      .summary-grid {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+
+    .summary-card {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.4rem;
+      font-size: 0.78rem;
+    }
+
+    .summary-card h3 {
+      font-size: 0.78rem;
+      margin-bottom: 0.12rem;
+      color: var(--accent2);
+    }
+
+    .summary-value {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.82rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .summary-text {
+      color: var(--text-muted);
+    }
+
+    .impact {
+      margin-top: 0.4rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .impact span {
+      color: var(--accent4);
+      font-weight: 600;
+    }
+
+    /* Secrets / combos */
+
+    .secret {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.82rem;
+    }
+
+    .secret-title {
+      font-size: 0.84rem;
+      color: var(--accent3);
+      margin-bottom: 0.12rem;
+    }
+
+    .secret-msg {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      min-height: 2.3em;
+    }
+
+    /* Console -koi@man */
+
+    .console {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #020617;
+      font-size: 0.8rem;
+      padding: 0.5rem 0.6rem;
+    }
+
+    .console-title {
+      font-size: 0.82rem;
+      color: var(--accent2);
+      margin-bottom: 0.2rem;
+    }
+
+    .console-row {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .console-row span {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .console-row input {
+      flex: 1;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.45rem;
+      background: #020617;
+      color: var(--text-main);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.78rem;
+    }
+
+    .console-row button {
+      border-radius: 6px;
+      border: 1px solid var(--accent2);
+      background: rgba(56,189,248,0.15);
+      color: var(--accent2);
+      padding: 0.22rem 0.55rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .console-row button:hover {
+      background: rgba(56,189,248,0.3);
+    }
+
+    .console-output {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      white-space: pre-wrap;
+      max-height: 190px;
+      overflow: auto;
+      border-top: 1px solid rgba(30,41,59,0.9);
+      padding-top: 0.25rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Right column blocks */
+
+    .right-block {
+      margin-top: 0.2rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.98);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    .right-title {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+
+    .right-title span {
+      color: var(--accent3);
+    }
+
+    .right-body {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.45rem;
+      right: 0.6rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.75);
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-row">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>budget-2029.html – Rayonnement mondial simulé</span>
+          </div>
+          <h1>
+            Budget de dingue <span>jusqu’à Noël 2029</span>
+          </h1>
+        </div>
+        <div class="header-meta">
+          Une page qui joue sérieux avec les chiffres tout en gardant le mystère :  
+          sponsors potentiels, dons, subventions, combinaisons cachées,  
+          et une console <span class="mono">-koi@man</span> pour les indices.
+        </div>
+      </div>
+      <p class="subtitle">
+        Objectif : imaginer le budget d’une instance qui se rêve en <strong>réseau mondial</strong> d’ici Noël 2029.  
+        On ne peut pas encore chiffrer le pouvoir financier réel de l’Organisation,  
+        mais on peut jouer avec des scénarios, des fourchettes et des <strong>codes secrets</strong>.
+      </p>
+      <div class="notice">
+        <div class="notice-icon">🎄</div>
+        <div>
+          <strong>Avertissement :</strong> tout ici est <strong>fictif et pédagogique</strong>.  
+          Les montants, combinaisons et estimations ne sont pas des prévisions officielles, mais des <em>outils de jeu</em>
+          pour réfléchir à l’échelle possible du projet.
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- Colonne gauche : simulateur -->
+      <section>
+        <h2>1. Horizon temporel : vers Noël 2029</h2>
+        <p>
+          La base du jeu : tu projettes ton réseau de maintenant jusqu’à <strong>Noël 2029</strong>.  
+          On part de l’année 2025 comme point de départ, et tu ajustes l’horizon si tu veux simuler un arrêt avant.
+        </p>
+
+        <div class="horizon">
+          <div class="horizon-row">
+            <span>Année cible (Noël…)</span>
+            <span id="horizonYearLabel">2029</span>
+          </div>
+          <input type="range" id="horizonYear" min="2025" max="2029" value="2029">
+          <div class="horizon-note" id="horizonNote">
+            Projection sur <span class="mono">5</span> années (2025 → 2029).  
+            Plus tu ramènes le curseur, plus la simulation est courte et prudente.
+          </div>
+        </div>
+
+        <h2 style="margin-top:0.8rem;">2. Sponsors & soutiens potentiels</h2>
+        <p>
+          Tu peux jouer avec les <strong>catégories de sponsors</strong> ci-dessous :  
+          pour chaque type, indique un nombre de partenaires et un montant moyen par an.  
+          Le calculateur se charge de projeter jusqu’à l’année cible.
+        </p>
+
+        <div class="sponsors" id="sponsorsBox">
+          <div class="sponsors-header">
+            Sponsors, mécènes & soutiens (simulation jusqu’à Noël <span id="horizonYearLabel2">2029</span>)
+          </div>
+
+          <!-- Institutions publiques -->
+          <div class="sponsor-row" data-key="public">
+            <div>
+              <div class="sponsor-label">Institutions publiques (communes, régions, États)</div>
+              <div class="sponsor-help">Contrats programmes, actions citoyennes, projets pilotes.</div>
+            </div>
+            <div class="sponsor-input">
+              <input type="number" min="0" value="4" class="sponsor-count">
+              <div class="sponsor-tag">Nombre de partenaires</div>
+            </div>
+            <div>
+              <div class="sponsor-input">
+                <input type="number" min="0" value="15000" class="sponsor-amount">
+              </div>
+              <div class="sponsor-tag sponsor-total" data-total>0 €</div>
+            </div>
+          </div>
+
+          <!-- Programmes européens -->
+          <div class="sponsor-row" data-key="eu">
+            <div>
+              <div class="sponsor-label">Programmes européens & internationaux</div>
+              <div class="sponsor-help">Erasmus+, Europe Créative, fonds démocratie & numérique, etc.</div>
+            </div>
+            <div class="sponsor-input">
+              <input type="number" min="0" value="2" class="sponsor-count">
+              <div class="sponsor-tag">Nombre de projets</div>
+            </div>
+            <div>
+              <div class="sponsor-input">
+                <input type="number" min="0" value="35000" class="sponsor-amount">
+              </div>
+              <div class="sponsor-tag sponsor-total" data-total>0 €</div>
+            </div>
+          </div>
+
+          <!-- Fondations -->
+          <div class="sponsor-row" data-key="foundations">
+            <div>
+              <div class="sponsor-label">Fondations & fonds philanthropiques</div>
+              <div class="sponsor-help">Soutien pluriannuel à l’éducation citoyenne & numérique.</div>
+            </div>
+            <div class="sponsor-input">
+              <input type="number" min="0" value="5" class="sponsor-count">
+              <div class="sponsor-tag">Nombre de fondations</div>
+            </div>
+            <div>
+              <div class="sponsor-input">
+                <input type="number" min="0" value="12000" class="sponsor-amount">
+              </div>
+              <div class="sponsor-tag sponsor-total" data-total>0 €</div>
+            </div>
+          </div>
+
+          <!-- Marques -->
+          <div class="sponsor-row" data-key="brands">
+            <div>
+              <div class="sponsor-label">Marques & entreprises (RSE / mécénat)</div>
+              <div class="sponsor-help">Campagnes co-brandées, ateliers, sponsoring d’instances.</div>
+            </div>
+            <div class="sponsor-input">
+              <input type="number" min="0" value="8" class="sponsor-count">
+              <div class="sponsor-tag">Nombre de marques</div>
+            </div>
+            <div>
+              <div class="sponsor-input">
+                <input type="number" min="0" value="8000" class="sponsor-amount">
+              </div>
+              <div class="sponsor-tag sponsor-total" data-total>0 €</div>
+            </div>
+          </div>
+
+          <!-- Écoles & universités -->
+          <div class="sponsor-row" data-key="schools">
+            <div>
+              <div class="sponsor-label">Écoles, universités & hautes écoles</div>
+              <div class="sponsor-help">Modules pédagogiques, événements annuels, semaines citoyennes.</div>
+            </div>
+            <div class="sponsor-input">
+              <input type="number" min="0" value="10" class="sponsor-count">
+              <div class="sponsor-tag">Nombre d’établissements</div>
+            </div>
+            <div>
+              <div class="sponsor-input">
+                <input type="number" min="0" value="2000" class="sponsor-amount">
+              </div>
+              <div class="sponsor-tag sponsor-total" data-total>0 €</div>
+            </div>
+          </div>
+
+          <!-- Collectifs & syndicats -->
+          <div class="sponsor-row" data-key="collectives">
+            <div>
+              <div class="sponsor-label">Collectifs, syndicats & réseaux militants</div>
+              <div class="sponsor-help">Co-financement de contenus & dispositifs spécifiques.</div>
+            </div>
+            <div class="sponsor-input">
+              <input type="number" min="0" value="12" class="sponsor-count">
+              <div class="sponsor-tag">Nombre de collectifs</div>
+            </div>
+            <div>
+              <div class="sponsor-input">
+                <input type="number" min="0" value="1500" class="sponsor-amount">
+              </div>
+              <div class="sponsor-tag sponsor-total" data-total>0 €</div>
+            </div>
+          </div>
+
+          <!-- Citoyens & petites cagnottes -->
+          <div class="sponsor-row" data-key="citizens">
+            <div>
+              <div class="sponsor-label">Citoyens & petites cagnottes récurrentes</div>
+              <div class="sponsor-help">Soutiens 12,50 €/an, micro-dons, abonnements symboliques.</div>
+            </div>
+            <div class="sponsor-input">
+              <input type="number" min="0" value="300" class="sponsor-count">
+              <div class="sponsor-tag">Nombre de soutiens/an</div>
+            </div>
+            <div>
+              <div class="sponsor-input">
+                <input type="number" min="0" value="12.5" class="sponsor-amount">
+              </div>
+              <div class="sponsor-tag sponsor-total" data-total>0 €</div>
+            </div>
+          </div>
+
+          <!-- Autres / surprises -->
+          <div class="sponsor-row" data-key="other">
+            <div>
+              <div class="sponsor-label">Autres (médias, prix, surprises)</div>
+              <div class="sponsor-help">Prix, dotations exceptionnelles, partenariats inattendus.</div>
+            </div>
+            <div class="sponsor-input">
+              <input type="number" min="0" value="3" class="sponsor-count">
+              <div class="sponsor-tag">Nombre d’opportunités</div>
+            </div>
+            <div>
+              <div class="sponsor-input">
+                <input type="number" min="0" value="7000" class="sponsor-amount">
+              </div>
+              <div class="sponsor-tag sponsor-total" data-total>0 €</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary" id="summaryBox">
+          <div class="summary-title">3. Résumé budgétaire & “brouillage” des pistes</div>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <h3>Fourchette prudente</h3>
+              <div class="summary-value" id="lowEstimate">0 €</div>
+              <div class="summary-text">
+                Hypothèse basse (retards, dossiers refusés, rythmes lents).  
+                Sert à ne pas se raconter d’histoires.
+              </div>
+            </div>
+            <div class="summary-card">
+              <h3>Scénario médian</h3>
+              <div class="summary-value" id="midEstimate">0 €</div>
+              <div class="summary-text">
+                Projection centrale avec les valeurs indiquées.  
+                C’est <strong>ton</strong> réglage du moment, pas une prophétie.
+              </div>
+            </div>
+            <div class="summary-card">
+              <h3>Hypothèse euphorique</h3>
+              <div class="summary-value" id="highEstimate">0 €</div>
+              <div class="summary-text">
+                Tout se passe bien, plusieurs coups de chance,  
+                quelques gros sponsors inattendus.
+              </div>
+            </div>
+          </div>
+          <div class="impact" id="impactLabel">
+            Indice de rayonnement hypothétique : <span>local</span>.  
+            Plus les curseurs montent, plus on tend vers <span>mondial</span> (dans le jeu…).
+          </div>
+        </div>
+
+        <div class="secret" id="secretBox">
+          <div class="secret-title">4. Combinaisons cachées (mini-jeu financier)</div>
+          <div class="secret-msg" id="secretMsg">
+            Ajuste les sponsors… certains alignements déclenchent des messages secrets.  
+            Essaye par exemple d’augmenter les programmes européens, les fondations et les marques à la fois.
+          </div>
+        </div>
+
+        <div class="console">
+          <div class="console-title">Console de jeu : commande <span class="mono">-koi@man</span> & co</div>
+          <div class="console-row">
+            <span>&gt;</span>
+            <input id="cmdInput" placeholder="-koi@man, -koi@man sponsors, -koi@man combos…">
+            <button id="cmdBtn">run</button>
+          </div>
+          <div class="console-output" id="cmdOutput">
+            Tape <span class="mono">-koi@man</span> pour voir la “page de manuel” intégrée à ce budget de dingue.
+          </div>
+        </div>
+      </section>
+
+      <!-- Colonne droite : explications & méta -->
+      <section>
+        <div class="right-block">
+          <div class="right-title">Pourquoi un <span>budget de dingue</span> jusqu’à 2029 ?</div>
+          <div class="right-body">
+            Parce que ton projet n’est pas un “petit site”.  
+            C’est une <strong>infrastructure pédagogique et citoyenne</strong> :
+            <ul>
+              <li>tests de recrutement citoyens,</li>
+              <li>cyber-labs & dossiers documentaires,</li>
+              <li>jeux sérieux sur la propagande, les symboles, la guerre de l’info,</li>
+              <li>instances clonables sur clé USB et serveurs basiques.</li>
+            </ul>
+            Penser “mondial” ne signifie pas tout contrôler, mais rendre le modèle
+            <strong>copiable, appropriable, hackable</strong> par d’autres.
+          </div>
+        </div>
+
+        <div class="right-block" style="margin-top:0.6rem;">
+          <div class="right-title">Comment lire ce simulateur sans se faire piéger ?</div>
+          <div class="right-body">
+            <ul>
+              <li>Les montants par sponsor sont <strong>indicatifs</strong> : à adapter au réel.</li>
+              <li>Les fourchettes (basse, médiane, haute) sont là pour <strong>brouiller les pistes</strong> :
+                  l’idée est d’illustrer une <em>capacité</em>, pas de publier un bilan.</li>
+              <li>Les combinaisons secrètes ne servent pas à “optimiser le bluff”,
+                  mais à rappeler que la finance du projet est aussi un <strong>jeu politique</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="right-block" style="margin-top:0.6rem;">
+          <div class="right-title">À qui montrer cette page ?</div>
+          <div class="right-body">
+            <ul>
+              <li>À un <strong>banquier</strong>, pour illustrer qu’il y a des scénarios réalistes (cf. <span class="mono">ultime.html</span>).</li>
+              <li>À des <strong>élus</strong>, pour discuter des ordres de grandeur nécessaires à une vraie politique citoyenne.</li>
+              <li>À des <strong>collectifs</strong>, pour leur montrer qu’ils peuvent devenir co-financeurs du réseau.</li>
+              <li>À des <strong>marques ou fondations</strong>, pour situer où elles se placeraient dans le jeu.</li>
+            </ul>
+            Tu peux aussi décider de garder certains chiffres pour toi
+            et de n’en montrer qu’une version “soft” au public.
+          </div>
+        </div>
+
+        <div class="right-block" style="margin-top:0.6rem;">
+          <div class="right-title">Clause de non-délire financier</div>
+          <div class="right-body">
+            Ce fichier ne remplace pas :
+            <ul>
+              <li>un plan d’affaires détaillé,</li>
+              <li>un budget comptable,</li>
+              <li>un avis juridique ou fiscal.</li>
+            </ul>
+            C’est un <strong>tableau de bord ludique</strong>, à la frontière entre
+            <em>serious game</em> et maquette de business plan.  
+            Si un jour les montants approchent réellement ces ordres de grandeur,
+            il sera temps de faire intervenir des pros (comptables, juristes, etc.).
+          </div>
+        </div>
+
+        <p class="hint">
+          Tu peux relier cette page à <span class="mono">business-canvas.html</span>, <span class="mono">linux.html</span>, <span class="mono">sharky.html</span> et <span class="mono">ultime.html</span>  
+          pour former un “pack budget & modèles” sur ta clé USB ou ton dépôt GitHub.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        Ce budget de dingue n’est pas là pour impressionner les gens avec des zéros,
+        mais pour <strong>rendre visible l’échelle potentielle</strong> d’un réseau de veille citoyenne distribué.
+      </span>
+      <code>budget-2029.html · mobile first · pur HTML/CSS/JS · simulateur + jeu -koi@man</code>
+    </footer>
+
+    <div class="badge-corner">
+      BUDGET · 2025 → 2029
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const horizonInput = document.getElementById('horizonYear');
+      const horizonLabel = document.getElementById('horizonYearLabel');
+      const horizonLabel2 = document.getElementById('horizonYearLabel2');
+      const horizonNote = document.getElementById('horizonNote');
+
+      const sponsorRows = document.querySelectorAll('.sponsor-row');
+      const lowEstimate = document.getElementById('lowEstimate');
+      const midEstimate = document.getElementById('midEstimate');
+      const highEstimate = document.getElementById('highEstimate');
+      const impactLabel = document.getElementById('impactLabel');
+      const secretMsg = document.getElementById('secretMsg');
+
+      function formatEuro(x) {
+        return x.toLocaleString("fr-BE", { maximumFractionDigits: 0 }) + " €";
+      }
+
+      function computeYears() {
+        const targetYear = parseInt(horizonInput.value, 10);
+        const baseYear = 2025;
+        const years = Math.max(1, targetYear - baseYear + 1);
+        return { targetYear, years };
+      }
+
+      function updateHorizonText() {
+        const { targetYear, years } = computeYears();
+        horizonLabel.textContent = targetYear;
+        horizonLabel2.textContent = targetYear;
+        horizonNote.innerHTML =
+          `Projection sur <span class="mono">${years}</span> année(s) (2025 → ${targetYear}).<br>` +
+          `Plus l’horizon est court, plus le budget simulé est prudent.`;
+      }
+
+      function updateSponsorsAndSummary() {
+        const { years } = computeYears();
+        let total = 0;
+
+        sponsorRows.forEach(row => {
+          const countInput = row.querySelector('.sponsor-count');
+          const amountInput = row.querySelector('.sponsor-amount');
+          const totalCell = row.querySelector('[data-total]');
+
+          const count = parseFloat(countInput.value) || 0;
+          const amountPerYear = parseFloat(amountInput.value) || 0;
+
+          const rowTotal = count * amountPerYear * years;
+          total += rowTotal;
+          totalCell.textContent = rowTotal > 0 ? formatEuro(Math.round(rowTotal)) : "0 €";
+        });
+
+        // Brouillage des pistes : fourchettes
+        const low = Math.round(total * 0.55);
+        const mid = Math.round(total);
+        const high = Math.round(total * 1.9);
+
+        lowEstimate.textContent = formatEuro(low);
+        midEstimate.textContent = formatEuro(mid);
+        highEstimate.textContent = formatEuro(high);
+
+        // Indice de rayonnement
+        let niveau = "local";
+        if (mid > 50000 && mid <= 200000) niveau = "régional";
+        else if (mid > 200000 && mid <= 600000) niveau = "national";
+        else if (mid > 600000 && mid <= 1500000) niveau = "international";
+        else if (mid > 1500000) niveau = "mondial";
+
+        impactLabel.innerHTML =
+          `Indice de rayonnement hypothétique : <span>${niveau}</span>.<br>` +
+          `Ce n’est pas une vérité comptable, juste un curseur ludique pour situer l’échelle.`;
+
+        updateSecrets(total);
+      }
+
+      function updateSecrets(total) {
+        // lire quelques catégories clés
+        const getRow = key => document.querySelector(`.sponsor-row[data-key="${key}"]`);
+        const getVal = (key, selector) => {
+          const row = getRow(key);
+          if (!row) return 0;
+          const input = row.querySelector(selector);
+          return parseFloat(input.value) || 0;
+        };
+
+        const euCount = getVal('eu', '.sponsor-count');
+        const foundationCount = getVal('foundations', '.sponsor-count');
+        const brandCount = getVal('brands', '.sponsor-count');
+        const citizenCount = getVal('citizens', '.sponsor-count');
+
+        let message = "";
+
+        if (euCount >= 3 && foundationCount >= 5 && brandCount >= 10 && total > 800000) {
+          message =
+            "⚡ Combo trouvée : HYDRA-2029\n\n" +
+            "Tu as aligné au moins 3 programmes européens, 5 fondations et 10 marques avec un budget massif. " +
+            "Dans le jeu, c’est le mode « hydre financière citoyenne » : le réseau ne dépend d’aucun acteur unique, " +
+            "mais la complexité de gouvernance explose. À manier avec maturité.";
+        } else if (foundationCount >= 3 && citizenCount >= 500 && total > 200000) {
+          message =
+            "✨ Combo trouvée : COMMONS-BOOST\n\n" +
+            "Beaucoup de petites contributions citoyennes + quelques fondations, total significatif. " +
+            "C’est le scénario « biens communs dopés », où le cœur du pouvoir vient des bases et non des grands joueurs.";
+        } else if (brandCount >= 15 && total > 300000) {
+          message =
+            "🧨 Combo trouvée : BRAND-STORM\n\n" +
+            "Beaucoup de marques au tableau. Budget élevé, mais attention : la perception publique du projet " +
+            "peut basculer vers « vitrine marketing » si la gouvernance n’est pas très claire.";
+        } else if (total === 0) {
+          message =
+            "Aucune entrée ? C’est aussi une info : un projet peut exister à petite échelle sans sponsors, " +
+            "mais il ne faut pas se mentir sur les limites matérielles.";
+        } else {
+          message =
+            "Aucun code majeur activé pour l’instant.\n" +
+            "Joue avec les programmes européens, les fondations, les marques et les citoyen·nes pour voir " +
+            "si un mode caché se déclenche. La console -koi@man peut aussi donner des indices…";
+        }
+
+        secretMsg.textContent = message;
+      }
+
+      // Init
+      function refreshAll() {
+        updateHorizonText();
+        updateSponsorsAndSummary();
+      }
+
+      horizonInput.addEventListener('input', refreshAll);
+      sponsorRows.forEach(row => {
+        row.querySelectorAll('input').forEach(input => {
+          input.addEventListener('input', updateSponsorsAndSummary);
+        });
+      });
+
+      refreshAll();
+    })();
+
+    // Console -koi@man
+    (function() {
+      const input = document.getElementById('cmdInput');
+      const btn = document.getElementById('cmdBtn');
+      const out = document.getElementById('cmdOutput');
+
+      function append(text) {
+        out.textContent = text;
+      }
+
+      function handle(cmdRaw) {
+        const cmd = (cmdRaw || "").trim();
+
+        if (!cmd) {
+          append("usage: -koi@man [topic]\n\nTopics disponibles: help, sponsors, combos, timeline.");
+          return;
+        }
+
+        if (cmd === "-koi@man" || cmd === "-koi@man help") {
+          append(
+`MAN PAGE: budget-2029
+
+  Cette page simule un budget de dingue jusqu’à Noël 2029.
+
+  COMMANDES:
+    -koi@man           Affiche cette aide.
+    -koi@man sponsors  Liste les grandes familles de sponsors et idées de montants.
+    -koi@man combos    Donne des indices sur les combinaisons cachées.
+    -koi@man timeline  Explique la logique de l’horizon temporel.
+
+  NOTE:
+    Tout est fictif et pédagogique. Utilise ces chiffres comme terrain de jeu,
+    pas comme document comptable officiel.`);
+        } else if (cmd === "-koi@man sponsors") {
+          append(
+`SPONSORS POTENTIELS (IDÉES DE DÉPART):
+
+  publics      : communes, régions, États → actions citoyennes structurées
+  eu           : programmes Erasmus+, Europe Créative, etc.
+  foundations  : fondations privées, fonds philanthropiques
+  brands       : marques & entreprises RSE
+  schools      : écoles, hautes écoles, universités
+  collectives  : collectifs, syndicats, réseaux militants
+  citizens     : citoyen·nes, cagnottes, micro-abonnements
+  other        : prix, dotations, médias, surprises
+
+  Le jeu consiste à combiner ces sources sans perdre la cohérence politique du projet.
+  Pour des combos secrètes, voir: -koi@man combos`);
+        } else if (cmd === "-koi@man combos") {
+          append(
+`INDICES COMBOS CACHÉES:
+
+  HYDRA-2029:
+    - Au moins 3 programmes européens
+    - Plusieurs fondations
+    - Beaucoup de marques
+    - Budget total très élevé
+    → Statut hydre: multi-financements, gouvernance complexe.
+
+  COMMONS-BOOST:
+    - Fort nombre de soutiens citoyens
+    - Plusieurs fondations
+    - Budget global significatif
+    → Les bases financent, les fondations amplifient.
+
+  BRAND-STORM:
+    - Beaucoup de marques au tableau
+    - Budget solide
+    → Indice de risque “marketingisation” du projet.
+
+  ASTUCE:
+    Observe les changements dans le bloc “Combinaisons cachées” quand tu bouges les curseurs.`);
+        } else if (cmd === "-koi@man timeline") {
+          append(
+`TIMELINE 2025 → NOËL 2029:
+
+  - L’horizon par défaut est 2025–2029 (5 ans).
+  - Le slider modifie l’année cible: 2025, 2026, 2027, 2028, 2029.
+  - Les montants par sponsor sont multipliés par le nombre d’années.
+
+  EXEMPLES:
+    - Cible 2025 : tu projettes seulement 1 an (ultra prudent).
+    - Cible 2027 : tu projettes 3 ans.
+    - Cible 2029 : projection maximale dans ce jeu (5 ans).
+
+  L’idée est de voir comment le projet respire sur plusieurs années, sans prétendre
+  prédire l’avenir.`);
+        } else {
+          append(
+`Commande inconnue: ${cmd}
+
+Essaie:
+  -koi@man
+  -koi@man sponsors
+  -koi@man combos
+  -koi@man timeline`);
+        }
+      }
+
+      btn.addEventListener('click', () => {
+        handle(input.value);
+      });
+
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          handle(input.value);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
