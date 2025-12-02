@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Générateur de Devis – Professionnel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    margin: 0; padding: 20px;
+    color: #222;
+  }
+
+  h1, h2 { color: #003366; }
+
+  .container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  th {
+    background: #eef4fb;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    background: #0055aa;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-secondary {
+    background: #666;
+  }
+
+  #output {
+    white-space: pre-wrap;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-top: 25px;
+    border-radius: 6px;
+  }
+
+  .flex {
+    display: flex;
+    gap: 12px;
+  }
+
+  .flex > div {
+    flex: 1;
+  }
+
+  @media print {
+    body { background: white; }
+    .no-print { display: none; }
+    .container { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Générateur de Devis Professionnel</h1>
+  <p>Formulaire standard utilisable pour commerciaux, consultants, freelances, agences et dossiers bancaires.</p>
+
+  <h2>Informations de votre entreprise</h2>
+  <div class="flex">
+    <div>
+      <label>Nom de l'entreprise</label>
+      <input id="my_name" placeholder="Ex : ACME Consulting">
+    </div>
+    <div>
+      <label>SIRET</label>
+      <input id="my_siret" placeholder="Ex : 123 456 789 00012">
+    </div>
+  </div>
+
+  <label>Adresse</label>
+  <textarea id="my_address" rows="2" placeholder="Adresse complète"></textarea>
+
+  <h2>Informations du client</h2>
+
+  <label>Nom du client</label>
+  <input id="client_name" placeholder="Entreprise / Personne">
+
+  <label>Adresse du client</label>
+  <textarea id="client_address" rows="2"></textarea>
+
+  <div class="flex">
+    <div>
+      <label>Date du devis</label>
+      <input type="date" id="date_devis">
+    </div>
+    <div>
+      <label>Validité en jours</label>
+      <input id="validite" type="number" value="30">
+    </div>
+  </div>
+
+  <h2>Prestations</h2>
+
+  <table id="table">
+    <thead>
+      <tr>
+        <th>Intitulé</th>
+        <th>Quantité</th>
+        <th>PU HT (€)</th>
+        <th>Total HT</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <button class="btn no-print" onclick="addLine()">+ Ajouter une ligne</button>
+
+  <h2>TVA & Mentions</h2>
+
+  <div class="flex">
+    <div>
+      <label>TVA (%)</label>
+      <input id="tva" type="number" value="20">
+    </div>
+    <div>
+      <label>Conditions / Modalités</label>
+      <textarea id="conditions" rows="3">Règlement à 30 jours. Devis accepté après signature.</textarea>
+    </div>
+  </div>
+
+  <button class="btn no-print" onclick="generate()">Générer le devis</button>
+  <button class="btn btn-secondary no-print" onclick="window.print()">🖨 Imprimer / Export PDF</button>
+
+  <h2>Résultat</h2>
+  <div id="output"></div>
+</div>
+
+<script>
+  function addLine() {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td><input placeholder="Ex : Audit, Formation…"></td>
+      <td><input type="number" value="1"></td>
+      <td><input type="number" value="100"></td>
+      <td class="ht-cell">0.00 €</td>
+    `;
+
+    tr.querySelectorAll("input").forEach(i => i.addEventListener("input", updateRow));
+    document.getElementById("tbody").appendChild(tr);
+    updateRow({target: tr.querySelector("input")});
+  }
+
+  function updateRow(e) {
+    const tr = e.target.closest("tr");
+    const qty = parseFloat(tr.children[1].querySelector("input").value) || 0;
+    const pu = parseFloat(tr.children[2].querySelector("input").value) || 0;
+    const total = qty * pu;
+    tr.querySelector(".ht-cell").textContent = total.toFixed(2) + " €";
+  }
+
+  function generate() {
+    const myName = document.getElementById("my_name").value;
+    const mySiret = document.getElementById("my_siret").value;
+    const myAddress = document.getElementById("my_address").value;
+    const client = document.getElementById("client_name").value;
+    const clientAddr = document.getElementById("client_address").value;
+    const date = document.getElementById("date_devis").value;
+    const valid = document.getElementById("validite").value;
+    const tva = parseFloat(document.getElementById("tva").value) || 0;
+    const cond = document.getElementById("conditions").value;
+
+    let totalHT = 0;
+    let lines = "";
+
+    document.querySelectorAll("#tbody tr").forEach(tr => {
+      const title = tr.children[0].querySelector("input").value;
+      const qty = tr.children[1].querySelector("input").value;
+      const pu = tr.children[2].querySelector("input").value;
+      const ht = qty * pu;
+
+      if (!title.trim()) return;
+
+      totalHT += ht;
+      lines += `• ${title} — ${qty} × ${pu} € = ${ht.toFixed(2)} €\n`;
+    });
+
+    const tvaAmt = totalHT * (tva/100);
+    const totalTTC = totalHT + tvaAmt;
+
+    const out = `
+=== DEVIS ===
+
+Émetteur :
+${myName}
+SIRET : ${mySiret}
+${myAddress}
+
+Client :
+${client}
+${clientAddr}
+
+Date : ${date}
+Validité : ${valid} jours
+
+Prestations :
+${lines}
+
+TOTAL HT : ${totalHT.toFixed(2)} €
+TVA (${tva} %) : ${tvaAmt.toFixed(2)} €
+TOTAL TTC : ${totalTTC.toFixed(2)} €
+
+Conditions :
+${cond}
+
+Signature du client : ________________________
+    `;
+
+    document.getElementById("output").textContent = out;
+  }
+
+  // Add a default line
+  addLine();
+</script>
+
+</body>
+</html>
