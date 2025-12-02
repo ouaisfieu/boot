@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>debrief.html – QuickStarterKit Ultime</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #020617;
+  --bg2: #0a1223;
+  --card: #050a19;
+  --accent-blue: #38bdf8;
+  --accent-green: #22c55e;
+  --accent-red: #fb7185;
+  --text-main: #f1f5f9;
+  --text-muted: #9ca3af;
+  --border: rgba(148,163,184,0.4);
+  --radius: 16px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: radial-gradient(circle at 30% -20%, rgba(56,189,248,0.25), transparent 60%),
+              radial-gradient(circle at 100% 120%, rgba(34,197,94,0.2), transparent 60%),
+              var(--bg);
+  font-family: Inter, sans-serif;
+  color: var(--text-main);
+  padding: 1rem;
+}
+
+.page {
+  max-width: 1000px;
+  margin: auto;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 1.5rem;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+  position: relative;
+}
+
+.page::before {
+  content: "debrief.html · QuickStarterKit";
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: 0.65rem;
+  opacity: 0.6;
+  font-family: "Share Tech Mono";
+  letter-spacing: 0.15em;
+}
+
+h1 {
+  font-family: "Share Tech Mono";
+  font-size: 2rem;
+  text-transform: uppercase;
+  background: linear-gradient(120deg, #38bdf8, #22c55e, #fb7185);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5rem;
+}
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.section {
+  margin-top: 1.5rem;
+}
+
+.section h2 {
+  font-size: 1.2rem;
+  border-left: 4px solid var(--accent-blue);
+  padding-left: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.card-grid {
+  display: grid;
+  gap: 0.6rem;
+}
+@media(min-width:700px) {
+  .card-grid { grid-template-columns: repeat(2,1fr); }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.7rem;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: 0.2s;
+}
+.card:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.card-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+footer {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-top: 1.8rem;
+  text-align: center;
+  font-family: "Share Tech Mono";
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+<h1>Debrief Ultime</h1>
+<p class="subtitle">
+Version condensée & opérationnelle du kit complet :  
+tests, missions, docs, lore, business, sécurité, budget.  
+Si tu dois n’ouvrir qu’UNE page pour comprendre l’ensemble → c’est celle-ci.
+</p>
+
+<!-- --- SECTION 1 --- -->
+<div class="section">
+<h2>1. Entrée · Orientation</h2>
+<div class="card-grid">
+
+<a href="tests/sas.html" class="card">
+  <div class="card-title">🚪 SAS d'entrée</div>
+  <div class="card-desc">Avertissements · contexte · les règles du jeu</div>
+</a>
+
+<a href="index.html" class="card">
+  <div class="card-title">🏛 Portail principal</div>
+  <div class="card-desc">La table des matières & l’arborescence du kit</div>
+</a>
+
+<a href="tests/test-index.html" class="card">
+  <div class="card-title">🧪 Index des tests</div>
+  <div class="card-desc">Choix des tests · niveaux · domaines analysés</div>
+</a>
+
+</div>
+</div>
+
+<!-- --- SECTION 2 --- -->
+<div class="section">
+<h2>2. Tests & Examens</h2>
+<div class="card-grid">
+
+<a href="tests/test-0-obsidian.html" class="card">
+  <div class="card-title">📘 Test 0 – Obsidian</div>
+  <div class="card-desc">Lecture · compréhension · usage des outils</div>
+</a>
+
+<a href="tests/test-1-veille.html" class="card">
+  <div class="card-title">📡 Test 1 – Veille citoyenne</div>
+  <div class="card-desc">Enjeux, réseaux, contre-pouvoirs</div>
+</a>
+
+<a href="tests/exam.html" class="card">
+  <div class="card-title">🎓 Examen général</div>
+  <div class="card-desc">Es-tu fait·e pour l’Organisation ?</div>
+</a>
+
+<a href="tests/jalon-0.html" class="card">
+  <div class="card-title">📍 Jalon 0</div>
+  <div class="card-desc">Bilan · positionnement · cohérence globale</div>
+</a>
+
+</div>
+</div>
+
+<!-- --- SECTION 3 --- -->
+<div class="section">
+<h2>3. Missions · Jeux · Simulations</h2>
+<div class="card-grid">
+
+<a href="missions/mission-1-marques.html" class="card">
+  <div class="card-title">🧩 Mission 1 – Marques</div>
+  <div class="card-desc">Jeu “Qui-est-ce ?” des sponsors & influences</div>
+</a>
+
+<a href="missions/mission-2-ressources-sel-vps.html" class="card">
+  <div class="card-title">🧂 Mission 2 – Éco-système</div>
+  <div class="card-desc">Sel → VPS → budget → recettes → gouvernance</div>
+</a>
+
+<a href="missions/mission-3-storage-cookies.html" class="card">
+  <div class="card-title">🍪 Mission 3 – Storage & Cookies</div>
+  <div class="card-desc">Inspecteur·rice citoyen·ne : localStorage, JSON, console</div>
+</a>
+
+</div>
+</div>
+
+<!-- --- SECTION 4 --- -->
+<div class="section">
+<h2>4. Docs techniques & pratiques</h2>
+<div class="card-grid">
+
+<a href="docs/faq-tech.html" class="card">
+  <div class="card-title">🛠 FAQ technique</div>
+  <div class="card-desc">HTML · Markdown · Git · serveurs · clé USB</div>
+</a>
+
+<a href="docs/faq-kit.html" class="card">
+  <div class="card-title">📦 Cloner son instance</div>
+  <div class="card-desc">Créer & adapter son propre kit complet</div>
+</a>
+
+<a href="docs/power.html" class="card">
+  <div class="card-title">💠 Power Map</div>
+  <div class="card-desc">Cercles vertueux · impact · viabilité du projet</div>
+</a>
+
+<a href="docs/budget-scenario.html" class="card">
+  <div class="card-title">💶 Budget & sponsors</div>
+  <div class="card-desc">Simulations · subventions · sponsoring</div>
+</a>
+
+</div>
+</div>
+
+<!-- --- SECTION 5 --- -->
+<div class="section">
+<h2>5. Lore · Univers étendu</h2>
+<div class="card-grid">
+
+<a href="lore/conspii.html" class="card">
+  <div class="card-title">🕵️‍♂️ La Conspi</div>
+  <div class="card-desc">Organisation rivale · version gore qui te copie</div>
+</a>
+
+<a href="lore/sharky.html" class="card">
+  <div class="card-title">🦈 Sharky</div>
+  <div class="card-desc">Mode “argent” – business agressif & licences douteuses</div>
+</a>
+
+<a href="lore/linux.html" class="card">
+  <div class="card-title">🐧 Linux</div>
+  <div class="card-desc">Économie du libre & modèle communautaire</div>
+</a>
+
+<a href="lore/pomme.html" class="card">
+  <div class="card-title">🍏 Pomme</div>
+  <div class="card-desc">Ce qu’il ne faut pas faire (presque) · version Turing</div>
+</a>
+
+<a href="lore/ultime.html" class="card">
+  <div class="card-title">📊 L’Ultime</div>
+  <div class="card-desc">Le canevas business pour toutes les parties prenantes</div>
+</a>
+
+</div>
+</div>
+
+<!-- --- SECTION 6 --- -->
+<div class="section">
+<h2>6. Ce que tu dois faire maintenant</h2>
+<div class="steps">
+  <div class="step">Choisir ton entrée : SAS → test → mission → docs.</div>
+  <div class="step">Définir ton objectif : apprendre, répliquer, auditer.</div>
+  <div class="step">Créer ta propre instance dans un dossier / sur une clé.</div>
+  <div class="step">Adapter le lore, les missions & les tests à ton groupe.</div>
+  <div class="step">Briefer ton équipe avec ce debrief.html → c’est le résumé absolu.</div>
+</div>
+</div>
+
+<footer>
+Ce debrief sert de “hub de compréhension” – la vue d’ensemble du multivers citoyen.<br>
+<code>debrief.html · QuickStarterKit · toutes catégories</code>
+</footer>
+
+</div>
+</body>
+</html>
