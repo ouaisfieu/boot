@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carte de vie — P</title>
+
+  <!-- Polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-alt: #0b1023;
+      --bg-soft: #151a35;
+      --fg: #f5f5fb;
+      --fg-soft: #c3c7ff;
+      --accent: #7cf4c4;
+      --accent-soft: rgba(124, 244, 196, 0.15);
+      --accent-2: #ffb3ff;
+      --danger: #ff4b6e;
+      --border: #252a4b;
+      --muted: #8b91c4;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.6);
+      --radius-lg: 18px;
+      --radius-xl: 26px;
+      --transition-fast: 0.18s ease-out;
+      --transition-slow: 0.28s ease;
+    }
+
+    body.light {
+      --bg: #f5f6fb;
+      --bg-alt: #ffffff;
+      --bg-soft: #e9ecff;
+      --fg: #050716;
+      --fg-soft: #434a80;
+      --accent: #2e8f6f;
+      --accent-soft: rgba(46, 143, 111, 0.13);
+      --accent-2: #a32ea3;
+      --danger: #d72346;
+      --border: #d5d9ff;
+      --muted: #6c73a2;
+      --shadow-soft: 0 14px 32px rgba(16, 18, 40, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #151a39 0, var(--bg) 55%);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER / NAV */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(22px);
+      background: linear-gradient(
+        to bottom,
+        rgba(3, 7, 18, 0.96),
+        rgba(3, 7, 18, 0.85),
+        transparent
+      );
+      border-bottom: 1px solid rgba(110, 127, 225, 0.45);
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.8rem 1.2rem 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, var(--accent-2), var(--accent));
+      border: 2px solid rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 24px rgba(124, 244, 196, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #050816;
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .logo-badge:hover {
+      transform: rotate(-4deg) scale(1.04);
+      box-shadow: 0 0 28px rgba(124, 244, 196, 1);
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.85rem;
+    }
+
+    .nav-links a {
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--fg-soft);
+      transition: background var(--transition-fast), color var(--transition-fast),
+                  border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .nav-links a:hover {
+      background: rgba(124, 244, 196, 0.07);
+      border-color: rgba(124, 244, 196, 0.4);
+      color: var(--fg);
+      transform: translateY(-1px);
+    }
+
+    .chip-outline {
+      border-color: rgba(124, 244, 196, 0.4);
+      color: var(--accent);
+    }
+
+    .btn-theme {
+      border-radius: 999px;
+      border: 1px solid rgba(124, 244, 196, 0.35);
+      padding: 0.25rem 0.9rem;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      color: var(--accent);
+      transition: background var(--transition-fast), transform var(--transition-fast),
+                  box-shadow var(--transition-fast);
+    }
+
+    .btn-theme:hover {
+      background: rgba(124, 244, 196, 0.08);
+      box-shadow: 0 0 16px rgba(124, 244, 196, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-theme span.icon {
+      font-size: 1rem;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: rgba(5, 9, 25, 0.96);
+      border-radius: 999px;
+      border: 1px solid rgba(124, 244, 196, 0.35);
+      padding: 0.3rem 0.6rem;
+      font-size: 0.85rem;
+      color: var(--accent);
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-toggle span.icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    /* LAYOUT */
+
+    main { flex: 1; }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.4rem 1.2rem 2.4rem;
+    }
+
+    section { margin-top: 2.4rem; }
+    section:first-of-type { margin-top: 2rem; }
+
+    .section-header {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 0.8rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-header p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 32rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /* HERO */
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr);
+      gap: 1.8rem;
+      padding: 1.6rem 1.4rem;
+      margin-top: 0.3rem;
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at top left, rgba(124, 244, 196, 0.22), transparent 55%),
+        radial-gradient(circle at 90% 5%, rgba(255, 179, 255, 0.2), transparent 55%),
+        linear-gradient(145deg, rgba(9, 13, 40, 0.98), rgba(5, 8, 24, 0.98));
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(138, 150, 239, 0.65);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at top, rgba(255, 255, 255, 0.04) 0, transparent 55%);
+      pointer-events: none;
+    }
+
+    .hero-main { position: relative; z-index: 1; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.15rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(5, 7, 22, 0.95);
+      border: 1px solid rgba(124, 244, 196, 0.5);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--fg-soft);
+      margin-bottom: 0.9rem;
+    }
+
+    .eyebrow span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 9px rgba(124, 244, 196, 0.9);
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 3vw + 1rem, 2.7rem);
+      line-height: 1.1;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.01em;
+    }
+
+    .hero h1 span.highlight {
+      background-image: linear-gradient(110deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--fg-soft);
+      max-width: 36rem;
+    }
+
+    .hero-sub strong { color: var(--accent); }
+
+    .hero-actions {
+      margin-top: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .btn-primary, .btn-ghost {
+      font-size: 0.9rem;
+      padding: 0.65rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: background var(--transition-slow), transform var(--transition-fast),
+                  box-shadow var(--transition-fast), border-color var(--transition-fast),
+                  color var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #050816;
+      font-weight: 600;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .btn-ghost {
+      background: rgba(7, 9, 30, 0.96);
+      border-color: rgba(132, 144, 231, 0.7);
+      color: var(--fg-soft);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(17, 21, 52, 0.98);
+      border-color: var(--accent);
+      color: var(--fg);
+      transform: translateY(-1px);
+    }
+
+    .hero-aside {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 0.8rem;
+      align-content: flex-start;
+    }
+
+    .card-mini {
+      border-radius: var(--radius-lg);
+      background: rgba(6, 9, 28, 0.96);
+      border: 1px solid rgba(148, 160, 239, 0.7);
+      padding: 0.85rem 0.9rem;
+      font-size: 0.8rem;
+      color: var(--fg-soft);
+    }
+
+    .card-mini h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--fg);
+      margin-bottom: 0.3rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.35rem;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      padding: 0.12rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(26, 32, 76, 0.96);
+      border: 1px solid rgba(124, 244, 196, 0.4);
+      color: var(--fg-soft);
+    }
+
+    @media (min-width: 768px) {
+      .hero {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+      }
+    }
+
+    /* CARDS GENERIQUES */
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      box-shadow: 0 10px 24px rgba(5, 7, 20, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(124, 244, 196, 0.12), transparent 55%);
+      opacity: 0;
+      transition: opacity var(--transition-slow);
+      pointer-events: none;
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card h3 {
+      font-size: 0.98rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .card p {
+      font-size: 0.86rem;
+      color: var(--fg-soft);
+      margin-bottom: 0.3rem;
+    }
+
+    .meta-line {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* TABS (PASSÉ / PRÉSENT / FUTUR) */
+
+    .tabs {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      background: rgba(7, 9, 28, 0.96);
+      border-radius: 999px;
+      border: 1px solid rgba(124, 244, 196, 0.35);
+      padding: 0.25rem;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--fg-soft);
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast),
+                  transform var(--transition-fast);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #050816;
+      transform: translateY(-1px);
+    }
+
+    .tab-section {
+      display: none;
+    }
+
+    .tab-section.active {
+      display: block;
+      margin-top: 0.8rem;
+    }
+
+    /* TIMELINE */
+
+    .timeline {
+      position: relative;
+      padding-left: 1.6rem;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 0.2rem;
+      bottom: 0.2rem;
+      left: 9px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      opacity: 0.85;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 0.9rem;
+    }
+
+    .timeline-bullet {
+      position: absolute;
+      left: -2px;
+      top: 0.1rem;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 10px rgba(124, 244, 196, 0.8);
+    }
+
+    .timeline-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .timeline-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-body {
+      font-size: 0.86rem;
+      color: var(--fg-soft);
+    }
+
+    /* KANBAN / LISTES */
+
+    .kanban {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 880px) {
+      .kanban {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .kanban-col {
+      background: var(--bg-alt);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 0.8rem;
+      box-shadow: 0 10px 24px rgba(5, 7, 20, 0.9);
+      font-size: 0.82rem;
+    }
+
+    .kanban-col h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .kanban-col small {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .task-list {
+      list-style: none;
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 0.2rem;
+    }
+
+    .task {
+      display: flex;
+      gap: 0.45rem;
+      align-items: flex-start;
+      padding: 0.32rem 0.45rem;
+      border-radius: 10px;
+      background: rgba(6, 9, 30, 0.96);
+      border: 1px solid rgba(95, 110, 188, 0.9);
+    }
+
+    .task input[type="checkbox"] {
+      margin-top: 0.1rem;
+      accent-color: var(--accent);
+      width: 14px;
+      height: 14px;
+    }
+
+    .task-label {
+      font-size: 0.8rem;
+      color: var(--fg-soft);
+    }
+
+    .task.done {
+      opacity: 0.7;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .task.done .task-label {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    /* GAUGES */
+
+    .gauges {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .gauge {
+      font-size: 0.8rem;
+    }
+
+    .gauge label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.2rem;
+      color: var(--fg-soft);
+    }
+
+    .gauge label span.value {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .gauge input[type="range"] {
+      width: 100%;
+      appearance: none;
+      background: transparent;
+    }
+
+    .gauge input[type="range"]::-webkit-slider-runnable-track {
+      height: 6px;
+      background: var(--bg-soft);
+      border-radius: 999px;
+    }
+
+    .gauge input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(124, 244, 196, 0.8);
+      margin-top: -5px;
+    }
+
+    .note {
+      margin-top: 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding: 0.6rem 0.7rem;
+      border-radius: 12px;
+      background: rgba(8, 12, 36, 0.96);
+      border: 1px dashed rgba(124, 244, 196, 0.45);
+    }
+
+    /* CONSOLE */
+
+    .console-card {
+      background: var(--bg-alt);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
+      padding: 1rem;
+      font-family: "Share Tech Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .console-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.2) 0,
+        rgba(0,0,0,0.2) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .console-header span {
+      font-size: 0.78rem;
+      color: var(--fg-soft);
+    }
+
+    .console-dots {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .console-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #ff5f57;
+    }
+
+    .console-dot:nth-child(2) { background: #febc2e; }
+    .console-dot:nth-child(3) { background: #28c840; }
+
+    .console-output {
+      position: relative;
+      z-index: 1;
+      background: rgba(3, 6, 18, 0.96);
+      border-radius: 10px;
+      padding: 0.6rem 0.7rem;
+      min-height: 140px;
+      max-height: 260px;
+      overflow-y: auto;
+      font-size: 0.78rem;
+      color: var(--accent);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+    }
+
+    .console-line {
+      margin-bottom: 0.18rem;
+      white-space: pre-wrap;
+    }
+
+    .console-line.system { color: var(--fg-soft); }
+    .console-line.hint { color: var(--accent-2); }
+    .console-line.error { color: var(--danger); }
+    .console-line.command { color: #e0e0e0; }
+
+    .console-form {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .console-form span.prompt { color: var(--accent); }
+
+    .console-input {
+      flex: 1;
+      background: rgba(5, 8, 22, 0.96);
+      border: 1px solid rgba(124, 244, 196, 0.5);
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+      color: var(--fg);
+      font-size: 0.78rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .console-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(124, 244, 196, 0.6);
+      padding: 0.3rem 0.8rem;
+      background: rgba(7, 10, 30, 0.96);
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.78rem;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .console-btn:hover {
+      background: rgba(124, 244, 196, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .console-hint {
+      position: relative;
+      z-index: 1;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: "Inter", system-ui, sans-serif;
+    }
+
+    .console-hint code {
+      font-size: 0.75rem;
+      background: rgba(8, 11, 29, 0.96);
+      padding: 0.1rem 0.3rem;
+      border-radius: 6px;
+      border: 1px solid rgba(124, 244, 196, 0.3);
+    }
+
+    /* CONTACT / FOOTER */
+
+    .contact-block {
+      background: var(--bg-alt);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      box-shadow: 0 10px 24px rgba(5, 7, 20, 0.9);
+      font-size: 0.86rem;
+      color: var(--fg-soft);
+    }
+
+    .contact-list {
+      list-style: none;
+      margin-top: 0.4rem;
+      display: grid;
+      gap: 0.3rem;
+      font-size: 0.84rem;
+    }
+
+    .contact-list li span {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    footer {
+      border-top: 1px solid rgba(90, 104, 191, 0.7);
+      padding: 1.1rem 1.2rem 1.4rem;
+      margin-top: 1.6rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      background: radial-gradient(circle at top, rgba(124, 244, 196, 0.09), transparent 55%);
+    }
+
+    footer strong { color: var(--accent); }
+
+    /* SPACING UTILITIES */
+
+    .mt-05 { margin-top: 0.5rem; }
+    .mt-06 { margin-top: 0.6rem; }
+    .mt-08 { margin-top: 0.8rem; }
+    .mt-10 { margin-top: 1rem; }
+
+    /* RESPONSIVE NAV */
+
+    @media (max-width: 900px) {
+      .nav-links {
+        position: absolute;
+        top: 100%;
+        right: 1.2rem;
+        left: 1.2rem;
+        margin-top: 0.4rem;
+        background: rgba(3, 7, 18, 0.98);
+        border-radius: 18px;
+        border: 1px solid rgba(126, 141, 232, 0.9);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
+        padding: 0.6rem 0.5rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.3rem;
+        display: none;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links a,
+      .nav-links .btn-theme {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .nav-toggle {
+        display: inline-flex;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav { padding-inline: 0.8rem; }
+      .shell { padding-inline: 0.9rem; }
+      .hero { padding-inline: 1rem; }
+    }
+  </style>
+</head>
+<body class="dark">
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div class="nav">
+      <div class="nav-left">
+        <div class="logo-badge" id="logoBadge">P</div>
+        <div>
+          <div class="brand-title">Carte de vie — P</div>
+          <div class="brand-sub">Tableau de bord personnel</div>
+        </div>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" type="button">
+        <span class="icon">☰</span>
+        <span>Menu</span>
+      </button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#intro">Vue d’ensemble</a>
+        <a href="#cartographie" class="chip-outline">Cartographie</a>
+        <a href="#timeline">Lignes de vie</a>
+        <a href="#etat">État du moment</a>
+        <a href="#tableau-bord">Tableau de bord</a>
+        <a href="#console">Console</a>
+        <a href="#contact">Notes perso</a>
+        <button class="btn-theme" id="themeToggle" type="button">
+          <span class="icon">🌙</span>
+          <span>Mode sombre</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell">
+
+      <!-- HERO -->
+      <section id="intro" class="hero">
+        <div class="hero-main">
+          <div class="eyebrow">
+            <span class="dot"></span>
+            <span>Outil d’auto-cartographie</span>
+          </div>
+          <h1>
+            Le <span class="highlight">site de ma propre vie</span><br>
+            pour y voir plus clair, sans filtre LinkedIn.
+          </h1>
+          <p class="hero-sub">
+            Ce fichier est un <strong>tableau de bord personnel</strong>.  
+            Il ne raconte pas tout, mais il propose trois angles simples :
+            <strong>où j’en suis</strong>, <strong>d’où je viens</strong> et <strong>où j’ai envie d’aller</strong>.  
+            Le but : arrêter de tourner en rond dans ma tête, et poser les choses à plat.
+          </p>
+          <div class="hero-actions">
+            <button class="btn-primary" type="button" onclick="document.getElementById('cartographie').scrollIntoView({behavior:'smooth'})">
+              Commencer par la cartographie
+            </button>
+            <button class="btn-ghost" type="button" onclick="document.getElementById('timeline').scrollIntoView({behavior:'smooth'})">
+              Parcourir les lignes de vie
+            </button>
+          </div>
+        </div>
+
+        <aside class="hero-aside">
+          <div class="card-mini">
+            <h3>Repères rapides</h3>
+            <p>
+              Alias : P.  
+              Contexte : vie cabossée, parcours riche, santé / énergie à gérer.  
+              Objectif : garder du sens, du revenu, et une marge de manœuvre.
+            </p>
+            <div class="pill-row">
+              <span class="pill">citoyenneté</span>
+              <span class="pill">éducation populaire</span>
+              <span class="pill">outils numériques</span>
+              <span class="pill">humour noir</span>
+            </div>
+          </div>
+          <div class="card-mini">
+            <h3>Règles du jeu</h3>
+            <p>
+              • Rien de tout ceci n’est figé.  
+              • Ce n’est pas un jugement, juste une carte.  
+              • Je peux réécrire cette page autant de fois que nécessaire.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <!-- CARTOGRAPHIE PRESENT / PASSE / FUTUR -->
+      <section id="cartographie">
+        <div class="section-header">
+          <div>
+            <h2>Cartographie de vie</h2>
+          </div>
+          <p>
+            Trois vues pour résumer la vie : ce qui est là maintenant, ce qui m’a fabriqué, et ce qui
+            pourrait venir. Le but n’est pas d’être complet, mais d’avoir une <strong>vision lisible</strong>.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="present">Présent</button>
+            <button class="tab-btn" data-tab="passe">Passé</button>
+            <button class="tab-btn" data-tab="futur">Futur proche</button>
+          </div>
+
+          <div id="tab-present" class="tab-section active">
+            <p class="mt-06">
+              Aujourd’hui : une période de <strong>reconstruction</strong>.  
+              Santé mentale / fatigue : pas au top, mais suffisamment lucide pour ne plus vouloir
+              rejouer les mêmes scénarios.  
+              Ressources : expérience solide en monde associatif, sens de la nuance, curiosité
+              obsessive, créativité pour imaginer des systèmes.
+            </p>
+            <p class="meta-line">
+              Question centrale du présent : <strong>comment rester utile sans me casser à nouveau ?</strong>
+            </p>
+          </div>
+
+          <div id="tab-passe" class="tab-section">
+            <p class="mt-06">
+              Le passé, c’est un mix de :  
+              • postes administratifs, gestion du personnel, soutien de première ligne,  
+              • immersion longue dans l’<strong>éducation permanente</strong> et les enjeux de société,  
+              • beaucoup de loyauté, parfois mal payée en retour,  
+              • un burn-out qui n’est pas juste un mot, mais un mur.
+            </p>
+            <p class="meta-line">
+              Héritage : de vraies compétences, un sens aigu des injustices et des systèmes qui broient,
+              mais aussi une usure qu’il faut respecter.
+            </p>
+          </div>
+
+          <div id="tab-futur" class="tab-section">
+            <p class="mt-06">
+              Le futur proche n’est pas un plan quinquennal.  
+              C’est plutôt une série d’hypothèses :
+            </p>
+            <ul style="margin-top:0.4rem;font-size:0.86rem;color:var(--fg-soft);padding-left:1.2rem;">
+              <li>→ continuer à créer des <strong>outils</strong> (sites, jeux, tests, dossiers) utiles à d’autres,</li>
+              <li>→ retrouver un <strong>cadre collectif</strong> sain (associations, collectifs, réseaux),</li>
+              <li>→ faire de la place à la santé et aux limites, plutôt que de les nier,</li>
+              <li>→ garder une forme d’<strong>autonomie intellectuelle</strong>.</li>
+            </ul>
+            <p class="meta-line">
+              Vision : une sorte de “coopérative de cerveau” à taille humaine, plutôt qu’un retour à
+              la machine à broyer.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TIMELINE -->
+      <section id="timeline">
+        <div class="section-header">
+          <div>
+            <h2>Lignes de vie (timeline simplifiée)</h2>
+          </div>
+          <p>
+            Une ligne du temps volontairement grossière : pas pour se juger, juste pour repérer
+            les grandes zones qui ont laissé des traces.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-bullet"></div>
+              <div class="timeline-title">Avant la socioculturelle</div>
+              <div class="timeline-meta">Enfance – début d’âge adulte</div>
+              <div class="timeline-body">
+                Apprentissages en vrac, curiosité déjà là, sentiment parfois d’être “trop” ou “pas
+                assez” pour les cases prévues.  
+                Goût pour la musique, les histoires, les questions qui durent plus longtemps que les
+                conversations.
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-bullet"></div>
+              <div class="timeline-title">Entrée dans le monde associatif</div>
+              <div class="timeline-meta">Soutien administratif &amp; bureautique</div>
+              <div class="timeline-body">
+                Arrivée dans une asbl d’éducation permanente.  
+                Découverte d’un univers où <strong>les mots “citoyenneté” et “émancipation” ont une
+                vraie épaisseur</strong>.  
+                Premières responsabilités concrètes, apprentissage des coulisses (subsides, salarisations,
+                réunions, rapports).
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-bullet"></div>
+              <div class="timeline-title">Longue séquence “gestion du personnel”</div>
+              <div class="timeline-meta">Environ une décennie</div>
+              <div class="timeline-body">
+                Prise en charge de la gestion administrative du personnel : contrats, horaires, suivi
+                des dossiers, etc.  
+                Beaucoup de sérieux, beaucoup de charge mentale, parfois peu de reconnaissance.  
+                Sentiment d’être à la fois au cœur du système et un peu écrasé par lui.
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-bullet"></div>
+              <div class="timeline-title">Burn-out &amp; rupture</div>
+              <div class="timeline-meta">Crash contrôlé (plus ou moins)</div>
+              <div class="timeline-body">
+                Le corps et la tête disent “stop”.  
+                Incapacité de travail, fatigue profonde, solitude administrative.  
+                Ce n’est pas une parenthèse, c’est un <strong>changement de gravité</strong> :
+                il faut réinventer à la fois le travail et la manière de se protéger.
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-bullet"></div>
+              <div class="timeline-title">Phase actuelle : recomposition</div>
+              <div class="timeline-meta">Aujourd’hui</div>
+              <div class="timeline-body">
+                Exploration d’outils numériques, de projets de sites, de jeux sérieux, de tests
+                de recrutement fictifs.  
+                Pas pour fuir la réalité, mais pour <strong>fabriquer un kit de survie</strong> :
+                de quoi garder du sens, de la créativité, et ouvrir des portes possibles.
+              </div>
+            </div>
+          </div>
+
+          <div class="note">
+            Il manque volontairement plein de détails.  
+            L’idée est de garder une <strong>vue aérienne</strong> : on pourra toujours zoomer,
+            ajouter des chapitres, ou changer les étiquettes.
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAT DU MOMENT (GAUGES) -->
+      <section id="etat">
+        <div class="section-header">
+          <div>
+            <h2>État du moment</h2>
+          </div>
+          <p>
+            Quelques “jauges” à ajuster à la main pour photographier l’instant.  
+            Elles ne valent pas un diagnostic, mais elles donnent un langage rapide avec soi-même.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2">
+          <div class="card">
+            <h3>Énergie &amp; charge</h3>
+            <div class="gauges mt-06">
+              <div class="gauge">
+                <label>
+                  Énergie générale
+                  <span class="value" id="gaugeEnergyVal">50</span>
+                </label>
+                <input type="range" id="gaugeEnergy" min="0" max="100" value="50">
+              </div>
+              <div class="gauge">
+                <label>
+                  Charge mentale
+                  <span class="value" id="gaugeLoadVal">60</span>
+                </label>
+                <input type="range" id="gaugeLoad" min="0" max="100" value="60">
+              </div>
+              <div class="gauge">
+                <label>
+                  Besoin de sécurité
+                  <span class="value" id="gaugeSafetyVal">80</span>
+                </label>
+                <input type="range" id="gaugeSafety" min="0" max="100" value="80">
+              </div>
+            </div>
+            <div class="note">
+              Astuce : ajuster les valeurs en fonction de la journée, juste pour
+              <strong>mettre des chiffres</strong> sur des sensations floues.
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Alignement &amp; sens</h3>
+            <div class="gauges mt-06">
+              <div class="gauge">
+                <label>
+                  Alignement avec mes valeurs
+                  <span class="value" id="gaugeValuesVal">65</span>
+                </label>
+                <input type="range" id="gaugeValues" min="0" max="100" value="65">
+              </div>
+              <div class="gauge">
+                <label>
+                  Clarté sur la direction
+                  <span class="value" id="gaugeClarityVal">40</span>
+                </label>
+                <input type="range" id="gaugeClarity" min="0" max="100" value="40">
+              </div>
+              <div class="gauge">
+                <label>
+                  Place pour le plaisir &amp; le jeu
+                  <span class="value" id="gaugePlayVal">30</span>
+                </label>
+                <input type="range" id="gaugePlay" min="0" max="100" value="30">
+              </div>
+            </div>
+            <div class="note">
+              Si l’alignement descend trop bas longtemps, c’est un signal.  
+              Pas forcément pour tout changer, mais pour <strong>réajuster des petits trucs</strong>.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABLEAU DE BORD (KANBAN) -->
+      <section id="tableau-bord">
+        <div class="section-header">
+          <div>
+            <h2>Tableau de bord de vie</h2>
+          </div>
+          <p>
+            Une mini “todo” permanente : non pas tout ce qu’il y a à faire,
+            mais <strong>les chantiers structurels</strong> à garder en vue.
+            Les cases cochées restent dans ce navigateur (localStorage).
+          </p>
+        </div>
+
+        <div class="kanban">
+          <div class="kanban-col">
+            <h3>À clarifier</h3>
+            <small>Questions qui reviennent souvent</small>
+            <ul class="task-list">
+              <li class="task" data-task-id="clarif-boulot">
+                <input type="checkbox">
+                <label class="task-label">
+                  Ce que je veux vraiment d’un <strong>boulot</strong> (revenu, sens, protections, rythme).
+                </label>
+              </li>
+              <li class="task" data-task-id="clarif-sante">
+                <input type="checkbox">
+                <label class="task-label">
+                  Mes limites côté <strong>santé</strong> (signaux d’alerte, garde-fous, volumes raisonnables).
+                </label>
+              </li>
+              <li class="task" data-task-id="clarif-projet">
+                <input type="checkbox">
+                <label class="task-label">
+                  Ce qui doit rester un <strong>projet perso expérimental</strong> et ce qui peut devenir pro.
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <div class="kanban-col">
+            <h3>En cours</h3>
+            <small>Chantiers déjà amorcés</small>
+            <ul class="task-list">
+              <li class="task" data-task-id="cours-outils">
+                <input type="checkbox">
+                <label class="task-label">
+                  Mettre en place une <strong>boîte à outils numérique</strong> (sites statiques, dossiers, jeux).
+                </label>
+              </li>
+              <li class="task" data-task-id="cours-cartes">
+                <input type="checkbox">
+                <label class="task-label">
+                  Organiser mes <strong>cartes mentales</strong> : projets, partenaires possibles, pistes de revenu.
+                </label>
+              </li>
+              <li class="task" data-task-id="cours-soutiens">
+                <input type="checkbox">
+                <label class="task-label">
+                  Identifier clairement <strong>où chercher de l’aide</strong> (amis, pros, structures).
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <div class="kanban-col">
+            <h3>À lâcher / à alléger</h3>
+            <small>Pour libérer de l’espace</small>
+            <ul class="task-list">
+              <li class="task" data-task-id="lacher-culpabilite">
+                <input type="checkbox">
+                <label class="task-label">
+                  Une partie de la <strong>culpabilité</strong> de ne pas être “productif·ve” 24/7.
+                </label>
+              </li>
+              <li class="task" data-task-id="lacher-comparaison">
+                <input type="checkbox">
+                <label class="task-label">
+                  Les comparaisons toxiques avec des trajectoires qui n’ont rien à voir avec la mienne.
+                </label>
+              </li>
+              <li class="task" data-task-id="lacher-perfection">
+                <input type="checkbox">
+                <label class="task-label">
+                  La <strong>perfection</strong> comme condition pour montrer ce que je fais (même ce site).
+                </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONSOLE DE QUESTIONS -->
+      <section id="console">
+        <div class="section-header">
+          <div>
+            <h2>Console de questions</h2>
+          </div>
+          <p>
+            Petit terminal personnel. Pas de magie, juste des réponses pré-écrites qui peuvent 
+            servir de <strong>rappel</strong> les jours de brouillard mental.
+          </p>
+        </div>
+
+        <div class="console-card">
+          <div class="console-header">
+            <span>LIFE-TERM 0.1 — profil P</span>
+            <div class="console-dots">
+              <div class="console-dot"></div>
+              <div class="console-dot"></div>
+              <div class="console-dot"></div>
+            </div>
+          </div>
+
+          <div class="console-output" id="consoleOutput"></div>
+
+          <form class="console-form" id="consoleForm">
+            <span class="prompt">&gt;</span>
+            <input
+              type="text"
+              class="console-input"
+              id="consoleInput"
+              autocomplete="off"
+              placeholder='tape "help", "pourquoi", "forces", "peurs", "petit-pas"...'
+            />
+            <button class="console-btn" type="submit">OK</button>
+          </form>
+
+          <p class="console-hint">
+            Commandes connues : <code>help</code>, <code>pourquoi</code>, <code>ouvaisje</code>, 
+            <code>forces</code>, <code>peurs</code>, <code>valeurs</code>, 
+            <code>petit-pas</code>, <code>reset</code>, <code>clear</code>.  
+            Commandes douceur : <code>bisou</code>, <code>merci</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- NOTES PERSO / CONTACT -->
+      <section id="contact">
+        <div class="section-header">
+          <div>
+            <h2>Notes persos &amp; rappels</h2>
+          </div>
+          <p>
+            Ici, pas de “contact” externe. C’est surtout un espace pour se laisser des notes 
+            à soi-même, comme une petite légende au bas de la carte.
+          </p>
+        </div>
+
+        <div class="contact-block">
+          <h3>Rappels pour les jours difficiles</h3>
+          <ul class="contact-list">
+            <li>
+              <span>1.</span> Ce site n’est pas un jugement, c’est un outil.  
+              Je peux le corriger, le simplifier, le jeter, le recommencer.
+            </li>
+            <li>
+              <span>2.</span> Ce qui ne rentre pas ici (douleurs, peurs, dossiers administratifs)
+              n’est pas moins réel. Il a juste besoin d’autres espaces (personnes, pros, carnets).
+            </li>
+            <li>
+              <span>3.</span> Je n’ai pas besoin d’un projet parfait pour avancer.  
+              <strong>Un petit pas concret</strong> vaut toujours mieux qu’un plan parfait dans ma tête.
+            </li>
+          </ul>
+
+          <p class="mt-06">
+            Zone à personnaliser (idées) :
+          </p>
+          <ul class="contact-list">
+            <li><span>•</span> Liste courte de personnes ressources (prénoms seulement).</li>
+            <li><span>•</span> Liste de lieux qui me font du bien (parcs, cafés, coins de ville).</li>
+            <li><span>•</span> Deux ou trois phrases qui me raccrochent quand ça tangue.</li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    Carte de vie de <strong>P</strong> — fichier statique HTML/CSS/JS pour y voir plus clair.  
+    Rien d’obligatoire, tout est réécriture possible.
+  </footer>
+</div>
+
+<script>
+  // NAV REPLIABLE
+  (function() {
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+      });
+    });
+  })();
+
+  // THEME TOGGLE
+  (function() {
+    const body = document.body;
+    const toggleBtn = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('vie-site-theme');
+
+    if (savedTheme === 'light') {
+      body.classList.remove('dark');
+      body.classList.add('light');
+      updateBtn(false);
+    } else {
+      body.classList.remove('light');
+      body.classList.add('dark');
+      updateBtn(true);
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const isDark = body.classList.contains('dark');
+      if (isDark) {
+        body.classList.remove('dark');
+        body.classList.add('light');
+        localStorage.setItem('vie-site-theme', 'light');
+        updateBtn(false);
+      } else {
+        body.classList.remove('light');
+        body.classList.add('dark');
+        localStorage.setItem('vie-site-theme', 'dark');
+        updateBtn(true);
+      }
+    });
+
+    function updateBtn(isDark) {
+      const icon = toggleBtn.querySelector('.icon');
+      const label = toggleBtn.querySelector('span:nth-child(2)');
+      if (isDark) {
+        icon.textContent = '🌙';
+        label.textContent = 'Mode sombre';
+      } else {
+        icon.textContent = '☀️';
+        label.textContent = 'Mode clair';
+      }
+    }
+  })();
+
+  // TABS CARTOGRAPHIE
+  (function() {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = {
+      present: document.getElementById('tab-present'),
+      passe: document.getElementById('tab-passe'),
+      futur: document.getElementById('tab-futur')
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-tab');
+
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        Object.keys(sections).forEach(key => {
+          sections[key].classList.toggle('active', key === target);
+        });
+      });
+    });
+  })();
+
+  // GAUGES
+  (function() {
+    const pairs = [
+      ['gaugeEnergy', 'gaugeEnergyVal'],
+      ['gaugeLoad', 'gaugeLoadVal'],
+      ['gaugeSafety', 'gaugeSafetyVal'],
+      ['gaugeValues', 'gaugeValuesVal'],
+      ['gaugeClarity', 'gaugeClarityVal'],
+      ['gaugePlay', 'gaugePlayVal']
+    ];
+
+    pairs.forEach(([inputId, labelId]) => {
+      const input = document.getElementById(inputId);
+      const label = document.getElementById(labelId);
+      if (!input || !label) return;
+      label.textContent = input.value;
+      input.addEventListener('input', () => {
+        label.textContent = input.value;
+      });
+    });
+  })();
+
+  // TABLEAU DE BORD (tasks + localStorage)
+  (function() {
+    const STORAGE_KEY = 'vie-site-tasks';
+    const tasks = document.querySelectorAll('.task');
+    let state = {};
+
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) state = JSON.parse(raw);
+    } catch(e) {
+      state = {};
+    }
+
+    tasks.forEach(task => {
+      const id = task.getAttribute('data-task-id');
+      const checkbox = task.querySelector('input[type="checkbox"]');
+
+      if (id && state[id]) {
+        checkbox.checked = true;
+        task.classList.add('done');
+      }
+
+      checkbox.addEventListener('change', () => {
+        const checked = checkbox.checked;
+        if (checked) {
+          state[id] = true;
+          task.classList.add('done');
+        } else {
+          delete state[id];
+          task.classList.remove('done');
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      });
+    });
+  })();
+
+  // CONSOLE
+  (function() {
+    const output = document.getElementById('consoleOutput');
+    const form = document.getElementById('consoleForm');
+    const input = document.getElementById('consoleInput');
+    const logoBadge = document.getElementById('logoBadge');
+
+    const history = [];
+    let historyIndex = -1;
+
+    function print(text, type = 'system') {
+      const line = document.createElement('div');
+      line.className = 'console-line ' + type;
+      line.textContent = text;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function printMulti(lines, type = 'system') {
+      lines.forEach(l => print(l, type));
+    }
+
+    function clearOutput() {
+      output.innerHTML = '';
+    }
+
+    function normalize(str) {
+      return (str || '').trim();
+    }
+
+    function execCommand(raw) {
+      const command = normalize(raw);
+      if (!command) return;
+
+      print('> ' + command, 'command');
+
+      const lower = command.toLowerCase();
+
+      switch (lower) {
+        case 'help':
+          printMulti([
+            'MANUAL — commandes disponibles :',
+            '  help         : afficher cette aide',
+            '  pourquoi     : pourquoi ce site existe',
+            '  ouvaisje     : où j’ai envie d’aller (en gros)',
+            '  forces       : ce que je peux reconnaître comme forces',
+            '  peurs        : ce qui me fait le plus hésiter',
+            '  valeurs      : ce que je ne veux pas sacrifier',
+            '  petit-pas    : idées de micro-actions',
+            '  reset        : rappel que je peux tout réécrire',
+            '  clear        : nettoyer l’écran',
+            '  bisou, merci : commandes douceur',
+          ], 'system');
+          break;
+
+        case 'pourquoi':
+          printMulti([
+            'Pourquoi ce site :',
+            '  • Parce qu’à l’intérieur, tout se mélange très vite.',
+            '  • Parce qu’écrire noir sur blanc, même de façon imparfaite,',
+            '    aide à voir les tendances au lieu de juste sentir la fatigue.',
+            '  • Parce que c’est plus simple de modifier une carte que de sortir',
+            '    du labyrinthe sans plan.'
+          ], 'system');
+          break;
+
+        case 'ouvaisje':
+          printMulti([
+            'Où j’ai envie d’aller (version honnête) :',
+            '  • Vers une vie où le travail est présent, mais pas destructeur.',
+            '  • Vers des projets où ce que je sais faire (administratif, écriture,',
+            '    outillage numérique, pédagogie) est vu comme une richesse, pas juste un “profil bizarre”.',
+            '  • Vers des environnements où je peux dire “je suis fatigué·e” sans risquer ma place.'
+          ], 'system');
+          break;
+
+        case 'forces':
+          printMulti([
+            'Forces, même les jours où j’en doute :',
+            '  • Capacité à comprendre des systèmes complexes (institutions, règles, dynamiques).',
+            '  • Sens de l’écriture et de la vulgarisation.',
+            '  • Capacité à imaginer des dispositifs (sites, jeux, tests, outils).',
+            '  • Empathie envers les gens en galère, parce que j’y ai aussi été.'
+          ], 'system');
+          break;
+
+        case 'peurs':
+          printMulti([
+            'Peurs (non exhaustives) :',
+            '  • Recommencer un job qui me broie lentement.',
+            '  • Me perdre dans mille projets sans en concrétiser un seul.',
+            '  • Ne pas être “crédible” aux yeux des institutions ou des recruteurs.',
+            '  • Me juger moi-même plus durement que n’importe quel inspecteur.'
+          ], 'system');
+          break;
+
+        case 'valeurs':
+          printMulti([
+            'Ce que je ne veux pas sacrifier :',
+            '  • Un minimum d’honnêteté sur ce que je vis.',
+            '  • L’idée que chacun mérite de comprendre le monde où il vit.',
+            '  • Une forme de solidarité, même discrète.',
+            '  • Le droit d’avoir de l’humour sur tout ça, sans se mépriser soi-même.'
+          ], 'system');
+          break;
+
+        case 'petit-pas':
+          printMulti([
+            'Idées de petits pas réalistes :',
+            '  • Limiter la to-do du jour à 3 choses faisables (même minuscules).',
+            '  • Prendre 15 minutes pour ranger un coin de réel (fichiers, papiers, pièce).',
+            '  • Écrire une phrase pour un projet plutôt que le plan complet.',
+            '  • Envoyer un message à quelqu’un de fiable juste pour dire “voilà où j’en suis”.'
+          ], 'system');
+          break;
+
+        case 'reset':
+          printMulti([
+            'Rappel : rien dans ce fichier n’est figé.',
+            '  • Je peux changer les mots, les sections, les jauges.',
+            '  • Cette version n’est qu’un snapshot. Je peux en enregistrer une autre',
+            '    quand la vie aura un peu bougé.',
+          ], 'hint');
+          break;
+
+        case 'clear':
+          clearOutput();
+          print('LIFE-TERM nettoyé. Tape "help" pour le manuel.', 'system');
+          break;
+
+        case 'bisou':
+          printMulti([
+            '💋 Bisou symbolique.',
+            'Si je lis ça, c’est que je suis déjà en train de prendre un peu soin de moi,',
+            'en essayant d’y voir clair au lieu de juste encaisser.'
+          ], 'hint');
+          break;
+
+        case 'merci':
+          printMulti([
+            '🙏 Merci à moi-même d’avoir pris le temps de faire ce site.',
+            'Ce n’est pas parfait, mais c’est déjà un geste de survie constructive.'
+          ], 'hint');
+          break;
+
+        default:
+          print('Commande inconnue : "' + command + '". Tape "help" pour la liste.', 'error');
+          break;
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const value = input.value;
+      if (!value.trim()) return;
+      history.push(value);
+      historyIndex = history.length;
+      execCommand(value);
+      input.value = '';
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        if (historyIndex > 0) {
+          historyIndex--;
+          input.value = history[historyIndex] || '';
+          input.setSelectionRange(input.value.length, input.value.length);
+          e.preventDefault();
+        }
+      } else if (e.key === 'ArrowDown') {
+        if (historyIndex < history.length - 1) {
+          historyIndex++;
+          input.value = history[historyIndex] || '';
+        } else {
+          historyIndex = history.length;
+          input.value = '';
+        }
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+    });
+
+    logoBadge.addEventListener('click', () => {
+      print('Easter egg : clic sur le badge "P".', 'hint');
+      print('Petit rappel : même avec un parcours compliqué, je reste la personne qui tient le stylo.', 'hint');
+    });
+
+    // Message d’accueil
+    clearOutput();
+    print('LIFE-TERM 0.1 — Console de vie chargée.', 'system');
+    print('Tape "help" pour voir les commandes disponibles.', 'system');
+  })();
+</script>
+
+</body>
+</html>
