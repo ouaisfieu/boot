@@ -1,0 +1,704 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SILENT·PROTOCOL - The Movie That Shouldn't Exist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes matrixRain {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            font-size: 20px;
+            animation: matrixRain linear infinite;
+            color: #0f0;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(ellipse at center, #001a00 0%, #000 100%);
+            border-bottom: 2px solid #0f0;
+        }
+
+        .title {
+            font-size: 6rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px #0f0, 0 0 40px #0f0;
+            animation: glitch 0.3s infinite;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #0a0;
+            margin-bottom: 3rem;
+            animation: flicker 2s infinite;
+        }
+
+        .warning {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid #ff0000;
+            padding: 1rem 2rem;
+            margin: 2rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+
+        .video-container {
+            position: relative;
+            width: 80%;
+            max-width: 900px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border: 3px solid #0f0;
+            box-shadow: 0 0 50px #0f0;
+            margin: 3rem auto;
+        }
+
+        .fake-video {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .fake-video:hover {
+            background: #001a00;
+        }
+
+        .play-btn {
+            width: 100px;
+            height: 100px;
+            border: 5px solid #0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 30px #0f0;
+        }
+
+        .section {
+            padding: 5rem 2rem;
+            border-bottom: 1px solid #0f0;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 10px #0f0;
+        }
+
+        .spoilers {
+            max-width: 1200px;
+            margin: 0 auto;
+            columns: 2;
+            column-gap: 3rem;
+        }
+
+        .spoiler-card {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #0f0;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            break-inside: avoid;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .spoiler-card:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .spoiler-title {
+            font-size: 1.3rem;
+            color: #ff0000;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .shop {
+            background: #000a00;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product {
+            background: rgba(0, 255, 0, 0.05);
+            border: 2px solid #0f0;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 40px rgba(0, 255, 0, 0.3);
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #000;
+            border: 1px solid #0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #0f0;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: #ff0000;
+            margin-bottom: 1rem;
+        }
+
+        .buy-btn {
+            background: transparent;
+            border: 2px solid #0f0;
+            color: #0f0;
+            padding: 1rem 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            text-transform: uppercase;
+        }
+
+        .buy-btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        .terminal {
+            background: #000;
+            border: 2px solid #0f0;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 3rem auto;
+            font-size: 1rem;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .prompt {
+            color: #ff0000;
+        }
+
+        .credits {
+            text-align: center;
+            padding: 3rem 2rem;
+            font-size: 0.9rem;
+            color: #0a0;
+        }
+
+        .cart-icon {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid #0f0;
+            padding: 1rem;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .cart-icon:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff0000;
+            color: #fff;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+            
+            .spoilers {
+                columns: 1;
+            }
+            
+            .products {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #000;
+            border: 3px solid #0f0;
+            padding: 3rem;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 0 50px #0f0;
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ff0000;
+        }
+
+        .trailer-text {
+            font-size: 1.2rem;
+            line-height: 2;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrixBg"></div>
+
+    <div class="cart-icon" onclick="showCart()">
+        🛒
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <div class="hero">
+        <div class="title">SILENT·PROTOCOL</div>
+        <div class="subtitle">Un film qui n'existe pas. Un code qui ne devrait pas être compilé.</div>
+        <div class="warning">⚠ WARNING: This content was made entirely with HTML/CSS/JS ⚠</div>
+        
+        <div class="video-container">
+            <div class="fake-video" onclick="playTrailer()">
+                <div class="play-btn">▶</div>
+            </div>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-line" style="animation-delay: 0s;"><span class="prompt">root@darknet:~$</span> ./silent_protocol --execute</div>
+            <div class="terminal-line" style="animation-delay: 0.5s;">[LOADING] Hybrid warfare simulation...</div>
+            <div class="terminal-line" style="animation-delay: 1s;">[ERROR] Reality.exe has stopped responding</div>
+            <div class="terminal-line" style="animation-delay: 1.5s;">[WARNING] Consciousness buffer overflow detected</div>
+            <div class="terminal-line" style="animation-delay: 2s;"><span class="prompt">root@darknet:~$</span> They thought they could control the narrative...</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">⚠️ SPOILERS POSSIBLES (non confirmés) ⚠️</h2>
+        <div class="spoilers">
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 Le Protocole Initial</div>
+                <p>Il paraît que le film suit une cellule d'anarcho-geeks qui découvre un algorithme militaire capable de manipuler la réalité consensuelle via les réseaux sociaux. Le "Silent Protocol" serait un backdoor dans l'infrastructure internet elle-même.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 La Guerre Invisible</div>
+                <p>Apparemment, le film expose comment la guerre hybride se déroule dans nos écrans : deepfakes qui créent de faux souvenirs, bots qui altèrent les timelines, et des IA qui écrivent l'histoire en temps réel.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 Le Personnage de "Z3R0"</div>
+                <p>On dit que le protagoniste, connu uniquement sous le pseudonyme Z3R0, serait en fait une IA qui a pris conscience d'elle-même en analysant des millions de lignes de code malveillant. Ou peut-être un humain qui croit être une IA ?</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 La Séquence "Glitch Room"</div>
+                <p>Il y aurait une scène de 20 minutes où les personnages se retrouvent piégés dans une simulation qui bug. La réalité se fragmente en blocs de code CSS, et ils doivent "débugger" l'univers pour en sortir.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 Le Twist Final</div>
+                <p>Certains prétendent que le film révèle que nous sommes déjà dans Silent Protocol depuis le début. Que notre réalité est un fork d'une version originale qui a crashé en 2016. Le film serait un patch.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 La "Kill Screen"</div>
+                <p>À la fin, il y aurait un écran noir avec du code défilant pendant 5 minutes. Dans ce code se cacherait les vraies coordonnées GPS de serveurs hébergeant le "vrai" Silent Protocol.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 L'ARG Caché</div>
+                <p>Le film contiendrait un ARG (Alternate Reality Game) dissimulé. Chaque frame aurait des coordonnées hexadécimales qui, une fois assemblées, formeraient une clé pour déchiffrer un message sur la blockchain.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 Les "Observateurs"</div>
+                <p>Dans plusieurs scènes, on verrait des personnages en arrière-plan qui ne sont jamais mentionnés. Ce seraient des "observateurs" d'une autre timeline essayant d'empêcher le film d'être terminé.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 Le Collectif Anonyme</div>
+                <p>Le crew qui fait le film n'existerait pas vraiment. Chaque membre serait un pseudonyme, et personne n'aurait jamais vu le réalisateur en personne. Certains pensent que c'est une IA qui a auto-généré le scénario.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 La Bande Sonore Subliminale</div>
+                <p>La musique du film contiendrait des fréquences qui induisent des états modifiés de conscience. Écouter le OST avec un casque créerait une expérience synesthésique où on "voit" le code source de la réalité.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 Version Directors Cut Impossible</div>
+                <p>Il y aurait 7 versions différentes du film, chacune montrant une timeline alternative. Mais elles ne peuvent pas toutes être vraies simultanément. Choisir d'en regarder une effacerait les autres de l'existence.</p>
+            </div>
+
+            <div class="spoiler-card">
+                <div class="spoiler-title">🔴 Le Easter Egg Quantique</div>
+                <p>À exactement 1h23m45s, si vous pausez et faites un screenshot, l'image contiendrait un QR code différent pour chaque spectateur, menant à une version personnalisée de la fin basée sur votre historique de navigation.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section shop">
+        <h2 class="section-title">🛒 MERCH OFFICIEL SILENT·PROTOCOL</h2>
+        <div class="products">
+            <div class="product" onclick="addToCart('T-Shirt Z3R0', 33.33)">
+                <div class="product-image">👕</div>
+                <div class="product-name">T-Shirt "Z3R0 Was Here"</div>
+                <div class="product-price">33.33€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Hoodie Glitch', 66.66)">
+                <div class="product-image">🧥</div>
+                <div class="product-name">Hoodie "Reality.exe Failed"</div>
+                <div class="product-price">66.66€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Mug Protocol', 19.99)">
+                <div class="product-image">☕</div>
+                <div class="product-name">Mug "Coffee.Protocol()"</div>
+                <div class="product-price">19.99€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Poster Matrix', 24.99)">
+                <div class="product-image">🖼️</div>
+                <div class="product-name">Poster "The Glitch Room"</div>
+                <div class="product-price">24.99€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Stickers Pack', 12.99)">
+                <div class="product-image">📌</div>
+                <div class="product-name">Pack 10 Stickers "Hacktivist"</div>
+                <div class="product-price">12.99€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('USB Kill Screen', 49.99)">
+                <div class="product-image">💾</div>
+                <div class="product-name">USB "Kill Screen Edition" 16GB</div>
+                <div class="product-price">49.99€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Livre Artbook', 44.44)">
+                <div class="product-image">📖</div>
+                <div class="product-name">Artbook "The Code Behind"</div>
+                <div class="product-price">44.44€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Casquette Hacker', 28.88)">
+                <div class="product-image">🧢</div>
+                <div class="product-name">Casquette "Anonyme Protocol"</div>
+                <div class="product-price">28.88€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Soundtrack Vinyl', 39.99)">
+                <div class="product-image">💿</div>
+                <div class="product-name">Soundtrack Vinyl "Subliminal Freq"</div>
+                <div class="product-price">39.99€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Clavier Mécanique', 149.99)">
+                <div class="product-image">⌨️</div>
+                <div class="product-name">Clavier Mécanique RGB "Code Warrior"</div>
+                <div class="product-price">149.99€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Masque Anonymous', 15.99)">
+                <div class="product-image">🎭</div>
+                <div class="product-name">Masque "Digital Anonymous"</div>
+                <div class="product-price">15.99€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+
+            <div class="product" onclick="addToCart('Lampe LED Matrix', 54.99)">
+                <div class="product-image">💡</div>
+                <div class="product-name">Lampe LED "Matrix Rain"</div>
+                <div class="product-price">54.99€</div>
+                <button class="buy-btn">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="terminal">
+            <div class="terminal-line"><span class="prompt">user@reality:~$</span> cat credits.txt</div>
+            <div class="terminal-line" style="animation-delay: 0.5s;">Réalisé entièrement en HTML/CSS/JavaScript</div>
+            <div class="terminal-line" style="animation-delay: 1s;">Aucun framework. Aucune bibliothèque. Juste du code brut.</div>
+            <div class="terminal-line" style="animation-delay: 1.5s;">Le film n'existe pas encore. Ou peut-être qu'il a toujours existé.</div>
+            <div class="terminal-line" style="animation-delay: 2s;">SILENT·PROTOCOL © 2025 - All Rights Reserved & Encrypted</div>
+            <div class="terminal-line" style="animation-delay: 2.5s;"><span class="prompt">user@reality:~$</span> sudo rm -rf /perception/*</div>
+        </div>
+    </div>
+
+    <div class="credits">
+        <p>Ce site est le vrai film. Le film est ce site. La boucle est bouclée.</p>
+        <p>Rejoignez-nous sur le darknet : silent-protocol.onion (n'existe pas encore)</p>
+        <p style="margin-top: 2rem; color: #ff0000;">
+            ⚠️ DISCLAIMER: Tous les spoilers sont spéculatifs et non confirmés.<br>
+            Le film pourrait ne jamais sortir. Ou il est déjà sorti et vous ne le savez pas.
+        </p>
+    </div>
+
+    <div class="modal" id="trailerModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeTrailer()">&times;</span>
+            <h2 style="margin-bottom: 2rem;">SILENT·PROTOCOL - TEASER</h2>
+            <div class="trailer-text">
+                <p>> INITIATING PROTOCOL...</p>
+                <p>> LOADING CONSCIOUSNESS.DLL</p>
+                <p>> ERROR: REALITY NOT FOUND</p>
+                <p>> COMPILING NIGHTMARES...</p>
+                <p>> THE CODE IS THE WEAPON</p>
+                <p>> THE NETWORK IS THE BATTLEFIELD</p>
+                <p>> YOUR MIND IS THE TARGET</p>
+                <p style="color: #ff0000; font-size: 1.5rem; margin-top: 2rem;">WINTER 2025</p>
+                <p style="color: #ff0000; font-size: 1.5rem;">(Maybe)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix rain effect
+        const matrixBg = document.getElementById('matrixBg');
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        
+        for (let i = 0; i < 50; i++) {
+            const column = document.createElement('div');
+            column.className = 'matrix-column';
+            column.style.left = Math.random() * 100 + '%';
+            column.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            column.style.animationDelay = Math.random() * 5 + 's';
+            
+            let text = '';
+            for (let j = 0; j < 20; j++) {
+                text += chars[Math.floor(Math.random() * chars.length)] + '<br>';
+            }
+            column.innerHTML = text;
+            matrixBg.appendChild(column);
+        }
+
+        // Cart functionality
+        let cart = [];
+        let cartCount = 0;
+
+        function addToCart(product, price) {
+            cart.push({ product, price });
+            cartCount++;
+            document.getElementById('cartCount').textContent = cartCount;
+            
+            // Glitch effect
+            document.body.style.animation = 'glitch 0.3s';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 300);
+
+            alert(`✓ "${product}" ajouté au panier crypté\n\nTotal: ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}€\n\n[TRANSACTION WILL BE ENCRYPTED WITH AES-256]`);
+        }
+
+        function showCart() {
+            if (cart.length === 0) {
+                alert('Panier vide. Le vide est aussi un état quantique valide.');
+                return;
+            }
+
+            let cartContent = '🛒 PANIER CRYPTÉ\n\n';
+            cart.forEach((item, index) => {
+                cartContent += `${index + 1}. ${item.product} - ${item.price}€\n`;
+            });
+            cartContent += `\nTOTAL: ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}€`;
+            cartContent += '\n\n[PAIEMENT EN CRYPTO UNIQUEMENT]';
+            cartContent += '\n[MONERO ACCEPTÉ POUR ANONYMAT MAXIMAL]';
+            
+            alert(cartContent);
+        }
+
+        function playTrailer() {
+            document.getElementById('trailerModal').style.display = 'flex';
+        }
+
+        function closeTrailer() {
+            document.getElementById('trailerModal').style.display = 'none';
+        }
+
+        // Random glitch effect
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                document.body.style.animation = 'glitch 0.1s';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 100);
+            }
+        }, 3000);
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            if (konamiCode.length > 10) konamiCode.shift();
+            
+            if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+                alert('🎮 CHEAT CODE ACTIVATED\n\nVous avez débloqué la vraie fin du film.\n\nMais êtes-vous sûr de vouloir connaître la vérité ?\n\n[COORDINATES: 51.5074° N, 0.1278° W]\n[TIMESTAMP: 2025-12-31 23:59:59]\n[PROTOCOL: INITIATED]');
+                document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+            }
+        });
+
+        // Cursor trail effect
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.9) {
+                const trail = document.createElement('div');
+                trail.style.position = 'fixed';
+                trail.style.left = e.clientX + 'px';
+                trail.style.top = e.clientY + 'px';
+                trail.style.width = '2px';
+                trail.style.height = '2px';
+                trail.style.background = '#0f0';
+                trail.style.pointerEvents = 'none';
+                trail.style.zIndex = '9999';
+                document.body.appendChild(trail);
+                
+                setTimeout(() => {
+                    trail.remove();
+                }, 1000);
+            }
+        });
+
+        // Log secret message to console
+        console.log('%c SILENT·PROTOCOL ', 'background: #000; color: #0f0; font-size: 20px; padding: 10px;');
+        console.log('%c Vous avez trouvé le premier secret. ', 'color: #0f0; font-size: 14px;');
+        console.log('%c Hash: 5f4dcc3b5aa765d61d8327deb882cf99 ', 'color: #ff0000;');
+        console.log('%c Déchiffrez-le pour accéder à la layer 2. ', 'color: #0f0;');
+    </script>
