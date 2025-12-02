@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>MSDA · Prologue défilant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+  :root {
+    --bg: #0e0a05;
+    --text: #f5e9d4;
+    --text-soft: #cbb89a;
+    --accent: #f97316;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at center,
+      #3c2b17 0%, #1a130c 40%, #0e0a05 100%);
+    color: var(--text);
+    font-family: Georgia, serif;
+    overflow: hidden;
+  }
+
+  /* Effets rétro */
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.20;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 2;
+  }
+  .vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.7));
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* Conteneur du texte */
+  .wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    z-index: 4;
+    position: relative;
+  }
+
+  #text {
+    font-size: clamp(20px, 4vw, 36px);
+    line-height: 1.45;
+    max-width: 900px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.3s ease, transform 1.3s ease;
+  }
+  #text.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Bouton de démarrage */
+  #startBtn {
+    display: none;
+    margin-top: 30px;
+    padding: 14px 36px;
+    font-size: 22px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: rgba(0,0,0,0.4);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all .3s ease;
+  }
+  #startBtn:hover {
+    background: var(--accent);
+    color: #1a130c;
+  }
+</style>
+</head>
+
+<body>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<div class="wrapper">
+  <div>
+    <div id="text">…</div>
+    <button id="startBtn" onclick="goGame()">Entrer dans la simulation</button>
+  </div>
+</div>
+
+<script>
+  /* --- SCRIPT NARRATIF QUI DÉFILE PHRASE PAR PHRASE --- */
+  const SCRIPT = [
+    "Années 1980. La crise est un incident. L’avenir, une promesse.",
+    "On te dit que l’économie va s’autoréguler. Que la politique suit le plan.",
+    "Tu observes. Tu grandis. Tu attends que les adultes sachent ce qu’ils font.",
+    "",
+    "Années 1990. Le monde s’ouvre comme un hypermarché.",
+    "On privatise ce qui dépasse. On rationalise ce qui respire.",
+    "On t’explique que si tu n’as rien à cacher, tu n’as rien à craindre.",
+    "",
+    "Années 2000. Les bulles gonflent et éclatent comme des ballons d’anniversaire.",
+    "On t’invite à t’adapter. À innover. À rester flexible, mais jamais fragile.",
+    "Le mot 'crise' devient un logiciel préinstallé.",
+    "",
+    "Années 2010. Les réseaux s’enflamment plus vite que les forêts.",
+    "Tout est réaction, indignation, amplification.",
+    "Chacun parle. Personne n’écoute. Sauf les algorithmes.",
+    "",
+    "Années 2020. Les crises deviennent systémiques.",
+    "Sanitaire. Sociale. Écologique. Psychique.",
+    "On te demande d’être résilient·e comme si tu étais un matériau de construction.",
+    "",
+    "Et pourtant… tu es toujours là.",
+    "Debout, fatigué·e, lucide.",
+    "Prêt·e à jouer ton rôle dans une société qui t’a rarement demandé ton avis.",
+    "",
+    "Bienvenue dans le Manual de Survie en Démocratie Avancée."
+  ];
+
+  let index = 0;
+  const textEl = document.getElementById("text");
+  const startBtn = document.getElementById("startBtn");
+
+  function nextLine() {
+    if (index >= SCRIPT.length) {
+      // Afficher le bouton
+      startBtn.style.display = "inline-block";
+      return;
+    }
+
+    const phrase = SCRIPT[index].trim();
+
+    // Effacement
+    textEl.classList.remove("visible");
+
+    setTimeout(() => {
+      textEl.textContent = phrase || " ";
+      textEl.classList.add("visible");
+      index++;
+      setTimeout(nextLine, 2600); // vitesse : ralentir ici
+    }, 500);
+  }
+
+  function goGame() {
+    window.location.href = "societe-jeu.html";
+  }
+
+  // Démarre automatiquement
+  setTimeout(nextLine, 1200);
+</script>
+
+</body>
+</html>
