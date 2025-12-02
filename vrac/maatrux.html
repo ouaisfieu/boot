@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Logiciels Incontournables – Kit CCPLC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Typo propre -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --card: #020617;
+      --accent: #22c55e;
+      --accent-2: #38bdf8;
+      --accent-3: #eab308;
+      --accent-4: #a855f7;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --muted-soft: #6b7280;
+      --border: rgba(148,163,184,0.9);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --shadow: 0 22px 60px rgba(15,23,42,0.95);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.25), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(56,189,248,0.25), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 1.4rem 0.7rem 1.8rem;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.18), transparent 70%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.98), transparent 60%),
+        var(--bg-soft);
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.4rem 1rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .app {
+        padding: 1.6rem 1.8rem 2rem;
+      }
+    }
+
+    .app::before {
+      content: "CCPLC • Logiciels & écosystème – Version clé USB";
+      position: absolute;
+      top: 0.6rem;
+      right: 1.4rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.85);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      margin: 0 auto 0.5rem;
+      background:
+        conic-gradient(from 210deg,
+          rgba(34,197,94,0.0),
+          rgba(34,197,94,0.9),
+          rgba(56,189,248,0.9),
+          rgba(234,179,8,0.9),
+          rgba(168,85,247,0.9),
+          rgba(34,197,94,0.0));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 0 26px rgba(34,197,94,0.8),
+        0 0 18px rgba(15,23,42,1);
+      color: #020617;
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.3rem);
+      letter-spacing: -0.03em;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #22c55e, #38bdf8, #eab308, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.25rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .subtitle strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .grid-main {
+      margin-top: 1.1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    @media (min-width: 980px) {
+      .grid-main {
+        grid-template-columns: minmax(0,1.8fr) minmax(0,1.2fr);
+      }
+    }
+
+    .card {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 0.9rem 1rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-title {
+      font-size: 0.98rem;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .card-title span.icon {
+      font-size: 1.25rem;
+    }
+
+    .card-sub {
+      font-size: 0.8rem;
+      color: var(--muted-soft);
+    }
+
+    h2 {
+      font-size: 1.02rem;
+      color: var(--text);
+      margin: 0.4rem 0 0.3rem;
+    }
+
+    h3 {
+      font-size: 0.94rem;
+      color: var(--text);
+      margin: 0.35rem 0 0.2rem;
+    }
+
+    p {
+      margin-bottom: 0.25rem;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.85);
+      padding: 0.08rem 0.55rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .pill span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .pill.gold span.dot { background: var(--accent-3); }
+    .pill.violet span.dot { background: var(--accent-4); }
+
+    .grid-soft {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+
+    @media (min-width: 720px) {
+      .grid-soft {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .soft-card {
+      border-radius: 14px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: #020617;
+      padding: 0.45rem 0.6rem 0.5rem;
+      font-size: 0.84rem;
+    }
+
+    .soft-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      align-items: center;
+      margin-bottom: 0.15rem;
+    }
+
+    .soft-name {
+      font-size: 0.9rem;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .soft-name span.icon {
+      font-size: 1rem;
+    }
+
+    .soft-role {
+      font-size: 0.78rem;
+      color: var(--muted-soft);
+    }
+
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      padding: 0.02rem 0.4rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: #020617;
+    }
+
+    .badge.beginner { border-color: #22c55e; }
+    .badge.intermediate { border-color: #38bdf8; }
+    .badge.advanced { border-color: #eab308; }
+
+    .alt-link {
+      margin-top: 0.35rem;
+      font-size: 0.82rem;
+    }
+
+    .alt-link a {
+      color: #38bdf8;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .alt-link a:hover {
+      color: #e0f2fe;
+    }
+
+    ul {
+      margin-left: 1.1rem;
+      margin-top: 0.1rem;
+    }
+
+    li + li {
+      margin-top: 0.08rem;
+    }
+
+    .quiz-section {
+      margin-top: 0.3rem;
+    }
+
+    .quiz-question {
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .quiz-meta {
+      font-size: 0.78rem;
+      color: var(--muted-soft);
+      margin-bottom: 0.25rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .quiz-option {
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: #020617;
+      color: var(--muted);
+      padding: 0.22rem 0.5rem;
+      font-size: 0.86rem;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .quiz-option span.bullet {
+      font-size: 0.9rem;
+    }
+
+    .quiz-option.selected {
+      border-color: var(--accent-2);
+      background: linear-gradient(120deg, rgba(56,189,248,0.12), rgba(34,197,94,0.08));
+      color: var(--text);
+    }
+
+    .quiz-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.15rem;
+      align-items: center;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.84rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #020617;
+      box-shadow: 0 12px 26px rgba(15,23,42,1);
+      font-family: inherit;
+    }
+
+    .btn span.icon {
+      font-size: 1rem;
+    }
+
+    .btn-ghost {
+      background: #020617;
+      color: var(--muted);
+      border: 1px solid rgba(148,163,184,0.85);
+      box-shadow: none;
+    }
+
+    .quiz-progress {
+      font-size: 0.8rem;
+      color: var(--muted-soft);
+    }
+
+    .quiz-result {
+      margin-top: 0.35rem;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .quiz-result strong {
+      color: var(--text);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .advanced-section {
+      margin-top: 0.6rem;
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(148,163,184,0.9);
+      padding: 0.7rem 0.8rem;
+      background: #020617;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .advanced-section.visible {
+      display: block;
+    }
+
+    .advanced-section:not(.visible) {
+      display: none;
+    }
+
+    .easter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--muted-soft);
+    }
+
+    .egg {
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 0.2rem 0.5rem;
+      border: 1px dashed rgba(148,163,184,0.9);
+      background: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .tips-grid {
+      margin-top: 0.45rem;
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    @media (min-width: 720px) {
+      .tips-grid {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+
+    .tips-card {
+      border-radius: 14px;
+      border: 1px solid rgba(55,65,81,0.9);
+      padding: 0.4rem 0.55rem;
+      background: #020617;
+      font-size: 0.8rem;
+    }
+
+    .tips-title {
+      font-size: 0.86rem;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .tips-list {
+      margin-left: 1rem;
+      margin-top: 0.1rem;
+    }
+
+    .tips-list li + li {
+      margin-top: 0.06rem;
+    }
+
+    .tiny-note {
+      font-size: 0.76rem;
+      color: var(--muted-soft);
+      margin-top: 0.4rem;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">⚙️</div>
+    <h1><span>Logiciels Incontournables</span></h1>
+    <p class="subtitle">
+      Un tour d’horizon des outils qui tiennent ton <strong>écosystème CCPLC / Organisation</strong> debout :
+      les indispensables, les alternatives, et quelques pépites cachées à débloquer via un quizz.
+    </p>
+  </header>
+
+  <div class="grid-main">
+    <!-- Colonne gauche : logiciels incontournables + quizz -->
+    <section>
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🔧</span>
+            <span>Les logiciels incontournables (kit de base)</span>
+          </div>
+          <div class="card-sub">À installer sur ta machine principale & sur ta clé USB (si possible portable).</div>
+        </div>
+
+        <h2>Navigation & web</h2>
+        <div class="grid-soft">
+          <div class="soft-card">
+            <div class="soft-head">
+              <div class="soft-name">
+                <span class="icon">🦊</span><span>Firefox / Brave / Chromium</span>
+              </div>
+              <span class="badge beginner">Niveau : débutant</span>
+            </div>
+            <p class="soft-role">
+              Ton <strong>portail sur le web</strong>. Sert à tout : veille, tests, accès à ton instance.
+            </p>
+            <ul>
+              <li>Extensions privacy (uBlock, privacy badger…)</li>
+              <li>Profils séparés : perso / projet / expérimentation</li>
+            </ul>
+          </div>
+
+          <div class="soft-card">
+            <div class="soft-head">
+              <div class="soft-name">
+                <span class="icon">📰</span><span>Lecteur RSS (ex. Fluent Reader)</span>
+              </div>
+              <span class="badge intermediate">Niveau : confirmé</span>
+            </div>
+            <p class="soft-role">
+              Pour centraliser ta <strong>veille citoyenne</strong> (flux d’actu, blogs, institutions…).
+            </p>
+            <ul>
+              <li>Categoriser par thèmes : info, tech, local, veille</li>
+              <li>Connecté à tes dossiers & tests de recrutement</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Organisation & notes</h2>
+        <div class="grid-soft">
+          <div class="soft-card">
+            <div class="soft-head">
+              <div class="soft-name">
+                <span class="icon">📓</span><span>Obsidian</span>
+              </div>
+              <span class="badge beginner">Niveau : débutant → expert</span>
+            </div>
+            <p class="soft-role">
+              Le <strong>cerveau externe</strong> du projet : notes, liens, cartes mentales, suivi des dossiers.
+            </p>
+            <ul>
+              <li>Un coffre-fort “Organisation” dédié</li>
+              <li>Un coffre-fort “Apprentissage perso”</li>
+            </ul>
+          </div>
+
+          <div class="soft-card">
+            <div class="soft-head">
+              <div class="soft-name">
+                <span class="icon">📂</span><span>Explorateur de fichiers + Sync (ex. Syncthing)</span>
+              </div>
+              <span class="badge intermediate">Niveau : confirmé</span>
+            </div>
+            <p class="soft-role">
+              Gérer proprement le <strong>dossier de ton instance</strong> (html, pdf, images, etc.).
+            </p>
+            <ul>
+              <li>Arborescence claire pour la clé USB</li>
+              <li>Synchro entre machines si besoin</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Création, code & sites statiques</h2>
+        <div class="grid-soft">
+          <div class="soft-card">
+            <div class="soft-head">
+              <div class="soft-name">
+                <span class="icon">🧑‍💻</span><span>VS Code / VSCodium</span>
+              </div>
+              <span class="badge beginner">Niveau : débutant+</span>
+            </div>
+            <p class="soft-role">
+              Éditer proprement <code>.html</code> / <code>.md</code> / <code>.css</code> et scripts JS.
+            </p>
+            <ul>
+              <li>Coloration syntaxique</li>
+              <li>Extensions Markdown, HTML, Git</li>
+            </ul>
+          </div>
+
+          <div class="soft-card">
+            <div class="soft-head">
+              <div class="soft-name">
+                <span class="icon">🌐</span><span>Git & GitHub Desktop</span>
+              </div>
+              <span class="badge intermediate">Niveau : confirmé</span>
+            </div>
+            <p class="soft-role">
+              Versionner ton <strong>kit de pages</strong> et le publier sur GitHub Pages / Vercel.
+            </p>
+            <ul>
+              <li>Un dépôt “instance-locale”</li>
+              <li>Un dépôt “public” pour partager</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Multimédia & confort</h2>
+        <div class="grid-soft">
+          <div class="soft-card">
+            <div class="soft-head">
+              <div class="soft-name">
+                <span class="icon">🎥</span><span>VLC</span>
+              </div>
+              <span class="badge beginner">Niveau : débutant</span>
+            </div>
+            <p class="soft-role">
+              Lire toutes les vidéos (tutos, docs, archives) sans se battre avec les formats.
+            </p>
+          </div>
+
+          <div class="soft-card">
+            <div class="soft-head">
+              <div class="soft-name">
+                <span class="icon">📄</span><span>LibreOffice / OnlyOffice</span>
+              </div>
+              <span class="badge beginner">Niveau : débutant</span>
+            </div>
+            <p class="soft-role">
+              Bureautique classique : rapports, fiches, tableaux, impressions.
+            </p>
+          </div>
+        </div>
+
+        <div class="alt-link">
+          Pour explorer des alternatives (libres, payantes, multi-plateformes), tu peux passer par  
+          <a href="https://alternativeto.net/" target="_blank" rel="noopener noreferrer">AlternativeTo.net</a>.  
+          Tape par ex. “Obsidian”, “VS Code”, “Firefox” pour voir les options.
+        </div>
+      </article>
+
+      <!-- QUIZZ -->
+      <article class="card quiz-section">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🧪</span>
+            <span>Quizz – Quel outil pour quoi faire ?</span>
+          </div>
+          <div class="card-sub">Score ≥ 70 % = déblocage des logiciels “pépites” + tips cachés.</div>
+        </div>
+
+        <div id="quizContainer">
+          <div class="quiz-question" id="quizQuestion"></div>
+          <div class="quiz-meta" id="quizMeta"></div>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-controls">
+            <button class="btn" type="button" id="quizNext">
+              <span class="icon">➡️</span><span>Valider / question suivante</span>
+            </button>
+            <button class="btn btn-ghost" type="button" id="quizRestart">
+              <span class="icon">🔄</span><span>Recommencer</span>
+            </button>
+            <span class="quiz-progress" id="quizProgress"></span>
+          </div>
+          <div class="quiz-result" id="quizResult"></div>
+        </div>
+
+        <div class="advanced-section" id="advancedSection">
+          <strong>Bravo, tu as débloqué la section “logiciels moins courants” :</strong>
+          <ul>
+            <li><strong>Joplin / Logseq :</strong> alternatives à Obsidian, plus orientées “libre” / “outliner”.</li>
+            <li><strong>FreshRSS / Miniflux :</strong> serveurs RSS auto-hébergés pour une veille plus robuste.</li>
+            <li><strong>Tails / Linux Mint :</strong> systèmes live/desktop pour compartimenter tes usages.</li>
+            <li><strong>Inkscape / Krita :</strong> graphisme vectoriel et dessin pour tes fiches, cartes & visuels.</li>
+            <li><strong>GnuPG / Kleopatra :</strong> chiffrement “à l’ancienne” pour les échanges sensibles.</li>
+          </ul>
+          <p style="margin-top:0.3rem;">
+            Tu peux chercher chacun de ces logiciels sur <em>AlternativeTo</em> pour repérer les forks, dérivés et outils cousins.
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Colonne droite : tips & easter eggs -->
+    <aside>
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">💡</span>
+            <span>Tips par niveau & easter eggs</span>
+          </div>
+          <div class="card-sub">Clique, teste, joue avec les niveaux pour voir ce qui te parle.</div>
+        </div>
+
+        <div class="tips-grid">
+          <div class="tips-card">
+            <div class="tips-title">
+              <span>Débutant</span>
+              <span class="pill"><span class="dot"></span>safe mode</span>
+            </div>
+            <ul class="tips-list">
+              <li>Commence avec <strong>Firefox</strong> + bloqueur de pub. Rien que ça change déjà la donne.</li>
+              <li>Installe <strong>Obsidian</strong> et écris 1 note / jour, sans te juger.</li>
+              <li>Garde un seul dossier “<code>CCPLC</code>” bien rangé sur ton bureau.</li>
+            </ul>
+          </div>
+
+          <div class="tips-card">
+            <div class="tips-title">
+              <span>Confirmé</span>
+              <span class="pill gold"><span class="dot"></span>level up</span>
+            </div>
+            <ul class="tips-list">
+              <li>Crée un <strong>vault Obsidian “Organisation”</strong> lié à ton instance de pages HTML.</li>
+              <li>Utilise un <strong>lecteur RSS</strong> pour suivre 10–20 sources max, triées par thèmes.</li>
+              <li>Versionne ton dossier via <strong>GitHub Desktop</strong> (même en privé).</li>
+            </ul>
+          </div>
+
+          <div class="tips-card">
+            <div class="tips-title">
+              <span>Pro / Hacker bienveillant</span>
+              <span class="pill violet"><span class="dot"></span>secret sauce</span>
+            </div>
+            <ul class="tips-list">
+              <li>Teste un <strong>Linux en live USB</strong> pour tes sessions “veille & développement”.</li>
+              <li>Auto-héberge un <strong>FreshRSS</strong> ou utilise un service fiable pour ta veille.</li>
+              <li>Automatise des sauvegardes chiffrées (GnuPG + cloud + disque externe).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="easter-row">
+          <span>🐣 Easter eggs :</span>
+          <button class="egg" type="button" id="eggPenguin">
+            <span>🐧</span><span>Pingouin (Linux)</span>
+          </button>
+          <button class="egg" type="button" id="eggNote">
+            <span>📝</span><span>Note secrète</span>
+          </button>
+        </div>
+
+        <div id="easterMessages" class="tiny-note"></div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🌐</span>
+            <span>Place des logiciels dans l’écosystème</span>
+          </div>
+        </div>
+        <p>
+          Si on simplifie, ton écosystème se structure en <strong>quatre couches</strong> :
+        </p>
+        <ul>
+          <li><strong>1. Interface :</strong> navigateur, obsidian, lecteurs, outils de travail quotidien.</li>
+          <li><strong>2. Contenu :</strong> pages HTML, dossiers PDF, notes, images, vidéos.</li>
+          <li><strong>3. Infrastructure :</strong> disque dur, clé USB, hébergement web, Git.</li>
+          <li><strong>4. Gouvernance :</strong> toi, ton collectif, les règles du jeu & le cadre éthique.</li>
+        </ul>
+        <p style="margin-top:0.3rem;">
+          Les logiciels ne sont pas des “fins en soi” : ce sont des <strong>prothèses d’intelligence</strong>.
+          Le test, les jeux et les dossiers te servent à garder la main sur l’outil, pas l’inverse.
+        </p>
+      </article>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function() {
+  // --- QUIZZ DATA ---
+  const questions = [
+    {
+      text: "Tu veux centraliser ta veille citoyenne (sites d’info, blogs, institutions…). Quel outil est le plus adapté ?",
+      difficulty: "Facile",
+      level: "débutant",
+      options: [
+        "Un lecteur RSS (ex. Fluent Reader, FreshRSS, Miniflux)",
+        "Un traitement de texte classique (LibreOffice Writer)",
+        "Un tableur (pour tout noter à la main)"
+      ],
+      correctIndex: 0
+    },
+    {
+      text: "Tu veux garder une trace structurée de toutes tes idées, projets, liens et tests de recrutement. Tu prends quoi en priorité ?",
+      difficulty: "Facile",
+      level: "débutant",
+      options: [
+        "Un unique document Word gigantesque",
+        "Obsidian avec un coffre-fort dédié au projet",
+        "Uniquement des notes papier et des post-it"
+      ],
+      correctIndex: 1
+    },
+    {
+      text: "Tu souhaites publier ton instance de pages HTML (escape, tests, fiches) sur Internet. Quel combo est le plus cohérent ?",
+      difficulty: "Moyen",
+      level: "confirmé",
+      options: [
+        "Git + GitHub / GitLab Pages ou Vercel",
+        "Envoyer les fichiers par e-mail à tout le monde",
+        "Les importer dans un tableur en ligne"
+      ],
+      correctIndex: 0
+    },
+    {
+      text: "Tu veux tester un environnement plus sécurisé pour certaines tâches (veille sensible, rédaction, tests). Quelle approche est la plus pertinente ?",
+      difficulty: "Moyen",
+      level: "confirmé",
+      options: [
+        "Installer un Linux en live USB ou une distribution dédiée",
+        "Continuer avec le même navigateur sans aucune extension",
+        "Utiliser exclusivement ton smartphone sans mises à jour"
+      ],
+      correctIndex: 0
+    },
+    {
+      text: "Tu as envie d’explorer des alternatives à Obsidian ou VS Code, tout en gardant l’esprit du projet. Quel réflexe est le plus malin ?",
+      difficulty: "Moyen",
+      level: "confirmé",
+      options: [
+        "Chercher “Obsidian” ou “VS Code” sur AlternativeTo.net",
+        "Attendre que quelqu’un te dise quoi installer",
+        "Tester au hasard tout ce qui apparaît sur un store"
+      ],
+      correctIndex: 0
+    },
+    {
+      text: "Tu veux limiter la casse si ton PC principal tombe en panne. Quelle stratégie est la plus robuste ?",
+      difficulty: "Difficile",
+      level: "pro",
+      options: [
+        "Sauvegarder régulièrement ton dossier CCPLC sur clé USB + sauvegarde distante chiffrée",
+        "Ne rien faire et espérer que tout ira bien",
+        "Tout garder sur le bureau sans dossier structuré"
+      ],
+      correctIndex: 0
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+  let answered = false;
+  let selectedIndex = null;
+  let passedOnce = false;
+
+  const quizQuestion = document.getElementById("quizQuestion");
+  const quizMeta = document.getElementById("quizMeta");
+  const quizOptions = document.getElementById("quizOptions");
+  const quizNext = document.getElementById("quizNext");
+  const quizRestart = document.getElementById("quizRestart");
+  const quizProgress = document.getElementById("quizProgress");
+  const quizResult = document.getElementById("quizResult");
+  const advancedSection = document.getElementById("advancedSection");
+
+  function renderQuestion() {
+    const q = questions[currentQuestion];
+    quizQuestion.textContent = q.text;
+    quizMeta.textContent =
+      `Difficulté : ${q.difficulty} • Niveau : ${q.level} • Question ${currentQuestion + 1}/${questions.length}`;
+    quizOptions.innerHTML = "";
+    answered = false;
+    selectedIndex = null;
+    quizResult.textContent = "";
+    quizProgress.textContent = `Score actuel : ${score} / ${questions.length}`;
+    questions[currentQuestion].options.forEach((opt, index) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "quiz-option";
+      btn.innerHTML = `<span class="bullet">${String.fromCharCode(65 + index)}.</span> ${opt}`;
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".quiz-option").forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        selectedIndex = index;
+      });
+      quizOptions.appendChild(btn);
+    });
+  }
+
+  function validateQuestion() {
+    if (selectedIndex === null) {
+      quizResult.textContent = "Choisis une réponse avant de valider.";
+      return;
+    }
+    if (answered) {
+      // déjà validé, passer à la suivante si possible
+      goNext();
+      return;
+    }
+    answered = true;
+    const q = questions[currentQuestion];
+    if (selectedIndex === q.correctIndex) {
+      score++;
+      quizResult.innerHTML = `<strong>Bonne réponse !</strong>`;
+    } else {
+      quizResult.innerHTML =
+        `<strong>Raté.</strong> La bonne réponse était « ${q.options[q.correctIndex]} ».`;
+    }
+    quizProgress.textContent = `Score actuel : ${score} / ${questions.length}`;
+    // changer le texte du bouton
+    if (currentQuestion === questions.length - 1) {
+      quizNext.innerHTML = `<span class="icon">📊</span><span>Voir le résultat final</span>`;
+    } else {
+      quizNext.innerHTML = `<span class="icon">➡️</span><span>Question suivante</span>`;
+    }
+  }
+
+  function goNext() {
+    if (!answered) {
+      validateQuestion();
+      return;
+    }
+    if (currentQuestion < questions.length - 1) {
+      currentQuestion++;
+      quizNext.innerHTML = `<span class="icon">➡️</span><span>Valider / question suivante</span>`;
+      renderQuestion();
+    } else {
+      endQuiz();
+    }
+  }
+
+  function endQuiz() {
+    const percent = Math.round((score / questions.length) * 100);
+    let msg = `Tu as obtenu ${score} / ${questions.length} (${percent} %). `;
+    if (percent >= 70) {
+      msg += "C’est suffisant pour débloquer les logiciels “pépites” 👇";
+      advancedSection.classList.add("visible");
+      passedOnce = true;
+    } else {
+      msg += "Tu peux recommencer pour tenter de débloquer la section cachée.";
+    }
+    quizResult.innerHTML = `<strong>${msg}</strong>`;
+    quizProgress.textContent = `Score final : ${score} / ${questions.length}`;
+  }
+
+  function restartQuiz() {
+    score = 0;
+    currentQuestion = 0;
+    answered = false;
+    selectedIndex = null;
+    quizNext.innerHTML = `<span class="icon">➡️</span><span>Valider / question suivante</span>`;
+    quizResult.textContent = "";
+    if (!passedOnce) {
+      advancedSection.classList.remove("visible");
+    }
+    renderQuestion();
+  }
+
+  quizNext.addEventListener("click", () => {
+    if (!answered) {
+      validateQuestion();
+    } else {
+      goNext();
+    }
+  });
+
+  quizRestart.addEventListener("click", restartQuiz);
+
+  // --- EASTER EGGS ---
+  const eggPenguin = document.getElementById("eggPenguin");
+  const eggNote = document.getElementById("eggNote");
+  const easterMessages = document.getElementById("easterMessages");
+
+  let penguinClicks = 0;
+  let noteToggled = false;
+
+  eggPenguin.addEventListener("click", () => {
+    penguinClicks++;
+    if (penguinClicks === 1) {
+      easterMessages.textContent = "Pingouin 1/3 : Linux n’est pas une obligation, mais un bac à sable intéressant.";
+    } else if (penguinClicks === 2) {
+      easterMessages.textContent = "Pingouin 2/3 : teste un live USB avant de tout migrer, surtout si tu es débutant.";
+    } else if (penguinClicks >= 3) {
+      easterMessages.textContent = "Pingouin 3/3 : l’objectif n’est pas d’être “puriste”, mais de mieux contrôler ton environnement.";
+    }
+  });
+
+  eggNote.addEventListener("click", () => {
+    noteToggled = !noteToggled;
+    if (noteToggled) {
+      easterMessages.textContent =
+        "Tip caché : un vault Obsidian + un dépôt Git + une clé USB = déjà une petite “agence de renseignement citoyenne”.";
+    } else {
+      easterMessages.textContent = "";
+    }
+  });
+
+  // INIT
+  renderQuestion();
+})();
+</script>
+</body>
+</html>
