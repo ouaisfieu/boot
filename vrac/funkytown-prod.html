@@ -1,0 +1,1208 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>FUNKY TOWN PROD – Agence Web Clé-sur-Porte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #020617;
+      --bg2: #020617;
+      --card: #020617;
+      --border: #1f2937;
+      --primary: #f97316;
+      --primary2: #22c55e;
+      --accent: #38bdf8;
+      --accent2: #a855f7;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --shadow: 0 24px 60px rgba(0,0,0,0.9);
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    * { box-sizing:border-box; margin:0; padding:0; }
+
+    body {
+      min-height:100vh;
+      font-family:var(--sans);
+      background:
+        radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color:var(--text);
+      padding:16px 10px 24px;
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    .page {
+      max-width:1120px;
+      margin:0 auto;
+      background:radial-gradient(circle at top, #020617 0, #020617 60%);
+      border-radius:26px;
+      border:1px solid rgba(31,41,55,0.95);
+      box-shadow:var(--shadow);
+      padding:14px 16px 16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .page::before {
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(249,115,22,0.28), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(56,189,248,0.22), transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(168,85,247,0.18), transparent 55%);
+      mix-blend-mode:screen;
+      opacity:0.85;
+      pointer-events:none;
+    }
+
+    .inner {
+      position:relative;
+      z-index:1;
+    }
+
+    /* HEADER */
+
+    header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding-bottom:8px;
+      border-bottom:1px solid rgba(31,41,55,0.9);
+    }
+
+    .logo-block {
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .logo-badge {
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      background:
+        conic-gradient(from 0deg,
+          #f97316 0 120deg,
+          #22c55e 120deg 240deg,
+          #38bdf8 240deg 360deg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:var(--mono);
+      font-size:0.8rem;
+      font-weight:700;
+      color:#0f172a;
+      box-shadow:0 14px 34px rgba(0,0,0,0.9);
+    }
+
+    .logo-text-main {
+      font-size:1.18rem;
+      font-weight:800;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+    }
+
+    .logo-text-main span.ft {
+      color:var(--primary);
+    }
+
+    .logo-text-main span.pd {
+      color:var(--accent);
+    }
+
+    .logo-text-sub {
+      font-size:0.82rem;
+      color:var(--muted);
+    }
+
+    nav {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      font-size:0.84rem;
+    }
+
+    .nav-btn {
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(51,65,85,0.9);
+      background:rgba(15,23,42,0.94);
+      color:var(--muted);
+      cursor:pointer;
+      transition:background .1s,border-color .1s,color .1s,transform .08s;
+    }
+
+    .nav-btn:hover {
+      background:#0f172a;
+      border-color:var(--accent);
+      color:var(--text);
+      transform:translateY(-1px);
+    }
+
+    .nav-btn.active {
+      background:var(--primary);
+      border-color:var(--primary);
+      color:#0f172a;
+      font-weight:600;
+      box-shadow:0 10px 26px rgba(249,115,22,0.8);
+    }
+
+    @media (max-width:720px) {
+      header { flex-direction:column; align-items:flex-start; }
+      nav { width:100%; }
+    }
+
+    /* SECTIONS */
+
+    .sections {
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);
+      gap:14px;
+      align-items:flex-start;
+    }
+
+    @media (max-width:900px) {
+      .sections {
+        grid-template-columns:minmax(0,1fr);
+      }
+    }
+
+    .card {
+      background:rgba(15,23,42,0.95);
+      border-radius:18px;
+      border:1px solid var(--border);
+      padding:14px 14px 12px;
+      box-shadow:0 18px 40px rgba(0,0,0,0.8);
+    }
+
+    .hero {
+      margin-bottom:10px;
+    }
+
+    .hero-title {
+      font-size:1.6rem;
+      line-height:1.2;
+      margin-bottom:5px;
+    }
+
+    .hero-title span {
+      color:var(--primary);
+    }
+
+    .hero-sub {
+      font-size:0.9rem;
+      color:var(--muted);
+    }
+
+    .pills {
+      margin-top:9px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+    }
+
+    .pill {
+      padding:7px 9px;
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:#020617;
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+
+    .pill strong {
+      color:var(--text);
+    }
+
+    .section-title {
+      font-size:0.98rem;
+      font-weight:600;
+      margin-bottom:4px;
+    }
+
+    .section-sub {
+      font-size:0.86rem;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .grid-2 {
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:8px;
+    }
+
+    @media (max-width:640px) {
+      .grid-2 { grid-template-columns:minmax(0,1fr); }
+    }
+
+    .tile {
+      border-radius:12px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:#020617;
+      padding:8px 9px 7px;
+      font-size:0.86rem;
+    }
+
+    .tile-title {
+      font-weight:600;
+      margin-bottom:2px;
+    }
+
+    .tile-desc {
+      font-size:0.84rem;
+      color:var(--muted);
+    }
+
+    .step-num {
+      font-family:var(--mono);
+      font-size:0.8rem;
+      color:var(--accent);
+      margin-bottom:2px;
+    }
+
+    .small {
+      font-size:0.78rem;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    /* MODULES LIST */
+
+    .modules-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:6px;
+      margin-bottom:6px;
+    }
+
+    .filters {
+      display:flex;
+      flex-wrap:wrap;
+      gap:4px;
+      font-size:0.78rem;
+    }
+
+    .filter-pill {
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:#020617;
+      color:var(--muted);
+      cursor:pointer;
+      transition:background .1s,border-color .1s,color .1s;
+    }
+
+    .filter-pill.active {
+      background:#0f172a;
+      border-color:var(--accent);
+      color:var(--text);
+    }
+
+    .module-list {
+      max-height:260px;
+      overflow:auto;
+      border-radius:12px;
+      border:1px solid rgba(31,41,55,0.9);
+      background:#020617;
+      padding:6px 6px 5px;
+    }
+
+    .module-item {
+      border-radius:10px;
+      padding:6px 7px;
+      display:grid;
+      grid-template-columns:minmax(0,1.5fr) auto;
+      gap:6px;
+      cursor:pointer;
+      transition:background .1s,box-shadow .1s,transform .06s;
+    }
+
+    .module-item:hover {
+      background:#020617;
+      box-shadow:0 10px 24px rgba(0,0,0,0.9);
+      transform:translateY(-1px);
+    }
+
+    .module-main {
+      font-size:0.86rem;
+    }
+
+    .module-title {
+      font-weight:600;
+      margin-bottom:2px;
+    }
+
+    .module-file {
+      font-family:var(--mono);
+      font-size:0.74rem;
+      color:#4ade80;
+      margin-bottom:2px;
+    }
+
+    .module-desc {
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+
+    .module-meta {
+      display:flex;
+      flex-wrap:wrap;
+      gap:4px;
+      margin-top:2px;
+      font-size:0.74rem;
+    }
+
+    .tag {
+      padding:1px 6px;
+      border-radius:999px;
+      border:1px solid #334155;
+      background:#020617;
+      color:#9ca3af;
+    }
+
+    .type-pill {
+      padding:1px 6px;
+      border-radius:999px;
+      border:1px solid #f97316;
+      background:#0f172a;
+      color:#fed7aa;
+      font-size:0.74rem;
+    }
+
+    .module-right {
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:flex-end;
+      gap:4px;
+      font-size:0.76rem;
+    }
+
+    .open-btn {
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:#020617;
+      color:#e5e7eb;
+      cursor:pointer;
+      font-size:0.78rem;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      transition:background .1s,border-color .1s,color .1s,transform .06s;
+    }
+
+    .open-btn:hover {
+      background:#0f172a;
+      border-color:var(--primary2);
+      color:#bbf7d0;
+      transform:translateY(-1px);
+    }
+
+    /* PLAN CLÉ-SUR-PORTE */
+
+    .plan-card {
+      margin-top:8px;
+      border-radius:14px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:#020617;
+      padding:8px 9px 7px;
+      font-size:0.84rem;
+    }
+
+    .plan-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:6px;
+      margin-bottom:5px;
+    }
+
+    .small-btn {
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:#020617;
+      color:#9ca3af;
+      font-size:0.78rem;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      transition:background .1s,border-color .1s,color .1s,transform .06s;
+    }
+
+    .small-btn:hover {
+      background:#0f172a;
+      border-color:var(--accent2);
+      color:#e5e7eb;
+      transform:translateY(-1px);
+    }
+
+    textarea {
+      width:100%;
+      min-height:160px;
+      resize:vertical;
+      border-radius:10px;
+      border:1px solid #1f2937;
+      background:#020617;
+      color:#e5e7eb;
+      font-size:0.8rem;
+      font-family:var(--mono);
+      padding:6px 7px;
+      outline:none;
+    }
+
+    textarea:focus {
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(56,189,248,0.6);
+    }
+
+    .plan-status {
+      font-size:0.78rem;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    footer {
+      margin-top:10px;
+      font-size:0.78rem;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+
+    footer span {
+      font-family:var(--mono);
+      font-size:0.74rem;
+    }
+
+    @media (max-width:640px) {
+      .page { padding:12px 11px 12px; border-radius:22px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="inner">
+    <header>
+      <div class="logo-block">
+        <div class="logo-badge">FTP</div>
+        <div>
+          <div class="logo-text-main">
+            <span class="ft">FUNKY</span> <span class="pd">TOWN PROD</span>
+          </div>
+          <div class="logo-text-sub">
+            Agence de production web qui t’apprend, clé-sur-porte,  
+            à monter <strong>ton propre écosystème HTML ultra-fonctionnel</strong>.
+          </div>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-section="intro">Accueil</button>
+        <button class="nav-btn" data-section="recipe">Recette clé-sur-porte</button>
+        <button class="nav-btn" data-section="modules">Galerie de modules</button>
+        <button class="nav-btn" data-section="kit">Kit projet complet</button>
+      </nav>
+    </header>
+
+    <div class="sections">
+      <!-- COLONNE GAUCHE : INTRO / RECETTE -->
+      <section class="card" id="left-panel">
+        <!-- rempli par JS -->
+      </section>
+
+      <!-- COLONNE DROITE : MODULES + PLAN -->
+      <section class="card">
+        <div>
+          <div class="section-title">Galerie de modules Funky Town</div>
+          <div class="section-sub">
+            Tous les morceaux qu’on peut assembler dans ton site :
+            intros, intranets, jeux, moteurs, mini-navigateurs…
+          </div>
+
+          <div class="modules-header">
+            <span style="font-size:0.8rem; color:var(--muted);" id="mod-count"></span>
+            <div class="filters">
+              <div class="filter-pill active" data-filter="all">Tous</div>
+              <div class="filter-pill" data-filter="intro">Intro / tuto</div>
+              <div class="filter-pill" data-filter="intranet">Intranets / pro</div>
+              <div class="filter-pill" data-filter="jeu">Jeux / expérimental</div>
+              <div class="filter-pill" data-filter="outil">Outils / moteur</div>
+              <div class="filter-pill" data-filter="satire">Satire / glitch</div>
+            </div>
+          </div>
+
+          <div class="module-list" id="module-list">
+            <!-- modules rendus en JS -->
+          </div>
+
+          <div class="small">
+            💡 Clique sur un module pour l’ouvrir (si le fichier existe dans le même dossier)
+            et t’en servir comme base. Tu peux aussi dupliquer / renommer les fichiers.
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-header">
+              <div>
+                <div style="font-size:0.9rem; font-weight:600;">Plan de site clé-sur-porte</div>
+                <div style="font-size:0.8rem; color:var(--muted);">
+                  Généré à partir des modules choisis : à coller dans un mail, un cahier des charges ou un README.
+                </div>
+              </div>
+              <div>
+                <button class="small-btn" type="button" id="btn-generate">
+                  Générer le plan
+                </button>
+              </div>
+            </div>
+            <div style="font-size:0.78rem; color:var(--muted); margin-bottom:4px;">
+              Sélectionne des modules (cases à cocher dans la liste) puis génère ton plan.
+            </div>
+            <textarea id="plan-area" placeholder="Ton plan clé-sur-porte apparaîtra ici en Markdown."></textarea>
+            <div style="margin-top:4px; display:flex; justify-content:space-between; gap:6px; align-items:center;">
+              <button class="small-btn" type="button" id="btn-copy">
+                Copier dans le presse-papiers
+              </button>
+              <div class="plan-status" id="plan-status">
+                Rien n’est envoyé nulle part : tout reste dans ton navigateur.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div>
+        © Funky Town Prod – Agence fictive pour vrai apprentissage : tout en HTML/CSS/JS statique, prêt pour clé USB.
+      </div>
+      <div>
+        <span>kit = { dossier/, fichiers .html, liens entre eux }</span>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>
+  /*******************************
+   * CONTENU DES SECTIONS GAUCHE
+   *******************************/
+  const leftPanel = document.getElementById("left-panel");
+  const navBtns = document.querySelectorAll(".nav-btn");
+
+  const sectionsLeft = {
+    intro: `
+      <div class="hero">
+        <div class="hero-title">
+          On n’est pas une agence,<br>
+          <span>on est ton mode d’emploi.</span>
+        </div>
+        <p class="hero-sub">
+          Funky Town Prod te montre comment construire <strong>ton propre site hyper fonctionnel</strong>,
+          avec seulement des fichiers HTML/CSS/JS, rangés dans un dossier, que tu peux balader
+          sur une clé USB, un disque dur, ou un dépôt Git.
+        </p>
+      </div>
+      <div class="pills">
+        <div class="pill"><strong>1 dossier</strong> = tout ton univers web</div>
+        <div class="pill"><strong>0 backend</strong> = pas de base de données, pas de serveur compliqué</div>
+        <div class="pill"><strong>100 % contrôle</strong> = tu comprends ce qui se passe</div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="section-title">Ce que tu apprends ici</div>
+        <div class="section-sub">
+          À partir de tous les modules qu’on a vus, on te montre comment câbler un écosystème complet :
+          intro, gros bouton, intranet, jeux, moteur, mini-navigateur…
+        </div>
+
+        <div class="grid-2">
+          <div class="tile">
+            <div class="tile-title">1. Comprendre le “tout tient dans un dossier”</div>
+            <div class="tile-desc">
+              Tu crées un dossier <code>mon-univers/</code>.  
+              Dedans, tu mets : <code>index.html</code>, <code>intro-rg.html</code>, <code>gr.html</code>, etc.
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile-title">2. Utiliser les modules existants</div>
+            <div class="tile-desc">
+              Chaque fichier est une “brique” : un site EP, un intranet, un jeu, un méta-moteur, un mini-navigateur.
+              Tu les branches ensemble.
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile-title">3. Faire ton propre assemblage</div>
+            <div class="tile-desc">
+              Avec le plan généré, tu peux :  
+              – présenter le projet à un·e allié·e  
+              – l’utiliser comme cahier des charges  
+              – ou comme doc de dev perso.
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile-title">4. Déployer partout</div>
+            <div class="tile-desc">
+              Ton dossier peut être :  
+              – sur une clé USB  
+              – sur un serveur statique  
+              – sur GitHub Pages, Vercel, un serveur associatif…
+            </div>
+          </div>
+        </div>
+      </div>
+    `,
+    recipe: `
+      <div class="hero">
+        <div class="hero-title">
+          Recette Funky Town<br>
+          <span>pour un site clé-sur-porte</span>
+        </div>
+        <p class="hero-sub">
+          On te donne la recette, étape par étape, pour reconstruire un univers complet à partir des modules existants.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <div class="tile">
+          <div class="step-num">Étape 1</div>
+          <div class="tile-title">Créer ton dossier de base</div>
+          <div class="tile-desc">
+            Sur ton ordinateur :  
+            <code>FunkySite/</code> ou <code>mon-univers-RG/</code>.  
+            C’est là que tu mettras tous les fichiers HTML.
+          </div>
+        </div>
+        <div class="tile">
+          <div class="step-num">Étape 2</div>
+          <div class="tile-title">Placer les fichiers “cœur”</div>
+          <div class="tile-desc">
+            Copie dans ce dossier :
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li><code>intro-rg.html</code> : intro “j’ai 5 ans”</li>
+              <li><code>index.html</code> : gros bouton / lanceur</li>
+              <li><code>gr.html</code> ou <code>mouvement-ep-fwb.html</code> : site EP</li>
+              <li><code>morpion-de360.html</code> : jeu expérimental</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="step-num">Étape 3</div>
+          <div class="tile-title">Ajouter les outils bonus</div>
+          <div class="tile-desc">
+            Tu peux ensuite ajouter :
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li><code>meta-search.html</code> : méta-moteur interne</li>
+              <li><code>kali-chrome.html</code> : mini-navigateur</li>
+              <li>les intranets et portfolios (P. Seudo, lobby, espion…)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="step-num">Étape 4</div>
+          <div class="tile-title">Relier le tout</div>
+          <div class="tile-desc">
+            Depuis :
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li><code>index.html</code> : gros boutons qui mènent aux pages clés</li>
+              <li><code>meta-search.html</code> : moteur pour tout retrouver</li>
+              <li>chaque page peut contenir des liens vers les autres</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="small">
+        Ensuite, tu peux adapter les textes, changer les couleurs, supprimer des modules, en ajouter d’autres…
+        La structure reste la même : <strong>1 dossier, plusieurs fichiers HTML reliés entre eux</strong>.
+      </p>
+    `,
+    modules: `
+      <div class="hero">
+        <div class="hero-title">
+          Les modules Funky Town<br>
+          <span>comme un set de LEGO</span>
+        </div>
+        <p class="hero-sub">
+          À droite, tu vois la liste de tous les modules.  
+          Ici, on t’explique comment les combiner intelligemment.
+        </p>
+      </div>
+
+      <div class="section-title">Schéma type d’un écosystème Funky</div>
+      <div class="section-sub">
+        Une configuration possible parmi d’autres :
+      </div>
+      <div class="grid-2">
+        <div class="tile">
+          <div class="tile-title">Niveau “Accueil / Orientation”</div>
+          <div class="tile-desc">
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li><code>index.html</code> : gros bouton principal</li>
+              <li><code>intro-rg.html</code> : explication simple</li>
+              <li><code>meta-search.html</code> : méta-moteur interne</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-title">Niveau “Production / sérieux”</div>
+          <div class="tile-desc">
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li><code>gr.html</code> ou <code>mouvement-ep-fwb.html</code> : EP FWB</li>
+              <li>intranet P. Seudo, générateur de devis, portfolios (lobby, espion…)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-title">Niveau “Jeux & expérimental”</div>
+          <div class="tile-desc">
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li><code>morpion-de360.html</code> : morpion + dé 3D</li>
+              <li>portail belgium glitch pour la satire institutionnelle</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-title">Niveau “Exploration”</div>
+          <div class="tile-desc">
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li><code>kali-chrome.html</code> : mini-navigateur dans un cadre “Kali”</li>
+              <li>embeds éventuels dans d’autres pages (PDF, vidéos…)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="small">
+        Tout ça reste 100 % statique :  
+        – aucun login serveur obligatoire,  
+        – aucune base de données,  
+        – juste des fichiers que tu peux versionner comme tu veux.
+      </p>
+    `,
+    kit: `
+      <div class="hero">
+        <div class="hero-title">
+          Kit de projet<br>
+          <span>prêt à envoyer à un·e partenaire</span>
+        </div>
+        <p class="hero-sub">
+          Ici, on joue au “chef de projet” : tu choisis les modules, tu génères un plan,
+          tu le colles dans un mail ou un doc. Funky Town Prod devient ton département de R&D.
+        </p>
+      </div>
+
+      <div class="section-title">Comment utiliser le kit</div>
+      <div class="section-sub">
+        1. À droite, coche les modules que tu veux inclure dans ton projet.  
+        2. Clique sur “Générer le plan”.  
+        3. Copie le résultat, adapte 2–3 phrases, envoie.
+      </div>
+
+      <div class="grid-2">
+        <div class="tile">
+          <div class="tile-title">Usage “demande de budget”</div>
+          <div class="tile-desc">
+            Tu listes :
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li>le site vitrine (EP, portfolio, etc.)</li>
+              <li>l’intranet (console, suivi des projets)</li>
+              <li>les outils pédagogiques (jeux, tutoriels, moteur)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-title">Usage “doc technique light”</div>
+          <div class="tile-desc">
+            Tu fournis un plan :
+            <ul style="margin-left:16px; margin-top:4px;">
+              <li>structure des fichiers</li>
+              <li>modules obligatoires</li>
+              <li>modules bonus selon le temps</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="small">
+        Résultat : tu peux passer de “j’ai un truc dans ma tête” à
+        “voici un plan structuré, exportable, partageable” sans changer d’outil.
+      </p>
+    `
+  };
+
+  function renderLeft(name) {
+    leftPanel.innerHTML = sectionsLeft[name] || sectionsLeft.intro;
+  }
+
+  navBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      navBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderLeft(btn.dataset.section);
+    });
+  });
+
+  // Section par défaut
+  renderLeft("intro");
+
+  /*******************************
+   * LISTE DES MODULES
+   *******************************/
+  const modules = [
+    {
+      id: "intro",
+      title: "Intro RG – Explication 5 ans",
+      file: "intro-rg.html",
+      category: "intro",
+      typeLabel: "Tutoriel",
+      description: "Page d’introduction ultra simple qui explique le concept : un dossier, des fichiers HTML, des gros boutons.",
+      tags: ["tutoriel","débutant","compréhension"],
+    },
+    {
+      id: "gros-bouton",
+      title: "Gros bouton – Lanceur d’univers",
+      file: "index.html",
+      category: "intro",
+      typeLabel: "Accueil",
+      description: "Page avec de gros boutons pour ouvrir l’intro, le site d’éducation permanente, ou d’autres modules.",
+      tags: ["accueil","navigation","simple"],
+    },
+    {
+      id: "gr",
+      title: "GR – Mouvement d’éducation permanente",
+      file: "gr.html",
+      category: "intranet",
+      typeLabel: "Site EP",
+      description: "Vitrine + contenu sérieux pour un mouvement d’éducation permanente citoyenne en FWB.",
+      tags: ["éducation permanente","citoyenneté","FWB"],
+    },
+    {
+      id: "ep-full",
+      title: "Mouvement EP – Intranet + console",
+      file: "mouvement-ep-fwb.html",
+      category: "intranet",
+      typeLabel: "Intranet EP",
+      description: "Portail EP complet avec tableau de bord interne, formulaire de projets et console intégrée.",
+      tags: ["intranet","console","projets"],
+    },
+    {
+      id: "pseudo",
+      title: "Intranet P. Seudo – Organisation derrière l’organisation",
+      file: "intranet-pseudo.html",
+      category: "intranet",
+      typeLabel: "Intranet multi-couches",
+      description: "Couche publique, privée et confidentielle pour coordonner l’organisation de P. Seudo.",
+      tags: ["secret","multi-niveaux","organisation"],
+    },
+    {
+      id: "devis",
+      title: "Services & demande de devis",
+      file: "services-devis.html",
+      category: "intranet",
+      typeLabel: "Vitrine pro",
+      description: "Page pour présenter tes services et permettre aux clients de formuler une demande de devis structurée.",
+      tags: ["clients","banque","offre"],
+    },
+    {
+      id: "devis-pro",
+      title: "Générateur de devis professionnel",
+      file: "devis-pro.html",
+      category: "intranet",
+      typeLabel: "Outil pro",
+      description: "Interface pour composer des devis propres, exportables, utilisables avec des institutions sérieuses.",
+      tags: ["devis","facturation","b2b"],
+    },
+    {
+      id: "lobby",
+      title: "Portfolio Lobbyiste",
+      file: "portfolio-lobbyiste.html",
+      category: "intranet",
+      typeLabel: "Portfolio",
+      description: "Site vitrine pour montrer un profil de plaidoyer / affaires publiques très carré.",
+      tags: ["plaidoyer","affaires publiques","CV"],
+    },
+    {
+      id: "spy",
+      title: "Portfolio Intelligence stratégique",
+      file: "portfolio-espion.html",
+      category: "intranet",
+      typeLabel: "Portfolio",
+      description: "Vitrine pour un profil ‘espion légal’ : due diligence, enquêtes documentaires, risques.",
+      tags: ["intelligence","analyse","risque"],
+    },
+    {
+      id: "bounty",
+      title: "BountyRepo – Missions GitHub",
+      file: "bountyrepo.html",
+      category: "intranet",
+      typeLabel: "Outil mission",
+      description: "Mise à prix de problèmes : dépôt Git, description de mission, mail prérempli, export Markdown.",
+      tags: ["github","missions","bounty"],
+    },
+    {
+      id: "belgium",
+      title: "Portail Belgium glitché",
+      file: "belgium-glitch.html",
+      category: "satire",
+      typeLabel: "Satire",
+      description: "Clone institutionnel complètement dysfonctionnel, pour jouer avec l’absurde administratif.",
+      tags: ["satire","dystopie","glitch"],
+    },
+    {
+      id: "nobrainer",
+      title: "NoBrainer – Hub anarcho-geek",
+      file: "nobrainer-hub.html",
+      category: "jeu",
+      typeLabel: "Hub de jeu",
+      description: "Point d’entrée pour un jeu anarcho-geek plein de références et de modules cachés.",
+      tags: ["jeu","anarcho","hub"],
+    },
+    {
+      id: "morpion",
+      title: "Morpion Dé 360",
+      file: "morpion-de360.html",
+      category: "jeu",
+      typeLabel: "Jeu",
+      description: "Jeu de morpion relié à un dé 3D coloré, avec combos débloquées et export JSON/Markdown.",
+      tags: ["morpion","dé 3D","export"],
+    },
+    {
+      id: "meta",
+      title: "Méta-moteur RG",
+      file: "meta-search.html",
+      category: "outil",
+      typeLabel: "Moteur interne",
+      description: "Page façon grand moteur, pour fouiller dans tous tes modules sans quitter ton univers.",
+      tags: ["moteur","search","navigation"],
+    },
+    {
+      id: "kali",
+      title: "Kali Chrome – Mini-navigateur",
+      file: "kali-chrome.html",
+      category: "outil",
+      typeLabel: "Mini navigateur",
+      description: "Enveloppe HTML façon Kali pour embarquer un site web dans une iframe, avec barre d’adresse et historique léger.",
+      tags: ["navigateur","exploration","iframe"],
+    },
+    {
+      id: "tutoriel-rg",
+      title: "Guide RG – Tutoriel grand public",
+      file: "rg-tutoriel.html",
+      category: "intro",
+      typeLabel: "Tutoriel",
+      description: "Guide textuel qui explique BROL / GR / dossier et comment tout relier.",
+      tags: ["guide","BROL","GR"],
+    }
+  ];
+
+  const moduleListEl = document.getElementById("module-list");
+  const modCountEl = document.getElementById("mod-count");
+  const filterPills = document.querySelectorAll(".filter-pill");
+
+  let currentFilter = "all";
+
+  function matchesFilter(module) {
+    if (currentFilter === "all") return true;
+    if (currentFilter === "intro") return module.category === "intro";
+    if (currentFilter === "intranet") return module.category === "intranet";
+    if (currentFilter === "jeu") return module.category === "jeu";
+    if (currentFilter === "outil") return module.category === "outil";
+    if (currentFilter === "satire") return module.category === "satire";
+    return true;
+  }
+
+  function renderModules() {
+    moduleListEl.innerHTML = "";
+    const filtered = modules.filter(matchesFilter);
+    modCountEl.textContent = `${filtered.length} module(s) affiché(s) / ${modules.length} au total`;
+
+    if (!filtered.length) {
+      const div = document.createElement("div");
+      div.className = "small";
+      div.style.padding = "6px";
+      div.textContent = "Aucun module dans cette catégorie pour l’instant.";
+      moduleListEl.appendChild(div);
+      return;
+    }
+
+    filtered.forEach(m => {
+      const item = document.createElement("div");
+      item.className = "module-item";
+
+      const left = document.createElement("div");
+      left.className = "module-main";
+      left.innerHTML = `
+        <div class="module-title">${m.title}</div>
+        <div class="module-file">./${m.file}</div>
+        <div class="module-desc">${m.description}</div>
+      `;
+
+      const meta = document.createElement("div");
+      meta.className = "module-meta";
+      const typeSpan = document.createElement("span");
+      typeSpan.className = "type-pill";
+      typeSpan.textContent = m.typeLabel;
+      meta.appendChild(typeSpan);
+      (m.tags || []).slice(0,3).forEach(t => {
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = t;
+        meta.appendChild(tag);
+      });
+      left.appendChild(meta);
+
+      const right = document.createElement("div");
+      right.className = "module-right";
+      const openBtn = document.createElement("button");
+      openBtn.className = "open-btn";
+      openBtn.type = "button";
+      openBtn.textContent = "Ouvrir";
+      openBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        window.location.href = m.file;
+      });
+      const check = document.createElement("label");
+      check.style.display = "flex";
+      check.style.alignItems = "center";
+      check.style.gap = "4px";
+      check.style.cursor = "pointer";
+      check.style.color = "#9ca3af";
+      check.style.fontSize = "0.78rem";
+
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.dataset.moduleId = m.id;
+      input.style.cursor = "pointer";
+      check.appendChild(input);
+      const span = document.createElement("span");
+      span.textContent = "Inclure dans le plan";
+      check.appendChild(span);
+
+      right.appendChild(openBtn);
+      right.appendChild(check);
+
+      item.appendChild(left);
+      item.appendChild(right);
+
+      // clic sur toute la ligne => ouvre aussi
+      item.addEventListener("click", () => {
+        window.location.href = m.file;
+      });
+
+      moduleListEl.appendChild(item);
+    });
+  }
+
+  filterPills.forEach(pill => {
+    pill.addEventListener("click", () => {
+      filterPills.forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      currentFilter = pill.dataset.filter;
+      renderModules();
+    });
+  });
+
+  renderModules();
+
+  /*******************************
+   * PLAN CLÉ-SUR-PORTE
+   *******************************/
+  const planArea = document.getElementById("plan-area");
+  const planStatus = document.getElementById("plan-status");
+  const btnGenerate = document.getElementById("btn-generate");
+  const btnCopy = document.getElementById("btn-copy");
+
+  function getSelectedModules() {
+    const checkboxes = moduleListEl.querySelectorAll("input[type='checkbox'][data-module-id]");
+    const selectedIds = [];
+    checkboxes.forEach(ch => {
+      if (ch.checked) selectedIds.push(ch.dataset.moduleId);
+    });
+    return modules.filter(m => selectedIds.includes(m.id));
+  }
+
+  function generatePlan() {
+    const selected = getSelectedModules();
+    if (!selected.length) {
+      planArea.value = "";
+      planStatus.textContent = "Sélectionne au moins un module dans la liste pour générer un plan.";
+      return;
+    }
+
+    const lines = [];
+    lines.push("# Plan de site – Funky Town Prod");
+    lines.push("");
+    lines.push("Ce plan de site est basé sur un assemblage de modules HTML statiques :");
+    lines.push("");
+    selected.forEach((m, idx) => {
+      lines.push(`## ${idx + 1}. ${m.title}`);
+      lines.push("");
+      lines.push(`- Fichier : \`./${m.file}\``);
+      lines.push(`- Type : ${m.typeLabel}`);
+      if (m.description) {
+        lines.push(`- Rôle : ${m.description}`);
+      }
+      if (m.tags && m.tags.length) {
+        lines.push(`- Mots-clés : ${m.tags.join(", ")}`);
+      }
+      lines.push("");
+    });
+
+    lines.push("## Structure technique proposée");
+    lines.push("");
+    lines.push("```text");
+    lines.push("mon-univers/");
+    selected.forEach(m => {
+      lines.push(`├─ ${m.file}`);
+    });
+    lines.push("└─ (autres ressources éventuelles : images, PDF…)");
+    lines.push("```");
+    lines.push("");
+    lines.push("## Principes");
+    lines.push("");
+    lines.push("- 1 dossier = 1 mini-univers web autonome ;");
+    lines.push("- tous les fichiers listés ci-dessus sont des pages HTML statiques ;");
+    lines.push("- la navigation se fait par des liens entre ces fichiers (boutons, menus, moteur interne) ;");
+    lines.push("- le site fonctionne en local (clé USB) ou sur un hébergement statique (Git, Vercel, serveur associatif…).");
+    lines.push("");
+    lines.push("> Plan généré automatiquement par le kit Funky Town Prod. Adapter les textes selon le contexte (EP, plaidoyer, jeu, etc.).");
+
+    planArea.value = lines.join("\n");
+    planStatus.textContent = "Plan généré. Tu peux maintenant le relire, l’adapter et le copier.";
+  }
+
+  function copyPlan() {
+    const text = planArea.value;
+    if (!text.trim()) {
+      planStatus.textContent = "Rien à copier : génère d’abord un plan.";
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        planStatus.textContent = "Plan copié dans le presse-papiers. Colle-le dans un mail, un doc ou un README.";
+      }).catch(() => {
+        planStatus.textContent = "Impossible de copier automatiquement. Sélectionne le texte et copie-le à la main.";
+      });
+    } else {
+      planStatus.textContent = "API clipboard indisponible. Sélectionne le texte et copie-le à la main.";
+    }
+  }
+
+  btnGenerate.addEventListener("click", generatePlan);
+  btnCopy.addEventListener("click", copyPlan);
+</script>
+</body>
+</html>
