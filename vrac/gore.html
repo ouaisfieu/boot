@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>conspii.html – La Conspi (copie gore non officielle)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Thème “gore” */
+      --bg-gore: #05010a;
+      --bg-alt-gore: #12000b;
+      --card-gore: #0b0205;
+      --accent-gore: #f97373;
+      --accent-soft-gore: rgba(248,113,113,0.18);
+      --accent2-gore: #fb923c;
+      --accent3-gore: #ef4444;
+      --text-main-gore: #fef2f2;
+      --text-muted-gore: #fecaca;
+      --border-gore: rgba(248,113,113,0.6);
+
+      /* Thème “cartoon” */
+      --bg-cartoon: #0f172a;
+      --bg-alt-cartoon: #111827;
+      --card-cartoon: #020617;
+      --accent-cartoon: #22c55e;
+      --accent-soft-cartoon: rgba(34,197,94,0.16);
+      --accent2-cartoon: #38bdf8;
+      --accent3-cartoon: #eab308;
+      --text-main-cartoon: #f9fafb;
+      --text-muted-cartoon: #9ca3af;
+      --border-cartoon: rgba(148,163,184,0.7);
+
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.6rem;
+      display: flex;
+      justify-content: center;
+      transition: background 0.25s ease-out, color 0.25s ease-out;
+    }
+
+    body.theme-gore {
+      background:
+        radial-gradient(circle at 10% 0, rgba(248,113,113,0.2), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(234,179,8,0.18), transparent 60%),
+        var(--bg-gore);
+      color: var(--text-main-gore);
+    }
+
+    body.theme-cartoon {
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.2), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.2), transparent 60%),
+        var(--bg-cartoon);
+      color: var(--text-main-cartoon);
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1180px;
+      border-radius: 26px;
+      border: 1px solid;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      padding: 1.2rem 0.9rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.25s ease-out, border-color 0.25s ease-out;
+    }
+
+    body.theme-gore .page {
+      background:
+        radial-gradient(circle at 0 0, rgba(248,113,113,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.95), transparent 60%),
+        var(--bg-alt-gore);
+      border-color: var(--border-gore);
+    }
+
+    body.theme-cartoon .page {
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.16), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.95), transparent 60%),
+        var(--bg-alt-cartoon);
+      border-color: var(--border-cartoon);
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.8rem 1.6rem 2.2rem; }
+    }
+
+    .page::before {
+      content: "conspii.html · Miroir gore & cartoon de ton projet";
+      position: absolute;
+      top: 0.4rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    body.theme-gore .page::before { color: var(--text-muted-gore); }
+    body.theme-cartoon .page::before { color: var(--text-muted-cartoon); }
+
+    header {
+      border-bottom: 1px solid;
+      padding-bottom: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    body.theme-gore header { border-color: var(--border-gore); }
+    body.theme-cartoon header { border-color: var(--border-cartoon); }
+
+    .header-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      box-shadow: 0 0 12px;
+    }
+
+    body.theme-gore .badge {
+      border: 1px solid var(--accent-gore);
+      background: var(--accent-soft-gore);
+      color: var(--accent-gore);
+    }
+    body.theme-gore .badge-dot {
+      background: var(--accent-gore);
+      box-shadow-color: rgba(248,113,113,0.8);
+    }
+
+    body.theme-cartoon .badge {
+      border: 1px solid var(--accent-cartoon);
+      background: var(--accent-soft-cartoon);
+      color: var(--accent-cartoon);
+    }
+    body.theme-cartoon .badge-dot {
+      background: var(--accent-cartoon);
+      box-shadow-color: rgba(34,197,94,0.8);
+    }
+
+    .header-meta {
+      font-size: 0.78rem;
+      max-width: 290px;
+    }
+    body.theme-gore .header-meta { color: var(--text-muted-gore); }
+    body.theme-cartoon .header-meta { color: var(--text-muted-cartoon); }
+
+    h1 {
+      margin-top: 0.4rem;
+      font-size: clamp(1.9rem, 4.6vw, 2.8rem);
+      line-height: 1.05;
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    body.theme-gore h1 span {
+      background: linear-gradient(120deg, #f97373, #fb923c, #eab308);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    body.theme-cartoon h1 span {
+      background: linear-gradient(120deg, #22c55e, #38bdf8, #a855f7);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+      max-width: 840px;
+    }
+    body.theme-gore .subtitle { color: var(--text-muted-gore); }
+    body.theme-cartoon .subtitle { color: var(--text-muted-cartoon); }
+    .subtitle strong { color: inherit; }
+
+    .mode-switch {
+      margin-top: 0.6rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .mode-label {
+      font-size: 0.78rem;
+      opacity: 0.9;
+    }
+
+    .switch-btn {
+      border-radius: 999px;
+      border: 1px solid;
+      padding: 0.26rem 0.8rem;
+      font-size: 0.8rem;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    body.theme-gore .switch-btn {
+      border-color: var(--accent-cartoon);
+      color: var(--accent-cartoon);
+      background: rgba(37,99,235,0.1);
+    }
+
+    body.theme-cartoon .switch-btn {
+      border-color: var(--accent-gore);
+      color: var(--accent-gore);
+      background: rgba(248,113,113,0.12);
+    }
+
+    main {
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 960px) {
+      main {
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.1fr);
+        align-items: flex-start;
+      }
+    }
+
+    section {
+      border-radius: var(--radius);
+      border: 1px solid;
+      padding: 0.9rem 0.95rem 1.2rem;
+      font-size: 0.9rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      section { padding: 1.1rem 1.15rem 1.35rem; }
+    }
+
+    body.theme-gore section {
+      background:
+        radial-gradient(circle at 0 0, rgba(248,113,113,0.18), transparent 65%),
+        var(--card-gore);
+      border-color: var(--border-gore);
+      color: var(--text-muted-gore);
+    }
+
+    body.theme-cartoon section {
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.14), transparent 65%),
+        var(--card-cartoon);
+      border-color: var(--border-cartoon);
+      color: var(--text-muted-cartoon);
+    }
+
+    section h2 {
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+    }
+    body.theme-gore section h2 { color: var(--text-main-gore); }
+    body.theme-cartoon section h2 { color: var(--text-main-cartoon); }
+
+    section p {
+      line-height: 1.55;
+      margin-bottom: 0.25rem;
+    }
+
+    ul { margin-left: 1.1rem; margin-bottom: 0.25rem; }
+    li { margin-bottom: 0.18rem; }
+
+    /* Dossier S,.- */
+
+    .profil-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    @media (min-width: 640px) {
+      .profil-wrapper {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
+
+    .profil-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      border: 2px solid;
+    }
+
+    body.theme-gore .profil-img {
+      border-color: var(--accent3-gore);
+      box-shadow: 0 0 20px rgba(248,113,113,0.7);
+      filter: grayscale(0.3) contrast(1.2);
+    }
+
+    body.theme-cartoon .profil-img {
+      border-color: var(--accent2-cartoon);
+      box-shadow: 0 0 20px rgba(56,189,248,0.6);
+      filter: saturate(1.3) contrast(1.05);
+    }
+
+    .profil-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .profil-glitch {
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    .profil-text {
+      font-size: 0.86rem;
+    }
+
+    /* Miroir des pages originales */
+
+    .mirror-grid {
+      margin-top: 0.5rem;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mirror-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .mirror-col {
+      border-radius: 14px;
+      border: 1px solid;
+      padding: 0.35rem 0.45rem;
+    }
+
+    body.theme-gore .mirror-col { border-color: rgba(248,113,113,0.6); }
+    body.theme-cartoon .mirror-col { border-color: rgba(148,163,184,0.7); }
+
+    .mirror-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.1rem;
+      opacity: 0.9;
+    }
+
+    body.theme-gore .mirror-label { color: var(--accent2-gore); }
+    body.theme-cartoon .mirror-label { color: var(--accent2-cartoon); }
+
+    .mirror-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 0.06rem;
+    }
+
+    /* Scanner de corruption */
+
+    .scanner {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px dashed;
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    body.theme-gore .scanner { border-color: var(--accent3-gore); }
+    body.theme-cartoon .scanner { border-color: var(--accent3-cartoon); }
+
+    .scanner-label {
+      font-size: 0.8rem;
+      margin-bottom: 0.18rem;
+    }
+
+    .scanner-bar {
+      margin-top: 0.15rem;
+      border-radius: 999px;
+      border: 1px solid;
+      padding: 0.13rem;
+    }
+
+    body.theme-gore .scanner-bar { border-color: var(--accent-gore); }
+    body.theme-cartoon .scanner-bar { border-color: var(--accent-cartoon); }
+
+    .scanner-inner {
+      height: 10px;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.25s linear;
+    }
+
+    body.theme-gore .scanner-inner {
+      background: linear-gradient(90deg, #22c55e, #eab308, #f97316, #ef4444);
+    }
+
+    body.theme-cartoon .scanner-inner {
+      background: linear-gradient(90deg, #22c55e, #38bdf8, #a855f7);
+    }
+
+    .scanner-btn {
+      margin-top: 0.35rem;
+      border-radius: 999px;
+      border: 1px solid;
+      padding: 0.26rem 0.8rem;
+      font-size: 0.8rem;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    body.theme-gore .scanner-btn {
+      border-color: var(--accent3-gore);
+      color: var(--accent3-gore);
+      background: rgba(248,113,113,0.08);
+    }
+
+    body.theme-cartoon .scanner-btn {
+      border-color: var(--accent2-cartoon);
+      color: var(--accent2-cartoon);
+      background: rgba(56,189,248,0.12);
+    }
+
+    .scanner-output {
+      margin-top: 0.25rem;
+      font-size: 0.78rem;
+    }
+
+    /* Quiz d’infiltration */
+
+    .quiz {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid;
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    body.theme-gore .quiz { border-color: var(--border-gore); }
+    body.theme-cartoon .quiz { border-color: var(--border-cartoon); }
+
+    .quiz h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .question {
+      border-radius: 12px;
+      border: 1px solid;
+      padding: 0.4rem 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+
+    body.theme-gore .question { border-color: var(--border-gore); }
+    body.theme-cartoon .question { border-color: var(--border-cartoon); }
+
+    .question.good {
+      border-color: #22c55e;
+      box-shadow: 0 0 10px rgba(34,197,94,0.8);
+    }
+
+    .question.bad {
+      border-color: #f97373;
+      box-shadow: 0 0 10px rgba(248,113,113,0.5);
+    }
+
+    .q-title {
+      font-size: 0.86rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .q-meta {
+      font-size: 0.78rem;
+      margin-bottom: 0.18rem;
+      opacity: 0.9;
+    }
+
+    .q-options {
+      display: grid;
+      gap: 0.1rem;
+      font-size: 0.84rem;
+    }
+
+    .q-options label {
+      display: flex;
+      gap: 0.35rem;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+
+    .q-options input {
+      margin-top: 0.12rem;
+    }
+
+    .quiz-actions {
+      margin-top: 0.4rem;
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid;
+      padding: 0.26rem 0.8rem;
+      font-size: 0.8rem;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    body.theme-gore .btn.primary {
+      border-color: var(--accent3-gore);
+      color: var(--accent3-gore);
+      background: rgba(248,113,113,0.1);
+    }
+
+    body.theme-cartoon .btn.primary {
+      border-color: var(--accent2-cartoon);
+      color: var(--accent2-cartoon);
+      background: rgba(56,189,248,0.14);
+    }
+
+    body.theme-gore .btn.secondary {
+      border-color: var(--border-gore);
+      color: var(--text-muted-gore);
+      background: rgba(15,23,42,0.96);
+    }
+
+    body.theme-cartoon .btn.secondary {
+      border-color: var(--border-cartoon);
+      color: var(--text-muted-cartoon);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .quiz-score {
+      font-size: 0.8rem;
+    }
+
+    /* Résistance / liens */
+
+    .resist-list {
+      margin-top: 0.25rem;
+      font-size: 0.84rem;
+    }
+
+    .link-row {
+      margin-top: 0.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .link-chip {
+      border-radius: 999px;
+      border: 1px solid;
+      padding: 0.2rem 0.7rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    body.theme-gore .link-chip {
+      border-color: var(--accent3-gore);
+      color: var(--accent3-gore);
+      background: rgba(248,113,113,0.08);
+    }
+
+    body.theme-cartoon .link-chip {
+      border-color: var(--accent-cartoon);
+      color: var(--accent-cartoon);
+      background: rgba(34,197,94,0.12);
+    }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    body.theme-gore footer { color: var(--text-muted-gore); }
+    body.theme-cartoon footer { color: var(--text-muted-cartoon); }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid;
+      padding: 0.16rem 0.5rem;
+      font-size: 0.7rem;
+    }
+
+    body.theme-gore footer code {
+      border-color: var(--border-gore);
+      background: #020008;
+    }
+
+    body.theme-cartoon footer code {
+      border-color: var(--border-cartoon);
+      background: #020617;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.45rem;
+      right: 0.6rem;
+      font-size: 0.65rem;
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.85;
+    }
+    body.theme-gore .badge-corner { color: var(--text-muted-gore); }
+    body.theme-cartoon .badge-corner { color: var(--text-muted-cartoon); }
+  </style>
+</head>
+<body class="theme-gore">
+  <div class="page">
+    <header>
+      <div class="header-row">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>La Conspi – Copie gore & cartoon de tout ce que tu fais</span>
+          </div>
+          <h1>La Conspi <span>observatoire secret des observatoires</span></h1>
+        </div>
+        <div class="header-meta">
+          Organisation fantôme qui copie tous tes outils, les repeint en mode gore, puis bascule en
+          cartoon pour faire passer ça pour une blague.  
+          À sa tête : un certain <strong>“S,.-”</strong>, dont on ne sait presque rien.
+        </div>
+      </div>
+      <p class="subtitle">
+        Ce site est leur vitrine interne : une sorte de <strong>miroir déformant</strong> de ton projet de veille citoyenne.  
+        Tout est fictif, mais tout renvoie à des choses très réelles : pouvoir, histoires, 
+        récupération, détournement… et la question qui traîne partout : <strong>“qui sert qui ?”</strong>
+      </p>
+
+      <div class="mode-switch">
+        <span class="mode-label">
+          Mode actuel : <span id="modeLabel">GORE (parodie noire)</span>
+        </span>
+        <button type="button" class="switch-btn" id="switchTheme">
+          Basculer en mode CARTOON
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Colonne gauche : dossier S,.- + miroir -->
+      <section>
+        <h2>1. Dossier S,.- (classification : ultra flou)</h2>
+        <div class="profil-wrapper">
+          <div class="profil-img">
+            <!-- Remplace src par le chemin réel de l’image de S,.- dans ton projet -->
+            <img src="images/s-mystere.jpg" alt="Portrait brouillé de S,.-">
+            <div class="profil-glitch"></div>
+          </div>
+          <div class="profil-text">
+            <p>
+              On ne sait que trois choses sur <strong>S,.-</strong> :
+            </p>
+            <ul>
+              <li>Il ou elle laisse toujours traîner cette image floue dans les systèmes qu’il copie.</li>
+              <li>Chaque fois qu’un nouveau kit citoyen apparaît, une version “Conspi” gore finit par émerger.</li>
+              <li>Personne ne sait s’il sabote le système… ou s’il l’aide malgré lui.</li>
+            </ul>
+            <p style="margin-top:0.2rem;">
+              D’après certaines rumeurs, S,.- se contente de pousser les logiques existantes
+              à l’extrême : là où tu vois “éducation populaire”, S,.- pousse vers
+              “fiction parano poussée trop loin… mais pas toujours à tort”.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:0.7rem;">
+          <p>
+            La Conspi ne crée presque rien : elle <strong>recopie</strong> ce que tu fais, le détourne, 
+            le surligne en rouge, ajoute des symboles et des blagues douteuses, puis agit comme
+            un miroir critique.  
+            Voici comment ça se reflète :
+          </p>
+          <div class="mirror-grid">
+            <div class="mirror-row">
+              <div class="mirror-col">
+                <div class="mirror-label">Version “officielle”</div>
+                <div class="mirror-title">SAS d’accueil / index.html</div>
+                <p>Portail de recrutement citoyen, disclaimers, transparence, pédagogie.</p>
+              </div>
+              <div class="mirror-col">
+                <div class="mirror-label">Version La Conspi</div>
+                <div class="mirror-title">SAS-Λ – Salle d’attente parano</div>
+                <p>Même structure, mais tout est présenté comme si chaque clic te fichait dans 12 bases de données.</p>
+              </div>
+            </div>
+
+            <div class="mirror-row">
+              <div class="mirror-col">
+                <div class="mirror-label">Version “officielle”</div>
+                <div class="mirror-title">Cyberlab-0</div>
+                <p>Faux ransomware, vrais réflexes de défense, humour contrôlé.</p>
+              </div>
+              <div class="mirror-col">
+                <div class="mirror-label">Version La Conspi</div>
+                <div class="mirror-title">Cyberlab-Ω</div>
+                <p>Alertes rouges partout, barres de progression apocalyptiques 
+                et messages qui insinuent que le pire s’est déjà produit.</p>
+              </div>
+            </div>
+
+            <div class="mirror-row">
+              <div class="mirror-col">
+                <div class="mirror-label">Version “officielle”</div>
+                <div class="mirror-title">Cagnotte & instance DIY</div>
+                <p>Modèle simple : 12,50 €/an ou bien instance autonome et soutien non-financier.</p>
+              </div>
+              <div class="mirror-col">
+                <div class="mirror-label">Version La Conspi</div>
+                <div class="mirror-title">Conspifund & clones sauvages</div>
+                <p>Tout le monde copie, personne ne sait qui finance quoi, 
+                et pourtant les kits continuent de circuler comme des rumeurs utiles.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scanner">
+          <div class="scanner-label">
+            Scanner de corruption Conspi (local, pure mise en scène) :
+          </div>
+          <p style="font-size:0.8rem; margin-bottom:0.15rem;">
+            Clique pour estimer à quel point ta propre instance a été contaminée par l’esprit de La Conspi.
+          </p>
+          <div class="scanner-bar">
+            <div class="scanner-inner" id="scannerInner"></div>
+          </div>
+          <button type="button" class="scanner-btn" id="scannerBtn">
+            Lancer le scan symbolique
+          </button>
+          <div class="scanner-output" id="scannerOutput">
+            En attente… (spoiler : la corruption commence le jour où tu prends un peu trop plaisir à tout gamifier).
+          </div>
+        </div>
+      </section>
+
+      <!-- Colonne droite : quiz + résistance -->
+      <section>
+        <h2>2. Es-tu déjà infiltré·e par La Conspi ?</h2>
+        <p>
+          Petit quiz d’auto-diagnostic : il ne mesure pas ton “niveau de complot”, 
+          mais ta propension à tout détourner, à rire de l’absurde, 
+          et à transpirer de la méfiance tout en voulant malgré tout <strong>améliorer le réel</strong>.
+        </p>
+
+        <div class="quiz" id="quiz">
+          <h3>Quiz d’infiltration (version courte)</h3>
+
+          <!-- Q1 -->
+          <div class="question" data-correct="c">
+            <div class="q-title">Q1. Tu tombes sur ce fichier conspii.html par hasard.</div>
+            <div class="q-meta">Difficulté : ★☆☆ – Réaction à chaud</div>
+            <div class="q-options">
+              <label>
+                <input type="radio" name="q1" value="a">
+                <span>Tu fermes directement l’onglet : trop bizarre, trop méfiant.</span>
+              </label>
+              <label>
+                <input type="radio" name="q1" value="b">
+                <span>Tu scrolles jusqu’en bas pour voir s’il y a un formulaire de don caché.</span>
+              </label>
+              <label>
+                <input type="radio" name="q1" value="c">
+                <span>Tu te demandes immédiatement comment cloner le truc pour tes propres expériences.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="question" data-correct="b">
+            <div class="q-title">Q2. On te parle de “cinquième pouvoir citoyen”.</div>
+            <div class="q-meta">Difficulté : ★★☆ – Vision du pouvoir</div>
+            <div class="q-options">
+              <label>
+                <input type="radio" name="q2" value="a">
+                <span>Tu t’imagines surtout un nouveau parti politique.</span>
+              </label>
+              <label>
+                <input type="radio" name="q2" value="b">
+                <span>Tu penses à des réseaux de citoyens qui échangent infos, méthodes et outils, 
+                en dehors des circuits habituels.</span>
+              </label>
+              <label>
+                <input type="radio" name="q2" value="c">
+                <span>Tu te dis que c’est forcément une couverture pour autre chose.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="question" data-correct="a">
+            <div class="q-title">Q3. On t’invite à participer à un test de recrutement gamifié.</div>
+            <div class="q-meta">Difficulté : ★★☆ – Rapport au jeu</div>
+            <div class="q-options">
+              <label>
+                <input type="radio" name="q3" value="a">
+                <span>Tu acceptes, mais tu veux d’abord savoir qui écrit les questions et ce qui sera fait des résultats.</span>
+              </label>
+              <label>
+                <input type="radio" name="q3" value="b">
+                <span>Tu refuses, par principe, toute forme d’évaluation.</span>
+              </label>
+              <label>
+                <input type="radio" name="q3" value="c">
+                <span>Tu fonces sans rien lire, juste pour “gagner”.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="question" data-correct="b">
+            <div class="q-title">Q4. Que faire de La Conspi ?</div>
+            <div class="q-meta">Difficulté : ★★★ – Positionnement</div>
+            <div class="q-options">
+              <label>
+                <input type="radio" name="q4" value="a">
+                <span>La détruire, elle est trop dangereuse symboliquement.</span>
+              </label>
+              <label>
+                <input type="radio" name="q4" value="b">
+                <span>La considérer comme une fiction utile : un personnage collectif pour parler des risques 
+                de récupération et de dérive, tout en gardant l’humour.</span>
+              </label>
+              <label>
+                <input type="radio" name="q4" value="c">
+                <span>La transformer en vraie organisation secrète, avec serments et hiérarchies.</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="quiz-actions">
+            <button type="button" class="btn primary" id="checkQuiz">Corriger</button>
+            <button type="button" class="btn secondary" id="resetQuiz">Réinitialiser</button>
+            <div class="quiz-score" id="quizScore">
+              Score : <strong>0 / 4</strong> – 3/4 ou plus = infiltration assumée (dans le bon sens).
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:0.8rem;">3. Comment retourner La Conspi contre elle-même</h2>
+        <p>
+          Le vrai twist, c’est que <strong>tu peux utiliser La Conspi comme épouvantail pédagogique</strong> :
+          un personnage fictif qui exagère les risques, les manipulations, les détournements… pour mieux les expliquer.
+        </p>
+
+        <div class="resist-list">
+          <ul>
+            <li>Tu gardes ce fichier conspii.html comme <strong>miroir critique</strong> de ton propre projet.</li>
+            <li>Tu t’en sers pour discuter : “et si ce qu’on fait était récupéré ? comment on s’en rendrait compte ?”.</li>
+            <li>Tu rappelles qu’ici, tout reste local, modifiable, forkable : pas de gourou, pas de S,.- “réel”.</li>
+          </ul>
+        </div>
+
+        <div class="link-row">
+          <!-- Adapte les href selon l’arborescence de ta clé -->
+          <a href="index.html" class="link-chip">
+            <span>⬅ Retour à ton portail</span>
+          </a>
+          <a href="SAS.html" class="link-chip">
+            <span>👁️ Revenir au SAS d’accueil</span>
+          </a>
+          <a href="cyberlab-0.html" class="link-chip">
+            <span>🧨 Cyberlab “version sérieuse”</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        La Conspi n’existe que si tu la laisses t’obséder.  
+        Utilisée avec humour, elle devient un vaccin narratif contre la parano vide.
+      </span>
+      <code>conspii.html · mobile first · pur HTML/CSS/JS · thème gore ⟷ cartoon</code>
+    </footer>
+
+    <div class="badge-corner">
+      S,.- WATCHING · MAYBE
+    </div>
+  </div>
+
+  <script>
+    // Switch thème gore / cartoon
+    (function() {
+      const body = document.body;
+      const btn = document.getElementById('switchTheme');
+      const label = document.getElementById('modeLabel');
+
+      function updateLabel() {
+        if (body.classList.contains('theme-gore')) {
+          label.textContent = 'GORE (parodie noire)';
+          btn.textContent = 'Basculer en mode CARTOON';
+        } else {
+          label.textContent = 'CARTOON (détournement bonbon)';
+          btn.textContent = 'Basculer en mode GORE';
+        }
+      }
+
+      btn.addEventListener('click', () => {
+        if (body.classList.contains('theme-gore')) {
+          body.classList.remove('theme-gore');
+          body.classList.add('theme-cartoon');
+        } else {
+          body.classList.remove('theme-cartoon');
+          body.classList.add('theme-gore');
+        }
+        updateLabel();
+      });
+
+      updateLabel();
+    })();
+
+    // Scanner de corruption symbolique
+    (function() {
+      const btn = document.getElementById('scannerBtn');
+      const inner = document.getElementById('scannerInner');
+      const out = document.getElementById('scannerOutput');
+
+      const messages = [
+        "Corruption légère : tu aimes juste trop les sites à base de tests et de clins d’œil.",
+        "Corruption modérée : tu commences à tout voir comme un ARG politique.",
+        "Corruption avancée : tu réfléchis à la gouvernance avant même de finir ton café.",
+        "Corruption totale (dans le bon sens) : tu veux que les autres puissent cloner tout ça sans t’attendre."
+      ];
+
+      btn.addEventListener('click', () => {
+        const level = Math.floor(Math.random() * 4); // 0 à 3
+        const percent = (level + 1) * 25 + 25; // 50, 75, 100, 125 (on triche un peu)
+        inner.style.width = Math.min(percent, 100) + "%";
+        out.textContent = messages[level];
+      });
+    })();
+
+    // Quiz d’infiltration
+    (function() {
+      const checkBtn = document.getElementById('checkQuiz');
+      const resetBtn = document.getElementById('resetQuiz');
+      const scoreEl = document.getElementById('quizScore');
+      const questions = document.querySelectorAll('.quiz .question');
+
+      function check() {
+        let total = 0;
+        let good = 0;
+
+        questions.forEach(q => {
+          q.classList.remove('good', 'bad');
+          const correct = q.getAttribute('data-correct');
+          if (!correct) return;
+          total++;
+          const radios = q.querySelectorAll('input[type="radio"]');
+          if (!radios.length) return;
+          const name = radios[0].name;
+          const checked = document.querySelector(`input[name="${name}"]:checked`);
+          if (checked && checked.value === correct) {
+            good++;
+            q.classList.add('good');
+          } else {
+            q.classList.add('bad');
+          }
+        });
+
+        scoreEl.innerHTML = `Score : <strong>${good} / ${total}</strong> – 3/4 ou plus = infiltration assumée (dans le bon sens).`;
+      }
+
+      function reset() {
+        questions.forEach(q => q.classList.remove('good', 'bad'));
+        document.querySelectorAll('.quiz input[type="radio"]').forEach(r => r.checked = false);
+        scoreEl.innerHTML = 'Score : <strong>0 / 4</strong> – 3/4 ou plus = infiltration assumée (dans le bon sens).';
+      }
+
+      checkBtn.addEventListener('click', check);
+      resetBtn.addEventListener('click', reset);
+    })();
+  </script>
+</body>
+</html>
