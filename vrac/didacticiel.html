@@ -1,0 +1,1252 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manual de Survie en Démocratie Avancée · Interface de jeu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #02081b;
+      --card: #020817;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.18);
+      --accent-2: #f97316;
+      --border: rgba(148,163,184,0.45);
+      --shadow: 0 22px 48px rgba(15,23,42,0.98);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text);
+    }
+
+    body {
+      position: relative;
+      padding: 10px 10px 22px;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    header.app-header {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.22), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(248,250,252,0.06), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 45%, #020817 100%);
+      box-shadow: var(--shadow);
+      padding: 10px 12px 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1 1 220px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 20%, #bbf7d0, #22c55e 45%, #14532d 95%);
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 26px rgba(34,197,94,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: #022c22;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .brand-sub strong {
+      color: var(--accent);
+    }
+
+    .header-middle {
+      flex: 1 1 190px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .mini-meters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .mini-meter {
+      flex: 1 1 90px;
+      min-width: 70px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.65);
+      background: rgba(15,23,42,0.98);
+      padding: 2px 6px 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mini-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .mini-bar-wrap {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      overflow: hidden;
+    }
+
+    .mini-bar {
+      height: 100%;
+      width: 40%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+      transition: width 0.2s ease-out;
+    }
+
+    .header-right {
+      flex: 0 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .btn-header {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(2,6,23,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .btn-header.accent {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+      box-shadow: 0 0 14px rgba(34,197,94,0.7);
+    }
+
+    .header-right a {
+      text-decoration: none;
+    }
+
+    .mode-chip {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-soft);
+    }
+
+    .mode-chip span {
+      color: #bbf7d0;
+    }
+
+    /* LAYOUT */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0,1.1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .card {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), #020617);
+      box-shadow: var(--shadow);
+      padding: 10px 10px 8px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+
+    .pill {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      white-space: nowrap;
+    }
+
+    /* PANNEAU DE JEU (GAUCHE) */
+
+    .scene-meta {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .scene-meta span {
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .scene-main {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      padding: 8px 9px 8px;
+      margin-bottom: 6px;
+    }
+
+    .scene-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .scene-context {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .scene-text {
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .choice-btn {
+      text-align: left;
+      width: 100%;
+      padding: 7px 9px;
+      font-size: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.05s ease;
+    }
+
+    .choice-btn:hover {
+      background: rgba(15,23,42,0.98);
+      border-color: var(--accent-2);
+    }
+
+    .choice-btn:active {
+      transform: scale(0.98);
+    }
+
+    .choice-btn .choice-label {
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .choice-btn .choice-note {
+      font-size: 11px;
+      opacity: 0.85;
+    }
+
+    .result-block {
+      margin-top: 6px;
+      padding: 6px 7px;
+      border-radius: 10px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+      font-size: 12px;
+      display: none;
+    }
+
+    .result-block.visible {
+      display: block;
+    }
+
+    .result-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
+      margin-bottom: 3px;
+    }
+
+    .btn-next {
+      margin-top: 6px;
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+      color: #bbf7d0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .history {
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(2,6,23,0.96);
+      padding: 6px 7px 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .history-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 4px;
+    }
+
+    .history-item {
+      margin-bottom: 3px;
+    }
+
+    .history-item span.label {
+      color: var(--accent-soft);
+    }
+
+    /* PANNEAU IRL (DROITE) */
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+
+    .tab-btn {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+      box-shadow: 0 0 10px rgba(34,197,94,0.6);
+    }
+
+    .tab-content {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(2,6,23,0.96);
+      padding: 8px 9px 8px;
+      font-size: 12px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .tab-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .tab-content p {
+      margin: 0 0 6px;
+    }
+
+    .tab-content ul {
+      margin: 0 0 6px 16px;
+      padding: 0;
+    }
+
+    .tab-content li {
+      margin-bottom: 3px;
+    }
+
+    .irl-footer {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .irl-footer-note {
+      opacity: 0.9;
+    }
+
+    .irl-toggle {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .irl-toggle input {
+      width: 26px;
+      height: 14px;
+    }
+
+    /* OVERLAY DIDACTICIEL */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.86);
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .overlay.visible {
+      display: flex;
+    }
+
+    .overlay-card {
+      max-width: 780px;
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: radial-gradient(circle at top left, rgba(15,23,42,1), #020617);
+      box-shadow: var(--shadow);
+      padding: 12px 12px 10px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .overlay-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .overlay-step {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    .overlay-body p {
+      margin: 0 0 6px;
+    }
+
+    .overlay-body ul {
+      margin: 0 0 6px 16px;
+      padding: 0;
+    }
+
+    .overlay-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .btn-overlay {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .btn-overlay.primary {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+    }
+
+    footer {
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--text-soft);
+      opacity: 0.85;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <div class="shell">
+    <header class="app-header">
+      <div class="brand-block">
+        <div class="brand-icon">MS</div>
+        <div class="brand-text">
+          <div class="brand-title">Manual de Survie en Démocratie Avancée</div>
+          <div class="brand-sub">
+            Interface principale du <strong>jeu de rôle autoguidé</strong> ·
+            apprendre à se situer dans la vie réelle sans tout prendre sur soi.
+          </div>
+        </div>
+      </div>
+
+      <div class="header-middle">
+        <div>Session en cours : <span id="sessionLabel">Matin gris, cerveau en reprise de service</span></div>
+        <div class="mini-meters">
+          <div class="mini-meter">
+            <span class="mini-label">Exposition</span>
+            <div class="mini-bar-wrap"><div class="mini-bar" id="meterExpo"></div></div>
+          </div>
+          <div class="mini-meter">
+            <span class="mini-label">Protection</span>
+            <div class="mini-bar-wrap"><div class="mini-bar" id="meterProtect"></div></div>
+          </div>
+          <div class="mini-meter">
+            <span class="mini-label">Expérimentation</span>
+            <div class="mini-bar-wrap"><div class="mini-bar" id="meterExp"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="btn-header" id="btnTutorial">Didacticiel</button>
+        <a href="fiche-perso.html" target="_blank" rel="noopener">
+          <button class="btn-header">Fiche perso</button>
+        </a>
+        <a href="index.html">
+          <button class="btn-header">Retour au réveil</button>
+        </a>
+        <div class="mode-chip">
+          Mode accompagnement : <span id="modeIRLLabel">ON</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- PANNEAU JEU -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="dot"></span>
+            <span>Scène en cours · Jeu de rôle</span>
+          </div>
+          <span class="pill" id="sceneProgress">Étape 1 / ?</span>
+        </div>
+
+        <div class="scene-meta" id="sceneMeta">
+          <!-- rempli par JS -->
+        </div>
+
+        <div class="scene-main">
+          <div class="scene-title" id="sceneTitle">Titre de la scène</div>
+          <div class="scene-context" id="sceneContext">Contexte rapide…</div>
+          <div class="scene-text" id="sceneText">Texte de la scène…</div>
+
+          <div class="choices" id="choicesContainer"></div>
+
+          <div class="result-block" id="resultBlock">
+            <div class="result-title">Conséquences approximatives</div>
+            <div id="resultText"></div>
+            <button class="btn-next" id="btnNextScene">
+              Continuer la journée →
+            </button>
+          </div>
+        </div>
+
+        <div class="history" id="historyBox">
+          <div class="history-title">Historique récent</div>
+          <div id="historyList"></div>
+        </div>
+      </section>
+
+      <!-- PANNEAU VIE RÉELLE -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="dot"></span>
+            <span>Prise en main · Vie réelle</span>
+          </div>
+          <span class="pill">Lecture pédagogique de la scène</span>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="sens" id="tabSens">Comprendre la scène</button>
+          <button class="tab-btn" data-tab="questions" id="tabQuestions">Questions à te poser</button>
+          <button class="tab-btn" data-tab="actions" id="tabActions">Expériences dans la vraie vie</button>
+        </div>
+
+        <div class="tab-content" id="tabContent">
+          <!-- rempli par JS -->
+        </div>
+
+        <div class="irl-footer">
+          <div class="irl-footer-note">
+            L’idée : <strong>voir ta vie comme un terrain de jeu</strong>, sans minimiser la réalité.
+            Ici, on s’entraîne à formuler des choix et à lire les mécaniques autour.
+          </div>
+          <label class="irl-toggle">
+            <input type="checkbox" id="toggleIRL" checked />
+            <span>Afficher les explications de vie réelle</span>
+          </label>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Rien de tout cela ne remplace une aide pro. C’est un outil de
+      <strong>mise en perspective</strong> et d’auto-observation, pas un jugement sur ta façon de survivre.
+    </footer>
+  </div>
+
+  <!-- OVERLAY DIDACTICIEL -->
+  <div class="overlay" id="tutorialOverlay">
+    <div class="overlay-card">
+      <div class="overlay-title">Didacticiel · Prise en main de l’interface</div>
+      <div class="overlay-step" id="tutorialStepLabel">Étape 1 / 4</div>
+      <div class="overlay-body" id="tutorialBody">
+        <!-- texte rempli par JS -->
+      </div>
+      <div class="overlay-controls">
+        <button class="btn-overlay" id="btnTutorialPrev">← Précédent</button>
+        <div>
+          <button class="btn-overlay" id="btnTutorialSkip">Passer</button>
+          <button class="btn-overlay primary" id="btnTutorialNext">Suivant →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ===========================
+     *  LOGIQUE DU JEU & SCÈNES
+     * ===========================
+     *
+     * Chaque scène est un objet avec :
+     * - id, titre, contexte, texte
+     * - meta (tags)
+     * - choices : { label, note, result, effects, next }
+     * - irl : { sens, questions[], actions[] }
+     */
+
+    const scenes = [
+      {
+        id: "reunion_participative",
+        title: "Réunion participative déjà décidée",
+        context: "Tu es invité·e à une « concertation » sur un projet déjà ficelé. La salle est sympathique, les décisions le sont moins.",
+        text: "Autour de la table : quelques collègues, des représentant·es institutionnels, et deux personnes qui semblent surtout vérifier que tout rentre dans le cadre déjà prévu. On te demande ton avis, mais tu as la nette impression que le scénario est bouclé.",
+        meta: [
+          "Lieu : travail / engagement",
+          "Thème : participation décorative",
+          "Enjeu : visibilité vs intégrité"
+        ],
+        choices: [
+          {
+            id: "jouer_le_jeu",
+            label: "Jouer le jeu, faire bonne figure",
+            note: "Tu dis des choses polies, tu fais semblant d’y croire, tu te gardes tes réserves pour plus tard.",
+            result: "Tu sors de la réunion avec l’impression d’avoir limité les dégâts, sans grandes illusions. On te classe dans les personnes « coopératives ». Ta parole n’a presque rien changé, mais tu n’es sur aucune liste noire.",
+            effects: { expo: 10, protect: 5, exp: 2 },
+            next: "reseaux_sociaux"
+          },
+          {
+            id: "dire_frontalement",
+            label: "Dire frontalement que tout est déjà décidé",
+            note: "Tu nommes ce que tout le monde sent, mais que personne n’ose formuler.",
+            result: "Un silence un peu lourd s’installe. Quelques personnes hochent la tête en silence. Les organisateurs notent poliment tes remarques. Officiellement, tu es « cash ». Officieusement, tu deviens quelqu’un qu’on ne convoque pas à toutes les réunions.",
+            effects: { expo: 18, protect: -5, exp: 6 },
+            next: "reseaux_sociaux"
+          },
+          {
+            id: "observer_notifier",
+            label: "Observer, prendre des notes, débriefer ailleurs",
+            note: "Tu joues profil bas, mais tu documentes soigneusement ce qui se passe.",
+            result: "Pendant la réunion, tu ne fais pas de vagues. Après, tu partages un compte rendu lucide avec quelques personnes de confiance. Tu deviens un petit point de repère pour celles et ceux qui ont besoin de comprendre ce qui se trame.",
+            effects: { expo: 5, protect: 12, exp: 8 },
+            next: "reseaux_sociaux"
+          }
+        ],
+        irl: {
+          sens: [
+            "Cette scène représente toutes les situations où on te demande ton avis, mais où tout est déjà décidé.",
+            "Objectif pédagogique : remarquer la différence entre participer pour de vrai et servir de décor, sans te culpabiliser d’être dans l’une ou l’autre configuration."
+          ],
+          questions: [
+            "Comment tu reconnais, dans ta vie, une « fausse participation » ? Quels sont les signaux ?",
+            "Dans ce genre de contexte, qu’est-ce qui est le plus important pour toi : protéger ta place, dire ce que tu vois, documenter pour plus tard ?",
+            "Est-ce que tu te sens obligé·e d’être héroïque à chaque fois ? Qu’est-ce que ça te coûte ?"
+          ],
+          actions: [
+            "Repérer, dans la semaine, une situation où tu sens que tout est déjà décidé. Juste la nommer pour toi-même, sans forcément agir.",
+            "Écrire (2–3 lignes) sur ce que tu as vraiment pensé pendant cette situation, sans t’auto-censurer.",
+            "Si tu le souhaites, partager ton ressenti avec une personne de confiance plutôt que directement avec l’institution en cause."
+          ]
+        }
+      },
+      {
+        id: "reseaux_sociaux",
+        title: "Matin gris, réseaux sociaux en feu",
+        context: "Tu as à peine fini ton café que ton fil d’actus te balance un mélange d’indignation, de catastrophes et de blagues douteuses.",
+        text: "Une polémique du jour monopolise l’attention. Tout le monde a une opinion tranchée, souvent sur la base d’un résumé approximatif. Tu sens une tension : si tu ne dis rien, tu te sens complice ; si tu parles, tu as peur de l’orage qui suit.",
+        meta: [
+          "Lieu : écran dans la cuisine",
+          "Thème : indignation connectée",
+          "Enjeu : énergie mentale"
+        ],
+        choices: [
+          {
+            id: "prendre_position",
+            label: "Prendre position publiquement",
+            note: "Tu postes un message argumenté, nuancé, que presque personne ne lira jusqu’au bout.",
+            result: "Tu reçois quelques réactions positives, quelques remarques irritées, beaucoup de silence. Tu passes une partie de la journée à vérifier les notifications. Tu as dit quelque chose qui te semble juste, mais tu as aussi épuisé une dose d’énergie non renouvelable.",
+            effects: { expo: 15, protect: -8, exp: 7 },
+            next: "discussion_privee"
+          },
+          {
+            id: "en_parler_prive",
+            label: "En parler en privé avec une ou deux personnes",
+            note: "Tu refuses le grand théâtre public, mais tu refuses aussi de faire comme si de rien n’était.",
+            result: "La discussion est plus lente, plus nuancée. Tu te sens moins seul·e face à ce que tu lis, et tu n’alimentes pas le grand spectacle algorithmique. Tu n’es pas visible, mais tu es relié·e.",
+            effects: { expo: 4, protect: 10, exp: 6 },
+            next: "discussion_privee"
+          },
+          {
+            id: "observer_capter",
+            label: "Lire, observer, puis fermer l’appli",
+            note: "Tu acceptes de ne pas intervenir tout de suite, voire pas du tout.",
+            result: "La polémique continue sans toi. Tu notes intérieurement ce que cette séquence dit du climat général. Tu restes un peu frustré·e, mais tu gardes une part de ton énergie pour autre chose.",
+            effects: { expo: 2, protect: 14, exp: 4 },
+            next: "discussion_privee"
+          }
+        ],
+        irl: {
+          sens: [
+            "Cette scène représente ce moment où ton cerveau est capturé par le fil d’actualité avant même que ta journée commence.",
+            "Objectif pédagogique : distinguer l’envie d’être présent dans le débat de l’obligation de réagir à tout, tout le temps."
+          ],
+          questions: [
+            "Qu’est-ce qui te pousse le plus à répondre : la colère, la peur d’être complice, l’envie d’exister aux yeux des autres ?",
+            "Quelle est ta limite d’énergie quotidienne réaliste pour ce genre d’interactions ?",
+            "Est-ce que tu arrives à te donner le droit de ne pas répondre tout de suite ?"
+          ],
+          actions: [
+            "Choisir un créneau horaire où tu acceptes de regarder les réseaux, et un autre où tu les fermes consciemment.",
+            "Repérer un sujet où tu préfères une vraie discussion en petit comité plutôt qu’un débat public.",
+            "Tester une matinée sans réseaux sociaux, puis noter comment tu te sens (mieux, pire, juste différent·e ?)."
+          ]
+        }
+      },
+      {
+        id: "discussion_privee",
+        title: "Discussion au boulot / à la cafet’",
+        context: "Plus tard, quelqu’un au boulot ou dans ton entourage évoque le sujet qui t’a remué ce matin.",
+        text: "La personne en face de toi a une vision très différente, parfois franchement irritante. Tu sens que tu pourrais soit laisser couler, soit monter dans les tours, soit tenter un truc au milieu.",
+        meta: [
+          "Lieu : travail / entourage",
+          "Thème : désaccord tranquille (ou pas)",
+          "Enjeu : lien vs franchise"
+        ],
+        choices: [
+          {
+            id: "laisser_couler",
+            label: "Laisser couler, changer de sujet",
+            note: "Tu choisis de garder ton énergie pour autre chose.",
+            result: "La conversation reste superficielle. Tu évites un conflit qui aurait pu te vider, mais tu restes un peu agacé·e. La relation reste intacte en surface, même si tu te sens incompris·e.",
+            effects: { expo: 1, protect: 12, exp: 2 },
+            next: null
+          },
+          {
+            id: "aller_au_conflit",
+            label: "Aller au conflit frontal",
+            note: "Tu poses clairement ton désaccord, sans chercher les gants en velours.",
+            result: "La discussion devient tendue. Tu te sens fidèle à toi-même, mais tu ressens aussi la fatigue après coup. Il est possible que la relation change, que ce soit en bien (clarification) ou en moins bien (prise de distance).",
+            effects: { expo: 14, protect: -6, exp: 8 },
+            next: null
+          },
+          {
+            id: "poser_des_questions",
+            label: "Poser des questions, chercher le dessous des positions",
+            note: "Tu acceptes le désaccord, mais tu essaies de comprendre ce qu’il raconte de l’autre.",
+            result: "La conversation ne devient pas forcément d’accord, mais elle devient plus intéressante. Tu vois mieux les peurs, les loyautés, les expériences derrière les positions affichées. Tu ne convaincs pas, mais tu apprends des choses utiles pour la suite.",
+            effects: { expo: 8, protect: 6, exp: 12 },
+            next: null
+          }
+        ],
+        irl: {
+          sens: [
+            "Cette scène symbolise tous les moments où un désaccord surgit dans le concret : pause café, repas de famille, couloir.",
+            "Objectif pédagogique : explorer plusieurs façons de rester en lien sans te dissoudre ni exploser à chaque fois."
+          ],
+          questions: [
+            "Quand tu entends une opinion qui t’agresse, qu’est-ce qui est touché chez toi exactement ?",
+            "Dans ton histoire, est-ce qu’on t’a appris plutôt à éviter les conflits, à les gagner, ou à faire comme s’il n’y en avait pas ?",
+            "Qu’est-ce que tu regrettes le plus souvent : avoir trop parlé, ou ne pas avoir parlé du tout ?"
+          ],
+          actions: [
+            "Repérer, dans la semaine, une petite conversation où tu peux simplement poser une question de plus plutôt que répondre tout de suite.",
+            "Noter après coup ce que tu as ressenti dans ton corps pendant ce désaccord (tension, chaleur, vide…).",
+            "Repérer une relation où il serait utile de clarifier un malentendu, en douceur, quand tu auras un peu d’énergie."
+          ]
+        }
+      }
+    ];
+
+    // État du jeu
+    const gameState = {
+      currentSceneIndex: 0,
+      meters: {
+        expo: 30,
+        protect: 50,
+        exp: 20
+      },
+      history: []
+    };
+
+    const STORAGE_KEY = "MSDA_GAME_STATE_V1";
+
+    // Références DOM
+    const sceneProgress = document.getElementById("sceneProgress");
+    const sceneMeta = document.getElementById("sceneMeta");
+    const sceneTitle = document.getElementById("sceneTitle");
+    const sceneContext = document.getElementById("sceneContext");
+    const sceneText = document.getElementById("sceneText");
+    const choicesContainer = document.getElementById("choicesContainer");
+    const resultBlock = document.getElementById("resultBlock");
+    const resultText = document.getElementById("resultText");
+    const btnNextScene = document.getElementById("btnNextScene");
+    const historyList = document.getElementById("historyList");
+    const historyBox = document.getElementById("historyBox");
+
+    const meterExpo = document.getElementById("meterExpo");
+    const meterProtect = document.getElementById("meterProtect");
+    const meterExp = document.getElementById("meterExp");
+
+    const tabContent = document.getElementById("tabContent");
+    const tabs = document.querySelectorAll(".tab-btn");
+    const toggleIRL = document.getElementById("toggleIRL");
+    const modeIRLLabel = document.getElementById("modeIRLLabel");
+
+    const tutorialOverlay = document.getElementById("tutorialOverlay");
+    const tutorialStepLabel = document.getElementById("tutorialStepLabel");
+    const tutorialBody = document.getElementById("tutorialBody");
+    const btnTutorial = document.getElementById("btnTutorial");
+    const btnTutorialPrev = document.getElementById("btnTutorialPrev");
+    const btnTutorialNext = document.getElementById("btnTutorialNext");
+    const btnTutorialSkip = document.getElementById("btnTutorialSkip");
+
+    /* ==========
+     *  TUTORIEL
+     * ========== */
+
+    const tutorialSteps = [
+      {
+        title: "1. Le panneau de gauche : la scène jouée",
+        body: [
+          "C’est ici que le jeu se déroule. Tu lis une <strong>scène réaliste</strong>, inspirée de situations que tu peux réellement vivre au travail, en famille, en engagement citoyen.",
+          "Tu choisis ensuite l’une des options proposées. Il n’y a pas de « bonne » réponse. Il y a ce que tu fais, ce que ça t’apporte, ce que ça te coûte."
+        ]
+      },
+      {
+        title: "2. Le panneau de droite : la lecture de vie réelle",
+        body: [
+          "Chaque scène a une <strong>traduction pédagogique</strong>: ce que ça représente, quelles questions te poser, quelles pistes d’action concrètes explorer dans ta vraie vie.",
+          "Tu peux naviguer entre les onglets « Comprendre », « Questions » et « Actions », ou couper l’accompagnement si tu veux juste jouer."
+        ]
+      },
+      {
+        title: "3. Les mini-mètres en haut",
+        body: [
+          "Les trois jauges en-tête donnent une idée de ton <strong>style de survie sociale</strong> dans cette session :",
+          "· <em>Exposition</em> : à quel point tu te mets en avant, tu prends la parole.<br>· <em>Protection</em> : à quel point tu protèges ton énergie, tes limites.<br>· <em>Expérimentation</em> : à quel point tu testes de nouvelles façons de faire.",
+          "Ce ne sont pas des scores de valeur : ce sont des indications pour voir où tu tends, ici et maintenant."
+        ]
+      },
+      {
+        title: "4. Ce que tu peux en faire dans la vraie vie",
+        body: [
+          "Tu peux utiliser ce jeu comme :",
+          "<ul><li>un <strong>échauffement mental</strong> avant une journée compliquée,</li><li>un moyen de <strong>mettre des mots</strong> sur des situations floues,</li><li>une base pour noter dans ta fiche perso ce que tu découvres sur toi.</li></ul>",
+          "Tu peux arrêter à tout moment, revenir plus tard, rejouer une scène avec un autre choix. Le but n’est pas de réussir le jeu, mais d’apprendre <strong>comment tu traverses le monde</strong>."
+        ]
+      }
+    ];
+
+    let tutorialIndex = 0;
+
+    function updateTutorialUI() {
+      const step = tutorialSteps[tutorialIndex];
+      tutorialStepLabel.textContent = `Étape ${tutorialIndex + 1} / ${tutorialSteps.length}`;
+      tutorialBody.innerHTML =
+        `<p><strong>${step.title}</strong></p>` +
+        step.body.map(p => `<p>${p}</p>`).join("");
+      btnTutorialPrev.disabled = tutorialIndex === 0;
+      btnTutorialNext.textContent = tutorialIndex === tutorialSteps.length - 1
+        ? "Terminer"
+        : "Suivant →";
+    }
+
+    function openTutorial() {
+      tutorialOverlay.classList.add("visible");
+      tutorialIndex = 0;
+      updateTutorialUI();
+    }
+
+    function closeTutorial() {
+      tutorialOverlay.classList.remove("visible");
+    }
+
+    btnTutorial.addEventListener("click", openTutorial);
+    btnTutorialSkip.addEventListener("click", closeTutorial);
+
+    btnTutorialPrev.addEventListener("click", () => {
+      if (tutorialIndex > 0) {
+        tutorialIndex--;
+        updateTutorialUI();
+      }
+    });
+
+    btnTutorialNext.addEventListener("click", () => {
+      if (tutorialIndex < tutorialSteps.length - 1) {
+        tutorialIndex++;
+        updateTutorialUI();
+      } else {
+        closeTutorial();
+      }
+    });
+
+    // Fermer l’overlay avec Échap
+    window.addEventListener("keydown", (ev) => {
+      if (ev.key === "Escape" && tutorialOverlay.classList.contains("visible")) {
+        closeTutorial();
+      }
+    });
+
+    /* ==========
+     *  SAUVEGARDE
+     * ========== */
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return;
+        if (typeof parsed.currentSceneIndex === "number") {
+          gameState.currentSceneIndex = Math.min(
+            Math.max(parsed.currentSceneIndex, 0),
+            scenes.length - 1
+          );
+        }
+        if (parsed.meters) {
+          gameState.meters = Object.assign(gameState.meters, parsed.meters);
+        }
+        if (Array.isArray(parsed.history)) {
+          gameState.history = parsed.history;
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    /* ==========
+     *  MISE À JOUR UI
+     * ========== */
+
+    function updateMetersUI() {
+      const expo = Math.max(0, Math.min(100, gameState.meters.expo));
+      const protect = Math.max(0, Math.min(100, gameState.meters.protect));
+      const exp = Math.max(0, Math.min(100, gameState.meters.exp));
+
+      meterExpo.style.width = expo + "%";
+      meterProtect.style.width = protect + "%";
+      meterExp.style.width = exp + "%";
+    }
+
+    function renderScene() {
+      const scene = scenes[gameState.currentSceneIndex];
+      sceneTitle.textContent = scene.title;
+      sceneContext.textContent = scene.context;
+      sceneText.textContent = scene.text;
+
+      // progression
+      sceneProgress.textContent = `Étape ${gameState.currentSceneIndex + 1} / ${scenes.length}`;
+
+      // meta
+      sceneMeta.innerHTML = "";
+      scene.meta.forEach(m => {
+        const span = document.createElement("span");
+        span.textContent = m;
+        sceneMeta.appendChild(span);
+      });
+
+      // choix
+      choicesContainer.innerHTML = "";
+      scene.choices.forEach((choice, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "choice-btn";
+        btn.innerHTML = `
+          <span class="choice-label">${choice.label}</span>
+          <span class="choice-note">${choice.note}</span>
+        `;
+        btn.addEventListener("click", () => handleChoice(scene, choice));
+        choicesContainer.appendChild(btn);
+      });
+
+      // masquer résultat tant qu’on n’a rien choisi
+      resultBlock.classList.remove("visible");
+      resultText.textContent = "";
+
+      // mise à jour panneau IRL pour cette scène
+      updateIRLTab("sens");
+    }
+
+    function handleChoice(scene, choice) {
+      // description
+      resultText.textContent = choice.result;
+      resultBlock.classList.add("visible");
+
+      // update meters
+      gameState.meters.expo += choice.effects.expo || 0;
+      gameState.meters.protect += choice.effects.protect || 0;
+      gameState.meters.exp += choice.effects.exp || 0;
+
+      // clamp
+      ["expo","protect","exp"].forEach(k => {
+        gameState.meters[k] = Math.max(0, Math.min(100, gameState.meters[k]));
+      });
+
+      updateMetersUI();
+
+      // ajouter à l’historique
+      gameState.history.unshift({
+        sceneId: scene.id,
+        sceneTitle: scene.title,
+        choiceId: choice.id,
+        choiceLabel: choice.label
+      });
+      // limiter historique
+      if (gameState.history.length > 20) gameState.history.length = 20;
+      renderHistory();
+
+      // préparer prochaine scène
+      const nextId = choice.next;
+      if (!nextId) {
+        btnNextScene.textContent = "Fin de cette mini-session · Rejouer une scène";
+      } else {
+        btnNextScene.textContent = "Continuer la journée →";
+      }
+      btnNextScene.onclick = () => goToNextScene(nextId);
+      saveState();
+    }
+
+    function goToNextScene(nextId) {
+      if (!nextId) {
+        // si pas de next, on revient au début (ou à la scène suivante si existante)
+        gameState.currentSceneIndex = Math.min(gameState.currentSceneIndex + 1, scenes.length - 1);
+      } else {
+        const idx = scenes.findIndex(s => s.id === nextId);
+        if (idx !== -1) gameState.currentSceneIndex = idx;
+      }
+      renderScene();
+      saveState();
+    }
+
+    function renderHistory() {
+      if (!gameState.history.length) {
+        historyList.innerHTML = "<div class='history-item'>Pas encore d’historique : choisis une option ci-dessus.</div>";
+        return;
+      }
+      historyList.innerHTML = "";
+      gameState.history.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "history-item";
+        div.innerHTML = `<span class="label">• ${item.sceneTitle}</span> — choix : « ${item.choiceLabel} »`;
+        historyList.appendChild(div);
+      });
+    }
+
+    /* ==========
+     *  PANNEAU IRL
+     * ========== */
+
+    function updateIRLTab(tabKey) {
+      const scene = scenes[gameState.currentSceneIndex];
+      const irl = scene.irl;
+      if (!irl) {
+        tabContent.innerHTML = "<p>Aucune explication IRL prévue pour cette scène (encore).</p>";
+        return;
+      }
+
+      if (!toggleIRL.checked) {
+        tabContent.innerHTML = "<p>Mode accompagnement désactivé. Tu peux te concentrer uniquement sur le jeu.</p>";
+        return;
+      }
+
+      if (tabKey === "sens") {
+        tabContent.innerHTML =
+          `<div class="tab-section-title">Ce que cette scène raconte</div>` +
+          irl.sens.map(p => `<p>${p}</p>`).join("");
+      } else if (tabKey === "questions") {
+        tabContent.innerHTML =
+          `<div class="tab-section-title">Questions à te poser</div>` +
+          `<ul>${irl.questions.map(q => `<li>${q}</li>`).join("")}</ul>`;
+      } else if (tabKey === "actions") {
+        tabContent.innerHTML =
+          `<div class="tab-section-title">Expériences possibles dans ta vraie vie</div>` +
+          `<ul>${irl.actions.map(a => `<li>${a}</li>`).join("")}</ul>`;
+      }
+    }
+
+    tabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabs.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        updateIRLTab(btn.dataset.tab);
+      });
+    });
+
+    toggleIRL.addEventListener("change", () => {
+      modeIRLLabel.textContent = toggleIRL.checked ? "ON" : "OFF";
+      const activeTab = document.querySelector(".tab-btn.active");
+      const key = activeTab ? activeTab.dataset.tab : "sens";
+      updateIRLTab(key);
+    });
+
+    /* ==========
+     *  INIT
+     * ========== */
+
+    function init() {
+      loadState();
+      updateMetersUI();
+      renderScene();
+      renderHistory();
+
+      // auto-ouvrir le tuto la toute première fois (simple heuristique)
+      if (!localStorage.getItem("MSDA_TUTORIAL_DONE")) {
+        openTutorial();
+        localStorage.setItem("MSDA_TUTORIAL_DONE", "1");
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
