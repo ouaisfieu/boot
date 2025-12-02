@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>chess-vortex.html – Échecs citoyens & modales markdown</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Police lisible -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --accent-1: #38bdf8;
+      --accent-2: #22c55e;
+      --accent-3: #fbbf24;
+      --accent-4: #f97316;
+      --accent-danger: #ef4444;
+      --text-main: #f9fafb;
+      --text-muted: #cbd5f5;
+      --border: rgba(148,163,184,0.9);
+      --radius: 18px;
+      --square-light: #0f172a;
+      --square-dark: #020617;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.3), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.25), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.6rem 1.8rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1024px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.2), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.96), transparent 60%),
+        var(--card);
+      border-radius: 26px;
+      border: 2px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.95);
+      padding: 1.3rem 0.9rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.7rem 1.5rem 2.3rem; }
+    }
+
+    .page::before {
+      content: "chess-vortex.html · Jeu d’échecs citoyens & modales markdown";
+      position: absolute;
+      top: 0.4rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+    }
+
+    header {
+      border-bottom: 2px dashed rgba(148,163,184,0.7);
+      padding-bottom: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 999px;
+      padding: 0.22rem 0.7rem;
+      border: 2px solid var(--accent-1);
+      background: #020617;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-1);
+      box-shadow: 0 0 16px rgba(56,189,248,0.8);
+    }
+
+    .tag-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent-1);
+      box-shadow: 0 0 10px rgba(56,189,248,1);
+    }
+
+    h1 {
+      margin-top: 0.5rem;
+      font-size: clamp(2rem, 4.6vw, 2.6rem);
+      line-height: 1.05;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #38bdf8, #22c55e, #fbbf24, #f97316);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.4rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 780px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .chips {
+      margin-top: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 0.22rem 0.7rem;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #020617;
+      color: var(--text-muted);
+    }
+
+    .layout {
+      margin-top: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 960px) {
+      .layout {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
+        align-items: flex-start;
+      }
+    }
+
+    /* Bloc échiquier */
+    .board-panel {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.98);
+      padding: 0.8rem 0.8rem 1rem;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .board-panel h2 {
+      font-size: 1.02rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .board-panel h2 span.icon { font-size: 1.2rem; }
+
+    .board-panel p { margin-bottom: 0.25rem; line-height: 1.5; }
+
+    .board-wrapper {
+      margin-top: 0.5rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .board {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      border: 2px solid rgba(148,163,184,0.9);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+    }
+
+    .square {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1.2rem, 4vw, 1.7rem);
+      cursor: pointer;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    }
+
+    .square:nth-child(odd) { background: var(--square-light); }
+    .square:nth-child(even) { background: var(--square-dark); }
+
+    .square.row-even:nth-child(odd) { background: var(--square-dark); }
+    .square.row-even:nth-child(even) { background: var(--square-light); }
+
+    .square:hover {
+      box-shadow: inset 0 0 0 2px rgba(56,189,248,0.9);
+      transform: translateY(-1px);
+    }
+
+    .square-label {
+      position: absolute;
+      bottom: 3px;
+      right: 4px;
+      font-size: 0.55rem;
+      color: rgba(148,163,184,0.9);
+      font-family: monospace;
+    }
+
+    .square-empty {
+      font-size: 1.2rem;
+      color: rgba(148,163,184,0.6);
+    }
+
+    .square-side-citoyen {
+      box-shadow: inset 0 0 0 1px rgba(34,197,94,0.6);
+    }
+
+    .square-side-systeme {
+      box-shadow: inset 0 0 0 1px rgba(239,68,68,0.6);
+    }
+
+    .square-side-neutre {
+      box-shadow: inset 0 0 0 1px rgba(148,163,184,0.4);
+    }
+
+    .board-legend {
+      margin-top: 0.35rem;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .board-buttons {
+      margin-top: 0.55rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.36rem 0.8rem;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.9);
+      background: linear-gradient(135deg, #22c55e, #38bdf8);
+      color: #020617;
+    }
+
+    .btn-outline {
+      background: #020617;
+      color: var(--text-muted);
+      border: 1px solid rgba(148,163,184,0.9);
+      box-shadow: none;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      color: #020617;
+    }
+
+    .btn span.icon { font-size: 1.1rem; }
+
+    /* Panneau d'édition / export */
+    .editor-panel {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.98);
+      padding: 0.8rem 0.8rem 1rem;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .editor-panel h2 {
+      font-size: 1.02rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .editor-panel h2 span.icon { font-size: 1.2rem; }
+
+    .hint {
+      margin-top: 0.2rem;
+      border-radius: 999px;
+      border: 1px dashed rgba(148,163,184,0.9);
+      padding: 0.28rem 0.7rem;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .hint span { font-size: 1.1rem; }
+
+    .current-square {
+      margin-top: 0.5rem;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #020617;
+      padding: 0.55rem 0.7rem;
+      font-size: 0.83rem;
+    }
+
+    .current-square-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.9);
+      padding: 0.12rem 0.55rem;
+      font-size: 0.76rem;
+      color: rgba(226,232,240,0.98);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .badge span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #38bdf8;
+      box-shadow: 0 0 8px rgba(56,189,248,1);
+    }
+
+    .field-group {
+      margin-top: 0.4rem;
+      display: grid;
+      gap: 0.25rem;
+    }
+
+    .field-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      color: var(--text-main);
+      padding: 0.32rem 0.5rem;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+
+    select {
+      padding-right: 1.8rem;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .preview-block {
+      margin-top: 0.4rem;
+      border-radius: 14px;
+      border: 1px dashed rgba(148,163,184,0.8);
+      background: #020617;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
+      max-height: 160px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    .img-preview {
+      margin-top: 0.25rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #020617;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 70px;
+      max-height: 150px;
+      overflow: hidden;
+    }
+
+    .img-preview img {
+      max-width: 100%;
+      max-height: 140px;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .img-placeholder {
+      font-size: 0.78rem;
+      color: rgba(148,163,184,0.9);
+      text-align: center;
+    }
+
+    .editor-actions {
+      margin-top: 0.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .export-panel {
+      margin-top: 0.7rem;
+      border-radius: 16px;
+      border: 1px solid rgba(34,197,94,0.9);
+      background: rgba(22,163,74,0.12);
+      padding: 0.55rem 0.7rem;
+      font-size: 0.83rem;
+      color: #dcfce7;
+    }
+
+    .export-panel h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+      color: #bbf7d0;
+    }
+
+    .export-panel textarea {
+      background: #022c22;
+      border-color: rgba(34,197,94,0.9);
+      min-height: 110px;
+      font-size: 0.8rem;
+    }
+
+    .small {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .toast {
+      margin-top: 0.25rem;
+      font-size: 0.76rem;
+      color: #bbf7d0;
+      display: none;
+    }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+      font-family: monospace;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.7rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.8);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-family: monospace;
+    }
+
+    a { color: var(--accent-1); text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="tag">
+      <span class="tag-dot"></span>
+      <span>Échecs citoyens · plateau cliquable & modales markdown</span>
+    </div>
+    <h1>
+      Le plateau <span>Échecs & Stratégies citoyennes</span>
+    </h1>
+    <p class="subtitle">
+      Cet échiquier n’est pas là pour te faire jouer comme Magnus Carlsen, mais pour
+      <strong>cartographier les forces en présence</strong> dans ton projet :
+      pièces citoyennes, pièces “système”, zones grises, alliances, sabotages…  
+      Chaque case ouvre une <strong>modale éditable</strong> : tu peux y écrire en markdown,
+      associer une petite illustration (URL d’image) et <strong>exporter tout ça</strong> vers ton
+      carnet ou ton instance (Obsidian, site statique, etc.).  
+      Tu peux aussi générer un <strong>mini-site HTML autonome</strong> à partir de ta configuration.
+    </p>
+    <div class="chips">
+      <div class="chip">♟ 8x8 · cliquable & modifiable</div>
+      <div class="chip">🗂 Modales illustrées</div>
+      <div class="chip">📝 Export complet en markdown</div>
+      <div class="chip">🌐 Export mini-site HTML</div>
+      <div class="chip">📱 Mobile first & localStorage</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Colonne gauche : plateau -->
+    <section class="board-panel">
+      <h2><span class="icon">♟️</span> 1. Plateau – cliquer pour ouvrir la modale</h2>
+      <p>
+        Tape sur une case pour ouvrir sa fiche. Quand tu modifies une pièce puis que tu
+        cliques sur <strong>“Enregistrer la case”</strong>, le plateau se met à jour avec tes valeurs
+        (emoji, camp, etc.). L’état est conservé dans le <strong>localStorage</strong> du navigateur.
+      </p>
+
+      <div class="board-wrapper">
+        <div id="board" class="board" aria-label="Plateau d’échecs citoyen"></div>
+        <div class="board-legend">
+          Coordonnées : colonnes <strong>A–H</strong>, rangées <strong>1–8</strong>.  
+          Exemple : A1 = coin en bas à gauche, H8 = coin en haut à droite.  
+          Bordure verte = camp citoyen, rouge = camp “système”, gris = neutre.
+        </div>
+      </div>
+
+      <div class="board-buttons">
+        <button class="btn btn-outline" type="button" id="btnFocusCitoyen">
+          <span class="icon">🟢</span><span>Afficher pièces citoyennes</span>
+        </button>
+        <button class="btn btn-outline" type="button" id="btnFocusSysteme">
+          <span class="icon">🔴</span><span>Afficher pièces “système”</span>
+        </button>
+        <button class="btn btn-outline btn-danger" type="button" id="btnReset">
+          <span class="icon">♻️</span><span>Réinitialiser le plateau</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Colonne droite : modale/éditeur & export -->
+    <section class="editor-panel">
+      <h2><span class="icon">🧩</span> 2. Fiche de case & export markdown</h2>
+      <p>
+        Quand tu cliques sur une case, les champs ci-dessous se remplissent. Tu peux :
+        <strong>modifier le rôle</strong>, <strong>changer le camp</strong>,
+        <strong>ajouter un emoji</strong>, une <strong>image</strong>, et surtout écrire
+        un <strong>texte en markdown</strong>.
+      </p>
+      <div class="hint">
+        <span>💡</span>
+        <span>
+          Pense chaque case comme un “pion narratif” : un acteur, un enjeu, une vulnérabilité,
+          un levier, etc. L’export markdown rassemble tout dans un seul fichier.
+        </span>
+      </div>
+
+      <div class="current-square" id="currentSquareBlock">
+        <div class="current-square-header">
+          <div>
+            <strong id="currentCoord">Case –</strong>
+            <span id="currentSummary" style="font-size:0.8rem; color:var(--text-muted);"></span>
+          </div>
+          <div class="badge">
+            <span class="dot"></span>
+            <span id="currentSideLabel">Camp : –</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-row">
+            <div style="flex:1 1 140px;">
+              <label for="fieldRole">Rôle / nom de la pièce</label>
+              <input type="text" id="fieldRole" placeholder="Ex. Tour citoyenne, Ministère, Media, etc.">
+            </div>
+            <div style="flex:0 0 110px;">
+              <label for="fieldSide">Camp</label>
+              <select id="fieldSide">
+                <option value="citoyen">Citoyen / Alliés</option>
+                <option value="systeme">Système / Adversaire</option>
+                <option value="neutre">Neutre / Zone grise</option>
+              </select>
+            </div>
+            <div style="flex:0 0 80px;">
+              <label for="fieldEmoji">Emoji</label>
+              <input type="text" id="fieldEmoji" maxlength="4" placeholder="♟️">
+            </div>
+          </div>
+
+          <div>
+            <label for="fieldImageUrl">URL d’image (facultatif, pour illustrer la case)</label>
+            <input type="text" id="fieldImageUrl" placeholder="https://… (image en lien avec la pièce)">
+            <div class="img-preview" id="imagePreview">
+              <div class="img-placeholder">
+                Aucune image chargée. Colle une URL ci-dessus pour prévisualiser.
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label for="fieldMarkdown">Texte de la case (markdown) – description, enjeux, pistes d’action…</label>
+            <textarea id="fieldMarkdown" placeholder="# Titre
+- Acteurs impliqués
+- Risques / opportunités
+- Ce qu’on peut faire…"></textarea>
+          </div>
+
+          <div>
+            <label>Prévisualisation brute (pour vérification rapide)</label>
+            <div class="preview-block" id="previewBlock"></div>
+          </div>
+        </div>
+
+        <div class="editor-actions">
+          <button class="btn" type="button" id="btnSave">
+            <span class="icon">💾</span><span>Enregistrer la case (localStorage)</span>
+          </button>
+          <button class="btn btn-outline" type="button" id="btnCopySquare">
+            <span class="icon">📋</span><span>Copier le markdown de cette case</span>
+          </button>
+          <button class="btn btn-outline" type="button" id="btnAddToExport">
+            <span class="icon">➕</span><span>Ajouter à l’export global</span>
+          </button>
+        </div>
+        <div class="toast" id="squareToast"></div>
+      </div>
+
+      <div class="export-panel">
+        <h3>Export global en markdown & mini-site HTML</h3>
+        <p>
+          Ce bloc rassemble les cases que tu as marquées pour export. Tu peux l’ouvrir
+          dans n’importe quel éditeur markdown (Obsidian, VSCode, site statique…) ou le
+          coller dans tes autres fichiers du projet.  
+          Tu peux aussi générer un <strong>mini-site HTML</strong> autonome basé sur ton plateau.
+        </p>
+        <textarea id="exportMarkdown" placeholder="(Encore vide – utilise “Ajouter à l’export global”.)"></textarea>
+        <div class="editor-actions">
+          <button class="btn" type="button" id="btnCopyExport">
+            <span class="icon">📋</span><span>Copier l’export global</span>
+          </button>
+          <button class="btn btn-outline" type="button" id="btnClearExport">
+            <span class="icon">🧹</span><span>Vider l’export global</span>
+          </button>
+          <button class="btn btn-outline" type="button" id="btnGenerateSite">
+            <span class="icon">🌐</span><span>Télécharger un mini-site HTML</span>
+          </button>
+        </div>
+        <div class="small">
+          Le mini-site contiendra un <strong>snapshot du plateau</strong> (avec tes emojis et camps)
+          + le contenu markdown exporté, dans un seul fichier <code>plateau-export.html</code>
+          prêt à être partagé.
+        </div>
+        <div class="toast" id="exportToast"></div>
+        <a id="downloadLink" style="display:none;"></a>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <span>
+      Ce plateau est pensé comme un <strong>outil d’analyse stratégique ludique</strong>.
+      Tu peux le copier, le renommer, l’adapter à d’autres contextes (asso, ville, école…).
+    </span>
+    <code>chess-vortex.html · échecs citoyens · modales markdown · mini-site export</code>
+  </footer>
+
+  <div class="badge-corner">
+    PLATEAU · ÉCHECS CITOYENS
+  </div>
+</div>
+
+<script>
+  // --- Données de base ---
+
+  const coordsCols = ["A","B","C","D","E","F","G","H"];
+  const coordsRows = [8,7,6,5,4,3,2,1]; // 8 en haut, 1 en bas
+
+  // Quelques valeurs par défaut raccord avec le projet
+  const defaultState = {
+    "A1": { side: "citoyen", role: "Tour citoyenne", emoji: "🏰", imageUrl: "", markdown:
+`# A1 – Tour citoyenne (territoire local)
+
+- Acteurs : collectifs, maisons de quartier, bibliothèques, écoles.
+- Atout : ancrage local, confiance de proximité.
+- Risque : isolement si les infos ne circulent pas.
+- Idée : relier ce point à la veille citoyenne et aux dossiers du projet.` },
+    "E1": { side: "citoyen", role: "Roi·Reine citoyenne", emoji: "👑", imageUrl: "", markdown:
+`# E1 – Centre citoyen
+
+- Ce n’est pas un chef autoritaire, mais un centre de gravité.
+- Tient ensemble les dossiers, les tests, les outils, les alliances.
+- Doit rester mobile : si un point tombe, le reste doit survivre.` },
+    "D1": { side: "citoyen", role: "Dame de la veille", emoji: "🕵️‍♀️", imageUrl: "", markdown:
+`# D1 – Dame de la veille citoyenne
+
+- Pièce la plus mobile : veille, OSINT, liens entre réseaux.
+- Sert à repérer les signaux faibles, les opportunités, les risques.
+- Lien direct avec les pages sur la guerre de l’info, la propagande, etc.` },
+    "A8": { side: "systeme", role: "Tour institutionnelle", emoji: "🏛️", imageUrl: "", markdown:
+`# A8 – Tour institutionnelle
+
+- Acteurs : grandes institutions, administrations, ministères.
+- Atout : moyens, légitimité, capacité de stabilisation.
+- Risque : opacité, lenteur, inertie.
+- Comment la hacker de façon constructive ?` },
+    "D8": { side: "systeme", role: "Dame narrative", emoji: "📺", imageUrl: "", markdown:
+`# D8 – Dame narrative (grands médias / plateformes)
+
+- Contrôle une large partie de la narration dominante.
+- Peut être alliée ou adversaire selon les moments.
+- Nécessité de développer des contre-narrations robustes.` },
+    "E8": { side: "systeme", role: "Roi financier", emoji: "💰", imageUrl: "", markdown:
+`# E8 – Roi financier
+
+- Centre de gravité du capital, des logiques de marché et de rendement.
+- Liens avec les pages “sharky”, “cashback”, “linux”, “pomme”.
+- Question centrale : comment faire exister des logiques non marchandes à côté ?` }
+  };
+
+  // --- État en mémoire / localStorage ---
+
+  const STORAGE_KEY = "chessVortexBoard_v1";
+  const STORAGE_EXPORT_KEY = "chessVortexExport_v1";
+
+  let boardState = {};
+  let currentCoord = "A1";
+
+  function loadBoardState() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        boardState = JSON.parse(raw);
+      } catch (e) {
+        console.warn("Erreur JSON, on repart des valeurs par défaut.");
+        boardState = {...defaultState};
+      }
+    } else {
+      boardState = {...defaultState};
+    }
+  }
+
+  function saveBoardState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(boardState));
+    } catch (e) {
+      console.warn("Impossible de sauvegarder dans localStorage.", e);
+    }
+  }
+
+  function loadExportState() {
+    const raw = localStorage.getItem(STORAGE_EXPORT_KEY);
+    if (raw) {
+      document.getElementById("exportMarkdown").value = raw;
+    }
+  }
+
+  function saveExportState() {
+    try {
+      localStorage.setItem(STORAGE_EXPORT_KEY, document.getElementById("exportMarkdown").value);
+    } catch (e) {
+      console.warn("Impossible de sauvegarder l’export global.", e);
+    }
+  }
+
+  // --- Construction du plateau ---
+
+  function buildBoard() {
+    const board = document.getElementById("board");
+    board.innerHTML = "";
+    for (let r = 0; r < coordsRows.length; r++) {
+      const rowNumber = coordsRows[r];
+      const rowEven = (r % 2 === 1);
+      for (let c = 0; c < coordsCols.length; c++) {
+        const colLetter = coordsCols[c];
+        const coord = colLetter + rowNumber;
+        const sq = document.createElement("button");
+        sq.className = "square" + (rowEven ? " row-even" : "");
+        const data = getSquareContent(coord);
+        if (data.side === "citoyen") sq.classList.add("square-side-citoyen");
+        else if (data.side === "systeme") sq.classList.add("square-side-systeme");
+        else sq.classList.add("square-side-neutre");
+        sq.setAttribute("type", "button");
+        sq.setAttribute("data-coord", coord);
+        sq.setAttribute("aria-label", "Case " + coord);
+
+        const contentEmoji = data.emoji && data.emoji.trim() ? data.emoji : "";
+        if (contentEmoji) {
+          sq.textContent = contentEmoji;
+        } else {
+          const span = document.createElement("span");
+          span.className = "square-empty";
+          span.textContent = "+";
+          sq.appendChild(span);
+        }
+
+        const label = document.createElement("div");
+        label.className = "square-label";
+        label.textContent = coord;
+        sq.appendChild(label);
+        sq.addEventListener("click", () => {
+          openSquare(coord);
+        });
+        board.appendChild(sq);
+      }
+    }
+  }
+
+  function getSquareContent(coord) {
+    return boardState[coord] || { side: "neutre", role: "", emoji: "", imageUrl: "", markdown: "" };
+  }
+
+  // --- UI fiche de case ---
+
+  function openSquare(coord) {
+    currentCoord = coord;
+    const data = getSquareContent(coord);
+
+    document.getElementById("currentCoord").textContent = "Case " + coord;
+    const sideLabel = sideToLabel(data.side);
+    document.getElementById("currentSideLabel").textContent = "Camp : " + sideLabel;
+    document.getElementById("currentSummary").textContent = data.role ? " – " + data.role : "";
+
+    document.getElementById("fieldRole").value = data.role || "";
+    document.getElementById("fieldSide").value = data.side || "neutre";
+    document.getElementById("fieldEmoji").value = data.emoji || "";
+    document.getElementById("fieldImageUrl").value = data.imageUrl || "";
+    document.getElementById("fieldMarkdown").value = data.markdown || "";
+
+    updatePreview();
+    updateImagePreview();
+    clearToast("squareToast");
+  }
+
+  function sideToLabel(side) {
+    if (side === "citoyen") return "Citoyen / Alliés";
+    if (side === "systeme") return "Système / Adversaire";
+    return "Neutre / Zone grise";
+  }
+
+  function updatePreview() {
+    const text = document.getElementById("fieldMarkdown").value || "";
+    document.getElementById("previewBlock").textContent = text;
+  }
+
+  function updateImagePreview() {
+    const url = document.getElementById("fieldImageUrl").value.trim();
+    const preview = document.getElementById("imagePreview");
+    preview.innerHTML = "";
+    if (!url) {
+      const ph = document.createElement("div");
+      ph.className = "img-placeholder";
+      ph.textContent = "Aucune image chargée. Colle une URL ci-dessus pour prévisualiser.";
+      preview.appendChild(ph);
+      return;
+    }
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "Illustration de la case";
+    img.addEventListener("error", () => {
+      preview.innerHTML = "";
+      const ph = document.createElement("div");
+      ph.className = "img-placeholder";
+      ph.textContent = "Impossible de charger l’image. Vérifie l’URL.";
+      preview.appendChild(ph);
+    });
+    preview.appendChild(img);
+  }
+
+  function showToast(id, message) {
+    const el = document.getElementById(id);
+    el.textContent = message;
+    el.style.display = "block";
+    setTimeout(() => {
+      el.style.display = "none";
+    }, 2400);
+  }
+
+  function clearToast(id) {
+    const el = document.getElementById(id);
+    el.style.display = "none";
+  }
+
+  // --- Actions case / export markdown ---
+
+  function saveCurrentSquare() {
+    const data = getSquareContent(currentCoord);
+    const role = document.getElementById("fieldRole").value.trim();
+    const side = document.getElementById("fieldSide").value;
+    const emoji = document.getElementById("fieldEmoji").value.trim();
+    const imageUrl = document.getElementById("fieldImageUrl").value.trim();
+    const markdown = document.getElementById("fieldMarkdown").value;
+
+    boardState[currentCoord] = {
+      ...data,
+      role,
+      side,
+      emoji,
+      imageUrl,
+      markdown
+    };
+    saveBoardState();
+    buildBoard();          // rafraîchit l’affichage avec les valeurs de l’utilisateur
+    openSquare(currentCoord);
+    showToast("squareToast", "Case " + currentCoord + " enregistrée (localStorage).");
+  }
+
+  function copyToClipboard(text, toastId) {
+    if (!text) {
+      showToast(toastId, "Rien à copier pour l’instant.");
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(toastId, "Copié dans le presse-papiers.");
+      }).catch(() => {
+        fallbackCopy(text, toastId);
+      });
+    } else {
+      fallbackCopy(text, toastId);
+    }
+  }
+
+  function fallbackCopy(text, toastId) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    showToast(toastId, "Copié (mode compatibilité).");
+  }
+
+  function copyCurrentSquareMarkdown() {
+    const data = getSquareContent(currentCoord);
+    const coord = currentCoord;
+    const sideLabel = sideToLabel(data.side || "neutre");
+    const role = data.role || "Pièce sans titre";
+    const md = (data.markdown || "").trim();
+
+    const fullMd =
+`## Case ${coord} – ${role} (${sideLabel})
+
+${md || "_(à compléter)_"}
+
+`;
+    copyToClipboard(fullMd, "squareToast");
+  }
+
+  function addCurrentToExport() {
+    const data = getSquareContent(currentCoord);
+    const coord = currentCoord;
+    const sideLabel = sideToLabel(data.side || "neutre");
+    const role = data.role || "Pièce sans titre";
+    const md = (data.markdown || "").trim();
+
+    const block =
+`## Case ${coord} – ${role} (${sideLabel})
+
+${md || "_(à compléter)_"}
+
+`;
+
+    const exportArea = document.getElementById("exportMarkdown");
+    const current = exportArea.value.trim();
+    exportArea.value = (current ? current + "\n" : "") + block;
+    saveExportState();
+    showToast("squareToast", "Case " + coord + " ajoutée à l’export global.");
+  }
+
+  function copyExport() {
+    const text = document.getElementById("exportMarkdown").value;
+    copyToClipboard(text, "exportToast");
+  }
+
+  function clearExport() {
+    if (!confirm("Vider tout l’export global en markdown ?")) return;
+    document.getElementById("exportMarkdown").value = "";
+    saveExportState();
+    showToast("exportToast", "Export global vidé.");
+  }
+
+  function focusBySide(side) {
+    const board = document.getElementById("board");
+    const squares = board.querySelectorAll(".square");
+    squares.forEach(sq => {
+      const coord = sq.getAttribute("data-coord");
+      const data = getSquareContent(coord);
+      if (data.side === side) {
+        sq.style.boxShadow = "inset 0 0 0 2px " + (side === "citoyen" ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)");
+        sq.style.transform = "translateY(-1px)";
+      } else {
+        // garder un léger contour lié au camp, déjà géré dans buildBoard
+        sq.style.transform = "translateY(0)";
+      }
+    });
+  }
+
+  function resetBoard() {
+    if (!confirm("Réinitialiser le plateau avec les quelques valeurs par défaut ?\n(Tes modifications actuelles seront perdues.)")) return;
+    boardState = {...defaultState};
+    saveBoardState();
+    buildBoard();
+    openSquare("A1");
+    showToast("squareToast", "Plateau réinitialisé.");
+  }
+
+  // --- Génération du mini-site HTML ---
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function generateBoardSnapshotHtml() {
+    let html = '<table class="mini-board"><tbody>';
+    for (let r = 0; r < coordsRows.length; r++) {
+      const rowNumber = coordsRows[r];
+      html += "<tr>";
+      for (let c = 0; c < coordsCols.length; c++) {
+        const colLetter = coordsCols[c];
+        const coord = colLetter + rowNumber;
+        const data = getSquareContent(coord);
+        const emoji = data.emoji && data.emoji.trim() ? data.emoji : "+";
+        let cls = "mini-sq";
+        if (data.side === "citoyen") cls += " mini-sq-citoyen";
+        else if (data.side === "systeme") cls += " mini-sq-systeme";
+        else cls += " mini-sq-neutre";
+        html += `<td class="${cls}" data-coord="${coord}">${escapeHtml(emoji)}</td>`;
+      }
+      html += "</tr>";
+    }
+    html += "</tbody></table>";
+    return html;
+  }
+
+  function generateCasesDetailsMarkdown() {
+    // Construit un markdown complet avec toutes les cases non vides
+    let blocks = [];
+    for (let r = 0; r < coordsRows.length; r++) {
+      for (let c = 0; c < coordsCols.length; c++) {
+        const coord = coordsCols[c] + coordsRows[r];
+        const data = getSquareContent(coord);
+        if (!data.role && !data.markdown && !data.emoji) continue;
+        const sideLabel = sideToLabel(data.side || "neutre");
+        const role = data.role || "Pièce sans titre";
+        const md = (data.markdown || "").trim();
+        const block =
+`## Case ${coord} – ${role} (${sideLabel})
+
+${md || "_(à compléter)_"}
+
+`;
+        blocks.push(block);
+      }
+    }
+    return blocks.join("\n");
+  }
+
+  function generateMiniSite() {
+    const exportText = document.getElementById("exportMarkdown").value.trim();
+    const boardHtml = generateBoardSnapshotHtml();
+    const allCasesMd = generateCasesDetailsMarkdown();
+
+    const mergedMarkdown = exportText
+      ? exportText + "\n\n---\n\n" + allCasesMd
+      : allCasesMd || "_(aucune case n’a encore été documentée)_";
+
+    const miniHtml =
+`<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Plateau exporté – Échecs & stratégies citoyennes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #020617;
+    color: #e5e7eb;
+    margin: 0;
+    padding: 1rem 0.6rem 1.6rem;
+  }
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    background: #020617;
+    border-radius: 18px;
+    border: 1px solid rgba(148,163,184,0.9);
+    padding: 1rem 0.9rem 1.3rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+  }
+  h1 {
+    font-size: clamp(1.7rem, 4vw, 2.2rem);
+    margin: 0.2rem 0 0.4rem;
+  }
+  h1 span {
+    background: linear-gradient(120deg, #38bdf8, #22c55e, #fbbf24, #f97316);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  p { line-height: 1.55; font-size: 0.9rem; }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid rgba(56,189,248,0.9);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7dd3fc;
+  }
+  .tag-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #38bdf8;
+    box-shadow: 0 0 8px rgba(56,189,248,1);
+  }
+  .mini-board {
+    border-collapse: collapse;
+    margin: 0.7rem auto;
+    max-width: 420px;
+    width: 100%;
+  }
+  .mini-board td {
+    width: 12.5%;
+    padding: 0.45rem 0;
+    text-align: center;
+    font-size: 1.3rem;
+    border: 1px solid rgba(30,64,175,0.7);
+  }
+  .mini-sq-citoyen { background: #022c22; }
+  .mini-sq-systeme { background: #3f1f1f; }
+  .mini-sq-neutre { background: #020617; }
+  .mini-board td[data-coord]::after {
+    content: attr(data-coord);
+    display: block;
+    font-size: 0.6rem;
+    color: rgba(148,163,184,0.9);
+    margin-top: 0.1rem;
+  }
+  .section {
+    margin-top: 0.8rem;
+    padding-top: 0.6rem;
+    border-top: 1px dashed rgba(148,163,184,0.7);
+  }
+  pre {
+    background: #020617;
+    border-radius: 10px;
+    border: 1px solid rgba(55,65,81,0.9);
+    padding: 0.6rem 0.7rem;
+    font-size: 0.78rem;
+    overflow: auto;
+    white-space: pre-wrap;
+  }
+  footer {
+    margin-top: 0.9rem;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  footer code {
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.9);
+    padding: 0.1rem 0.45rem;
+    font-size: 0.7rem;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="tag">
+    <span class="tag-dot"></span>
+    <span>Mini-site exporté – Plateau échecs citoyens</span>
+  </div>
+  <h1>Snapshot du <span>plateau citoyen</span></h1>
+  <p>
+    Ce fichier est un <strong>mini-site autonome</strong> généré à partir d’un plateau
+    “Échecs & stratégies citoyennes” configuré dans <code>chess-vortex.html</code>.  
+    Tu peux l’envoyer par e-mail, le déposer sur un site statique, ou le garder comme
+    capture d’état dans ton projet.
+  </p>
+
+  <div class="section">
+    <h2>1. Plateau – snapshot</h2>
+    ${boardHtml}
+    <p style="font-size:0.78rem; color:#9ca3af;">
+      🟢 = camp citoyen / alliés · 🔴 = camp “système” · ⚪ = neutre / zone grise (codé par la couleur de fond).
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>2. Contenu markdown (export global + cases)</h2>
+    <p style="font-size:0.82rem;">
+      Bloc prêt à être copié dans Obsidian, VSCode, ou dans un site statique en markdown :
+    </p>
+    <pre>${escapeHtml(mergedMarkdown)}</pre>
+  </div>
+
+  <footer>
+    <span>Fichier généré localement à partir d’un plateau d’échecs citoyens.</span>
+    <code>plateau-export.html · snapshot partagé</code>
+  </footer>
+</div>
+</body>
+</html>`;
+
+    const blob = new Blob([miniHtml], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.getElementById("downloadLink");
+    link.href = url;
+    link.download = "plateau-export.html";
+    link.click();
+    showToast("exportToast", "Mini-site HTML généré et téléchargé (plateau-export.html).");
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  // --- Initialisation ---
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadBoardState();
+    buildBoard();
+    openSquare(currentCoord);
+    loadExportState();
+
+    document.getElementById("fieldMarkdown").addEventListener("input", updatePreview);
+    document.getElementById("fieldImageUrl").addEventListener("input", updateImagePreview);
+    document.getElementById("fieldSide").addEventListener("change", () => {
+      const side = document.getElementById("fieldSide").value;
+      document.getElementById("currentSideLabel").textContent = "Camp : " + sideToLabel(side);
+    });
+    document.getElementById("fieldRole").addEventListener("input", () => {
+      const role = document.getElementById("fieldRole").value.trim();
+      document.getElementById("currentSummary").textContent = role ? " – " + role : "";
+    });
+
+    document.getElementById("btnSave").addEventListener("click", saveCurrentSquare);
+    document.getElementById("btnCopySquare").addEventListener("click", copyCurrentSquareMarkdown);
+    document.getElementById("btnAddToExport").addEventListener("click", addCurrentToExport);
+
+    document.getElementById("btnCopyExport").addEventListener("click", copyExport);
+    document.getElementById("btnClearExport").addEventListener("click", clearExport);
+    document.getElementById("btnGenerateSite").addEventListener("click", generateMiniSite);
+
+    document.getElementById("btnFocusCitoyen").addEventListener("click", () => focusBySide("citoyen"));
+    document.getElementById("btnFocusSysteme").addEventListener("click", () => focusBySide("systeme"));
+    document.getElementById("btnReset").addEventListener("click", resetBoard);
+  });
+</script>
+</body>
+</html>
