@@ -1,0 +1,1534 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Le 642 — Portail GOO & Casino Cosmique</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Portail GOO psychédélique vers une machine à sous cosmique : Le 642. Jeu fictif de sensibilisation aux mécaniques de casino. Aucun argent réel." />
+
+<style>
+:root {
+  --border: #020617;
+  --text: #e5e7eb;
+  --text-soft: #9ca3af;
+  --accent-1: #f97316;
+  --accent-2: #22c55e;
+  --accent-3: #38bdf8;
+}
+
+/* RESET & BASE */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: #020617;
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+/* BACKGROUND PSYCHÉ + GOO */
+
+.bg-psy {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(244,114,182,0.9) 0, transparent 35%),
+    radial-gradient(circle at 90% 15%, rgba(45,212,191,0.9) 0, transparent 40%),
+    radial-gradient(circle at 15% 85%, rgba(250,204,21,0.9) 0, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(96,165,250,0.9) 0, transparent 38%),
+    radial-gradient(circle at 50% 50%, rgba(30,64,175,1) 0, rgba(15,23,42,1) 60%);
+  filter: saturate(1.7) contrast(1.2);
+  animation: bgMove 18s ease-in-out infinite alternate;
+}
+
+.bg-psy::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    conic-gradient(from 0deg,
+      rgba(56,189,248,0.32),
+      rgba(250,204,21,0.35),
+      rgba(34,197,94,0.36),
+      rgba(244,114,182,0.4),
+      rgba(56,189,248,0.32));
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  animation: spinSlow 35s linear infinite;
+}
+
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at top, rgba(15,23,42,0.35), rgba(15,23,42,0.96)),
+    radial-gradient(circle at bottom, rgba(15,23,42,0.85), rgba(0,0,0,0.9));
+}
+
+.bg-noise {
+  position: fixed;
+  inset: -50%;
+  z-index: -1;
+  background-image: radial-gradient(circle, rgba(15,23,42,0.35) 1px, transparent 0);
+  background-size: 6px 6px;
+  opacity: 0.25;
+  mix-blend-mode: soft-light;
+  animation: noiseDrift 12s linear infinite alternate;
+}
+
+.cosmic-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* WRAPPER */
+
+.wrapper {
+  width: 100%;
+  max-width: 460px;
+  margin: auto;
+  padding: 14px 12px 80px;
+  border-radius: 22px;
+  background: radial-gradient(circle at top, rgba(15,23,42,0.98), rgba(2,6,23,0.97));
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(15,23,42,1);
+  border: 1px solid rgba(15,23,42,0.9);
+  position: relative;
+  backdrop-filter: blur(12px);
+}
+
+/* HEADER */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.game-title {
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #e5e7eb;
+  text-shadow:
+    0 0 6px rgba(248,250,252,0.7),
+    0 0 18px rgba(56,189,248,0.9);
+}
+
+.game-sub {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-soft);
+}
+
+.pill-demo {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(248,250,252,0.5);
+  color: #fef2f2;
+  background: linear-gradient(90deg, rgba(59,130,246,0.85), rgba(16,185,129,0.85));
+  box-shadow:
+    0 0 8px rgba(59,130,246,0.9),
+    0 0 24px rgba(16,185,129,0.7);
+}
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.6);
+  background: rgba(15,23,42,0.9);
+  color: #e5e7eb;
+  padding: 4px 8px;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.icon-btn:hover { filter: brightness(1.05); }
+.icon-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+/* INFO BAR */
+
+.info-bar {
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(15,23,42,0.95);
+  border: 1px solid rgba(148,163,184,0.6);
+  font-size: 11px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.info-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* PORTAIL GOO */
+
+.goo-container {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.portal-card {
+  width: 100%;
+  border-radius: 18px;
+  padding: 12px 10px 14px;
+  background:
+    radial-gradient(circle at 10% 0, rgba(17,24,39,0.98), rgba(15,23,42,1));
+  box-shadow:
+    0 18px 48px rgba(0,0,0,0.85),
+    0 0 0 1px rgba(30,64,175,0.4);
+  border: 1px solid rgba(30,64,175,0.7);
+  position: relative;
+  overflow: hidden;
+}
+
+/* contour néon du portail */
+
+.portal-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    conic-gradient(from 0deg,
+      rgba(244,114,182,0.0),
+      rgba(244,114,182,0.65),
+      rgba(52,211,153,0.75),
+      rgba(56,189,248,0.75),
+      rgba(244,114,182,0.65),
+      rgba(244,114,182,0.0));
+  opacity: 0.6;
+  filter: blur(26px);
+  mix-blend-mode: screen;
+  z-index: -1;
+  animation: portalNeon 20s linear infinite;
+}
+
+@keyframes portalNeon {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.portal-layout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.portal-info {
+  flex: 1;
+}
+
+.portal-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e5e7eb;
+}
+
+.portal-sub {
+  font-size: 11px;
+  color: var(--text-soft);
+  margin-top: 4px;
+}
+
+.portal-hint {
+  font-size: 10px;
+  margin-top: 6px;
+  color: rgba(248,250,252,0.85);
+}
+
+/* LOGO GOO */
+
+.logo-wrap {
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  filter: url(#goo);
+  position: relative;
+}
+
+.blob {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #f97316, #be123c);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+.blob:nth-child(1) {
+  top: 12px; left: 8px;
+  animation: blobMove1 8s ease-in-out infinite alternate;
+}
+.blob:nth-child(2) {
+  bottom: 6px; right: 6px;
+  background: radial-gradient(circle at 30% 20%, #22c55e, #16a34a);
+  animation: blobMove2 7s ease-in-out infinite alternate;
+}
+.blob:nth-child(3) {
+  top: 0; right: 20px;
+  background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
+  animation: blobMove3 9s ease-in-out infinite alternate;
+}
+
+@keyframes blobMove1 {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(12px,8px); }
+  100% { transform: translate(-4px,12px); }
+}
+@keyframes blobMove2 {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(-8px,-10px); }
+  100% { transform: translate(6px,-4px); }
+}
+@keyframes blobMove3 {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(-10px,8px); }
+  100% { transform: translate(4px,-6px); }
+}
+
+.logo-core {
+  position: absolute;
+  inset: 16px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 10%, rgba(248,250,252,0.9), rgba(248,250,252,0.05));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.85),
+    0 16px 40px rgba(15,23,42,0.96);
+  overflow: hidden;
+}
+
+.logo-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.logo-sub {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #4b5563;
+}
+.logo-title {
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #0f172a;
+}
+.logo-tag {
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0f172a;
+  opacity: 0.8;
+}
+
+/* HOTSPOTS PORTAIL */
+
+.hotspot {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.hotspot-top {
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.hotspot-right {
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.hotspot-left {
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.hotspot-center {
+  position: absolute;
+  inset: 6px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* petit feedback visuel des hotspots (debug / UX) */
+
+.hotspot-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px dashed rgba(148,163,184,0.15);
+}
+
+/* SLOT SECTION */
+
+.slot-section {
+  margin-top: 18px;
+  display: none; /* visible après déblocage */
+}
+
+.slot-card {
+  width: 100%;
+  border-radius: 18px;
+  padding: 14px 13px 16px;
+  background:
+    radial-gradient(circle at 10% 0, rgba(30,64,175,0.85), rgba(15,23,42,0.98));
+  box-shadow:
+    0 18px 60px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(148,163,184,0.45);
+  border: 1px solid rgba(30,64,175,0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+/* contour néon */
+
+.slot-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    conic-gradient(from 0deg,
+      rgba(244,114,182,0.0),
+      rgba(244,114,182,0.65),
+      rgba(52,211,153,0.75),
+      rgba(56,189,248,0.75),
+      rgba(244,114,182,0.65),
+      rgba(244,114,182,0.0));
+  opacity: 0.75;
+  filter: blur(22px);
+  mix-blend-mode: screen;
+  z-index: -1;
+  animation: neonLoop 16s linear infinite;
+}
+
+@keyframes neonLoop {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.slot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.slot-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.slot-game-name {
+  font-size: 20px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fef9c3;
+  text-shadow:
+    0 0 6px rgba(250,204,21,0.9),
+    0 0 16px rgba(248,250,252,0.6);
+}
+
+.slot-subtitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(191,219,254,0.9);
+}
+
+.slot-pill {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(248,250,252,0.5);
+  color: #fef2f2;
+  background: linear-gradient(90deg, rgba(248,113,113,0.85), rgba(239,68,68,0.85));
+  box-shadow:
+    0 0 8px rgba(248,113,113,0.9),
+    0 0 24px rgba(239,68,68,0.7);
+}
+
+/* STATS */
+
+.slot-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(148,163,184,0.5);
+}
+
+.status-label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 9px;
+}
+
+/* REELS */
+
+.slot-body {
+  border-radius: 14px;
+  padding: 10px 10px 12px;
+  background:
+    radial-gradient(circle at 0 0, rgba(15,23,42,1), rgba(15,23,42,1));
+  border: 1px solid rgba(30,64,175,0.8);
+  box-shadow:
+    inset 0 0 0 1px rgba(15,23,42,1),
+    0 14px 40px rgba(15,23,42,0.9);
+}
+
+.reels-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.reel {
+  flex: 1;
+  height: 80px;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,0.98), rgba(15,23,42,1));
+  border: 1px solid rgba(148,163,184,0.8);
+  box-shadow:
+    inset 0 0 0 1px rgba(15,23,42,1),
+    0 8px 24px rgba(0,0,0,1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.reel-number {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #e5e7eb;
+  text-shadow:
+    0 0 8px rgba(248,250,252,0.8),
+    0 0 22px rgba(56,189,248,0.9);
+}
+
+.reel::before,
+.reel::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 16px;
+  pointer-events: none;
+}
+.reel::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(15,23,42,1), transparent);
+}
+.reel::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(15,23,42,1), transparent);
+}
+
+.reel.spinning .reel-number {
+  animation: reelWiggle 0.18s linear infinite;
+}
+
+@keyframes reelWiggle {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* CONTROLES SLOT */
+
+.slot-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.spin-btn {
+  flex: 1;
+  border-radius: 999px;
+  border: none;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  background: linear-gradient(90deg,#22c55e,#a855f7,#0ea5e9);
+  color: #020617;
+  box-shadow:
+    0 14px 40px rgba(15,23,42,0.9),
+    0 0 0 1px rgba(15,23,42,0.8);
+}
+.spin-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 6px 18px rgba(15,23,42,0.9),
+    0 0 0 1px rgba(15,23,42,0.8);
+}
+.spin-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.balance-block {
+  font-size: 11px;
+  text-align: right;
+  min-width: 90px;
+}
+.balance-label {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(191,219,254,0.9);
+}
+.balance-value {
+  font-weight: 600;
+}
+
+/* BANNER */
+
+.banner {
+  margin-top: 10px;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 11px;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  background: rgba(15,23,42,0.96);
+  border: 1px solid rgba(148,163,184,0.5);
+}
+.banner-icon { font-size: 14px; }
+.banner-text { line-height: 1.4; }
+
+.banner.win {
+  border-color: rgba(74,222,128,0.9);
+  background: rgba(22,163,74,0.1);
+}
+.banner.danger {
+  border-color: rgba(248,113,113,0.9);
+  background: rgba(248,113,113,0.1);
+}
+
+/* OVERLAY LOSE ULTIME */
+
+.overlay-lose {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: radial-gradient(circle at top, rgba(127,29,29,0.98), rgba(15,23,42,0.98));
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-inner-lose {
+  max-width: 360px;
+  margin: 0 16px;
+  border-radius: 18px;
+  padding: 16px 14px 18px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 10% 0, rgba(15,23,42,0.98), rgba(15,23,42,1));
+  box-shadow:
+    0 22px 80px rgba(0,0,0,1),
+    0 0 0 1px rgba(148,163,184,0.75);
+  border: 1px solid rgba(248,113,113,0.9);
+  overflow: hidden;
+  position: relative;
+}
+
+.overlay-inner-lose::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(248,113,113,0.15),
+      rgba(248,113,113,0.15) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  animation: glitchLines 1s steps(2,end) infinite;
+}
+
+@keyframes glitchLines {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+.lose-title {
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fee2e2;
+  text-shadow:
+    0 0 4px rgba(248,250,252,0.9),
+    0 0 16px rgba(248,113,113,0.9);
+  margin-bottom: 6px;
+}
+
+.lose-sub {
+  font-size: 12px;
+  color: #fecaca;
+  margin-bottom: 8px;
+}
+
+.lose-num {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  color: #fef3c7;
+  text-shadow:
+    0 0 6px rgba(250,204,21,1),
+    0 0 30px rgba(248,113,113,1);
+  margin-bottom: 10px;
+}
+
+.lose-tip {
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.btn-reset {
+  margin-top: 10px;
+  border-radius: 999px;
+  border: none;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(90deg,#22c55e,#a855f7,#0ea5e9);
+  color: #020617;
+  box-shadow: 0 10px 30px rgba(15,23,42,0.9);
+}
+
+/* TOASTS */
+
+.toast-layer {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+}
+.toast {
+  pointer-events: auto;
+  max-width: 320px;
+  margin: 0 12px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(15,23,42,0.96);
+  border: 1px solid rgba(148,163,184,0.7);
+  font-size: 11px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.9);
+  animation: toastIn 0.22s ease-out forwards;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* MODALE INFO / BILAN */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 45;
+}
+.modal {
+  max-width: 360px;
+  margin: 0 14px;
+  border-radius: 16px;
+  padding: 14px 12px 14px;
+  background: rgba(15,23,42,0.98);
+  border: 1px solid rgba(148,163,184,0.7);
+  box-shadow: 0 22px 60px rgba(0,0,0,0.95);
+  font-size: 12px;
+}
+.modal h2 {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.modal p { margin: 4px 0; }
+.modal ul {
+  margin: 4px 0 4px 18px;
+  padding: 0;
+}
+
+/* ANIMATIONS FOND */
+
+@keyframes bgMove {
+  0% { transform: translate3d(0,0,0) scale(1); }
+  100% { transform: translate3d(-24px,12px,0) scale(1.1); }
+}
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes noiseDrift {
+  from { transform: translate3d(0,0,0); }
+  to   { transform: translate3d(40px,-30px,0); }
+}
+
+/* MOBILE OPTI */
+
+@media (max-width: 480px) {
+  .slot-game-name { font-size: 18px; }
+  .reel { height: 72px; }
+  .reel-number { font-size: 34px; }
+  .spin-btn { font-size: 13px; padding-inline: 8px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- filtre goo -->
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;pointer-events:none;">
+  <defs>
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+      <feColorMatrix in="blur" mode="matrix"
+        values="
+          1 0 0 0 0
+          0 1 0 0 0
+          0 0 1 0 0
+          0 0 0 20 -10"
+        result="goo" />
+      <feBlend in="SourceGraphic" in2="goo" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="bg-psy"></div>
+<div class="bg-overlay"></div>
+<div class="bg-noise"></div>
+<canvas id="cosmicCanvas" class="cosmic-canvas"></canvas>
+
+<div class="wrapper">
+  <header class="header">
+    <div class="title-block">
+      <div class="game-title">LE 642</div>
+      <div class="game-sub">Portail GOO · Univers 12·50</div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="btnInfo" type="button">
+        <span>❓</span><span>Règles</span>
+      </button>
+      <button class="icon-btn" id="btnBilan" type="button">
+        <span>🧠</span><span>Bilan</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="info-bar">
+    <div class="info-chip">
+      🎮 <span>Jeu fictif, aucun argent réel.</span>
+    </div>
+    <div class="info-chip">
+      📱 <span>Mobile first · tap / clic uniquement.</span>
+    </div>
+  </div>
+
+  <!-- PORTAIL GOO -->
+  <section class="goo-container" aria-label="Portail d'accès au casino Le 642">
+    <div class="portal-card">
+      <div class="portal-layout">
+        <div class="portal-info">
+          <div class="portal-title">Portail GOO Hardcore</div>
+          <div class="portal-sub">
+            Pour accéder au casino cosmique, il faut d'abord convaincre la glu.
+          </div>
+          <div class="portal-hint" id="portalHint">
+            Essaie de toucher le <strong>haut</strong>, puis la <strong>droite</strong>, puis la <strong>gauche</strong> du cercle. Ou appuie longtemps au centre.
+          </div>
+        </div>
+
+        <div class="logo-wrap" id="logoWrap">
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+
+          <div class="logo-core" id="logoCore">
+            <div class="hotspot hotspot-top" data-step="top" aria-label="Hotspot haut"></div>
+            <div class="hotspot hotspot-right" data-step="right" aria-label="Hotspot droite"></div>
+            <div class="hotspot hotspot-left" data-step="left" aria-label="Hotspot gauche"></div>
+            <div class="hotspot-center" id="hotspotCenter" aria-label="Centre du portail"></div>
+
+            <div class="logo-inner">
+              <div class="logo-sub">UNIVERS</div>
+              <div class="logo-title">12·50</div>
+              <div class="logo-tag">PORTAIL GOO</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="icon-btn" id="btnOpenSlot" type="button" style="margin-top:8px; display:none;">
+      <span>🚀</span><span>Entrer dans le casino « Le 642 »</span>
+    </button>
+  </section>
+
+  <!-- SLOT 642 -->
+  <section class="slot-section" id="slotSection" aria-label="Machine à sous Le 642">
+    <div class="slot-card">
+      <div class="slot-header">
+        <div class="slot-title-block">
+          <div class="slot-game-name">LE 642</div>
+          <div class="slot-subtitle">LA LOOZE ULTIME</div>
+        </div>
+        <div class="slot-pill">MODE DÉMO</div>
+      </div>
+
+      <div class="slot-status">
+        <div class="status-chip">
+          <span class="status-label">SPINS</span>
+          <span id="statSpins">0</span>
+        </div>
+        <div class="status-chip">
+          <span class="status-label">SOLDE</span>
+          <span id="statBalance">1250</span> jetons
+        </div>
+        <div class="status-chip">
+          <span class="status-label">BEST</span>
+          <span id="statBest">—</span>
+        </div>
+      </div>
+
+      <div class="slot-body">
+        <div class="reels-row">
+          <div class="reel"><div class="reel-number" id="reel1">6</div></div>
+          <div class="reel"><div class="reel-number" id="reel2">4</div></div>
+          <div class="reel"><div class="reel-number" id="reel3">2</div></div>
+        </div>
+
+        <div class="slot-controls">
+          <button class="spin-btn" id="spinBtn" type="button">
+            🎰 SPIN
+          </button>
+          <div class="balance-block">
+            <div class="balance-label">Solde</div>
+            <div class="balance-value"><span id="balance">1250</span> jt</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner" id="banner">
+        <div class="banner-icon">💬</div>
+        <div class="banner-text">
+          Mise par défaut : 10 jetons fictifs par spin. Objectif : éviter <strong>642</strong>.
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- OVERLAY LOSE ULTIME -->
+<div class="overlay-lose" id="overlayLose" role="dialog" aria-modal="true" aria-labelledby="loseTitle">
+  <div class="overlay-inner-lose">
+    <div class="lose-title" id="loseTitle">LA LOOZE ULTIME</div>
+    <div class="lose-sub">
+      Tu as aligné <span class="lose-num">6&nbsp;4&nbsp;2</span>.<br />
+      Dans ce casino cosmique, c'est le pire tirage possible.
+    </div>
+    <div class="lose-tip">
+      Heureusement, ici tout est fictif. Dans un vrai casino, ce genre de séance se paye en euros.
+    </div>
+    <button class="btn-reset" id="btnReset" type="button">
+      🔁 Repartir avec 1250 jetons fictifs
+    </button>
+  </div>
+</div>
+
+<!-- MODALE INFO RÈGLES -->
+<div class="modal-backdrop" id="modalInfoBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <h2 id="infoTitle">Comment ça marche ?</h2>
+    <p>
+      <strong>Le 642</strong> est une machine à sous entièrement fictive, pensée pour montrer
+      comment on peut facilement s'accrocher à un jeu de casino.
+    </p>
+    <ul>
+      <li>Tu démarres avec <strong>1250 jetons</strong> fictifs.</li>
+      <li>Chaque spin coûte <strong>10 jetons</strong>.</li>
+      <li>Les gains et pertes sont purement virtuels, aucun argent réel.</li>
+    </ul>
+    <p><strong>Tirages spéciaux :</strong></p>
+    <ul>
+      <li><strong>642</strong> → LA LOOZE ULTIME : tu perds tout ton solde.</li>
+      <li><strong>Triple chiffre</strong> (ex : 777) → jackpot stellaire.</li>
+      <li>Combos particuliers → mini bonus ou petites pertes.</li>
+    </ul>
+    <p>
+      Ce jeu n'est pas une incitation à jouer, mais un support de <strong>sensibilisation</strong> :
+      le cerveau réagit comme si c'était “pour de vrai”, même quand tout est virtuel.
+    </p>
+    <button class="btn-reset" type="button" id="btnCloseInfo">OK, je vois</button>
+  </div>
+</div>
+
+<!-- MODALE BILAN -->
+<div class="modal-backdrop" id="modalBilanBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bilanTitle">
+    <h2 id="bilanTitle">Bilan de ta session</h2>
+    <p>
+      Voici ce que ton cerveau a vécu dans ce casino fictif :
+    </p>
+    <ul>
+      <li><strong>Spins joués :</strong> <span id="bilanSpins">0</span></li>
+      <li><strong>Solde actuel :</strong> <span id="bilanBalance">0</span> jetons</li>
+      <li><strong>Meilleur tirage :</strong> <span id="bilanBest">—</span></li>
+    </ul>
+    <p id="bilanComment"></p>
+    <p style="margin-top:6px;">
+      Dans un contexte réel, ces spins seraient des mises en argent. Le but ici est
+      de mettre en lumière <strong>le temps passé</strong> et
+      <strong>l'énergie mentale</strong> mobilisée, sans aucun gain réel.
+    </p>
+    <button class="btn-reset" type="button" id="btnCloseBilan">Fermer le bilan</button>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-layer" id="toastLayer"></div>
+
+<script>
+/* ========= COSMIC CANVAS SIMPLE ========= */
+(function () {
+  const canvas = document.getElementById("cosmicCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let w, h, stars = [];
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    stars = [];
+    const count = Math.floor((w * h) / 9000);
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.8 + 0.4,
+        s: Math.random() * 0.35 + 0.15,
+        a: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (const s of stars) {
+      s.a += 0.01;
+      s.y += s.s;
+      const flicker = 0.4 + 0.4 * Math.sin(s.a * 2);
+      const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r);
+      grad.addColorStop(0, `rgba(248,250,252,${0.4 + flicker})`);
+      grad.addColorStop(1, "rgba(15,23,42,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (s.y > h + 10) {
+        s.y = -10;
+        s.x = Math.random() * w;
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+  draw();
+})();
+
+/* ========= TOOLS ========= */
+
+let soundEnabled = true; // toggle possible si tu veux plus tard
+
+function beep(freq, duration) {
+  if (!soundEnabled || typeof AudioContext === "undefined") return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = "square";
+  osc.frequency.value = freq;
+  gain.gain.value = 0.07;
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => {
+    osc.stop();
+    ctx.close();
+  }, duration || 120);
+}
+
+function showToast(text, timeout = 2800) {
+  const layer = document.getElementById("toastLayer");
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = text;
+  layer.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(8px)";
+    setTimeout(() => toast.remove(), 220);
+  }, timeout);
+}
+
+/* ========= PORTAIL GOO (UNLOCK) ========= */
+
+const logoCore = document.getElementById("logoCore");
+const hotspotCenter = document.getElementById("hotspotCenter");
+const hotspots = document.querySelectorAll(".hotspot[data-step]");
+const portalHint = document.getElementById("portalHint");
+const btnOpenSlot = document.getElementById("btnOpenSlot");
+const slotSection = document.getElementById("slotSection");
+
+let unlockSequence = [];
+const neededSequence = ["top", "right", "left"];
+let portalUnlocked = false;
+
+// feedback léger des hotspots
+hotspots.forEach(h => {
+  const ring = document.createElement("div");
+  ring.className = "hotspot-ring";
+  h.appendChild(ring);
+  h.addEventListener("click", () => {
+    if (portalUnlocked) return;
+    const step = h.dataset.step;
+    unlockSequence.push(step);
+    if (unlockSequence.length > neededSequence.length) {
+      unlockSequence.shift();
+    }
+    beep(520, 60);
+
+    if (neededSequence.every((s, i) => unlockSequence[i] === s)) {
+      unlockPortal("Séquence correcte détectée : accès au casino cosmique accordé.");
+    } else {
+      portalHint.textContent = "La glu a senti quelque chose… continue la séquence.";
+    }
+  });
+});
+
+// appui long au centre
+(function initLongPress() {
+  let timer = null;
+  hotspotCenter.addEventListener("pointerdown", () => {
+    if (portalUnlocked) return;
+    timer = setTimeout(() => {
+      unlockPortal("Accès accordé via pression prolongée au cœur du Portail GOO.");
+    }, 900);
+  });
+  hotspotCenter.addEventListener("pointerup", () => {
+    if (timer) clearTimeout(timer);
+  });
+  hotspotCenter.addEventListener("pointerleave", () => {
+    if (timer) clearTimeout(timer);
+  });
+})();
+
+function unlockPortal(message) {
+  if (portalUnlocked) return;
+  portalUnlocked = true;
+  portalHint.textContent = message;
+  btnOpenSlot.style.display = "inline-flex";
+
+  logoCore.style.boxShadow =
+    "0 0 0 1px rgba(22,163,74,0.8), 0 0 30px rgba(22,163,74,0.9), 0 24px 60px rgba(15,23,42,1)";
+  beep(660, 120);
+  beep(880, 160);
+  showToast("Portail GOO : connexion cosmique établie. Tu peux entrer dans le casino.");
+}
+
+btnOpenSlot.addEventListener("click", () => {
+  slotSection.style.display = "block";
+  slotSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  showToast("Bienvenue dans la machine « Le 642 ». Rappelle-toi : tout est fictif.");
+});
+
+/* ========= SLOT LOGIC & STATS ========= */
+
+const spinBtn = document.getElementById("spinBtn");
+const balanceEl = document.getElementById("balance");
+const statSpinsEl = document.getElementById("statSpins");
+const statBalanceEl = document.getElementById("statBalance");
+const statBestEl = document.getElementById("statBest");
+const banner = document.getElementById("banner");
+const overlayLose = document.getElementById("overlayLose");
+const btnReset = document.getElementById("btnReset");
+
+const reelsEls = [
+  document.getElementById("reel1"),
+  document.getElementById("reel2"),
+  document.getElementById("reel3")
+];
+
+const STATS_KEY = "le642_stats_v1";
+
+let balance = 1250;
+let spinning = false;
+
+let stats = {
+  spins: 0,
+  netBalance: 1250,
+  bestCombo: null,
+  bestDelta: 0
+};
+
+try {
+  const saved = localStorage.getItem(STATS_KEY);
+  if (saved) {
+    const loaded = JSON.parse(saved);
+    stats = { ...stats, ...loaded };
+    balance = loaded.netBalance ?? balance;
+  }
+} catch (e) {}
+
+function saveStats() {
+  try {
+    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+  } catch (e) {}
+}
+
+function updateUIStats() {
+  statSpinsEl.textContent = stats.spins;
+  statBalanceEl.textContent = stats.netBalance;
+  statBestEl.textContent = stats.bestCombo || "—";
+  balanceEl.textContent = balance;
+}
+
+function setBanner(text, type = "info") {
+  banner.classList.remove("win", "danger");
+  if (type === "win") banner.classList.add("win");
+  if (type === "danger") banner.classList.add("danger");
+  banner.querySelector(".banner-text").innerHTML = text;
+}
+
+function updateBalance(delta) {
+  balance += delta;
+  stats.netBalance = balance;
+  updateUIStats();
+  saveStats();
+}
+
+function registerSpin(delta, comboStr) {
+  stats.spins++;
+  if (typeof delta === "number") {
+    if (delta > 0 && delta > stats.bestDelta) {
+      stats.bestDelta = delta;
+      stats.bestCombo = comboStr;
+    }
+  }
+  updateUIStats();
+  saveStats();
+  maybeAutoBilan();
+}
+
+function spin() {
+  if (spinning) return;
+  if (balance < 10) {
+    setBanner(
+      "Tu n'as plus assez de jetons fictifs pour miser 10. Dans un vrai casino, il faudrait recharger… avec de l'argent réel.",
+      "danger"
+    );
+    showToast("Le cosmos te conseille une pause. Dans la vraie vie aussi.");
+    beep(260, 140);
+    return;
+  }
+
+  spinning = true;
+  updateBalance(-10); // mise
+  registerSpin(-10, null);
+
+  setBanner("Spin en cours… observe tes réflexes, pas seulement les chiffres.");
+
+  const finalDigits = [];
+  const spinTimes = [600, 900, 1200];
+
+  reelsEls.forEach((reelEl, index) => {
+    const reelBox = reelEl.closest(".reel");
+    reelBox.classList.add("spinning");
+    let ticks = 0;
+    const interval = setInterval(() => {
+      reelEl.textContent = Math.floor(Math.random() * 10);
+      ticks++;
+      if (ticks % 3 === 0) beep(300 + index * 60, 40);
+    }, 60);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      const digit = Math.floor(Math.random() * 10);
+      reelEl.textContent = digit;
+      finalDigits[index] = digit;
+      reelBox.classList.remove("spinning");
+
+      if (index === reelsEls.length - 1) {
+        setTimeout(() => {
+          resolveResult(finalDigits);
+        }, 80);
+      }
+    }, spinTimes[index]);
+  });
+}
+
+const surpriseMessages = [
+  "Astuce : ici tu ne risques que des jetons. Ce n'est pas le cas partout.",
+  "Ton cerveau réagit, même si tout est virtuel. C'est normal.",
+  "Mini rappel : les casinos réels ne sont pas conçus pour que tu gagnes.",
+  "Dans un vrai contexte, chaque spin serait payé en euros.",
+  "La meilleure stratégie de la Looze Utlime ? Ne jamais y mettre d'argent réel."
+];
+
+function triggerRandomSurprise(digits) {
+  const [a, b, c] = digits;
+  const rnd = Math.random();
+
+  if (a === 1 && b === 2 && c === 5) {
+    showToast("Combo 125 : clin d'œil à 12,50. Rien à gagner, tout à comprendre.");
+    return;
+  }
+
+  if (rnd < 0.25) {
+    const msg = surpriseMessages[Math.floor(Math.random() * surpriseMessages.length)];
+    showToast(msg);
+  }
+}
+
+function resolveResult(d) {
+  const [a, b, c] = d;
+  const comboStr = `${a}${b}${c}`;
+
+  // 642 = lose ultime
+  if (a === 6 && b === 4 && c === 2) {
+    overlayLose.style.display = "flex";
+    spinning = false;
+    beep(180, 300);
+    beep(120, 300);
+    beep(80, 400);
+    setBanner(
+      "Tu as déclenché la Looze Ultime (642). Tout est fictif, mais observe ce que ça te fait.",
+      "danger"
+    );
+    balance = 0;
+    updateBalance(0); // maj UI
+    return;
+  }
+
+  let message = "";
+  let type = "info";
+  let delta = 0;
+
+  // triple → jackpot
+  if (a === b && b === c) {
+    delta = 250;
+    type = "win";
+    message = `JACKPOT stellaire : <strong>${comboStr}</strong>. +${delta} jetons fictifs.`;
+    beep(880, 160);
+    beep(1200, 200);
+  } else {
+    const digitsSet = new Set(d);
+    const has6 = digitsSet.has(6);
+    const has4 = digitsSet.has(4);
+    const has2 = digitsSet.has(2);
+
+    if (has6 && has4 && has2) {
+      // tous présents mais pas 642
+      delta = -20;
+      type = "danger";
+      message = `Combo toxique (tous les chiffres maudits, mais pas alignés) : <strong>${comboStr}</strong>. -20 jetons fictifs.`;
+      beep(260, 140);
+    } else if ((a + b + c) % 3 === 0) {
+      // somme divisible par 3
+      delta = 15;
+      type = "win";
+      message = `Alignement cosmique (somme divisible par 3) : <strong>${comboStr}</strong>. +${delta} jetons fictifs.`;
+      beep(720, 120);
+    } else if (a === 6 || b === 4 || c === 2) {
+      delta = 0;
+      type = "info";
+      message = `Un des chiffres maudits est sorti (<strong>${comboStr}</strong>). Le vide quantique t'observe, mais te laisse passer.`;
+    } else {
+      const rnd = Math.random();
+      if (rnd < 0.25) {
+        delta = 10;
+        type = "win";
+        message = `Mini win galactique sur <strong>${comboStr}</strong> : +${delta} jetons fictifs.`;
+        beep(660, 100);
+      } else {
+        delta = 0;
+        type = "info";
+        message = `Rien de spécial sur <strong>${comboStr}</strong>. Les galaxies tournent, le casino sourit.`;
+      }
+    }
+  }
+
+  if (delta !== 0) updateBalance(delta);
+  registerSpin(delta, comboStr);
+  setBanner(message, type);
+  triggerRandomSurprise(d);
+  spinning = false;
+}
+
+/* ========= RESET LOOZE ========= */
+
+btnReset.addEventListener("click", () => {
+  balance = 1250;
+  stats.netBalance = balance;
+  stats.spins = 0;
+  stats.bestCombo = null;
+  stats.bestDelta = 0;
+  saveStats();
+  updateUIStats();
+  overlayLose.style.display = "none";
+  setBanner(
+    "Nouveau crédit fictif : 1250 jetons. Rappelle-toi : tout sauf 642.",
+    "info"
+  );
+});
+
+/* ========= MODALES INFO & BILAN ========= */
+
+const modalInfoBackdrop = document.getElementById("modalInfoBackdrop");
+const modalBilanBackdrop = document.getElementById("modalBilanBackdrop");
+const btnInfo = document.getElementById("btnInfo");
+const btnBilan = document.getElementById("btnBilan");
+const btnCloseInfo = document.getElementById("btnCloseInfo");
+const btnCloseBilan = document.getElementById("btnCloseBilan");
+
+btnInfo.addEventListener("click", () => {
+  modalInfoBackdrop.style.display = "flex";
+});
+btnCloseInfo.addEventListener("click", () => {
+  modalInfoBackdrop.style.display = "none";
+});
+
+btnBilan.addEventListener("click", openBilanModal);
+btnCloseBilan.addEventListener("click", () => {
+  modalBilanBackdrop.style.display = "none";
+});
+
+function openBilanModal() {
+  document.getElementById("bilanSpins").textContent = stats.spins;
+  document.getElementById("bilanBalance").textContent = stats.netBalance;
+  document.getElementById("bilanBest").textContent = stats.bestCombo || "—";
+
+  const commentEl = document.getElementById("bilanComment");
+  if (stats.spins === 0) {
+    commentEl.textContent = "Tu n'as pas encore joué. C'est une stratégie imbattable pour ne rien perdre.";
+  } else if (stats.netBalance > 1250) {
+    commentEl.textContent =
+      "Tu es fictivement gagnant. Dans un vrai casino, ce genre de réussite donne souvent envie de continuer… c'est là que le risque commence.";
+  } else if (stats.netBalance < 1250) {
+    commentEl.textContent =
+      "Tu es fictivement en perte. Dans un vrai casino, beaucoup de personnes essayent alors de 'se refaire', ce qui creuse encore plus les pertes.";
+  } else {
+    commentEl.textContent =
+      "Tu es revenu à ton solde de départ. Même équilibré, le temps et l'énergie mentale sont bien réels.";
+  }
+
+  modalBilanBackdrop.style.display = "flex";
+}
+
+function maybeAutoBilan() {
+  if (stats.spins === 20 || stats.spins === 40 || stats.spins === 60) {
+    showToast("Pause bilan proposée : tu peux cliquer sur 🧠 pour voir tes stats.");
+  }
+}
+
+/* ========= INIT ========= */
+
+updateUIStats();
+spinBtn.addEventListener("click", spin);
+</script>
+
+</body>
+</html>
