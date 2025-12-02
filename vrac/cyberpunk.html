@@ -1,0 +1,1711 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Belgilikjes · Fuites & Passoires du Royaume</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--
+    Belgilikjes · Univers satirique
+    --------------------------------
+    Faux portail de "fuite massive" des données du Royaume de Belgique.
+    Aucune donnée réelle, tout est généré / fictif / parodique.
+  -->
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #030712;
+      --bg-card: #020617;
+      --border: #1f2937;
+      --border-soft: #111827;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --text-softer: #6b7280;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.1);
+      --accent2: #a855ff;
+      --danger: #f97316;
+      --danger-soft: rgba(248, 113, 113, 0.14);
+      --warning: #eab308;
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 42px rgba(15, 23, 42, 0.8);
+      --transition-fast: 0.15s ease-out;
+      --transition-med: 0.25s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 60%, #000 100%);
+      color: var(--text);
+    }
+
+    a {
+      color: #bfdbfe;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+
+    .topbar {
+      background: radial-gradient(circle at top left, #111827 0, #020617 45%, #000 100%);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9);
+    }
+
+    @media (min-width: 960px) {
+      .topbar {
+        padding: 10px 20px;
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 0, #facc15, #f97316 40%, #7c2d12 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #0f172a;
+      font-size: 16px;
+      box-shadow:
+        0 0 0 2px rgba(15, 23, 42, 0.9),
+        0 0 18px rgba(248, 113, 113, 0.8);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .topbar-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .alert-banner {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(248, 250, 252, 0.7);
+      background: rgba(15, 23, 42, 0.8);
+      color: #fee2e2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .alert-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 16px rgba(248, 113, 113, 0.9);
+      animation: blink 0.9s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
+    }
+
+    .topbar-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 11px;
+    }
+
+    .login-pill {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text-soft);
+      padding: 4px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .login-pill span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+    }
+
+    .btn-mini {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(15, 23, 42, 0.7);
+      background: #f97316;
+      color: #111827;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    /* LAYOUT */
+
+    .layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto 18px;
+    }
+
+    @media (min-width: 1040px) {
+      .layout {
+        grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.8fr) minmax(260px, 1.1fr);
+        gap: 16px;
+        padding: 16px 20px 22px;
+      }
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .col-header {
+      font-size: 11px;
+      color: var(--text-softer);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 2px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #020617 0, #020617 65%, #000 100%);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title span.icon {
+      font-size: 16px;
+    }
+
+    .badge {
+      font-size: 10px;
+      border-radius: var(--radius-pill);
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      color: var(--text-softer);
+    }
+
+    .badge-danger {
+      border-color: #fed7aa;
+      color: #fed7aa;
+      background: rgba(248, 113, 113, 0.16);
+    }
+
+    .badge-green {
+      border-color: #bbf7d0;
+      color: #bbf7d0;
+      background: var(--accent-soft);
+    }
+
+    .badge-soft {
+      border-color: #4b5563;
+      color: #9ca3af;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    /* COL GAUCHE : SECTEURS, RECHERCHE */
+
+    .sector-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    .sector-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 4px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .sector-item:hover {
+      background: rgba(15, 23, 42, 0.9);
+      transform: translateX(2px);
+    }
+
+    .sector-item.active {
+      background: rgba(248, 113, 113, 0.18);
+    }
+
+    .sector-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sector-label span.icon {
+      font-size: 15px;
+    }
+
+    .sector-count {
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .filter-chips {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-softer);
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast),
+        color var(--transition-fast);
+    }
+
+    .chip.active {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      background: var(--accent-soft);
+    }
+
+    .search-box {
+      margin-top: 8px;
+      padding: 5px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #020617;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 12px;
+      flex: 1;
+    }
+
+    .search-hint {
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--text-softer);
+    }
+
+    /* COL CENTRALE : TABS, TABLEAU DE FUITES & MODE ENQUÊTE */
+
+    .tabs-header {
+      display: flex;
+      gap: 6px;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .tab-btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-softer);
+      padding: 3px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent2);
+      color: #e9d5ff;
+      background: rgba(88, 28, 135, 0.55);
+    }
+
+    .tab-content {
+      display: none;
+      margin-top: 4px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+    }
+
+    .view-btn {
+      font-size: 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-softer);
+      padding: 2px 8px;
+      cursor: pointer;
+    }
+
+    .view-btn.active {
+      border-color: var(--accent2);
+      color: #e9d5ff;
+      background: rgba(88, 28, 135, 0.45);
+    }
+
+    .leaks-list {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    @media (min-width: 720px) {
+      .leaks-list.grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+
+    .leak-card {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      padding: 8px 9px;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      transition: border-color var(--transition-fast), transform var(--transition-fast),
+        box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    .leak-card:hover {
+      border-color: rgba(248, 113, 113, 0.8);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.9);
+      background: radial-gradient(circle at top left, rgba(248, 113, 113, 0.16), #020617);
+    }
+
+    .leak-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .leak-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .leak-badge {
+      font-size: 10px;
+      border-radius: 999px;
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      color: var(--text-softer);
+    }
+
+    .leak-badge.high {
+      border-color: #fecaca;
+      color: #fecaca;
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .leak-badge.medium {
+      border-color: #fed7aa;
+      color: #fed7aa;
+      background: rgba(245, 158, 11, 0.18);
+    }
+
+    .leak-meta {
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .leak-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .leak-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-softer);
+    }
+
+    .leak-footer {
+      font-size: 10px;
+      color: var(--text-softer);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .pagination {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .pager-btns {
+      display: flex;
+      gap: 4px;
+    }
+
+    .pager-btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-softer);
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .pager-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    /* MODE ENQUÊTE */
+
+    .scenario-block {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .scenario-block p {
+      margin: 0 0 6px;
+    }
+
+    .scenario-steps {
+      margin: 4px 0 4px 16px;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    .scenario-steps li {
+      margin-bottom: 4px;
+    }
+
+    .scenario-json {
+      margin-top: 4px;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      background: #020617;
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      padding: 6px 8px;
+      color: #22c55e;
+      white-space: pre-wrap;
+    }
+
+    /* COL DROITE : PASSOIRE MÈTRE + TOILETTES PUBLIQUES */
+
+    .score-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-softer);
+      margin-top: 4px;
+    }
+
+    .score-pill {
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bar {
+      margin-top: 6px;
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+    }
+
+    .bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f97316, #facc15, #22c55e);
+      transition: width var(--transition-med);
+    }
+
+    .links-vrac {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .links-vrac a::before {
+      content: "↗ ";
+      opacity: 0.6;
+    }
+
+    .toilette-box {
+      margin-top: 6px;
+      padding: 6px 8px;
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .toilette-box strong {
+      color: #fed7aa;
+    }
+
+    .disclaimer {
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--text-softer);
+      border-top: 1px solid var(--border-soft);
+      padding-top: 4px;
+    }
+
+    /* MODALE DÉTAIL FUITES */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 40;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      max-height: 90vh;
+      background: radial-gradient(circle at top left, #020617 0, #000 70%);
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-soft);
+      background: #020617;
+    }
+
+    .modal-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .modal-meta {
+      font-size: 10px;
+      color: var(--text-softer);
+    }
+
+    .modal-close {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      padding: 2px 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 8px 10px 10px;
+      font-size: 12px;
+      color: var(--text-soft);
+      overflow-y: auto;
+    }
+
+    .modal-body p {
+      margin: 0 0 6px;
+    }
+
+    .modal-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-softer);
+      margin-top: 6px;
+      margin-bottom: 2px;
+    }
+
+    .modal-kv {
+      font-size: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+      margin-bottom: 4px;
+    }
+
+    .modal-kv span.key {
+      color: var(--text-softer);
+    }
+
+    .modal-kv span.value {
+      color: var(--text);
+    }
+
+    .modal-redacted {
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      background: #020617;
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      padding: 6px 8px;
+      margin-top: 4px;
+      color: #22c55e;
+      white-space: pre-wrap;
+    }
+
+    .modal-footer {
+      font-size: 10px;
+      color: var(--text-softer);
+      margin-top: 6px;
+      border-top: 1px solid var(--border-soft);
+      padding-top: 4px;
+    }
+
+    /* FOOTER */
+
+    .footer {
+      font-size: 10px;
+      color: var(--text-softer);
+      padding: 10px 16px 16px;
+      border-top: 1px solid var(--border-soft);
+      background: #020617;
+    }
+
+    .footer strong {
+      color: var(--text-soft);
+    }
+
+    @media (max-width: 768px) {
+      .topbar-center {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-logo">BG</div>
+        <div class="brand-text">
+          <div class="brand-title">BELGILIKJES</div>
+          <div class="brand-sub">“Parce que tout fuit, autant le cartographier.”</div>
+        </div>
+      </div>
+      <div class="topbar-center">
+        <div class="alert-banner">
+          <div class="alert-dot"></div>
+          <span>ALERTE · Fuites fictives à travers tout le Royaume</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="login-pill">
+          <span class="dot"></span>
+          Anonyme crypto-connard connecté
+        </div>
+        <button class="btn-mini" onclick="location.href='jeu-arcade.html'">
+          🎮 Revenir à l’arcade
+        </button>
+      </div>
+    </header>
+
+    <!-- LAYOUT -->
+    <main class="layout">
+      <!-- COL GAUCHE -->
+      <aside class="col">
+        <div class="col-header">secteurs en passoire</div>
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">🧮</span>
+              Panorama des fuites fictives
+            </div>
+            <span class="badge badge-soft">échantillon simulé</span>
+          </div>
+          <div class="sector-list">
+            <div class="sector-item active" data-sector="tous">
+              <div class="sector-label">
+                <span class="icon">🌍</span>
+                <span>Tous secteurs confondus</span>
+              </div>
+              <span class="sector-count" id="sector-count-all">–</span>
+            </div>
+            <div class="sector-item" data-sector="sante">
+              <div class="sector-label">
+                <span class="icon">🏥</span>
+                <span>Santé / Hôpitaux / Mutualités</span>
+              </div>
+              <span class="sector-count" id="sector-count-sante">–</span>
+            </div>
+            <div class="sector-item" data-sector="social">
+              <div class="sector-label">
+                <span class="icon">🧾</span>
+                <span>Sécurité sociale / CPAS</span>
+              </div>
+              <span class="sector-count" id="sector-count-social">–</span>
+            </div>
+            <div class="sector-item" data-sector="justice">
+              <div class="sector-label">
+                <span class="icon">⚖️</span>
+                <span>Justice / Police / Prisons</span>
+              </div>
+              <span class="sector-count" id="sector-count-justice">–</span>
+            </div>
+            <div class="sector-item" data-sector="energie">
+              <div class="sector-label">
+                <span class="icon">⚡</span>
+                <span>Énergie / Infrastructures</span>
+              </div>
+              <span class="sector-count" id="sector-count-energie">–</span>
+            </div>
+            <div class="sector-item" data-sector="asbl">
+              <div class="sector-label">
+                <span class="icon">📚</span>
+                <span>ASBL / Éducation permanente</span>
+              </div>
+              <span class="sector-count" id="sector-count-asbl">–</span>
+            </div>
+            <div class="sector-item" data-sector="toilettes">
+              <div class="sector-label">
+                <span class="icon">🚻</span>
+                <span>Toilettes publiques & mobilier urbain</span>
+              </div>
+              <span class="sector-count" id="sector-count-toilettes">–</span>
+            </div>
+          </div>
+
+          <div class="filter-chips">
+            <button class="chip active" data-filter="recent">Fuites “récentes” (simulées)</button>
+            <button class="chip" data-filter="massives">Fuites massives</button>
+            <button class="chip" data-filter="toilettes">Tag “toilettes publiques”</button>
+          </div>
+
+          <div class="search-box">
+            🔍
+            <input id="search-input" placeholder="Chercher un mot-clé fictif (commune, service...)" />
+          </div>
+          <div class="search-hint">
+            Pas de panique : la recherche ne passe par aucun serveur. Tout est dans ton navigateur,
+            comme tes illusions de confidentialité.
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">🧊</span>
+              Mode lecture
+            </div>
+            <span class="badge badge-soft">gestion de la nausée</span>
+          </div>
+          <div style="font-size:11px; color:var(--text-softer);">
+            <p>
+              Tu peux utiliser Belgilikjes comme :
+            </p>
+            <ul style="margin:0 0 4px 16px; padding:0;">
+              <li>une satire des “data leaks” permanents,</li>
+              <li>un décor pour ton jeu d’enquête citoyenne,</li>
+              <li>un prétexte pour parler RGPD ailleurs que dans un PowerPoint soporifique.</li>
+            </ul>
+            <p>
+              Aucun nom réel, aucun dossier réel, aucun login réel.  
+              Juste du HTML, du CSS, un peu de JS, et beaucoup de lassitude collective.
+            </p>
+          </div>
+        </section>
+      </aside>
+
+      <!-- COL CENTRALE -->
+      <section class="col">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">💾</span>
+              Centre de fuite Belgilikjes
+            </div>
+            <span class="badge badge-danger">tout est faux, tout est plausible</span>
+          </div>
+
+          <!-- Onglets -->
+          <div class="tabs-header">
+            <button class="tab-btn active" data-tab="index">
+              📂 Index des fuites
+            </button>
+            <button class="tab-btn" data-tab="enquete">
+              🕵️ Mode enquête
+            </button>
+          </div>
+
+          <!-- Onglet INDEX -->
+          <div id="tab-index" class="tab-content active">
+            <div class="table-header">
+              <div>Résultats <span id="results-count">(chargement...)</span></div>
+              <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">Vue grille</button>
+                <button class="view-btn" data-view="list">Vue liste compact</button>
+              </div>
+            </div>
+            <div id="leaks-list" class="leaks-list grid">
+              <!-- cartes injectées en JS -->
+            </div>
+            <div class="pagination">
+              <div>Page <span id="page-current">1</span> / <span id="page-total">1</span></div>
+              <div class="pager-btns">
+                <button id="btn-prev" class="pager-btn">◀ Précédent</button>
+                <button id="btn-next" class="pager-btn">Suivant ▶</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Onglet MODE ENQUÊTE -->
+          <div id="tab-enquete" class="tab-content">
+            <div class="scenario-block">
+              <p>
+                🕵️ <strong>Tu as été recruté·e (sans le savoir) comme enquêteur·rice citoyen·ne.</strong><br />
+                Le Royaume fuit de partout, mais tout ce que tu as, ce sont des échantillons
+                pseudo-anonymisés et un navigateur fatigué.
+              </p>
+              <p>
+                <strong>Mission :</strong> reconstruire comment on en est arrivé à un État
+                aussi troué que les tranchées de Passchendaele, à partir de quelques fuites :
+              </p>
+              <ol class="scenario-steps">
+                <li>
+                  Commence par <a href="#" data-jumpto="BG-0001-CPAS-XL">BG-0001-CPAS-XL</a> (CPAS)  
+                  → imagine les effets pour une personne réelle coincée dans les délais.
+                </li>
+                <li>
+                  Enchaîne avec <a href="#" data-jumpto="BG-0005-ASBL-EDUPERM">BG-0005-ASBL-EDUPERM</a> (ASBL)  
+                  → regarde comment les mêmes publics réapparaissent dans d’autres colonnes.
+                </li>
+                <li>
+                  Puis ouvre <a href="#" data-jumpto="BG-0012-BELGI-LOGS">BG-0012-BELGI-LOGS</a>  
+                  → découvre que même Belgilikjes produit sa propre couche de métadonnées.
+                </li>
+                <li>
+                  Termine avec <a href="#" data-jumpto="BG-0013-KINGDOM-DIAGRAM">BG-0013-KINGDOM-DIAGRAM</a>  
+                  → lecture d’un diagramme ASCII qui cartographie un Royaume saturé de logs.
+                </li>
+              </ol>
+              <p>
+                À chaque fuite, demande-toi :  
+                <em>qui ne dort plus la nuit à cause de ça&nbsp;?</em>
+              </p>
+
+              <div class="modal-section-title">Plan d’enquête (pseudo-code)</div>
+              <div class="scenario-json">
+{
+  "enquete": {
+    "point_depart": "BG-0001-CPAS-XL",
+    "liaisons": [
+      {
+        "depuis": "BG-0001-CPAS-XL",
+        "vers": "BG-0005-ASBL-EDUPERM",
+        "raison": "mêmes publics, autre tableur"
+      },
+      {
+        "depuis": "BG-0005-ASBL-EDUPERM",
+        "vers": "BG-0011-MR-CAMPAGNE-EXPORT",
+        "raison": "campagne politique qui recycle les listes"
+      },
+      {
+        "depuis": "BG-0011-MR-CAMPAGNE-EXPORT",
+        "vers": "BG-0012-BELGI-LOGS",
+        "raison": "trace de Belgilikjes dans ses propres logs"
+      },
+      {
+        "depuis": "BG-0012-BELGI-LOGS",
+        "vers": "BG-0013-KINGDOM-DIAGRAM",
+        "raison": "vision globale d’un Royaume loggé"
+      }
+    ],
+    "sortie_possible": "fermer l’onglet, en parler ailleurs, ou tout encoder mieux"
+  }
+}
+              </div>
+
+              <p style="margin-top:6px;">
+                Rien n’est sauvegardé : l’enquête vit dans ta tête, pas dans un serveur.
+                Mais tu peux intégrer ce “mode enquête” dans ton jeu plus large
+                (intranet, VSSE fictive, Organisation, etc.).
+              </p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- COL DROITE -->
+      <aside class="col">
+        <div class="col-header">passoire-mètre & toilettes publiques</div>
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">🕳️</span>
+              Passoire-mètre du Royaume
+            </div>
+            <span class="badge badge-soft">échelle Passchendaele</span>
+          </div>
+
+          <div class="score-row">
+            <div class="score-pill">
+              🏚️ Niveau global :
+              <strong id="score-global">0</strong> / 10 trous
+            </div>
+            <div class="score-pill">
+              🚽 Toilettes publiques :
+              <strong id="score-toilettes">0</strong> / 10 éclaboussures
+            </div>
+          </div>
+
+          <div class="bar">
+            <div id="bar-global" class="bar-inner"></div>
+          </div>
+          <div class="bar" style="margin-top:4px;">
+            <div id="bar-toilettes" class="bar-inner"></div>
+          </div>
+
+          <div style="font-size:11px; color:var(--text-softer); margin-top:4px;">
+            Les scores sont complètement inventés, mais honnêtement, est-ce que ça choque quelqu’un ?
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">🚻</span>
+              Dossiers “toilettes publiques”
+            </div>
+            <span class="badge badge-green">tag spécial Belgilikjes</span>
+          </div>
+          <div class="toilette-box">
+            <strong>Concept :</strong> si l’État fuit partout, pourquoi pas jusque
+            dans les toilettes publiques ?  
+            Ici, on recense des fuites fictives liées à :
+            <ul style="margin:4px 0 0 16px; padding:0;">
+              <li>badges d’accès mal gérés,</li>
+              <li>capteurs connectés qui envoient n’importe quoi,</li>
+              <li>tests “smart city” déployés sur des gens qui voulaient juste uriner tranquille.</li>
+            </ul>
+          </div>
+          <div class="links-vrac">
+            <a href="organisation.html">“L’Organisation” – intranet socialement anonyme</a>
+            <a href="vsse.html">VSSE – test de recrutement fictif</a>
+            <a href="mr-campagne.html">MR EN MIEUX – site de campagne gamified</a>
+            <a href="campagne-clones.html">Fork écolo & PTB – clones woke</a>
+            <a href="etagere.html">Étagère – tous les dossiers dans une armoire</a>
+          </div>
+          <div class="disclaimer">
+            <strong>Rappel :</strong> cette page ne montre aucune donnée réelle.  
+            Si tu veux parler des vraies fuites, il faudra un autre cadre, d’autres outils
+            et probablement un bon avocat.
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <!-- MODALE -->
+    <div id="modal-backdrop" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <div id="modal-title" class="modal-title">Détail de la fuite (fictive)</div>
+            <div id="modal-meta" class="modal-meta">Secteur · Gravité · Timestamp</div>
+          </div>
+          <button id="modal-close" class="modal-close">Fermer ✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-section-title">Résumé</div>
+          <p id="modal-summary">
+            Exemple de description synthétique de la fuite.
+          </p>
+
+          <div class="modal-section-title">Métadonnées (fictives)</div>
+          <div class="modal-kv">
+            <span class="key">Dossier :</span><span id="modal-id" class="value">BG-XXXX-000</span>
+            <span class="key">Secteur :</span><span id="modal-sector" class="value">—</span>
+            <span class="key">Gravité :</span><span id="modal-severity" class="value">—</span>
+          </div>
+
+          <div class="modal-section-title">Extrait pseudo-anonymisé</div>
+          <div id="modal-redacted" class="modal-redacted">
+██████████████████████████████████████████████
+█ AVERTISSEMENT : Données fictives seulement █
+██████████████████████████████████████████████
+          </div>
+
+          <div class="modal-footer">
+            Tout ce que tu vois ici est généré pour l’univers du jeu.  
+            Aucune info réelle, aucun identifiant réel, aucun login réel.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div>
+        <strong>Belgilikjes</strong> fait partie d’un univers fictif satirique sur la Belgique,
+        les fuites de données et l’obsession crypto-messianique de “dénoncer l’État”.
+        Ce site n’est relié à aucune base de données réelle, et ne doit en aucun cas être
+        confondu avec une plateforme de leaks ou de “whistleblowing” authentique.
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // =======================
+    // Données fictives
+    // =======================
+    const leaks = [
+      {
+        id: "BG-0001-CPAS-XL",
+        title: "Export CSV oublié sur un bureau du CPAS de Bruxelles (échantillon)",
+        sector: "social",
+        severity: "high",
+        recent: true,
+        tags: ["CPAS", "Bruxelles", "tableur", "accès physique"],
+        toilets: false,
+        summary:
+          "Un fichier CSV test contenant des lignes fictives 'BENEFICIAIRE_X' est laissé sur un poste non verrouillé. Des stagiaires imaginaires en rigolent, personne ne comprend vraiment le RGPD.",
+        redacted: `ID;NOM;SITUATION;MONTANT
+1;BENEFICIAIRE_████;SUSPENDU;12,50
+2;BENEFICIAIRE_████;EN ATTENTE;125,00
+3;BENEFICIAIRE_████;EN RECOURS;0,00`
+      },
+      {
+        id: "BG-0002-HOSP-CHU",
+        title: "Logs de badge d’hôpital gardés en clair (échantillon simulé)",
+        sector: "sante",
+        severity: "medium",
+        recent: true,
+        tags: ["hôpital", "badges", "logs", "surveillance"],
+        toilets: false,
+        summary:
+          "Un système de contrôle d’accès fictif stocke les passages avec des identifiants génériques. On peut suivre 'MEDECIN_X' et 'INFIRMIERE_Y' comme dans une série mais en bien plus triste.",
+        redacted: `[LOG] 2025-11-27 07:42  BADGE_MEDECIN_X     PORTE_URGENCES    OK
+[LOG] 2025-11-27 07:44  BADGE_INFIRMIERE_Y PORTE_BLOC_OP    OK
+[LOG] 2025-11-27 07:52  BADGE_MEDECIN_X     PORTE_REPOS       OK`
+      },
+      {
+        id: "BG-0003-JUD-PRISON",
+        title: "Liste fictive de dossiers disciplinaires en prison",
+        sector: "justice",
+        severity: "high",
+        recent: false,
+        tags: ["prison", "discipline", "pdf", "impression"],
+        toilets: false,
+        summary:
+          "Un PDF d’exemple circule dans un intranet pénitentiaire fictif. Les noms sont remplacés par DETENU_001 etc., mais le modèle du formulaire reste inquiétant.",
+        redacted: `DOSSIER DISCIPLINAIRE (MODÈLE)
+DETENU_00█ : MANQUEMENT A LA REGLE N°██
+SANCTION PROPOSÉE : ISOLEMENT (SIMULÉ)
+SIGNATURE DIRECT. ██████████████████`
+      },
+      {
+        id: "BG-0004-ENERG-GRID",
+        title: "Dashboard public de consommation énergétique trop bavard",
+        sector: "energie",
+        severity: "medium",
+        recent: true,
+        tags: ["smartgrid", "open data", "profilage"],
+        toilets: false,
+        summary:
+          "Une carte 'open data' fictive expose des profils horaires tellement précis qu’on pourrait deviner quand tout un quartier prend sa douche.",
+        redacted: `HORAIRE_CONSOMMATION (AGRÉGÉ ANONYME)
+06:00-07:00 : pic douche + chauffage
+18:00-20:00 : pic cuisson + streaming
+02:00-03:00 : pics résiduels (serveurs / insomnies)`
+      },
+      {
+        id: "BG-0005-ASBL-EDUPERM",
+        title: "Tableur d’inscriptions à des formations citoyennes",
+        sector: "asbl",
+        severity: "medium",
+        recent: false,
+        tags: ["éducation permanente", "formations", "mailing"],
+        toilets: false,
+        summary:
+          "Un fichier XLS fictif combine nom de projet, commune, public cible. Pas de gros secret, mais on dirait un trésor pour n’importe quel marketeux en mal de cible.",
+        redacted: `PROJET;COMMUNE;TYPE_PUBLIC
+LABO_DEMOCRATIQUE;URBANVILLE;JEUNES ADULTES
+ATELIER_MEDIA;RURAVILLE;PUBLIC MIXTE
+FORUM_SOCIAL;PERIPH-CITY;MILITANTS FATIGUÉS`
+      },
+      {
+        id: "BG-0006-TOILET-SMARTCITY",
+        title: "Capteurs “smart city” dans les toilettes d’une gare",
+        sector: "toilettes",
+        severity: "high",
+        recent: true,
+        tags: ["toilettes publiques", "IoT", "smartcity", "capteurs"],
+        toilets: true,
+        summary:
+          "Un pilote fictif installe des capteurs connectés pour mesurer l’usage des toilettes. Les logs agrégés permettent surtout de savoir quand les trains sont systématiquement en retard.",
+        redacted: `[TOILET_IOT] 2025-11-27 08:01  CABINE_1   UTILISATION  03m12
+[TOILET_IOT] 2025-11-27 08:05  CABINE_2   UTILISATION  01m07
+[TOILET_IOT] 2025-11-27 08:07  CABINE_3   HORS SERVICE (PAPIER ?)`
+      },
+      {
+        id: "BG-0007-TOILET-BADGE",
+        title: "Accès badge aux toilettes du ministère (échantillon log)",
+        sector: "toilettes",
+        severity: "medium",
+        recent: false,
+        tags: ["ministère", "badge", "toilettes publiques internes"],
+        toilets: true,
+        summary:
+          "Dans un ministère fictif, les toilettes sont derrière badge. Les logs (sans nom) montrent surtout l’intensité des réunions interminables.",
+        redacted: `2025-11-27 10:14 BADGE_EMPLOYE_████  PORTE_WC_ETAGE_3  OK
+2025-11-27 10:49 BADGE_EMPLOYE_████  PORTE_WC_ETAGE_3  OK
+2025-11-27 11:02 BADGE_EMPLOYE_████  PORTE_WC_ETAGE_3  OK`
+      },
+      {
+        id: "BG-0008-POLICE-CAM",
+        title: "Export d’exemple d’images floutées de caméras urbaines",
+        sector: "justice",
+        severity: "medium",
+        recent: true,
+        tags: ["caméras", "vidéosurveillance", "floutage"],
+        toilets: false,
+        summary:
+          "Un ZIP fictif regroupe des images où tout le monde est flouté sauf les panneaux publicitaires. Techniquement conforme, politiquement ambigu.",
+        redacted: `FICHIERS:
+CAMERA_001_FRAME_0001_BLUR_PERSONNES_OK
+CAMERA_001_FRAME_0001_PUB_NETTE_SPONSOR_XXX
+LOG ANONYMISATION : SUCCÈS (SUR LE PAPIER)`
+      },
+      {
+        id: "BG-0009-CPAS-PLAINTE",
+        title: "Modèle de courrier de plainte interne au CPAS",
+        sector: "social",
+        severity: "medium",
+        recent: false,
+        tags: ["plainte", "workflow", "formulaire"],
+        toilets: false,
+        summary:
+          "Un modèle de formulaire interne circule sur trop de clefs USB. Il est rempli avec des FAUX_USAGERS dans cette version, mais on devine le reste.",
+        redacted: `OBJET : PLAINTE USAGER_███
+MOTIF : DELAI / ACCUEIL / DÉCISION
+TRAITEMENT : PRÉVU DANS 12,50 JOURS OUVRABLES (THÉORIQUE)`
+      },
+      {
+        id: "BG-0010-ASBL-LISTE",
+        title: "Liste de diffusion mail d’une plate-forme associative",
+        sector: "asbl",
+        severity: "medium",
+        recent: true,
+        tags: ["mailing", "plateforme", "coalition"],
+        toilets: false,
+        summary:
+          "Un export fictif montre la structure d’une mailing-list d’associations. Noms remplacés par ASSO_X, mais on voit la topologie d’un réseau civil.",
+        redacted: `ASSO_01@exemple.be ; THEMATIQUE: LOGEMENT
+ASSO_02@exemple.be ; THEMATIQUE: CLIMAT
+ASSO_03@exemple.be ; THEMATIQUE: TRAVAIL PRÉCAIRE`
+      },
+      {
+        id: "BG-0011-MR-CAMPAGNE-EXPORT",
+        title: "Export simulé de micro-ciblage de campagne MR EN MIEUX",
+        sector: "asbl",
+        severity: "high",
+        recent: true,
+        tags: ["campagne", "MR EN MIEUX", "micro-ciblage", "cross-data"],
+        toilets: false,
+        summary:
+          "Un CSV fictif illustre comment une campagne politique parallèle pourrait recroiser CPAS, ASBL et habitudes de clic issues de sites comme Belgilikjes.",
+        redacted: `ID_FAUX;SOURCE;TAG_CIBLE
+0001;CPAS_TABLEUR;PUBLIC_FRAGILISE
+0002;ASBL_EDUPERM;MILITANT_POTENTIEL
+0003;BELGILIKJES_CLICK;INTERET_DATALEAK_SPECTACLE`
+      },
+      {
+        id: "BG-0012-BELGI-LOGS",
+        title: "Journal système interne de Belgilikjes (méta-fuite)",
+        sector: "toilettes",
+        severity: "medium",
+        recent: true,
+        tags: ["meta-leak", "logs internes", "Belgilikjes", "autosurveillance"],
+        toilets: true,
+        summary:
+          "Fuite fictive montrant que Belgilikjes logge tout : clics, filtres, recherches. Le site de dénonciation devient à son tour une passoire.",
+        redacted: `[BELGILIKJES_LOG] 2025-11-27T12:50:01Z  VISITE /?sector=tous&filter=recent
+[BELGILIKJES_LOG] 2025-11-27T12:50:12Z  CLICK LEAK BG-0001-CPAS-XL
+[BELGILIKJES_LOG] 2025-11-27T12:51:42Z  SWITCH TAB -> MODE_ENQUETE`
+      },
+      {
+        id: "BG-0013-KINGDOM-DIAGRAM",
+        title: "Diagramme ASCII du Royaume intégralement loggé",
+        sector: "energie",
+        severity: "high",
+        recent: true,
+        tags: ["diagramme", "système", "dystopie", "cartographie"],
+        toilets: false,
+        summary:
+          "Un schéma textuel relie CPAS, hôpitaux, prisons, campagnes politiques et Belgilikjes dans une seule constellation de logs interminables.",
+        redacted: `          [USAGERS]
+               /    |    \\
+          [CPAS] [HÔPITAL] [PRISON]
+             \\       |       /
+              \\      |      /
+               [CAMPAGNES_POLITIQUES]
+                       |
+                  [BELGILIKJES]
+                       |
+                   [LOGS_∞]`
+      }
+    ];
+
+    // =======================
+    // État & DOM
+    // =======================
+    const leaksListEl = document.getElementById("leaks-list");
+    const resultsCountEl = document.getElementById("results-count");
+    const pageCurrentEl = document.getElementById("page-current");
+    const pageTotalEl = document.getElementById("page-total");
+    const btnPrev = document.getElementById("btn-prev");
+    const btnNext = document.getElementById("btn-next");
+    const searchInput = document.getElementById("search-input");
+
+    const sectorItems = document.querySelectorAll(".sector-item");
+    const chips = document.querySelectorAll(".chip");
+    const viewBtns = document.querySelectorAll(".view-btn");
+    const tabBtns = document.querySelectorAll(".tab-btn");
+
+    const sectorCountEls = {
+      all: document.getElementById("sector-count-all"),
+      sante: document.getElementById("sector-count-sante"),
+      social: document.getElementById("sector-count-social"),
+      justice: document.getElementById("sector-count-justice"),
+      energie: document.getElementById("sector-count-energie"),
+      asbl: document.getElementById("sector-count-asbl"),
+      toilettes: document.getElementById("sector-count-toilettes")
+    };
+
+    const scoreGlobalEl = document.getElementById("score-global");
+    const scoreToilettesEl = document.getElementById("score-toilettes");
+    const barGlobal = document.getElementById("bar-global");
+    const barToilettes = document.getElementById("bar-toilettes");
+
+    const modalBackdrop = document.getElementById("modal-backdrop");
+    const modalClose = document.getElementById("modal-close");
+    const modalTitle = document.getElementById("modal-title");
+    const modalMeta = document.getElementById("modal-meta");
+    const modalSummary = document.getElementById("modal-summary");
+    const modalId = document.getElementById("modal-id");
+    const modalSector = document.getElementById("modal-sector");
+    const modalSeverity = document.getElementById("modal-severity");
+    const modalRedacted = document.getElementById("modal-redacted");
+
+    // liens du mode enquête qui “jump” vers un leak
+    const jumpLinks = document.querySelectorAll("[data-jumpto]");
+
+    let currentSector = "tous";
+    let currentFilter = "recent";
+    let currentView = "grid";
+    let currentPage = 1;
+    const pageSize = 4;
+
+    // =======================
+    // Fonctions utilitaires
+    // =======================
+    function applyFilters() {
+      let filtered = leaks.slice();
+
+      if (currentSector !== "tous") {
+        filtered = filtered.filter(l => l.sector === currentSector);
+      }
+
+      if (currentFilter === "recent") {
+        filtered = filtered.filter(l => l.recent);
+      } else if (currentFilter === "massives") {
+        filtered = filtered.filter(l => l.severity === "high");
+      } else if (currentFilter === "toilettes") {
+        filtered = filtered.filter(l => l.toilets);
+      }
+
+      const q = searchInput.value.trim().toLowerCase();
+      if (q) {
+        filtered = filtered.filter(l =>
+          (l.title + " " + l.summary + " " + l.id + " " + l.tags.join(" "))
+            .toLowerCase()
+            .includes(q)
+        );
+      }
+
+      return filtered;
+    }
+
+    function renderLeakList() {
+      const filtered = applyFilters();
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const start = (currentPage - 1) * pageSize;
+      const pageItems = filtered.slice(start, start + pageSize);
+
+      leaksListEl.innerHTML = "";
+      leaksListEl.classList.toggle("grid", currentView === "grid");
+
+      pageItems.forEach(leak => {
+        const card = document.createElement("article");
+        card.className = "leak-card";
+        card.dataset.id = leak.id;
+
+        const header = document.createElement("div");
+        header.className = "leak-header";
+
+        const title = document.createElement("div");
+        title.className = "leak-title";
+        title.textContent = leak.title;
+
+        const badge = document.createElement("div");
+        badge.className = "leak-badge";
+        if (leak.severity === "high") badge.classList.add("high");
+        if (leak.severity === "medium") badge.classList.add("medium");
+        badge.textContent =
+          leak.severity === "high"
+            ? "Gravité : HAUTE (fictive)"
+            : "Gravité : MOYENNE (fictive)";
+
+        header.appendChild(title);
+        header.appendChild(badge);
+
+        const meta = document.createElement("div");
+        meta.className = "leak-meta";
+        meta.textContent = `ID ${leak.id} · Secteur : ${leak.sector}`;
+
+        const tagsContainer = document.createElement("div");
+        tagsContainer.className = "leak-tags";
+        leak.tags.forEach(t => {
+          const span = document.createElement("span");
+          span.className = "leak-tag";
+          span.textContent = t;
+          tagsContainer.appendChild(span);
+        });
+
+        const footer = document.createElement("div");
+        footer.className = "leak-footer";
+        footer.innerHTML = `
+          <span>Cliquer pour voir le détail pseudo-anonymisé</span>
+          <span>${leak.recent ? "Marqué comme “récent”" : "Ancienne fuite de démo"}</span>
+        `;
+
+        card.appendChild(header);
+        const p = document.createElement("div");
+        p.style.fontSize = "11px";
+        p.style.marginTop = "2px";
+        p.textContent = leak.summary;
+        card.appendChild(p);
+        card.appendChild(meta);
+        card.appendChild(tagsContainer);
+        card.appendChild(footer);
+
+        card.addEventListener("click", () => openModal(leak));
+
+        leaksListEl.appendChild(card);
+      });
+
+      resultsCountEl.textContent = `(${total} fuite${total > 1 ? "s" : ""} affichée${total > 1 ? "s" : ""})`;
+      pageCurrentEl.textContent = total ? currentPage : 0;
+      pageTotalEl.textContent = totalPages;
+
+      btnPrev.disabled = currentPage <= 1;
+      btnNext.disabled = currentPage >= totalPages;
+    }
+
+    function updateSectorCounts() {
+      const counts = {
+        all: leaks.length,
+        sante: leaks.filter(l => l.sector === "sante").length,
+        social: leaks.filter(l => l.sector === "social").length,
+        justice: leaks.filter(l => l.sector === "justice").length,
+        energie: leaks.filter(l => l.sector === "energie").length,
+        asbl: leaks.filter(l => l.sector === "asbl").length,
+        toilettes: leaks.filter(l => l.sector === "toilettes").length
+      };
+
+      sectorCountEls.all.textContent = counts.all;
+      sectorCountEls.sante.textContent = counts.sante;
+      sectorCountEls.social.textContent = counts.social;
+      sectorCountEls.justice.textContent = counts.justice;
+      sectorCountEls.energie.textContent = counts.energie;
+      sectorCountEls.asbl.textContent = counts.asbl;
+      sectorCountEls.toilettes.textContent = counts.toilettes;
+    }
+
+    function updateScores() {
+      const total = leaks.length;
+      const toilets = leaks.filter(l => l.toilets).length;
+
+      const globalScore = Math.min(10, Math.round(total / 2));
+      const toiletsScore = Math.min(10, toilets * 3);
+
+      scoreGlobalEl.textContent = globalScore;
+      scoreToilettesEl.textContent = toiletsScore;
+
+      barGlobal.style.width = (globalScore / 10) * 100 + "%";
+      barToilettes.style.width = (toiletsScore / 10) * 100 + "%";
+    }
+
+    function openModal(leak) {
+      modalTitle.textContent = leak.title;
+      modalMeta.textContent = `ID ${leak.id} · Secteur : ${leak.sector} · Gravité : ${leak.severity.toUpperCase()} (fictive)`;
+      modalSummary.textContent = leak.summary;
+      modalId.textContent = leak.id;
+      modalSector.textContent = leak.sector;
+      modalSeverity.textContent = leak.severity.toUpperCase();
+      modalRedacted.textContent = leak.redacted;
+      modalBackdrop.classList.add("open");
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove("open");
+    }
+
+    function openLeakById(id) {
+      const leak = leaks.find(l => l.id === id);
+      if (!leak) return;
+      // on bascule sur l’onglet index, au cas où
+      setActiveTab("index");
+      openModal(leak);
+    }
+
+    function setActiveTab(tabName) {
+      tabBtns.forEach(btn => {
+        const isActive = btn.dataset.tab === tabName;
+        btn.classList.toggle("active", isActive);
+      });
+      document.getElementById("tab-index").classList.toggle("active", tabName === "index");
+      document.getElementById("tab-enquete").classList.toggle("active", tabName === "enquete");
+    }
+
+    // =======================
+    // Événements
+    // =======================
+    sectorItems.forEach(item => {
+      item.addEventListener("click", () => {
+        sectorItems.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
+        currentSector = item.dataset.sector || "tous";
+        currentPage = 1;
+        renderLeakList();
+      });
+    });
+
+    chips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        chips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        currentFilter = chip.dataset.filter || "recent";
+        currentPage = 1;
+        renderLeakList();
+      });
+    });
+
+    viewBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        viewBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentView = btn.dataset.view || "grid";
+        renderLeakList();
+      });
+    });
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        setActiveTab(btn.dataset.tab || "index");
+      });
+    });
+
+    btnPrev.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderLeakList();
+      }
+    });
+
+    btnNext.addEventListener("click", () => {
+      currentPage++;
+      renderLeakList();
+    });
+
+    searchInput.addEventListener("input", () => {
+      currentPage = 1;
+      renderLeakList();
+    });
+
+    jumpLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const id = link.dataset.jumpto;
+        openLeakById(id);
+      });
+    });
+
+    modalClose.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+
+    // =======================
+    // Init
+    // =======================
+    updateSectorCounts();
+    updateScores();
+    renderLeakList();
+  </script>
+</body>
+</html>
