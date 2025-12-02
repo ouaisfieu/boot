@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouvement d’éducation permanente – Fédération Wallonie-Bruxelles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --bg-alt: #ffffff;
+      --primary: #1d4ed8;
+      --primary-soft: rgba(37,99,235,0.08);
+      --accent: #f97316;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 18px 45px rgba(15,23,42,0.12);
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New",monospace;
+    }
+
+    * { box-sizing:border-box; margin:0; padding:0; }
+
+    body {
+      font-family:var(--sans);
+      background:
+        radial-gradient(circle at top, #dbeafe 0, #f3f4f6 40%, #e5e7eb 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    .page {
+      max-width:1160px;
+      margin:0 auto;
+      padding:20px 16px 32px;
+    }
+
+    /* HEADER */
+    header {
+      background:rgba(255,255,255,0.95);
+      border-radius:18px;
+      padding:10px 14px;
+      border:1px solid rgba(209,213,219,0.95);
+      box-shadow:0 12px 32px rgba(148,163,184,0.45);
+      display:flex;
+      align-items:center;
+      gap:14px;
+      position:sticky;
+      top:10px;
+      z-index:30;
+      backdrop-filter:blur(12px);
+    }
+
+    @media (max-width:820px) {
+      header {
+        flex-direction:column;
+        align-items:flex-start;
+      }
+    }
+
+    .logo-block {
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .logo-mark {
+      width:42px;
+      height:42px;
+      border-radius:16px;
+      background:linear-gradient(135deg,#1d4ed8,#2563eb);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-weight:700;
+      font-size:18px;
+      box-shadow:0 10px 26px rgba(37,99,235,0.6);
+    }
+
+    .logo-main {
+      font-size:1rem;
+      font-weight:600;
+    }
+
+    .logo-sub {
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+
+    .badge-header {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:2px 7px;
+      border-radius:999px;
+      background:var(--primary-soft);
+      border:1px solid rgba(148,163,184,0.7);
+      font-size:0.72rem;
+      color:var(--muted);
+      margin-top:3px;
+    }
+
+    .badge-dot {
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:#22c55e;
+      box-shadow:0 0 0 4px rgba(34,197,94,0.4);
+    }
+
+    nav {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      font-size:0.86rem;
+      margin-left:auto;
+    }
+
+    .nav-btn {
+      padding:6px 11px;
+      border-radius:999px;
+      border:1px solid transparent;
+      background:transparent;
+      color:var(--muted);
+      cursor:pointer;
+      transition:background 0.12s,border-color 0.12s,color 0.12s;
+    }
+
+    .nav-btn:hover {
+      background:var(--primary-soft);
+      border-color:rgba(148,163,184,0.7);
+      color:var(--text);
+    }
+
+    .nav-btn.active {
+      background:var(--primary);
+      border-color:var(--primary);
+      color:#fff;
+      font-weight:500;
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      margin-top:20px;
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) minmax(0,0.9fr);
+      gap:18px;
+      align-items:flex-start;
+    }
+
+    @media (max-width:960px) {
+      main { grid-template-columns:minmax(0,1fr); }
+    }
+
+    .card {
+      background:var(--bg-alt);
+      border-radius:var(--radius-lg);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-soft);
+      padding:18px 18px 17px;
+    }
+
+    .section-title {
+      font-size:1rem;
+      font-weight:600;
+      margin-bottom:6px;
+    }
+
+    .section-sub {
+      font-size:0.9rem;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    h1 {
+      font-size:1.8rem;
+      line-height:1.25;
+      margin-bottom:6px;
+    }
+
+    h1 span {
+      color:var(--primary);
+    }
+
+    .hero-sub {
+      font-size:0.96rem;
+      color:var(--muted);
+    }
+
+    .pill-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .pill {
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      padding:7px 10px;
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+
+    .pill strong {
+      display:block;
+      font-size:0.9rem;
+      color:var(--text);
+    }
+
+    .grid-2 {
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+
+    @media (max-width:640px) {
+      .grid-2 { grid-template-columns:minmax(0,1fr); }
+    }
+
+    .tile {
+      border-radius:var(--radius-md);
+      border:1px solid var(--border);
+      background:#f9fafb;
+      padding:10px 11px 9px;
+      font-size:0.86rem;
+    }
+
+    .tile-title {
+      font-weight:600;
+      margin-bottom:2px;
+    }
+
+    .tile-desc {
+      font-size:0.84rem;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+
+    .tag {
+      display:inline-block;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.9);
+      background:#eef2ff;
+      font-size:0.74rem;
+      color:#1e293b;
+      margin-right:4px;
+      margin-top:2px;
+    }
+
+    .btn-main {
+      margin-top:10px;
+      padding:9px 16px;
+      border-radius:999px;
+      background:var(--primary);
+      border:none;
+      color:#fff;
+      font-size:0.9rem;
+      font-weight:600;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 12px 26px rgba(37,99,235,0.45);
+      transition:transform 0.12s,box-shadow 0.12s,filter 0.12s;
+    }
+
+    .btn-main:hover {
+      transform:translateY(-1px);
+      filter:brightness(1.04);
+      box-shadow:0 14px 32px rgba(37,99,235,0.5);
+    }
+
+    .btn-main:active {
+      transform:translateY(1px) scale(0.99);
+      box-shadow:0 8px 20px rgba(15,23,42,0.4);
+    }
+
+    .btn-ghost {
+      padding:7px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      color:var(--muted);
+      font-size:0.82rem;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      transition:background 0.12s,border-color 0.12s,color 0.12s;
+    }
+
+    .btn-ghost:hover {
+      background:#eef2ff;
+      border-color:rgba(148,163,184,0.9);
+      color:var(--text);
+    }
+
+    .small {
+      font-size:0.8rem;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    ul {
+      font-size:0.88rem;
+      color:var(--muted);
+      padding-left:18px;
+      margin-top:2px;
+    }
+
+    ul li { margin-bottom:4px; }
+
+    /* FORMULAIRE CONTACT */
+    .form-group { margin-bottom:8px; }
+    .label {
+      font-size:0.8rem;
+      font-weight:500;
+      margin-bottom:4px;
+      color:#4b5563;
+    }
+    .label span.opt {
+      font-weight:400;
+      color:#9ca3af;
+      font-size:0.76rem;
+    }
+
+    input, textarea, select {
+      width:100%;
+      padding:7px 9px;
+      border-radius:9px;
+      border:1px solid var(--border);
+      font-size:0.86rem;
+      font-family:var(--sans);
+      outline:none;
+      background:#f9fafb;
+      transition:border-color 0.12s,box-shadow 0.12s,background 0.12s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color:var(--primary);
+      box-shadow:0 0 0 1px rgba(37,99,235,0.2);
+      background:#fff;
+    }
+
+    textarea { min-height:90px; resize:vertical; }
+
+    .form-row {
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);
+      gap:8px;
+    }
+
+    @media (max-width:640px) {
+      .form-row { grid-template-columns:minmax(0,1fr); }
+    }
+
+    .status {
+      margin-top:6px;
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+    .status.ok { color:#15803d; }
+    .status.warn { color:#b45309; }
+
+    /* INTRANET */
+    .intranet-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      margin-bottom:8px;
+    }
+
+    .intranet-badge {
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+
+    .intranet-badge span {
+      display:inline-block;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      margin-right:4px;
+      font-size:0.74rem;
+    }
+
+    .intranet-badge .public { background:#ecfdf3; color:#166534; }
+    .intranet-badge .interne { background:#eef2ff; color:#1d4ed8; }
+    .intranet-badge .conf { background:#fef3c7; color:#92400e; }
+
+    .intra-login {
+      border-radius:11px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      padding:8px 9px;
+      font-size:0.84rem;
+      margin-bottom:10px;
+    }
+
+    .intra-login-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:4px;
+      align-items:center;
+    }
+
+    .intra-login input {
+      width:auto;
+      flex:1 1 120px;
+      min-width:120px;
+    }
+
+    .intra-tag {
+      display:inline-block;
+      padding:1px 6px;
+      border-radius:999px;
+      border:1px solid #d1d5db;
+      font-size:0.7rem;
+      color:#6b7280;
+      margin-left:4px;
+    }
+
+    .intra-locked {
+      opacity:0.5;
+      pointer-events:none;
+      filter:grayscale(0.2);
+    }
+
+    /* TABLEAU PROJETS */
+    table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:0.8rem;
+      margin-top:6px;
+    }
+
+    th, td {
+      padding:5px 6px;
+      border-bottom:1px solid #e5e7eb;
+      text-align:left;
+    }
+
+    th {
+      font-size:0.78rem;
+      color:#6b7280;
+      text-transform:uppercase;
+      letter-spacing:0.03em;
+    }
+
+    tbody tr:nth-child(even) { background:#f9fafb; }
+
+    .project-form {
+      margin-top:8px;
+      border-radius:10px;
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      padding:7px 8px;
+    }
+
+    .project-row {
+      display:grid;
+      grid-template-columns:1.2fr 1fr 0.9fr 0.7fr;
+      gap:6px;
+    }
+
+    @media (max-width:740px) {
+      .project-row {
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      }
+    }
+
+    .project-row input, .project-row select {
+      font-size:0.78rem;
+      padding:5px 7px;
+    }
+
+    /* CONSOLE */
+    .console-card {
+      margin-top:10px;
+      border-radius:12px;
+      border:1px solid #111827;
+      background:#020617;
+      padding:8px 9px;
+      font-family:var(--mono);
+      font-size:0.78rem;
+      color:#e5e7eb;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .console-header {
+      font-size:0.74rem;
+      color:#9ca3af;
+      margin-bottom:4px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .console light {}
+    .console-dot {
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:#22c55e;
+      box-shadow:0 0 0 3px rgba(34,197,94,0.4);
+    }
+
+    .console-output {
+      max-height:160px;
+      overflow:auto;
+      border-radius:6px;
+      border:1px solid #111827;
+      padding:4px 5px;
+      background:#020617;
+      margin-bottom:4px;
+    }
+
+    .console-line {
+      white-space:pre-wrap;
+    }
+
+    .console-line.sys {
+      color:#9ca3af;
+    }
+
+    .console-line.warn {
+      color:#f97316;
+    }
+
+    .console-line.err {
+      color:#f97373;
+    }
+
+    .console-input-row {
+      display:flex;
+      align-items:center;
+      gap:4px;
+      margin-top:2px;
+    }
+
+    .console-prefix {
+      color:#22c55e;
+    }
+
+    #console-input {
+      flex:1;
+      background:#020617;
+      border:1px solid #374151;
+      color:#e5e7eb;
+      font-family:var(--mono);
+      font-size:0.78rem;
+      padding:4px 6px;
+      border-radius:6px;
+      outline:none;
+    }
+
+    #console-input:focus {
+      border-color:#22c55e;
+      box-shadow:0 0 0 1px rgba(34,197,94,0.4);
+    }
+
+    footer {
+      margin-top:20px;
+      font-size:0.78rem;
+      color:var(--muted);
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:6px;
+      align-items:center;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="logo-block">
+      <div class="logo-mark">EP</div>
+      <div>
+        <!-- 👉 renomme ici avec le nom de ton mouvement -->
+        <div class="logo-main">Mouvement d’éducation permanente [P. Seudo]</div>
+        <div class="logo-sub">
+          Fédération Wallonie-Bruxelles · reconnaissance & transformation sociale
+        </div>
+        <div class="badge-header">
+          <span class="badge-dot"></span>
+          <span>Candidat au titre de « plus grand mouvement d’éducation permanente »</span>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-btn active" data-section="public">Présentation</button>
+      <button class="nav-btn" data-section="actions">Actions & programmes</button>
+      <button class="nav-btn" data-section="reseau">Réseau & partenariats</button>
+      <button class="nav-btn" data-section="contact">Contact / Devis</button>
+      <button class="nav-btn" data-section="intranet">Intranet & console</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Colonne gauche : contenu variable -->
+    <section class="card" id="left-panel">
+      <!-- rempli par JS -->
+    </section>
+
+    <!-- Colonne droite : bloc fixe + intranet -->
+    <section class="card">
+      <div class="intranet-header">
+        <div>
+          <div class="section-title">Intranet du mouvement</div>
+          <div class="section-sub">
+            Outil interne pour suivre les projets, les notes et piloter l’activité.
+          </div>
+        </div>
+        <div class="intranet-badge">
+          <span class="public">public</span>
+          <span class="interne">interne</span>
+          <span class="conf">confidentiel</span>
+        </div>
+      </div>
+
+      <!-- Login intranet -->
+      <div class="intra-login" id="login-panel">
+        <div>
+          Accès réservé à l’équipe d’animation.  
+          <span class="small">Pour un vrai déploiement, ce code serait remplacé par une authentification serveur. Ici, tout reste dans votre navigateur.</span>
+        </div>
+        <div class="intra-login-row">
+          <input id="intra-code" type="password" placeholder="Code d’accès intranet">
+          <button class="btn-ghost" type="button" onclick="handleLogin()">Entrer</button>
+          <span class="intra-tag">mode démo : code par défaut à personnaliser dans le script</span>
+        </div>
+        <div class="status" id="login-status"></div>
+      </div>
+
+      <!-- Contenu intranet (verrouillé au départ) -->
+      <div id="intranet-body" class="intra-locked">
+        <section>
+          <div class="section-title">Tableau de bord des projets</div>
+          <div class="section-sub">
+            Liste des projets d’éducation permanente en cours : ateliers, publications, campagnes, recherches, etc.
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Projet</th>
+                <th>Axe</th>
+                <th>Territoire</th>
+                <th>Statut</th>
+                <th>Année</th>
+              </tr>
+            </thead>
+            <tbody id="projects-body">
+              <!-- rempli par JS -->
+            </tbody>
+          </table>
+
+          <div class="project-form">
+            <div class="label">Ajouter / mettre à jour un projet</div>
+            <div class="project-row">
+              <input id="proj-nom" placeholder="Nom du projet">
+              <input id="proj-axe" placeholder="Axe (citoyenneté, médias, travail...)">
+              <input id="proj-territoire" placeholder="Territoire (FWB, local...)">
+              <select id="proj-statut">
+                <option value="En préparation">En préparation</option>
+                <option value="En cours">En cours</option>
+                <option value="Clôturé">Clôturé</option>
+              </select>
+              <input id="proj-annee" placeholder="Année" style="grid-column:1/-1; max-width:120px;">
+            </div>
+            <div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:6px;">
+              <button class="btn-ghost" type="button" onclick="addProject()">Enregistrer le projet</button>
+              <button class="btn-ghost" type="button" onclick="resetProjects()">Réinitialiser la liste (local)</button>
+            </div>
+            <div class="small">
+              🔒 Les données sont stockées uniquement dans ce navigateur (localStorage).  
+              Pour partager entre plusieurs personnes, exportez l’état dans un document partagé.
+            </div>
+          </div>
+        </section>
+
+        <!-- Console intégrée -->
+        <section class="console-card">
+          <div class="console-header">
+            <span>Console EP-FWB · ligne de commande interne</span>
+            <span class="console-dot" id="console-dot"></span>
+          </div>
+          <div class="console-output" id="console-output"></div>
+          <div class="console-input-row">
+            <span class="console-prefix">&gt;&gt;</span>
+            <input id="console-input" autocomplete="off" placeholder="tapez « help » pour voir les commandes disponibles">
+          </div>
+          <div class="small" style="margin-top:4px; color:#9ca3af;">
+            Exemples : <code>add projet Forum EP | Citoyenneté | FWB | En cours | 2025</code> ·
+            <code>list projets</code> · <code>note ...</code> · <code>clear</code>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      © <span id="year"></span> · Mouvement d’éducation permanente [P. Seudo] – Fédération Wallonie-Bruxelles.
+    </div>
+    <div>
+      Intranet statique autonome · prêt pour clé USB, GitHub Pages ou serveur associatif.
+    </div>
+  </footer>
+</div>
+
+<script>
+  /**********************
+   * PARAMÈTRES A ADAPTER
+   **********************/
+  // 👉 change le code intranet ici
+  const INTRANET_CODE = "EP-FWB-2025";
+
+  // Email de contact générique
+  const EP_EMAIL = "contact@votre-mouvement.example";
+
+  /**********************
+   * NAVIGATION PUBLIQUE
+   **********************/
+  const navButtons = document.querySelectorAll(".nav-btn");
+  const leftPanel = document.getElementById("left-panel");
+
+  const sections = {
+    public: `
+      <div>
+        <h1>Un mouvement d’éducation permanente<br><span>ancré en Fédération Wallonie-Bruxelles.</span></h1>
+        <p class="hero-sub">
+          Notre mouvement développe des actions d’éducation permanente pour renforcer l’esprit critique,
+          l’analyse sociale et la participation active des citoyennes et citoyens.
+          Notre ambition&nbsp;: devenir, par la qualité et la densité de nos actions,
+          une référence majeure en FWB.
+        </p>
+
+        <div class="pill-row">
+          <div class="pill">
+            <strong>Analyse critique</strong>
+            productions, études, dossiers thématiques.
+          </div>
+          <div class="pill">
+            <strong>Actions collectives</strong>
+            ateliers, forums, cycles de formation, campagnes.
+          </div>
+          <div class="pill">
+            <strong>Transformation</strong>
+            travail sur les inégalités, les droits et les pratiques institutionnelles.
+          </div>
+        </div>
+
+        <section style="margin-top:14px;">
+          <div class="section-title">Axes principaux</div>
+          <div class="grid-2">
+            <div class="tile">
+              <div class="tile-title">Citoyenneté & démocratie</div>
+              <div class="tile-desc">
+                Comprendre les mécanismes de pouvoir, les institutions, les droits et les limites de la participation.
+              </div>
+              <div>
+                <span class="tag">éducation citoyenne</span>
+                <span class="tag">démocratie</span>
+              </div>
+            </div>
+            <div class="tile">
+              <div class="tile-title">Travail, protection sociale, inégalités</div>
+              <div class="tile-desc">
+                Lire le monde du travail, les politiques sociales et leurs effets concrets sur les trajectoires de vie.
+              </div>
+              <div>
+                <span class="tag">travail</span>
+                <span class="tag">sécurité sociale</span>
+              </div>
+            </div>
+            <div class="tile">
+              <div class="tile-title">Médias, numérique & critiques</div>
+              <div class="tile-desc">
+                Décrypter l’information, les logiques algorithmiques, les plateformes et leurs impacts démocratiques.
+              </div>
+              <div>
+                <span class="tag">médias</span>
+                <span class="tag">numérique</span>
+              </div>
+            </div>
+            <div class="tile">
+              <div class="tile-title">Territoires & vécus</div>
+              <div class="tile-desc">
+                Partir des vécus locaux pour interroger les structures plus larges : urbain, rural, quartiers, institutions.
+              </div>
+              <div>
+                <span class="tag">ancrage local</span>
+                <span class="tag">recherche-action</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    `,
+    actions: `
+      <div>
+        <div class="section-title">Actions & programmes d’éducation permanente</div>
+        <div class="section-sub">
+          Quelques formats-types que nous développons, adaptables selon les publics,
+          les partenaires et les territoires.
+        </div>
+
+        <div class="grid-2">
+          <div class="tile">
+            <div class="tile-title">Cycles d’atelier</div>
+            <div class="tile-desc">
+              Séquences de plusieurs séances, avec temps d’analyse, d’échange et de production collective.
+            </div>
+            <ul>
+              <li>Public : groupes constitués ou ouverts.</li>
+              <li>Durée : de 3 à 10 séances.</li>
+              <li>Possibilité de co-construction avec les partenaires.</li>
+            </ul>
+          </div>
+          <div class="tile">
+            <div class="tile-title">Forums & journées d’étude</div>
+            <div class="tile-desc">
+              Temps forts pour croiser les regards : citoyen·nes, chercheur·ses, professionnel·les, institutions.
+            </div>
+            <ul>
+              <li>Tables rondes, ateliers, espaces de controverse.</li>
+              <li>Valorisation des productions issues du terrain.</li>
+            </ul>
+          </div>
+          <div class="tile">
+            <div class="tile-title">Publications & outils pédagogiques</div>
+            <div class="tile-desc">
+              Dossiers, brochures, podcasts, contenus numériques, outils pour animateur·rices.
+            </div>
+            <ul>
+              <li>Licence à préciser selon les projets (CC-BY, etc.).</li>
+            </ul>
+          </div>
+          <div class="tile">
+            <div class="tile-title">Accompagnements sur mesure</div>
+            <div class="tile-desc">
+              Appui à des collectifs, associations, services publics souhaitant renforcer une démarche d’EP.
+            </div>
+            <ul>
+              <li>Diagnostic partagé.</li>
+              <li>Co-construction du programme.</li>
+              <li>Évaluation qualitative.</li>
+            </ul>
+          </div>
+        </div>
+
+        <button class="btn-main" type="button" onclick="switchSection('contact')">
+          Proposer une collaboration
+        </button>
+        <p class="small">
+          Nous privilégions les collaborations qui respectent l’esprit de l’éducation permanente :
+          indépendance, esprit critique, attention aux personnes concernées.
+        </p>
+      </div>
+    `,
+    reseau: `
+      <div>
+        <div class="section-title">Réseau & partenariats</div>
+        <div class="section-sub">
+          Le mouvement s’inscrit dans un paysage plus large : autres mouvements d’EP, associations,
+          services publics, collectifs informels, institutions académiques…
+        </div>
+
+        <div class="grid-2">
+          <div class="tile">
+            <div class="tile-title">Partenaires associatifs</div>
+            <div class="tile-desc">
+              Co-organisation d’actions, mutualisation de ressources, partage d’analyses et de pratiques.
+            </div>
+            <div>
+              <span class="tag">associations</span>
+              <span class="tag">collectifs</span>
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile-title">Relations avec les pouvoirs publics</div>
+            <div class="tile-desc">
+              Dialogue avec les pouvoirs publics, dans le respect de l’indépendance d’analyse,
+              sur les politiques qui touchent les publics rencontrés.
+            </div>
+            <div>
+              <span class="tag">FWB</span>
+              <span class="tag">pouvoirs locaux</span>
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile-title">Liens avec la recherche</div>
+            <div class="tile-desc">
+              Coopérations avec des équipes de recherche, dans une logique de recherche-action participative.
+            </div>
+            <div>
+              <span class="tag">universités</span>
+              <span class="tag">hautes écoles</span>
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile-title">Réseau informel des participant·es</div>
+            <div class="tile-desc">
+              Les personnes qui participent aux actions sont actrices et acteurs du mouvement :
+              relais, propositions, co-création.
+            </div>
+            <div>
+              <span class="tag">participation</span>
+              <span class="tag">co-construction</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="small" style="margin-top:8px;">
+          Pour rejoindre ou construire ce réseau, utilisez le formulaire de contact ou prenez rendez-vous
+          pour une rencontre exploratoire.
+        </p>
+      </div>
+    `,
+    contact: `
+      <div>
+        <div class="section-title">Contact & demande de collaboration / devis</div>
+        <div class="section-sub">
+          Décrivez votre structure, vos publics, vos enjeux et le type de collaboration souhaité.
+          Un mail structuré sera préparé dans votre messagerie.
+        </div>
+
+        <form onsubmit="handleContact(event)">
+          <div class="form-group">
+            <div class="label">Nom / Prénom</div>
+            <input id="c-name" required placeholder="Votre nom complet">
+          </div>
+          <div class="form-group">
+            <div class="label">Organisation</div>
+            <input id="c-org" required placeholder="Association, service public, collectif, autre…">
+          </div>
+          <div class="form-group">
+            <div class="label">Email</div>
+            <input id="c-email" type="email" required placeholder="prenom.nom@structure.be">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div class="label">Type de demande</div>
+              <select id="c-type" required>
+                <option value="">Sélectionnez</option>
+                <option>Co-organisation d’actions d’EP</option>
+                <option>Accompagnement / diagnostic</option>
+                <option>Intervention ponctuelle</option>
+                <option>Demande de devis / lettre d’intention</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="label">Territoire principal</div>
+              <input id="c-territoire" placeholder="ex. FWB, province, ville, quartier…">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label">Publics & enjeux</div>
+            <textarea id="c-enjeux" required placeholder="Décrivez les publics concernés, les situations rencontrées, les questions que vous souhaitez travailler."></textarea>
+          </div>
+
+          <div class="form-group">
+            <div class="label">Attentes & formats pressentis <span class="opt">(facultatif)</span></div>
+            <textarea id="c-attentes" placeholder="Ex : cycle d’atelier, accompagnement d’équipe, forum, publication…"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div class="label">Budget indicatif <span class="opt">(facultatif)</span></div>
+              <select id="c-budget">
+                <option value="">À discuter</option>
+                <option>Exploration (petit volume)</option>
+                <option>Programme significatif</option>
+                <option>Partenariat pluriannuel</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="label">Délai</div>
+              <input id="c-delai" placeholder="Période souhaitée (dates, année, etc.)">
+            </div>
+          </div>
+
+          <p class="small">
+            🔒 Le formulaire ne stocke rien : il prépare simplement un email dans votre client de messagerie.
+          </p>
+
+          <button class="btn-main" type="submit">
+            Préparer l’email
+          </button>
+          <div class="status" id="contact-status"></div>
+        </form>
+      </div>
+    `,
+    intranet: `
+      <div>
+        <div class="section-title">Intranet & console intégrée</div>
+        <div class="section-sub">
+          À droite : tableau de bord des projets et console ligne de commande.
+          Ci-dessous : rappel des fonctions internes.
+        </div>
+
+        <div class="grid-2">
+          <div class="tile">
+            <div class="tile-title">Tableau de bord projets</div>
+            <div class="tile-desc">
+              Ajout, modification légère et suivi des projets d’EP (nom, axe, territoire, statut, année).
+            </div>
+            <ul>
+              <li>Stockage local dans le navigateur.</li>
+              <li>Possibilité de copier-coller dans un rapport ou un tableur.</li>
+            </ul>
+          </div>
+          <div class="tile">
+            <div class="tile-title">Console EP-FWB</div>
+            <div class="tile-desc">
+              Interface texte pour interagir rapidement avec le tableau de bord et journaliser des notes internes.
+            </div>
+            <ul>
+              <li><code>help</code> pour voir les commandes.</li>
+              <li><code>list projets</code> pour un aperçu rapide.</li>
+              <li><code>note ...</code> pour consigner une observation.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="small" style="margin-top:8px;">
+          Pour une installation réelle, cet intranet peut être étendu (export, authentification serveur, etc.)
+          mais ce prototype tient déjà sur une clé USB ou un simple dépôt Git.
+        </p>
+      </div>
+    `
+  };
+
+  function renderSection(name) {
+    leftPanel.innerHTML = sections[name] || sections.public;
+  }
+
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      navButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderSection(btn.dataset.section);
+    });
+  });
+
+  function switchSection(name) {
+    navButtons.forEach(b => {
+      const active = b.dataset.section === name;
+      b.classList.toggle("active", active);
+    });
+    renderSection(name);
+  }
+
+  /**********************
+   * CONTACT / EMAIL
+   **********************/
+  function handleContact(event) {
+    event.preventDefault();
+    const name = document.getElementById("c-name").value.trim();
+    const org = document.getElementById("c-org").value.trim();
+    const email = document.getElementById("c-email").value.trim();
+    const type = document.getElementById("c-type").value;
+    const territoire = document.getElementById("c-territoire").value.trim();
+    const enjeux = document.getElementById("c-enjeux").value.trim();
+    const attentes = document.getElementById("c-attentes").value.trim();
+    const budget = document.getElementById("c-budget").value;
+    const delai = document.getElementById("c-delai").value.trim();
+    const status = document.getElementById("contact-status");
+
+    if (!name || !org || !email || !type || !enjeux) {
+      status.textContent = "Merci de compléter au minimum : nom, organisation, email, type de demande et enjeux.";
+      status.classList.remove("ok");
+      status.classList.add("warn");
+      return;
+    }
+
+    let subject = "Demande de collaboration / devis – " + org;
+    let body = [];
+    body.push("Bonjour,");
+    body.push("");
+    body.push("Je vous contacte au nom de : " + org);
+    body.push("");
+    body.push("Nom / Prénom : " + name);
+    body.push("Email : " + email);
+    body.push("Type de demande : " + type);
+    if (territoire) body.push("Territoire principal : " + territoire);
+    if (budget) body.push("Budget indicatif : " + budget);
+    if (delai) body.push("Délai / période souhaitée : " + delai);
+    body.push("");
+    body.push("Publics & enjeux :");
+    body.push(enjeux);
+    if (attentes) {
+      body.push("");
+      body.push("Attentes & formats pressentis :");
+      body.push(attentes);
+    }
+    body.push("");
+    body.push("Je reste à disposition pour un échange plus détaillé.");
+    body.push("");
+    body.push("Bien à vous,");
+    body.push(name);
+
+    const mailtoUrl =
+      "mailto:" + encodeURIComponent(EP_EMAIL) +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body.join("\n"));
+
+    status.textContent = "Ouverture de votre messagerie…";
+    status.classList.remove("warn");
+    status.classList.add("ok");
+
+    window.location.href = mailtoUrl;
+  }
+
+  /**********************
+   * INTRANET LOGIN
+   **********************/
+  const loginStatus = document.getElementById("login-status");
+  const intraBody = document.getElementById("intranet-body");
+
+  function handleLogin() {
+    const value = document.getElementById("intra-code").value.trim();
+    if (!value) {
+      loginStatus.textContent = "Merci d’indiquer le code intranet.";
+      loginStatus.classList.remove("ok");
+      loginStatus.classList.add("warn");
+      return;
+    }
+    if (value === INTRANET_CODE) {
+      loginStatus.textContent = "Accès intranet activé sur ce navigateur.";
+      loginStatus.classList.remove("warn");
+      loginStatus.classList.add("ok");
+      intraBody.classList.remove("intra-locked");
+      initConsole();
+    } else {
+      loginStatus.textContent = "Code incorrect. Si vous êtes autorisé·e, contactez l’administrateur du mouvement.";
+      loginStatus.classList.remove("ok");
+      loginStatus.classList.add("warn");
+    }
+  }
+
+  /**********************
+   * PROJETS (localStorage)
+   **********************/
+  const PROJECTS_KEY = "ep_fwb_projets";
+  const projectsBody = document.getElementById("projects-body");
+
+  function loadProjects() {
+    let data;
+    try {
+      const stored = localStorage.getItem(PROJECTS_KEY);
+      data = stored ? JSON.parse(stored) : null;
+    } catch (e) {
+      data = null;
+    }
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      data = [
+        { nom:"Ateliers démocratie critique", axe:"Citoyenneté", territoire:"FWB", statut:"En cours", annee:new Date().getFullYear() },
+        { nom:"Forum travail et dignité", axe:"Travail / protection sociale", territoire:"Bruxelles / Wallonie", statut:"En préparation", annee:new Date().getFullYear() },
+        { nom:"Laboratoire médias & numérique", axe:"Médias / numérique", territoire:"FWB", statut:"En cours", annee:new Date().getFullYear() }
+      ];
+    }
+    renderProjects(data);
+  }
+
+  function renderProjects(list) {
+    projectsBody.innerHTML = "";
+    list.forEach((p, idx) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${p.nom || ""}</td>
+        <td>${p.axe || ""}</td>
+        <td>${p.territoire || ""}</td>
+        <td>${p.statut || ""}</td>
+        <td>${p.annee || ""}</td>
+      `;
+      projectsBody.appendChild(tr);
+    });
+    try {
+      localStorage.setItem(PROJECTS_KEY, JSON.stringify(list));
+    } catch (e) {
+      // stockage impossible (ex: navigation privée stricte)
+    }
+  }
+
+  function getCurrentProjects() {
+    try {
+      const stored = localStorage.getItem(PROJECTS_KEY);
+      const data = stored ? JSON.parse(stored) : [];
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function addProject() {
+    const nom = document.getElementById("proj-nom").value.trim();
+    const axe = document.getElementById("proj-axe").value.trim();
+    const territoire = document.getElementById("proj-territoire").value.trim();
+    const statut = document.getElementById("proj-statut").value;
+    const annee = document.getElementById("proj-annee").value.trim() || new Date().getFullYear().toString();
+
+    if (!nom) {
+      alert("Indique au moins un nom de projet.");
+      return;
+    }
+    const list = getCurrentProjects();
+    list.push({ nom, axe, territoire, statut, annee });
+    renderProjects(list);
+
+    document.getElementById("proj-nom").value = "";
+    document.getElementById("proj-axe").value = "";
+    document.getElementById("proj-territoire").value = "";
+    document.getElementById("proj-annee").value = "";
+  }
+
+  function resetProjects() {
+    if (!confirm("Réinitialiser la liste locale des projets ?")) return;
+    try { localStorage.removeItem(PROJECTS_KEY); } catch (e) {}
+    loadProjects();
+  }
+
+  /**********************
+   * CONSOLE INTÉGRÉE
+   **********************/
+  const consoleOutput = document.getElementById("console-output");
+  const consoleInput = document.getElementById("console-input");
+  const consoleDot = document.getElementById("console-dot");
+
+  function logConsole(text, type="sys") {
+    if (!consoleOutput) return;
+    const div = document.createElement("div");
+    div.className = "console-line " + type;
+    div.textContent = text;
+    consoleOutput.appendChild(div);
+    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+  }
+
+  function initConsole() {
+    if (!consoleOutput) return;
+    if (consoleOutput.getAttribute("data-init") === "1") return;
+    consoleOutput.setAttribute("data-init","1");
+    logConsole("Console EP-FWB prête. Tapez 'help' pour voir les commandes.", "sys");
+  }
+
+  function handleConsoleCommand(cmdRaw) {
+    const cmd = cmdRaw.trim();
+    if (!cmd) return;
+    logConsole(">> " + cmd, "sys");
+
+    if (cmd === "help") {
+      logConsole("Commandes disponibles :", "sys");
+      logConsole("  help               : affiche cette aide", "sys");
+      logConsole("  list projets       : liste les projets enregistrés", "sys");
+      logConsole("  add projet T | A | T | S | A : ajoute un projet (Titre | Axe | Territoire | Statut | Année)", "sys");
+      logConsole("  note ...           : ajoute une note dans le journal", "sys");
+      logConsole("  clear              : vide la console (journal conservé dans votre tête)", "sys");
+      return;
+    }
+
+    if (cmd === "clear") {
+      consoleOutput.innerHTML = "";
+      return;
+    }
+
+    if (cmd.startsWith("note ")) {
+      const texte = cmd.slice(5).trim();
+      if (!texte) {
+        logConsole("note : merci d’ajouter un texte après la commande.", "warn");
+      } else {
+        logConsole("[NOTE] " + texte, "warn");
+      }
+      return;
+    }
+
+    if (cmd === "list projets") {
+      const list = getCurrentProjects();
+      if (!list.length) {
+        logConsole("Aucun projet enregistré.", "sys");
+        return;
+      }
+      list.forEach((p,i) => {
+        logConsole(
+          `${i+1}. ${p.nom} | ${p.axe || "—"} | ${p.territoire || "—"} | ${p.statut || "—"} | ${p.annee || "—"}`,
+          "sys"
+        );
+      });
+      return;
+    }
+
+    if (cmd.startsWith("add projet ")) {
+      const rest = cmd.slice("add projet ".length);
+      const parts = rest.split("|").map(s => s.trim());
+      if (parts.length < 1 || !parts[0]) {
+        logConsole("Usage : add projet Titre | Axe | Territoire | Statut | Année", "err");
+        return;
+      }
+      const [titre, axe, terr, statut, annee] = parts;
+      const list = getCurrentProjects();
+      list.push({
+        nom: titre,
+        axe: axe || "",
+        territoire: terr || "",
+        statut: statut || "En cours",
+        annee: annee || new Date().getFullYear().toString()
+      });
+      renderProjects(list);
+      logConsole(`Projet ajouté : ${titre}`, "sys");
+      return;
+    }
+
+    logConsole("Commande inconnue. Tapez 'help' pour voir les options.", "err");
+  }
+
+  if (consoleInput) {
+    consoleInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleConsoleCommand(consoleInput.value);
+        consoleInput.value = "";
+      }
+    });
+  }
+
+  // clignotement léger du point console
+  setInterval(() => {
+    if (!consoleDot) return;
+    consoleDot.style.opacity = consoleDot.style.opacity === "0.25" ? "1" : "0.25";
+  }, 900);
+
+  /**********************
+   * INIT
+   **********************/
+  document.getElementById("year").textContent = new Date().getFullYear();
+  renderSection("public");
+  loadProjects();
+</script>
+</body>
+</html>
