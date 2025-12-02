@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Services & Demande de devis – Éducation permanente / Conseil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f5f6fa;
+      --bg-alt: #ffffff;
+      --fg: #1f2933;
+      --muted: #6b7280;
+      --accent: #1f4f8f;
+      --accent-soft: #e1ecff;
+      --border: #d1d5db;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--accent);
+      color: white;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.2rem;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 1.8rem auto 2.5rem;
+      padding: 0 1.2rem;
+    }
+
+    section + section {
+      margin-top: 2rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    p.lead {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    /* Services */
+
+    .services-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 768px) {
+      .services-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .service-card {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.9rem 0.9rem 0.8rem;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.05);
+    }
+
+    .service-card h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+      color: var(--accent);
+    }
+
+    .service-card p {
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    /* Formulaire */
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(15,23,42,0.08);
+    }
+
+    form {
+      margin-top: 0.4rem;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .col {
+      flex: 1;
+      min-width: 230px;
+    }
+
+    label {
+      font-size: 0.84rem;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(31,79,143,0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+      line-height: 1.4;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .actions {
+      margin-top: 0.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #143763;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .error {
+      color: #b91c1c;
+      font-size: 0.8rem;
+      margin-top: 0.35rem;
+    }
+
+    /* Aperçu demande */
+
+    #previewBlock {
+      margin-top: 1.4rem;
+      display: none;
+    }
+
+    #previewBlock h3 {
+      font-size: 0.98rem;
+      margin-bottom: 0.4rem;
+    }
+
+    #previewText {
+      width: 100%;
+      min-height: 200px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.7rem;
+      font-size: 0.86rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      background: #f9fafb;
+    }
+
+    .small-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Services & demande de devis</h1>
+  <p>Consultance, accompagnement et outils en éducation permanente / secteur associatif.</p>
+</header>
+
+<main>
+
+  <!-- Présentation rapide -->
+  <section>
+    <h2>Profil et domaines d’intervention</h2>
+    <p class="lead">
+      Accompagnement de structures (asbl, mouvements, pouvoirs locaux…) sur des questions de
+      participation, de veille citoyenne, de pédagogie critique et d’organisation interne.
+      Les services ci-dessous peuvent être combinés en fonction des besoins.
+    </p>
+
+    <div class="services-grid">
+      <article class="service-card">
+        <h3>Ateliers & animations citoyennes</h3>
+        <p>
+          Conception et animation d’ateliers participatifs : compréhension des enjeux de société,
+          décryptage de l’actualité, initiation à la veille citoyenne, outils ludiques pour travailler
+          avec des publics variés.
+        </p>
+      </article>
+
+      <article class="service-card">
+        <h3>Veille stratégique & cartographie</h3>
+        <p>
+          Mise en place de dispositifs simples de veille (outils gratuits), cartographie d’acteurs,
+          repérage de ressources et structuration d’informations au service de projets associatifs.
+        </p>
+      </article>
+
+      <article class="service-card">
+        <h3>Accompagnement & conseil</h3>
+        <p>
+          Soutien à la réflexion stratégique, clarification de projets, cadrage de dossiers,
+          mise en forme de notes et documents internes en lien avec l’éducation permanente.
+        </p>
+      </article>
+
+      <article class="service-card">
+        <h3>Outils pédagogiques & contenus</h3>
+        <p>
+          Aide à la conception de supports : fiches, parcours en ligne, dossiers thématiques,
+          tests/quiz, scénarios d’animation, documentation claire pour les équipes et les publics.
+        </p>
+      </article>
+
+      <article class="service-card">
+        <h3>Organisation & administratif</h3>
+        <p>
+          Appui sur les aspects de suivi administratif liés au personnel et aux activités, structuration
+          de procédures simples, mise en place d’outils de suivi accessibles à l’équipe.
+        </p>
+      </article>
+
+      <article class="service-card">
+        <h3>Expérimentations numériques</h3>
+        <p>
+          Exploration de formats plus expérimentaux (sites statiques, mini-jeux, “tests” en ligne),
+          toujours avec une Porte d’entrée pédagogique claire et transmissible.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Demande de devis -->
+  <section>
+    <h2>Préparer une demande de devis</h2>
+    <div class="card">
+      <p class="lead">
+        Ce formulaire génère un texte récapitulatif que vous pouvez ensuite
+        <strong>copier-coller dans un mail</strong> ou un document interne pour formaliser la demande.
+      </p>
+
+      <form id="quoteForm">
+        <!-- Bloc 1 : infos structure -->
+        <div class="row">
+          <div class="col">
+            <label for="orgName">Organisation / structure</label>
+            <input id="orgName" type="text" required placeholder="Nom de l’asbl / service / institution">
+          </div>
+          <div class="col">
+            <label for="orgType">Type de structure</label>
+            <input id="orgType" type="text" placeholder="Ex : asbl, mouvement d’éducation permanente, commune…">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="contactName">Personne de contact</label>
+            <input id="contactName" type="text" placeholder="Nom, prénom">
+          </div>
+          <div class="col">
+            <label for="contactRole">Fonction</label>
+            <input id="contactRole" type="text" placeholder="Ex : coordination, animation, direction…">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="contactEmail">Email</label>
+            <input id="contactEmail" type="email" placeholder="email@exemple.org">
+          </div>
+          <div class="col">
+            <label for="contactPhone">Téléphone (optionnel)</label>
+            <input id="contactPhone" type="text" placeholder="n° de téléphone">
+          </div>
+        </div>
+
+        <!-- Bloc 2 : mission -->
+        <div class="row">
+          <div class="col">
+            <label for="serviceType">Type de demande principal</label>
+            <select id="serviceType">
+              <option value="Ateliers / animations citoyennes">Ateliers / animations citoyennes</option>
+              <option value="Veille stratégique / cartographie">Veille stratégique / cartographie</option>
+              <option value="Accompagnement / conseil">Accompagnement / conseil</option>
+              <option value="Outils pédagogiques / contenus">Outils pédagogiques / contenus</option>
+              <option value="Organisation / administratif">Organisation / administratif</option>
+              <option value="Projet expérimental / numérique">Projet expérimental / numérique</option>
+              <option value="Autre">Autre (précisé ci-dessous)</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="targetAudience">Public(s) cible(s)</label>
+            <input id="targetAudience" type="text" placeholder="Ex : bénévoles, animateur·rices, public adulte, jeunes…">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="context">Contexte / besoin</label>
+            <textarea id="context" placeholder="Quelques lignes sur votre situation actuelle, le problème ou la question de départ."></textarea>
+            <p class="hint">Ce qui vous amène à chercher un accompagnement ou un renfort externe.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="objectives">Objectifs souhaités</label>
+            <textarea id="objectives" placeholder="Ex : mieux structurer notre veille, disposer d’un outil pédagogique, clarifier notre projet…"></textarea>
+          </div>
+        </div>
+
+        <!-- Bloc 3 : cadre pratique -->
+        <div class="row">
+          <div class="col">
+            <label for="timeline">Calendrier / échéances</label>
+            <textarea id="timeline" placeholder="Période souhaitée, contraintes de calendrier, deadlines éventuelles."></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="format">Format envisagé</label>
+            <input id="format" type="text" placeholder="Ex : 1 à 2 journées, cycle de plusieurs séances, accompagnement à distance…">
+          </div>
+          <div class="col">
+            <label for="budget">Budget indicatif (si vous en avez un)</label>
+            <input id="budget" type="text" placeholder="Fourchette ou ordre de grandeur (optionnel)">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="otherInfo">Autres informations utiles (optionnel)</label>
+            <textarea id="otherInfo" placeholder="Contraintes particulières, ressources existantes, partenaires impliqués…"></textarea>
+          </div>
+        </div>
+
+        <div id="formError" class="error" style="display:none;"></div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">Générer le texte de demande</button>
+          <button type="button" class="btn btn-secondary" id="resetBtn">Réinitialiser</button>
+        </div>
+      </form>
+
+      <div id="previewBlock">
+        <h3>Texte de demande de devis</h3>
+        <textarea id="previewText" readonly></textarea>
+        <p class="small-note">
+          Vous pouvez copier-coller ce texte dans un mail adressé au consultant.  
+          Remplacez simplement l’adresse de contact par celle que vous utilisez.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const form = document.getElementById('quoteForm');
+  const errorEl = document.getElementById('formError');
+  const previewBlock = document.getElementById('previewBlock');
+  const previewText = document.getElementById('previewText');
+  const resetBtn = document.getElementById('resetBtn');
+
+  function sanitize(value) {
+    return (value || '').toString().trim();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+
+    const orgName = sanitize(document.getElementById('orgName').value);
+    const orgType = sanitize(document.getElementById('orgType').value);
+    const contactName = sanitize(document.getElementById('contactName').value);
+    const contactRole = sanitize(document.getElementById('contactRole').value);
+    const contactEmail = sanitize(document.getElementById('contactEmail').value);
+    const contactPhone = sanitize(document.getElementById('contactPhone').value);
+    const serviceType = sanitize(document.getElementById('serviceType').value);
+    const targetAudience = sanitize(document.getElementById('targetAudience').value);
+    const context = sanitize(document.getElementById('context').value);
+    const objectives = sanitize(document.getElementById('objectives').value);
+    const timeline = sanitize(document.getElementById('timeline').value);
+    const format = sanitize(document.getElementById('format').value);
+    const budget = sanitize(document.getElementById('budget').value);
+    const otherInfo = sanitize(document.getElementById('otherInfo').value);
+
+    // Validation minimale
+    if (!orgName || !contactEmail || !serviceType) {
+      errorEl.textContent = "Merci de renseigner au minimum l’organisation, un email de contact et le type de demande.";
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    let text = "";
+
+    text += "Objet : Demande de devis – " + serviceType + "\n\n";
+    text += "Bonjour,\n\n";
+    text += "Nous souhaiterions vous solliciter pour une intervention et/ou un accompagnement et vous transmettons ci-dessous les éléments de base pour l’établissement d’un devis.\n\n";
+
+    text += "1. Organisation\n";
+    text += "   • Nom : " + orgName + "\n";
+    if (orgType) text += "   • Type de structure : " + orgType + "\n";
+    text += "   • Personne de contact : " + (contactName || "–") + "\n";
+    if (contactRole) text += "   • Fonction : " + contactRole + "\n";
+    text += "   • Email : " + contactEmail + "\n";
+    if (contactPhone) text += "   • Téléphone : " + contactPhone + "\n";
+    text += "\n";
+
+    text += "2. Type de demande\n";
+    text += "   • Type principal : " + serviceType + "\n";
+    if (targetAudience) text += "   • Public(s) concerné(s) : " + targetAudience + "\n";
+    text += "\n";
+
+    text += "3. Contexte et besoins\n";
+    text += (context ? "   " + context.replace(/\n/g, "\n   ") + "\n" : "   (à préciser)\n");
+    text += "\n";
+
+    text += "4. Objectifs souhaités\n";
+    text += (objectives ? "   " + objectives.replace(/\n/g, "\n   ") + "\n" : "   (à préciser ensemble)\n");
+    text += "\n";
+
+    text += "5. Cadre pratique envisagé\n";
+    if (timeline) text += "   • Calendrier / échéances : " + timeline.replace(/\n/g, "\n     ") + "\n";
+    if (format) text += "   • Format envisagé : " + format + "\n";
+    if (budget) text += "   • Budget indicatif : " + budget + "\n";
+    if (!timeline && !format && !budget) {
+      text += "   (à discuter : calendrier, format et budget restent ouverts)\n";
+    }
+    text += "\n";
+
+    if (otherInfo) {
+      text += "6. Autres informations utiles\n";
+      text += "   " + otherInfo.replace(/\n/g, "\n   ") + "\n\n";
+    }
+
+    text += "Si nécessaire, nous restons disponibles pour compléter ces informations ou échanger par téléphone.\n\n";
+    text += "Bien à vous,\n";
+    if (contactName) text += contactName + "\n";
+    if (orgName) text += orgName + "\n";
+
+    previewText.value = text;
+    previewBlock.style.display = 'block';
+    previewBlock.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  resetBtn.addEventListener('click', function () {
+    form.reset();
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+    previewBlock.style.display = 'none';
+    previewText.value = "";
+  });
+</script>
+
+</body>
+</html>
