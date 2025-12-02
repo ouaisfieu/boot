@@ -1,0 +1,566 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cas d’étude – MOC x Trust Coin Club</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050016;
+      --accent1: #ff6bd5;
+      --accent2: #3af5ff;
+      --accent3: #ffe66b;
+      --card: #13032b;
+      --text: #fdfdfd;
+      --muted: #b9a9ff;
+      --border: rgba(255,255,255,0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4313ff 0, #050016 52%, #000 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 2.4rem 1.4rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before, header::after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 60%);
+      opacity: 0.6;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+    header::before { top: -170px; left: -120px; }
+    header::after  { top: -210px; right: -80px; }
+
+    .badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.3);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #ff6bd5, #ffe66b, #3af5ff, #ff6bd5);
+      box-shadow: 0 0 10px rgba(255,255,255,0.8);
+    }
+
+    h1 {
+      margin: 0.4rem 0 0.2rem;
+      font-size: clamp(2rem, 3vw + 1rem, 3.1rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-shadow: 0 0 16px rgba(0,0,0,0.8);
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      margin: 0.7rem auto 1.4rem;
+      max-width: 600px;
+      font-size: 0.99rem;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tag {
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(0,0,0,0.5);
+      font-size: 0.78rem;
+    }
+
+    .cta-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 0.6rem;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.7rem 1.3rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, var(--accent1), var(--accent2));
+      color: #140220;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.8);
+    }
+    .btn-ghost {
+      background: rgba(0,0,0,0.5);
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 1.2rem 3rem;
+    }
+
+    .section-title {
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent2);
+    }
+
+    .card {
+      background: rgba(9,0,22,0.94);
+      border-radius: 18px;
+      padding: 1.3rem 1.2rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.65);
+      border: 1px solid var(--border);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.1rem;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    @media (max-width: 720px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      header { padding-top: 2rem; }
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.15rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(0,0,0,0.4);
+      font-size: 0.78rem;
+      margin: 0 0.3rem 0.3rem 0;
+    }
+
+    .timeline {
+      margin: 0.7rem 0;
+      border-left: 2px solid rgba(255,255,255,0.25);
+      padding-left: 0.9rem;
+    }
+    .timeline-item {
+      margin-bottom: 0.6rem;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -1.05rem;
+      top: 0.35rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent3);
+      box-shadow: 0 0 8px rgba(0,0,0,0.8);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 0.4rem;
+    }
+    th, td {
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      text-align: right;
+    }
+    th:first-child, td:first-child { text-align: left; }
+    th {
+      font-weight: 600;
+      color: var(--accent3);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    .ok { color: #70ff9d; font-weight: 600; }
+    .warn { color: #ffb36c; font-weight: 600; }
+    .risk { color: #ff7b7b; font-weight: 600; }
+
+    footer {
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge-top">
+    <span class="dot"></span>
+    Cas d’étude réaliste – prototype
+  </div>
+  <h1>MOC x Trust Coin Club</h1>
+  <p class="subtitle">
+    Scénario fictif mais techniquement faisable<br>
+    pour une monnaie de confiance interne au réseau MOC.
+  </p>
+
+  <div class="hero-tags">
+    <div class="tag">🔎 Pilote 18 mois</div>
+    <div class="tag">💶 Montants réalistes</div>
+    <div class="tag">⚖️ Contraintes juridiques prises en compte</div>
+    <div class="tag">📊 Projections prudentes</div>
+  </div>
+
+  <div class="cta-row">
+    <a href="#contexte" class="btn btn-primary">📌 Voir le contexte</a>
+    <a href="#projections" class="btn btn-ghost">📊 Voir les chiffres</a>
+  </div>
+</header>
+
+<main>
+  <section id="contexte">
+    <h2 class="section-title">01 · Contexte MOC & objectif réaliste</h2>
+    <div class="card">
+      <h3>Le point de départ</h3>
+      <p>
+        Le MOC est une grande structure d’éducation permanente et de mouvement social,
+        avec des régionales, des mouvements affiliés et une base militante importante.
+        La réalité quotidienne :
+      </p>
+      <ul>
+        <li>financement mêlant subsides publics, cotisations, dons, actions locales ;</li>
+        <li>charge administrative élevée pour des montants parfois modestes ;</li>
+        <li>volonté de garder une cohérence avec des valeurs de justice sociale et démocratie interne.</li>
+      </ul>
+      <p class="muted">
+        Idée : tester une <strong>micro-monnaie de confiance interne</strong>, non spéculative,
+        pour financer des projets locaux et renforcer le lien militants ↔ projets,
+        sans créer une usine à gaz.
+      </p>
+    </div>
+  </section>
+
+  <section id="design">
+    <h2 class="section-title">02 · Design du pilote (18 mois)</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Paramètres du pilote</h3>
+        <p>
+          Scénario volontairement prudent :
+        </p>
+        <p>
+          <span class="pill">5 régionales pilotes</span>
+          <span class="pill">1 projet local / régionale</span>
+          <span class="pill">50 soutiens par projet</span>
+        </p>
+        <ul>
+          <li>Double caution 12,50 € (régionale) + 12,50 € (“hub TCC–MOC”).</li>
+          <li>Émission max : <strong>1 000 TRUST</strong> par projet, à 1 € symbolique.</li>
+          <li>TRUST = bon de soutien / jeton interne, <strong>sans promesse de rendement</strong>.</li>
+          <li>Durée du pilote : <strong>18 mois</strong>, avec 2 évaluations intermédiaires.</li>
+        </ul>
+        <p class="note">
+          Tous les flux en euros restent sur des comptes bancaires classiques du MOC ou des régionales,
+          avec traçabilité comptable standard.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Timeline réaliste</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <strong>T0 – 3 mois</strong> : cadrage interne, avis juridique de base,
+            validation politique (Conseil d’administration / secrétariat national).
+          </div>
+          <div class="timeline-item">
+            <strong>T+6 mois</strong> : lancement des 5 projets pilotes,
+            formation des animateurs + communication vers les membres.
+          </div>
+          <div class="timeline-item">
+            <strong>T+12 mois</strong> : bilan intermédiaire (nombre de TRUST émis,
+            retours militants, charge de travail).
+          </div>
+          <div class="timeline-item">
+            <strong>T+18 mois</strong> : évaluation finale, décision :
+            arrêt / consolidation / extension à d’autres régionales.
+          </div>
+        </div>
+        <p class="note">
+          Rien ne part en mode “révolution mondiale” : on reste sur une échelle gérable,
+          compatible avec les réalités d’un mouvement comme le MOC.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="projections">
+    <h2 class="section-title">03 · Projections chiffrées (prudentes)</h2>
+    <div class="card">
+      <h3>Hypothèses financières</h3>
+      <ul>
+        <li>
+          <strong>Scénario prudent :</strong> 50 soutiens par projet, contribution moyenne 10 €/personne.
+        </li>
+        <li>
+          <strong>Scénario médian :</strong> 80 soutiens par projet, contribution moyenne 15 €/personne.
+        </li>
+        <li>
+          <strong>Scénario haut :</strong> 120 soutiens par projet, contribution moyenne 20 €/personne.
+        </li>
+      </ul>
+
+      <table aria-label="Projections par scénario">
+        <thead>
+          <tr>
+            <th>Scénario</th>
+            <th>TRUST émis / projet</th>
+            <th>Montant par projet</th>
+            <th>Montant total (5 projets)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Prudent</td>
+            <td>≈ 500 TRUST</td>
+            <td>≈ 500 €</td>
+            <td>≈ 2 500 €</td>
+          </tr>
+          <tr>
+            <td>Médian</td>
+            <td>≈ 1 200 TRUST</td>
+            <td>≈ 1 200 €</td>
+            <td>≈ 6 000 €</td>
+          </tr>
+          <tr>
+            <td>Haut</td>
+            <td>≈ 2 400 TRUST</td>
+            <td>≈ 2 400 €</td>
+            <td>≈ 12 000 €</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="note">
+        Ce ne sont pas des montants révolutionnaires, mais pour des petites actions locales (formations,
+        animations, matériel militant), c’est significatif, surtout si la charge administrative est faible.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Coûts réalistes</h3>
+      <ul>
+        <li>Temps de conception interne : 3–5 réunions ciblées + rédaction de note (1–2 jours/homme).</li>
+        <li>Temps d’animation par régionale : 1 personne de référence, quelques heures/mois.</li>
+        <li>Coût technique : site statique hébergé à faible coût ou sur infrastructure existante.</li>
+        <li>Frais bancaires : gestion d’un ou deux comptes de projet / sous-comptes (modérés).</li>
+      </ul>
+      <p class="note">
+        Le pari : avoir un ratio “temps administratif / euros collectés” nettement meilleur
+        que certaines procédures de subsides très lourdes.
+      </p>
+    </div>
+  </section>
+
+  <section id="faisabilite">
+    <h2 class="section-title">04 · Faisabilité – les 4 angles critiques</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>1. Cadre légal / compliance</h3>
+        <ul>
+          <li>Positionner les TRUST comme <strong>bona fide “bons de soutien”</strong> / jetons symboliques.</li>
+          <li>Aucune promesse de rendement, aucun marché secondaire organisé.</li>
+          <li>Documentation claire : ce n’est pas un produit d’investissement.</li>
+          <li>Vérification avec un·e juriste et, si nécessaire, avis d’un réviseur / expert-comptable.</li>
+        </ul>
+        <p class="muted">
+          Objectif : rester dans le registre associatif classique (dons, cotisations, actions de soutien),
+          pas dans la sphère des produits financiers régulés.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>2. Organisation & charge de travail</h3>
+        <ul>
+          <li>Désigner un·e référent·e “Trust Coin” au niveau MOC + un contact par régionale.</li>
+          <li>Limiter le pilote à 5 projets pour garder la charge sous contrôle.</li>
+          <li>Standardiser la documentation (fiches projet, suivi des TRUST, reporting simple).</li>
+        </ul>
+        <p class="muted">
+          On évite le piège des “projets gadgets” qui ajoutent de la complexité sans bénéfice réel.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>3. Technique</h3>
+        <ul>
+          <li>Site 100 % statique (HTML/CSS) + éventuel petit script JS pour l’affichage des totaux.</li>
+          <li>Aucune base de données complexe pour le pilote : mise à jour manuelle possible.</li>
+          <li>Hébergement simple (clé USB, serveur mutualisé, infra existante du MOC).</li>
+        </ul>
+        <p class="muted">
+          Plus c’est simple, plus c’est robuste, et moins il y a de risque de fail technique.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>4. Politique & acceptabilité interne</h3>
+        <ul>
+          <li>Expliquer clairement que ce n’est pas un “gadget crypto”, mais un outil pédagogique.</li>
+          <li>Associer les équipes locales dès la conception : co-construction, pas top-down.</li>
+          <li>Prévoir un droit de retrait simple si une régionale ne se sent pas à l’aise.</li>
+        </ul>
+        <p class="muted">
+          Le projet doit être lisible comme une extension cohérente des valeurs du MOC,
+          pas comme une lubie technophile.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="risques">
+    <h2 class="section-title">05 · Risques réalistes & garde-fous</h2>
+    <div class="card">
+      <table aria-label="Analyse des risques">
+        <thead>
+          <tr>
+            <th>Risque</th>
+            <th>Niveau</th>
+            <th>Garde-fou</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mauvaise compréhension “crypto = casino”</td>
+            <td class="warn">Moyen</td>
+            <td>Communication claire, vocabulaire “bon de soutien”, FAQ, formation.</td>
+          </tr>
+          <tr>
+            <td>Sous-utilisation / faible participation</td>
+            <td class="warn">Moyen</td>
+            <td>Limiter les attentes, viser d’abord un outil pédagogique et relationnel.</td>
+          </tr>
+          <tr>
+            <td>Charge administrative qui explose</td>
+            <td class="warn">Moyen</td>
+            <td>Pilote limité, outils simples, abandon si le ratio temps/bénéfice est mauvais.</td>
+          </tr>
+          <tr>
+            <td>Flou juridique</td>
+            <td class="warn">Moyen</td>
+            <td>Note juridique de départ, revue annuelle, adaptation si nécessaire.</td>
+          </tr>
+          <tr>
+            <td>Risque financier direct pour le public</td>
+            <td class="ok">Faible</td>
+            <td>Montants faibles, pas de promesse de rendement, positionnement “don + contrepartie symbolique”.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">
+        Si, après 18 mois, les risques prennent le dessus sur les bénéfices, le pilote peut être arrêté
+        proprement, sans “dommages collatéraux” pour les membres.
+      </p>
+    </div>
+  </section>
+
+  <section id="conclusion">
+    <h2 class="section-title">06 · Conclusion du cas d’étude</h2>
+    <div class="card">
+      <h3>Ce que montre ce scénario</h3>
+      <ul>
+        <li>Oui, il est réaliste de tester une monnaie de confiance interne avec des montants modestes.</li>
+        <li>Oui, on peut rester dans le registre associatif classique (bons de soutien) si c’est bien cadré.</li>
+        <li>Non, ce n’est pas magique : ça demande du temps, de la clarté, et une vraie volonté politique.</li>
+      </ul>
+      <p class="muted">
+        Le MOC n’est pas obligé d’“acheter” l’idée telle quelle. Mais ce prototype montre une
+        manière concrète, chiffrée et réversible d’utiliser la logique “Trust Coin” pour renforcer
+        la participation et le financement local.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Scénario fictif pour discussion interne – MOC x Trust Coin Club ·
+  À adapter, valider et critiquer avant tout lancement réel.
+</footer>
+
+</body>
+</html>
