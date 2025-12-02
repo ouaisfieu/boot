@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>sharky.html – Mode Sharky : faire du pognon sans tout cramer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #050818;
+      --card: #020617;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.18);
+      --accent2: #38bdf8;
+      --accent3: #eab308;
+      --accent4: #f97316;
+      --money: #22c55e;
+      --danger: #f97373;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(148,163,184,0.7);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56,189,248,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.22), transparent 60%),
+        var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.7rem 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1180px;
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.14), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15,23,42,0.95), transparent 60%),
+        var(--bg-alt);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      padding: 1.2rem 0.9rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 1.8rem 1.6rem 2.2rem; }
+    }
+
+    .page::before {
+      content: "sharky.html · Plan “Sharky” pour monétiser l’instance";
+      position: absolute;
+      top: 0.4rem;
+      right: 1.1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      pointer-events: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .header-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--money);
+      background: var(--accent-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--money);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--money);
+      box-shadow: 0 0 12px rgba(34,197,94,0.8);
+    }
+
+    .header-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      max-width: 290px;
+    }
+
+    h1 {
+      margin-top: 0.4rem;
+      font-size: clamp(1.9rem, 4.6vw, 2.8rem);
+      line-height: 1.05;
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #22c55e, #38bdf8, #eab308, #f97316);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 840px;
+    }
+
+    .subtitle strong { color: var(--text-main); }
+
+    .notice {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 0.5rem 0.7rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .notice strong { color: var(--accent3); }
+
+    .mode-switch {
+      margin-top: 0.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .mode-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .switch-btn {
+      border-radius: 999px;
+      border: 1px solid var(--money);
+      padding: 0.26rem 0.8rem;
+      font-size: 0.8rem;
+      background: rgba(34,197,94,0.12);
+      color: var(--money);
+      cursor: pointer;
+    }
+
+    .layout {
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    @media (min-width: 980px) {
+      .layout {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.05fr);
+        align-items: flex-start;
+      }
+    }
+
+    section {
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.18), transparent 65%),
+        var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.9rem 0.95rem 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      section { padding: 1.1rem 1.15rem 1.35rem; }
+    }
+
+    section h2 {
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-main);
+    }
+
+    section p {
+      line-height: 1.55;
+      margin-bottom: 0.25rem;
+    }
+
+    ul { margin-left: 1.1rem; margin-bottom: 0.25rem; }
+    li { margin-bottom: 0.18rem; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      padding: 0.12rem 0.55rem;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .pill span {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    /* Modèle économique */
+
+    .biz-model {
+      margin-top: 0.4rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.98);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    .biz-row {
+      margin-bottom: 0.3rem;
+    }
+
+    .biz-title {
+      font-size: 0.84rem;
+      color: var(--accent2);
+      margin-bottom: 0.08rem;
+    }
+
+    .biz-tag {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.08rem;
+    }
+
+    .biz-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Calculateur de cashflow */
+
+    .calc {
+      margin-top: 0.6rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.98);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    .calc-grid {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+    }
+
+    @media (min-width: 640px) {
+      .calc-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .calc-field {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .calc-field label {
+      display: block;
+      margin-bottom: 0.1rem;
+    }
+
+    .calc-field input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.24rem 0.6rem;
+      background: #020617;
+      color: var(--text-main);
+      font-size: 0.8rem;
+    }
+
+    .calc-summary {
+      margin-top: 0.35rem;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .calc-summary strong {
+      color: var(--money);
+    }
+
+    .warn {
+      margin-top: 0.25rem;
+      font-size: 0.78rem;
+      color: var(--danger);
+    }
+
+    /* Curseur “Sharky vs mission” */
+
+    .meter {
+      margin-top: 0.6rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.6rem;
+      background: rgba(15,23,42,0.96);
+      font-size: 0.84rem;
+    }
+
+    .meter-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .meter-label span:last-child {
+      color: var(--accent4);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent4);
+      cursor: pointer;
+    }
+
+    .meter-note {
+      margin-top: 0.2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .meter-note strong { color: var(--accent3); }
+
+    /* Offers / packs */
+
+    .packs {
+      margin-top: 0.4rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.98);
+      padding: 0.55rem 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    .pack-grid {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+
+    @media (min-width: 640px) {
+      .pack-grid {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+
+    .pack {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .pack-name {
+      font-size: 0.86rem;
+      color: var(--text-main);
+      margin-bottom: 0.1rem;
+    }
+
+    .pack-price {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.8rem;
+      color: var(--money);
+      margin-bottom: 0.06rem;
+    }
+
+    .pack-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Annexes & sources business */
+
+    .tabs {
+      margin-top: 0.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.22rem 0.7rem;
+      font-size: 0.78rem;
+      background: rgba(15,23,42,0.96);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent2);
+      background: rgba(56,189,248,0.18);
+      color: var(--accent2);
+    }
+
+    .tab-panel {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.6rem;
+      background: rgba(15,23,42,0.96);
+      font-size: 0.84rem;
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .tab-panel h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+      color: var(--text-main);
+    }
+
+    .tab-panel ul { margin-top: 0.15rem; }
+
+    .mono {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.78rem;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    footer {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    footer code {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.16rem 0.5rem;
+      background: #020617;
+      font-size: 0.7rem;
+    }
+
+    .badge-corner {
+      position: absolute;
+      bottom: 0.45rem;
+      right: 0.6rem;
+      font-size: 0.65rem;
+      color: rgba(148,163,184,0.75);
+      font-family: "Share Tech Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-row">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>Mode Sharky – Monétisation assumée</span>
+          </div>
+          <h1>Monétiser l’instance <span>sans devenir une caricature</span></h1>
+        </div>
+        <div class="header-meta">
+          Ce fichier est la version “business” de ton projet.  
+          On parle <strong>cashflow, offres, clients</strong>… en gardant en tête que le cœur reste
+          la veille citoyenne et l’éducation populaire.
+        </div>
+      </div>
+      <p class="subtitle">
+        Tu as l’autorisation : tu peux faire du pognon avec tes idées.  
+        Mais tu veux le faire sans vendre la cause aux plus offrants.  
+        <strong>sharky.html</strong> te sert de <em>tableau de bord stratégique</em> : combien, avec qui, comment,
+        et jusqu’où tu acceptes de pousser le curseur “Sharky”.
+      </p>
+      <div class="notice">
+        <strong>Disclaimer :</strong> ce n’est ni un conseil fiscal ni un business plan “clé en main”.  
+        C’est un <strong>canevas de réflexion</strong> pour structurer un modèle économique autour de ton instance :
+        services, formations, partenariats, licences, merchandising… à adapter selon ta réalité.
+      </div>
+
+      <div class="mode-switch">
+        <span class="mode-label">
+          Curseur moral (indicatif) : si tu as besoin de te rappeler que tu n’es pas une multinationale, reviens sur <span class="mono">cagnotte.html</span> et <span class="mono">viral.html</span>.
+        </span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- Colonne gauche : modèle économique & calculateur -->
+      <section>
+        <h2>1. Modèle économique autour de ton instance</h2>
+        <p>
+          Tu ne vends pas “la vérité” : tu vends <strong>du temps, des compétences, des formats</strong>.  
+          Ton instance (clé USB, site, tests, cyberlab, Conspi, etc.) devient la <strong>base produit</strong>.
+        </p>
+
+        <div class="pill">
+          <span>Idée centrale :</span> l’instance reste clonable – tu monétises ce que les gens n’ont pas le temps / les moyens de faire eux-mêmes.
+        </div>
+
+        <div class="biz-model">
+          <div class="biz-row">
+            <div class="biz-tag">LIGNE 1 – SERVICES</div>
+            <div class="biz-title">Formations, ateliers & accompagnement</div>
+            <div class="biz-text">
+              • Animations (3h, 1 journée, cycle) basées sur tes tests & dossiers.<br>
+              • Accompagnement de structures (asso, syndicats, services publics) pour créer leur propre instance locale.<br>
+              • Tarification : forfait par séance, par cycle ou par groupe.
+            </div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-tag">LIGNE 2 – PACKS</div>
+            <div class="biz-title">Packs “instance clé en main”</div>
+            <div class="biz-text">
+              • Tu prends ta base (clé + site) et tu la personnalises pour une organisation.  
+              • Logo, textes adaptés, quelques tests spécifiques, petite formation à l’usage.<br>
+              • Tarification : pack de mise en route + option “maintenance / mise à jour”.
+            </div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-tag">LIGNE 3 – LICENCES SOFT</div>
+            <div class="biz-title">Licence morale / soutien professionnel</div>
+            <div class="biz-text">
+              • L’instance de base reste libre et clonable.<br>
+              • Les structures qui ont un budget paient une “licence de soutien” qui leur donne accès à : versions enrichies, hotline, co-développement de contenus.<br>
+              • Tu assumes clairement : ceux qui ont des moyens financent l’écosystème pour les autres.
+            </div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-tag">LIGNE 4 – PRODUITS</div>
+            <div class="biz-title">Merchandising utile</div>
+            <div class="biz-text">
+              • Affiches, cartes, livrets, carnets de bord, posters pédagogiques, jeux de cartes…<br>
+              • Toujours liés à la pédagogie (pas juste du logo vide).<br>
+              • Vente en ligne ou via les structures partenaires.
+            </div>
+          </div>
+        </div>
+
+        <div class="calc">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:0.4rem;">
+            <span style="font-size:0.86rem;">Calculateur de cashflow (ordre de grandeur)</span>
+            <span style="font-size:0.72rem;color:var(--text-muted);">Tout est fictif, à ajuster</span>
+          </div>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="membres">Membres/cotisants (12,50 €/an)</label>
+              <input type="number" id="membres" value="100" min="0" step="10">
+            </div>
+            <div class="calc-field">
+              <label for="ateliers">Ateliers / formations par an</label>
+              <input type="number" id="ateliers" value="10" min="0" step="1">
+            </div>
+            <div class="calc-field">
+              <label for="tarifAtelier">Tarif moyen atelier (€)</label>
+              <input type="number" id="tarifAtelier" value="400" min="0" step="50">
+            </div>
+            <div class="calc-field">
+              <label for="packs">Packs “instance clé en main” / an</label>
+              <input type="number" id="packs" value="3" min="0" step="1">
+            </div>
+            <div class="calc-field">
+              <label for="tarifPack">Tarif moyen pack (€)</label>
+              <input type="number" id="tarifPack" value="1200" min="0" step="100">
+            </div>
+            <div class="calc-field">
+              <label for="produits">Merchandising / ventes produits (€ / an)</label>
+              <input type="number" id="produits" value="1500" min="0" step="100">
+            </div>
+          </div>
+          <div class="calc-summary" id="calcSummary">
+            Recette annuelle estimée : <strong>0 €</strong>  
+            (à recalculer en cliquant dans un champ.)
+          </div>
+          <div class="warn" id="calcWarn">
+            Rappel : ce chiffre ne tient pas compte des charges, du temps de travail, ni des impôts.  
+            Si le montant dépasse largement ton énergie réelle, c’est que tu as mis trop de zéros.
+          </div>
+        </div>
+
+        <div class="meter">
+          <div class="meter-label">
+            <span>Curseur “Sharky vs Mission”</span>
+            <span id="sharkLabel">1 / 5</span>
+          </div>
+          <input type="range" id="sharkRange" min="1" max="5" value="2">
+          <div class="meter-note" id="sharkNote">
+            1/5 – Tu restes quasi intégralement sur la logique “cagnotte + dons + instances DIY”.  
+            La monétisation est un complément, pas le centre.
+          </div>
+        </div>
+      </section>
+
+      <!-- Colonne droite : packs, annexes, garde-fous business -->
+      <section>
+        <h2>2. Packs “Sharky” présentables à des partenaires</h2>
+        <p>
+          Tu peux présenter ce qui suit à une asso, un syndicat, une commune, une école…  
+          À adapter en fonction de ton contexte légal et de ton statut (indépendant·e, asbl, coop, etc.).
+        </p>
+
+        <div class="packs">
+          <div style="font-size:0.84rem;color:var(--text-muted);">
+            Exemple de gamme minimale (les tarifs sont indicatifs, à recaler selon ta réalité) :
+          </div>
+          <div class="pack-grid">
+            <div class="pack">
+              <div class="pack-name">Pack Découverte</div>
+              <div class="pack-price">≈ 350–600 €</div>
+              <div class="pack-note">
+                • 1 demi-journée de sensibilisation avec tes tests (cyber, symboles, propagande…).<br>
+                • Accès à ton instance pendant X mois.<br>
+                • Conseils pour créer une mini-cellule interne.
+              </div>
+            </div>
+            <div class="pack">
+              <div class="pack-name">Pack Instance Locale</div>
+              <div class="pack-price">≈ 900–1500 €</div>
+              <div class="pack-note">
+                • Adaptation de ton portail & de tes tests pour une structure ou un territoire.<br>
+                • 1 à 2 séances d’accompagnement pour l’équipe interne.<br>
+                • Mise à jour 1 fois/an incluse (ou forfait).
+              </div>
+            </div>
+            <div class="pack">
+              <div class="pack-name">Pack Partenaire</div>
+              <div class="pack-price">≈ 2500 € et +</div>
+              <div class="pack-note">
+                • Co-création de nouveaux dossiers pédagogiques.<br>
+                • Formations multi-groupes.<br>
+                • Mention (ou non) du partenaire dans ton écosystème, selon ce qui est cohérent.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:0.9rem;">3. Annexes & sources business</h2>
+        <p>
+          Cette section te sert de <strong>mémo stratégique</strong> : ce que tu dois documenter si tu veux
+          être crédible face à des partenaires sérieux.
+        </p>
+
+        <div class="tabs">
+          <button type="button" class="tab-btn active" data-tab="doc">
+            Doc à produire
+          </button>
+          <button type="button" class="tab-btn" data-tab="legal">
+            Cadre légal & statut
+          </button>
+          <button type="button" class="tab-btn" data-tab="ethic">
+            Garde-fous “Sharky”
+          </button>
+          <button type="button" class="tab-btn" data-tab="sources">
+            Inspirations & lectures
+          </button>
+        </div>
+
+        <div class="tab-panel active" data-tab-panel="doc">
+          <h3>Doc à produire pour un mode “Sharky crédible”</h3>
+          <ul>
+            <li><strong>1. Présentation synthétique du projet</strong> (2–4 pages maxi)
+              <ul>
+                <li>Objectifs citoyens / pédagogiques.</li>
+                <li>Publics concernés.</li>
+                <li>Formats (tests, ateliers, clé USB, site…).</li>
+              </ul>
+            </li>
+            <li><strong>2. Catalogue de services</strong>
+              <ul>
+                <li>Descriptif de chaque pack (comme ci-dessus).</li>
+                <li>Conditions pratiques (durée, logistique, matériel nécessaire).</li>
+              </ul>
+            </li>
+            <li><strong>3. Références / preuves de concept</strong>
+              <ul>
+                <li>Compte-rendu anonymisé d’ateliers test.</li>
+                <li>Feedbacks courts de participants (avec accord).</li>
+              </ul>
+            </li>
+            <li><strong>4. Note pédagogique</strong>
+              <ul>
+                <li>Ce que tu cherches à développer : esprit critique, compréhension des médias, veille citoyenne…</li>
+                <li>Ce que ce n’est pas : endoctrinement, recrutement partisan, chasse aux sorcières.</li>
+              </ul>
+            </li>
+          </ul>
+          <p class="hint">
+            Tout ça peut vivre en PDF dans un dossier <span class="mono">/business</span> sur ta clé ou ton dépôt Git.
+          </p>
+        </div>
+
+        <div class="tab-panel" data-tab-panel="legal">
+          <h3>Cadre légal & statut (à creuser dans ton pays)</h3>
+          <p>
+            À vérifier avec un·e professionnel·le (juriste, comptable, accompagnateur d’ESS) :
+          </p>
+          <ul>
+            <li><strong>Statut du porteur :</strong> indépendant·e, asbl, coop, structure hybride…</li>
+            <li><strong>Facturation :</strong> prestations de service, vente de biens, subventions.</li>
+            <li><strong>Droits d’auteur :</strong> licences sur tes contenus (libres ou non commerciaux) + conditions d’usage.</li>
+            <li><strong>Protection des données :</strong> dès que tu collectes des infos sur les participants (mails, réponses aux tests…).</li>
+          </ul>
+          <p class="hint">
+            L’idée Sharky : <strong>être carré</strong> sur la forme pour pouvoir dire “non” aux demandes
+            qui violent ton cadre (ex. : exploitation politique grossière, récupération toxique).
+          </p>
+        </div>
+
+        <div class="tab-panel" data-tab-panel="ethic">
+          <h3>Garde-fous mode Sharky</h3>
+          <ul>
+            <li><strong>1. Qui finance quoi ?</strong>
+              Tu gardes une ligne rouge : pas de partenariat avec des acteurs dont les pratiques
+              sont frontalement opposées à ce que tu défends.</li>
+            <li><strong>2. Transparence minimale</strong>
+              Tu peux garder des zones de flou scénarisées (Conspi, S,.-, etc.), mais pas sur l’usage
+              de l’argent lorsqu’il s’agit de partenariats formels.</li>
+            <li><strong>3. Séparation feuilletons / vrai pouvoir</strong>
+              Ce qui est jeu (ARG, Conspi, Sharky…) doit rester compréhensible comme tel dans ta doc “sérieuse”.</li>
+            <li><strong>4. Non-exclusivité</strong>
+              Tu évites de signer des contrats qui t’empêchent de continuer à travailler avec d’autres acteurs
+              ou de garder une version libre de ton kit.</li>
+          </ul>
+          <p class="hint">
+            Si tu sens que tu dois renoncer à l’essence du projet pour signer un gros contrat, c’est que le curseur Sharky est passé en 6/5.
+          </p>
+        </div>
+
+        <div class="tab-panel" data-tab-panel="sources">
+          <h3>Inspirations & lectures possibles</h3>
+          <ul>
+            <li><strong>Économie sociale & solidaire :</strong> coopératives, associations qui vendent des services
+              sans renoncer à leur mission.</li>
+            <li><strong>“Open source business” :</strong> modèles où la base reste libre mais où services & accompagnement sont payants.</li>
+            <li><strong>Éducation populaire & formation :</strong> dispositifs d’éducation permanente, formations syndicales, pédagogies critiques.</li>
+            <li><strong>OSINT & veille citoyenne :</strong> ressources publiques sur l’intelligence économique, la veille stratégique, la
+              transparence, adaptées à un public non-expert.</li>
+          </ul>
+          <p class="hint">
+            Tu peux créer un <span class="mono">sharky-sources.html</span> ou un PDF dédié pour archiver toutes tes références sérieuses.
+          </p>
+        </div>
+
+        <div class="hint">
+          Ton nom n’apparaît nulle part ici : seule compte la <strong>cohérence</strong> entre ce que tu
+          dis vouloir faire, ce que tu vends, et la manière dont tu le mènes.
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        Mode Sharky : activé sur cette page uniquement.  
+        Tu peux très bien garder ce fichier pour toi, comme miroir de ce que tu es prêt·e à accepter… ou pas.
+      </span>
+      <code>sharky.html · mobile first · pur HTML/CSS/JS · business canvas intégrable à la clé</code>
+    </footer>
+
+    <div class="badge-corner">
+      SHARKY MODE · V1
+    </div>
+  </div>
+
+  <script>
+    // Calculateur de cashflow
+    (function() {
+      const membres = document.getElementById('membres');
+      const ateliers = document.getElementById('ateliers');
+      const tarifAtelier = document.getElementById('tarifAtelier');
+      const packs = document.getElementById('packs');
+      const tarifPack = document.getElementById('tarifPack');
+      const produits = document.getElementById('produits');
+      const summary = document.getElementById('calcSummary');
+      const warn = document.getElementById('calcWarn');
+
+      function update() {
+        const m = parseFloat(membres.value) || 0;
+        const a = parseFloat(ateliers.value) || 0;
+        const ta = parseFloat(tarifAtelier.value) || 0;
+        const p = parseFloat(packs.value) || 0;
+        const tp = parseFloat(tarifPack.value) || 0;
+        const prod = parseFloat(produits.value) || 0;
+
+        const cotisations = m * 12.5;
+        const recettesAteliers = a * ta;
+        const recettesPacks = p * tp;
+        const total = Math.round(cotisations + recettesAteliers + recettesPacks + prod);
+
+        summary.innerHTML = `Recette annuelle estimée : <strong>${total.toLocaleString("fr-BE")} €</strong> (hors charges, impôts, frais, temps de travail).`;
+
+        if (total > 40000) {
+          warn.textContent = "Attention : si ce montant te semble énorme au regard de ton temps disponible, revois tes hypothèses ou prévois un collectif / une structure adaptée.";
+        } else if (total > 15000) {
+          warn.textContent = "Ce montant peut représenter une base de revenu complémentaire ou un début de structure. Reste lucide sur la charge de travail et le cadre légal.";
+        } else {
+          warn.textContent = "Montant modeste mais réaliste pour démarrer, si les partenariats et la logistique suivent.";
+        }
+      }
+
+      [membres, ateliers, tarifAtelier, packs, tarifPack, produits].forEach(el => {
+        el.addEventListener('input', update);
+      });
+
+      update();
+    })();
+
+    // Curseur Sharky vs mission
+    (function() {
+      const range = document.getElementById('sharkRange');
+      const label = document.getElementById('sharkLabel');
+      const note = document.getElementById('sharkNote');
+
+      function update() {
+        const v = parseInt(range.value, 10);
+        label.textContent = v + " / 5";
+        let txt;
+        if (v === 1) {
+          txt = "1/5 – Tu restes quasi intégralement sur la logique “cagnotte + dons + instances DIY”. La monétisation est un complément, pas le centre.";
+        } else if (v === 2) {
+          txt = "2/5 – Tu assumes quelques prestations payantes, mais tu gardes une grosse partie des ressources libres et accessibles.";
+        } else if (v === 3) {
+          txt = "3/5 – Tu développes une vraie offre pro, tout en maintenant une version libre et en expliquant clairement la différence entre les deux.";
+        } else if (v === 4) {
+          txt = "4/5 – Ton revenu dépend fortement du projet : tu dois te battre pour que l’éthique ne soit pas avalée par les contraintes commerciales.";
+        } else {
+          txt = "5/5 – Mode Sharky total : tout est packé, tarifé, brandé. Si tu arrives là, garde un œil critique sur ce que tu as perdu en route et sur comment revenir à l’essentiel si nécessaire.";
+        }
+        note.innerHTML = txt.replace("Mode Sharky total", "<strong>Mode Sharky total</strong>");
+      }
+
+      range.addEventListener('input', update);
+      update();
+    })();
+
+    // Tabs annexes
+    (function() {
+      const btns = document.querySelectorAll('.tab-btn');
+      const panels = document.querySelectorAll('.tab-panel');
+
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.getAttribute('data-tab');
+          btns.forEach(b => b.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          const panel = document.querySelector(`.tab-panel[data-tab-panel="${tab}"]`);
+          if (panel) panel.classList.add('active');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
