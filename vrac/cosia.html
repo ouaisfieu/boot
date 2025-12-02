@@ -1,0 +1,778 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smartwatch en pur HTML/CSS/JS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050816;
+      --accent: #32d5ff;
+      --accent-soft: rgba(50, 213, 255, 0.2);
+      --accent-strong: #6cff8f;
+      --text-main: #f5f5f5;
+      --text-dim: #8c8fa5;
+      --danger: #ff4b6a;
+      --shadow-strong: 0 0 40px rgba(0, 0, 0, 0.7);
+      --radius-watch: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #151c3a 0, #050816 55%, #000 100%);
+      color: var(--text-main);
+    }
+
+    .frame {
+      width: min(380px, 95vw);
+      aspect-ratio: 9 / 16;
+      border-radius: 36px;
+      padding: 14px;
+      background: radial-gradient(circle at top left, #202840, #050816 65%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.02),
+        0 22px 60px rgba(0, 0, 0, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.15), transparent 60%);
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    .screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 26px;
+      padding: 14px 16px 16px;
+      background: radial-gradient(circle at top, #151d34 0, #050816 70%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        inset 0 0 25px rgba(0, 0, 0, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Barre de statut */
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .status-left,
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(50, 213, 255, 0.8);
+    }
+
+    .signal {
+      display: inline-flex;
+      gap: 2px;
+    }
+
+    .signal span {
+      width: 2px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .signal span:nth-child(1) {
+      height: 5px;
+    }
+
+    .signal span:nth-child(2) {
+      height: 7px;
+    }
+
+    .signal span:nth-child(3) {
+      height: 9px;
+    }
+
+    .signal span:nth-child(4) {
+      height: 11px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(50, 213, 255, 0.9);
+    }
+
+    .battery {
+      width: 18px;
+      height: 9px;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      position: relative;
+    }
+
+    .battery::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: 2px;
+      width: 2px;
+      height: 5px;
+      border-radius: 1px;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .battery-level {
+      position: absolute;
+      inset: 1px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent-strong), var(--accent));
+      box-shadow: 0 0 6px rgba(50, 213, 255, 0.7);
+    }
+
+    /* Bloc montre */
+
+    .watch {
+      margin-top: 2px;
+      flex: 1.1;
+      border-radius: var(--radius-watch);
+      padding: 12px 12px 10px;
+      background: radial-gradient(circle at top, #1b2542 0, #050816 80%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.07),
+        0 18px 40px rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .watch-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .watch-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Cadran analogique */
+
+    .dial {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 0%, #313a5f, #050816 70%);
+      box-shadow:
+        inset 0 0 25px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255, 255, 255, 0.03),
+        0 0 25px rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .dial-ring {
+      position: absolute;
+      inset: 10%;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 25px rgba(50, 213, 255, 0.45);
+    }
+
+    .dial-glow {
+      position: absolute;
+      inset: 28%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(50, 213, 255, 0.18), transparent 70%);
+      mix-blend-mode: screen;
+    }
+
+    .tick {
+      position: absolute;
+      width: 2px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.4);
+      top: 4%;
+      left: 50%;
+      transform-origin: 50% 260%;
+      border-radius: 999px;
+    }
+
+    .tick.major {
+      height: 12px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(50, 213, 255, 0.9);
+    }
+
+    .hand {
+      position: absolute;
+      width: 2px;
+      border-radius: 999px;
+      background: #fff;
+      top: 50%;
+      left: 50%;
+      transform-origin: 50% 90%;
+      transform: translate(-50%, -90%) rotate(0deg);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    }
+
+    .hand.hour {
+      height: 26%;
+      width: 3px;
+      background: var(--accent-strong);
+      box-shadow: 0 0 12px rgba(108, 255, 143, 0.8);
+    }
+
+    .hand.minute {
+      height: 34%;
+    }
+
+    .hand.second {
+      height: 40%;
+      background: var(--danger);
+      box-shadow: 0 0 12px rgba(255, 75, 106, 0.9);
+    }
+
+    .center-cap {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow:
+        0 0 12px rgba(50, 213, 255, 1),
+        0 0 0 3px rgba(5, 8, 22, 0.9);
+    }
+
+    /* Bloc infos numériques */
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .time-digital {
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      text-shadow: 0 0 18px rgba(50, 213, 255, 0.9);
+    }
+
+    .date {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .metrics {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .metric-card {
+      border-radius: 12px;
+      padding: 7px 9px;
+      background: radial-gradient(circle at top left, rgba(50, 213, 255, 0.16), rgba(0, 0, 0, 0.65));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+      font-size: 0.72rem;
+    }
+
+    .metric-label {
+      color: var(--text-dim);
+      margin-bottom: 2px;
+    }
+
+    .metric-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .metric-unit {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .progress-bar {
+      margin-top: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 0 8px rgba(50, 213, 255, 0.9);
+      width: 0%;
+    }
+
+    /* Notifications */
+
+    .notifications {
+      margin-top: 4px;
+      flex: 0.8;
+      border-radius: 18px;
+      padding: 8px 10px 9px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: var(--shadow-strong);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .notifications-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .chip {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(50, 213, 255, 0.14);
+      color: var(--accent);
+    }
+
+    .notif {
+      margin-top: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.78rem;
+      padding: 6px 7px;
+      border-radius: 10px;
+      background: rgba(10, 14, 30, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .notif-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 8px;
+      background: radial-gradient(circle at top, var(--accent), #0c1328);
+      box-shadow: 0 0 10px rgba(50, 213, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+
+    .notif-content {
+      flex: 1;
+    }
+
+    .notif-title {
+      font-weight: 500;
+      margin-bottom: 1px;
+    }
+
+    .notif-text {
+      color: var(--text-dim);
+    }
+
+    .notif-time {
+      margin-left: 4px;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    /* Mini "mode discret" dystopique 😈 */
+
+    .stealth-toggle {
+      margin-top: 2px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .stealth-btn {
+      font-size: 0.7rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.7);
+      color: var(--text-dim);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stealth-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stealth-btn.active .stealth-dot {
+      background: var(--danger);
+      box-shadow: 0 0 10px rgba(255, 75, 106, 0.9);
+    }
+
+    .stealth-panel {
+      display: none;
+      margin-top: 4px;
+      font-size: 0.7rem;
+      text-align: center;
+      color: var(--text-dim);
+      opacity: 0.8;
+    }
+
+    .stealth-panel span {
+      color: var(--accent);
+    }
+
+    @media (max-width: 360px) {
+      .time-digital {
+        font-size: 1.7rem;
+      }
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+      .watch-body {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="screen">
+      <!-- Barre de statut -->
+      <div class="status-bar">
+        <div class="status-left">
+          <div class="pill">
+            <span class="dot"></span>
+            <span id="status-time">00:00</span>
+          </div>
+        </div>
+        <div class="status-right">
+          <div class="signal" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="battery" aria-hidden="true">
+            <div class="battery-level" id="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloc montre -->
+      <section class="watch" aria-label="Smartwatch">
+        <header class="watch-header">
+          <div>Pulse&nbsp;OS • v1.0</div>
+          <div class="badge">Offline • USB</div>
+        </header>
+
+        <div class="watch-body">
+          <!-- Cadran analogique -->
+          <div class="dial" aria-hidden="true">
+            <div class="dial-ring"></div>
+            <div class="dial-glow"></div>
+            <!-- Ticks -->
+            <!-- on crée les 12 majeurs + 48 mineurs via JS, mais on laisse quelques par défaut pour la déco de base -->
+            <div class="center-cap"></div>
+            <div class="hand hour" id="hand-hour"></div>
+            <div class="hand minute" id="hand-minute"></div>
+            <div class="hand second" id="hand-second"></div>
+          </div>
+
+          <!-- Infos numériques -->
+          <div class="info">
+            <div class="time-digital" id="time-digital">00:00</div>
+            <div class="date" id="date-label">—</div>
+
+            <div class="metrics">
+              <div class="metric-card">
+                <div class="metric-label">Pas</div>
+                <div class="metric-value">
+                  <span id="steps-value">7421</span>
+                  <span class="metric-unit">aujourd'hui</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="steps-progress"></div>
+                </div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Fréquence cardiaque</div>
+                <div class="metric-value">
+                  <span id="heart-value">72</span>
+                  <span class="metric-unit">bpm</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="heart-progress"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Notifications -->
+      <section class="notifications" aria-label="Notifications récentes">
+        <div class="notifications-header">
+          <span>Notifications</span>
+          <span class="chip">3 non lues</span>
+        </div>
+
+        <article class="notif">
+          <div class="notif-icon">💬</div>
+          <div class="notif-content">
+            <div class="notif-title">
+              Signal • S
+              <span class="notif-time">• maintenant</span>
+            </div>
+            <div class="notif-text">
+              « Si tu lis ça hors-ligne, c’est que tu sais déjà qu’on t’observe. »
+            </div>
+          </div>
+        </article>
+
+        <article class="notif">
+          <div class="notif-icon">⚙️</div>
+          <div class="notif-content">
+            <div class="notif-title">
+              Système
+              <span class="notif-time">• il y a 12 min</span>
+            </div>
+            <div class="notif-text">
+              Mode <strong>Ultra offline</strong> activé. Aucune donnée envoyée vers le cloud.
+            </div>
+          </div>
+        </article>
+
+        <article class="notif">
+          <div class="notif-icon">👁️</div>
+          <div class="notif-content">
+            <div class="notif-title">
+              Insight
+              <span class="notif-time">• il y a 42 min</span>
+            </div>
+            <div class="notif-text">
+              Rappel&nbsp;: le meilleur pare-feu reste ce qui <em>n’est jamais connecté</em>.
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Petit mode "dystopie discrète" -->
+      <div class="stealth-toggle">
+        <button class="stealth-btn" id="stealth-btn" type="button">
+          <span class="stealth-dot"></span>
+          <span>mode discret</span>
+        </button>
+      </div>
+      <div class="stealth-panel" id="stealth-panel">
+        Astuce&nbsp;: une smartwatch 100 % locale ne peut pas
+        <span>revendre tes données</span>. C’est fou, non ?
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Utilitaires ----------
+
+    function pad(n) {
+      return n.toString().padStart(2, "0");
+    }
+
+    const dial = document.querySelector(".dial");
+
+    // Génération des graduations (ticks) du cadran
+    (function createTicks() {
+      if (!dial) return;
+      for (let i = 0; i < 60; i++) {
+        const tick = document.createElement("div");
+        tick.classList.add("tick");
+        if (i % 5 === 0) tick.classList.add("major");
+        tick.style.transform = `translate(-50%, 0) rotate(${i * 6}deg)`;
+        dial.appendChild(tick);
+      }
+    })();
+
+    const digitalTimeEl = document.getElementById("time-digital");
+    const statusTimeEl = document.getElementById("status-time");
+    const dateEl = document.getElementById("date-label");
+    const handHour = document.getElementById("hand-hour");
+    const handMinute = document.getElementById("hand-minute");
+    const handSecond = document.getElementById("hand-second");
+    const batteryLevelEl = document.getElementById("battery-level");
+
+    const stepsValueEl = document.getElementById("steps-value");
+    const stepsProgressEl = document.getElementById("steps-progress");
+    const heartValueEl = document.getElementById("heart-value");
+    const heartProgressEl = document.getElementById("heart-progress");
+
+    // ---------- Horloge & cadran ----------
+
+    function updateClock() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      const s = now.getSeconds();
+
+      const timeStr = `${pad(h)}:${pad(m)}`;
+      if (digitalTimeEl) digitalTimeEl.textContent = timeStr;
+      if (statusTimeEl) statusTimeEl.textContent = timeStr;
+
+      // Date
+      const days = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
+      const months = [
+        "janv.",
+        "févr.",
+        "mars",
+        "avr.",
+        "mai",
+        "juin",
+        "juil.",
+        "août",
+        "sept.",
+        "oct.",
+        "nov.",
+        "déc."
+      ];
+      const dayName = days[now.getDay()];
+      const day = now.getDate();
+      const monthName = months[now.getMonth()];
+      if (dateEl) {
+        dateEl.textContent = `${dayName} ${day} ${monthName} ${now.getFullYear()}`;
+      }
+
+      // Angles des aiguilles
+      const hourAngle = ((h % 12) + m / 60) * 30; // 360 / 12
+      const minuteAngle = (m + s / 60) * 6; // 360 / 60
+      const secondAngle = s * 6;
+
+      if (handHour) {
+        handHour.style.transform = `translate(-50%, -90%) rotate(${hourAngle}deg)`;
+      }
+      if (handMinute) {
+        handMinute.style.transform = `translate(-50%, -90%) rotate(${minuteAngle}deg)`;
+      }
+      if (handSecond) {
+        handSecond.style.transform = `translate(-50%, -90%) rotate(${secondAngle}deg)`;
+      }
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // ---------- Batterie (fake mais jolie) ----------
+
+    (function animateBattery() {
+      if (!batteryLevelEl) return;
+      let level = 0.35 + Math.random() * 0.5; // entre ~35% et 85%
+      batteryLevelEl.style.width = `${Math.round(level * 100)}%`;
+    })();
+
+    // ---------- Stats (fake dynamiques) ----------
+
+    function randomBetween(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function updateStats() {
+      // Steps
+      const targetSteps = 10000;
+      const currentSteps = randomBetween(3200, 11800);
+      if (stepsValueEl) stepsValueEl.textContent = currentSteps.toLocaleString("fr-FR");
+      if (stepsProgressEl) {
+        const v = Math.min(currentSteps / targetSteps, 1);
+        stepsProgressEl.style.width = `${Math.round(v * 100)}%`;
+      }
+
+      // Heart
+      const heart = randomBetween(60, 110);
+      if (heartValueEl) heartValueEl.textContent = heart;
+      if (heartProgressEl) {
+        const v = Math.min((heart - 50) / 80, 1); // petit mapping simple
+        heartProgressEl.style.width = `${Math.round(v * 100)}%`;
+      }
+    }
+
+    updateStats();
+    setInterval(updateStats, 8000);
+
+    // ---------- Mode "discret / dystopique" ----------
+
+    const stealthBtn = document.getElementById("stealth-btn");
+    const stealthPanel = document.getElementById("stealth-panel");
+
+    if (stealthBtn && stealthPanel) {
+      stealthBtn.addEventListener("click", () => {
+        const isActive = stealthBtn.classList.toggle("active");
+        stealthPanel.style.display = isActive ? "block" : "none";
+      });
+    }
+  </script>
+</body>
+</html>
