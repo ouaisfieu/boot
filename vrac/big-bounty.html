@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>BountyRepo – Mettez mes talents à l’œuvre via un dépôt GitHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --bg-alt: #ffffff;
+      --primary: #1d4ed8;
+      --primary-soft: rgba(37,99,235,0.08);
+      --accent: #f97316;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 18px 45px rgba(15,23,42,0.15);
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top, #dbeafe 0, #f4f6fb 45%, #e5e7eb 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 20px 16px 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(209,213,219,0.9);
+      box-shadow: 0 10px 30px rgba(148,163,184,0.35);
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+    }
+
+    @media (max-width: 820px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        border-radius: 18px;
+      }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 10px 25px rgba(37,99,235,0.6);
+    }
+
+    .logo-text-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .logo-text-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.88rem;
+    }
+
+    .nav-link {
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      color: var(--muted);
+      background: transparent;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      background: var(--primary-soft);
+      border-color: rgba(148,163,184,0.7);
+      color: var(--text);
+    }
+
+    .nav-link.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    main {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 17px;
+    }
+
+    .hero-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .hero-title {
+      margin-top: 4px;
+      font-size: 1.9rem;
+      line-height: 1.25;
+    }
+
+    .hero-title span {
+      color: var(--primary);
+    }
+
+    .hero-sub {
+      margin-top: 8px;
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+
+    .hero-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,0.9fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .hero-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .list {
+      margin: 2px 0 8px;
+      padding-left: 18px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .list li { margin-bottom: 4px; }
+
+    .pill-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .pill-stats {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .pill strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #eff6ff;
+      font-size: 0.75rem;
+      color: #1e293b;
+    }
+
+    .btn-main {
+      margin-top: 10px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 26px rgba(37,99,235,0.45);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      box-shadow: 0 14px 32px rgba(37,99,235,0.5);
+    }
+
+    .btn-main:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 7px 18px rgba(15,23,42,0.4);
+    }
+
+    .btn-ghost {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      color: var(--muted);
+      font-size: 0.84rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    }
+
+    .btn-ghost:hover {
+      background: #eef2ff;
+      border-color: rgba(148,163,184,0.8);
+      color: var(--text);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .services-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .services-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .service-card {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 10px 11px 9px;
+    }
+
+    .service-title {
+      font-size: 0.96rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .service-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .service-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .steps-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 880px) {
+      .steps-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .steps-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .step-card {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 7px 9px;
+    }
+
+    .step-num {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .step-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin: 2px 0;
+    }
+
+    .step-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .code-block {
+      margin-top: 8px;
+      background: #020617;
+      color: #e5e7eb;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      overflow-x: auto;
+    }
+
+    .code-block span.comment {
+      color: #6b7280;
+    }
+
+    .money-card {
+      margin-top: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(22,163,74,0.18);
+      background: #ecfdf3;
+      padding: 9px 11px 9px;
+      font-size: 0.86rem;
+      color: #065f46;
+    }
+
+    .money-title {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .money-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.84rem;
+    }
+
+    .case-list {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr);
+      gap: 6px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .case-item {
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: #f9fafb;
+      padding: 7px 9px;
+    }
+
+    .case-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #111827;
+    }
+
+    .case-tagline {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .case-detail { font-size: 0.82rem; }
+
+    .form-group { margin-bottom: 8px; }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #4b5563;
+    }
+
+    .label span.opt {
+      font-weight: 400;
+      color: #9ca3af;
+      font-size: 0.76rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      font-size: 0.86rem;
+      font-family: var(--sans);
+      outline: none;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+      background: #f9fafb;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37,99,235,0.2);
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: minmax(0,1.1fr) minmax(0,0.9fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .form-row {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .status {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .status.ok { color: #15803d; }
+    .status.warn { color: #b45309; }
+
+    .email-preview {
+      margin-top: 10px;
+    }
+
+    .email-preview textarea {
+      width: 100%;
+      margin-top: 4px;
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: #0b1120;
+      color: #e5e7eb;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      min-height: 130px;
+      resize: vertical;
+      white-space: pre;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .footer-left strong { color: var(--primary); }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="logo">
+      <div class="logo-mark">BR</div>
+      <div>
+        <div class="logo-text-title">BountyRepo · Votre Nom</div>
+        <div class="logo-text-sub">Mettez ma tête à prix… sur un dépôt GitHub</div>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-link" type="button" onclick="scrollToId('concept')">Concept</button>
+      <button class="nav-link" type="button" onclick="scrollToId('employeurs')">Pour qui</button>
+      <button class="nav-link" type="button" onclick="scrollToId('process')">Processus</button>
+      <button class="nav-link" type="button" onclick="scrollToId('github-guide')">GitHub&nbsp;?</button>
+      <button class="nav-link primary" type="button" onclick="scrollToId('contact')">Proposer une mission</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Colonne gauche : concept, process, business, GitHub expliqué -->
+    <section class="card">
+      <div class="hero-header">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span>Initiative indépendante · Modèle lucratif assumé · Collaboration par dépôt GitHub</span>
+        </div>
+      </div>
+
+      <h1 class="hero-title" id="concept">
+        Vous créez le dépôt.<br>
+        <span>Je prends la mission comme une prime à la tête.</span>
+      </h1>
+
+      <p class="hero-sub">
+        <strong>BountyRepo</strong>, c’est un principe simple&nbsp;: vous ouvrez un dépôt GitHub avec tout ce qu’il faut
+        pour mener une mission (contexte, données, idées, backlog). Je m’engage, sur cette base, à livrer
+        <strong>un travail exploitable et documenté</strong>, dans un cadre contractuel clair et facturé.
+      </p>
+
+      <div class="hero-grid">
+        <div>
+          <h2 id="employeurs" class="section-title">Pour quels employeurs&nbsp;?</h2>
+          <p class="section-sub">
+            Toute organisation ayant besoin d’un cerveau externe qui travaille à partir d’un dépôt propre plutôt que
+            d’emails éparpillés.
+          </p>
+          <ul class="list">
+            <li>Entreprises (PME, ETI, startups, grands comptes) pour des sujets ciblés.</li>
+            <li>Associations, collectifs, fondations pour structurer des dossiers complexes.</li>
+            <li>Cabinets (conseil, avocats, communication) pour des missions discrètes et cadrées.</li>
+            <li>Banques et financeurs pour des besoins ponctuels d’analyse ou de structuration.</li>
+          </ul>
+          <div class="tags">
+            <span class="tag">Audit & analyse</span>
+            <span class="tag">Organisation & stratégie</span>
+            <span class="tag">Investigation documentaire</span>
+            <span class="tag">Outils & prototypes</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">Ce que vous gagnez</h2>
+          <div class="pill-stats">
+            <div class="pill">
+              <strong>Dépôt unique</strong>
+              un seul endroit pour tout&nbsp;: docs, tâches, livrables.
+            </div>
+            <div class="pill">
+              <strong>Traçabilité</strong>
+              chaque avance, chaque idée est versionnée.
+            </div>
+            <div class="pill">
+              <strong>Monétisation claire</strong>
+              devis, phases, livrables payés. Rien de flou.
+            </div>
+          </div>
+
+          <button class="btn-main" type="button" onclick="scrollToId('contact')">
+            Proposer un dépôt-bounty
+          </button>
+          <p class="small">
+            Premier échange sans frais&nbsp;: on regarde ensemble si votre idée de dépôt-bounty est exploitable
+            et à quelles conditions.
+          </p>
+        </div>
+      </div>
+
+      <section id="process" style="margin-top:16px;">
+        <h2 class="section-title">Comment ça marche (en pratique)</h2>
+        <p class="section-sub">
+          La “tête à prix” est symbolique. Concrètement, on parle de <strong>missions payées</strong>, structurées
+          dans un dépôt GitHub, avec un niveau de sérieux compatible avec des comités de direction ou des banquiers.
+        </p>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">Étape 1</div>
+            <div class="step-title">Vous créez un dépôt GitHub</div>
+            <div class="step-desc">
+              Nom du projet, description, quelques dossiers et un premier README. Même brut, ça suffit pour démarrer.
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Étape 2</div>
+            <div class="step-title">On clarifie la bounty</div>
+            <div class="step-desc">
+              Visio ou échange écrit&nbsp;: périmètre, livrables, délais, droits d’auteur, confidentialité.
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Étape 3</div>
+            <div class="step-title">Je travaille dans le dépôt</div>
+            <div class="step-desc">
+              Issues, branches, PR, documentation. Vous voyez exactement ce qui est fait, quand, et avec quel impact.
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Étape 4</div>
+            <div class="step-title">Livrable & facture</div>
+            <div class="step-desc">
+              Livraison d’un état stable, validation, facture émise sur ce qui a été convenu. On peut enchaîner.
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+<span class="comment"># Exemple très simple de dépôt-bounty</span>
+bounty-projet-organisation/
+├─ README.md             <span class="comment"># Contexte & objectifs</span>
+├─ 01_contexte/         <span class="comment"># Docs, notes, liens utiles</span>
+├─ 02_backlog/          <span class="comment"># Idées, tâches, priorités</span>
+├─ 03_donnees/          <span class="comment"># Données brutes (si besoin)</span>
+├─ 04_livrables/        <span class="comment"># Ce que je produis pour vous</span>
+└─ .github/ISSUE_TEMPLATE.md  <span class="comment"># Pour cadrer les demandes</span>
+        </div>
+      </section>
+
+      <section style="margin-top:16px;">
+        <h2 class="section-title">Un modèle économique assumé</h2>
+        <p class="section-sub">
+          On ne cache pas l’argent derrière des grands mots. L’initiative est à but lucratif, assumé, mais avec
+          des règles claires dès le départ.
+        </p>
+
+        <div class="money-card">
+          <div class="money-title">En résumé :</div>
+          <ul class="money-list">
+            <li>Devis ou lettre de mission validé·e avant tout travail significatif.</li>
+            <li>Travail facturé au <strong>forfait par bounty</strong> ou au <strong>taux journalier</strong> selon la nature du projet.</li>
+            <li>Possibilité de <strong>phase test courte</strong> avant engagement plus long.</li>
+            <li>Facturation et conditions générales compatibles entreprises, banques et institutions.</li>
+          </ul>
+        </div>
+
+        <div class="services-grid" style="margin-top:12px;">
+          <div class="service-card">
+            <div class="service-title">Pack “Sprint dépôt”</div>
+            <div class="service-desc">
+              Vous avez l’idée mais pas le temps de structurer le dépôt&nbsp;? Je vous aide à construire le
+              premier squelette GitHub pour accueillir vos missions.
+            </div>
+            <div class="service-meta">
+              Diagnostic, arborescence, premier README, idées de bounties.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">Pack “Mission unique”</div>
+            <div class="service-desc">
+              Une bounty, un livrable, un budget. Idéal pour tester le modèle ou traiter un sujet ciblé.
+            </div>
+            <div class="service-meta">
+              Devis clair, planning, points d’étape, restitution.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top:16px;">
+        <h2 class="section-title">Exemples de bounties possibles</h2>
+        <div class="case-list">
+          <div class="case-item">
+            <div class="case-title">“Rendre lisible notre organisation absurde”</div>
+            <div class="case-tagline">Entreprise ou institution · Diagnostic & mise en forme</div>
+            <div class="case-detail">
+              Vous alimentez un dépôt avec vos organigrammes, procédures, exemples de situations. Je construis un diagnostic
+              lisible, des cartes, des scénarios et un support de présentation pour la direction.
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-title">“Dossier de conviction pour financeur / banque”</div>
+            <div class="case-tagline">Association, projet hybride · Structuration de dossier</div>
+            <div class="case-detail">
+              Le dépôt contient vos idées, chiffres, documents existants. J’en fais un dossier cohérent, argumenté
+              et prêt à être défendu devant un comité de crédit ou de subventions.
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-title">“Prototype de site / outil pour tester une idée”</div>
+            <div class="case-tagline">Startup, produit interne · Preuve de concept</div>
+            <div class="case-detail">
+              Le dépôt décrit la logique métier et les contraintes. Je livre une maquette ou un outil statique
+              suffisant pour tester l’idée auprès d’utilisateurs ou de décideurs.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION GITHUB EXPLIQUÉE -->
+      <section id="github-guide" style="margin-top:18px;">
+        <h2 class="section-title">GitHub, concrètement, comment ça marche&nbsp;?</h2>
+        <p class="section-sub">
+          GitHub est une plateforme en ligne qui permet de stocker, organiser et suivre des projets.
+          On peut la voir comme un mélange entre un dossier partagé, un historique de modifications
+          et un tableau de tâches.
+        </p>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-title">1. Créer un compte</div>
+            <div class="service-desc">
+              Vous créez un compte gratuit sur github.com avec votre adresse professionnelle.
+            </div>
+            <div class="service-meta">
+              Vous gardez la propriété du compte et des dépôts créés.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">2. Créer un dépôt (“repo”)</div>
+            <div class="service-desc">
+              Un dépôt = un projet. Vous lui donnez un nom, une description, et choisissez s’il est public ou privé.
+            </div>
+            <div class="service-meta">
+              Pour les missions sensibles, on utilise des dépôts privés.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">3. Inviter le prestataire</div>
+            <div class="service-desc">
+              Vous m’ajoutez comme collaborateur·rice au dépôt, avec les droits nécessaires.
+            </div>
+            <div class="service-meta">
+              Vous pouvez retirer l’accès à tout moment.
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-title">4. Travailler dans le dépôt</div>
+            <div class="service-desc">
+              Les documents, notes, tâches et livrables sont gérés dans ce dépôt&nbsp;: tout est tracé et daté.
+            </div>
+            <div class="service-meta">
+              Pratique pour justifier le travail auprès d’un comité de direction ou d’un financeur.
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block" style="margin-top:10px;">
+<span class="comment"># Exemple très simplifié, côté employeur</span>
+1. Créer un compte sur https://github.com
+2. Cliquer sur "New repository"
+3. Nommer le dépôt (ex. "bounty-notre-projet")
+4. Choisir "Private" si le sujet est sensible
+5. Ajouter un README avec le modèle proposé
+6. Inviter le prestataire comme "Collaborator"
+        </div>
+
+        <p class="small" style="margin-top:8px;">
+          🔐 Vous pouvez considérer GitHub comme un coffre-fort organisé pour votre projet&nbsp;: vous décidez
+          qui a accès, ce qui est publié (ou non), et comment les informations sont structurées.
+        </p>
+      </section>
+    </section>
+
+    <!-- Colonne droite : contact / dépôt-bounty -->
+    <section class="card" id="contact">
+      <h2 class="section-title">Proposer une bounty (dépôt GitHub)</h2>
+      <p class="section-sub">
+        Remplissez ce formulaire pour décrire votre organisation, votre dépôt existant (ou à créer) et ce que vous
+        voulez mettre à prix. Un email pré-rempli sera généré pour un premier échange.
+      </p>
+
+      <form onsubmit="handleContact(event)">
+        <div class="form-group">
+          <div class="label">Nom / Prénom</div>
+          <input id="c-name" required placeholder="Votre nom complet">
+        </div>
+
+        <div class="form-group">
+          <div class="label">Email professionnel</div>
+          <input id="c-email" type="email" required placeholder="prenom.nom@organisation.fr">
+        </div>
+
+        <div class="form-group">
+          <div class="label">Organisation</div>
+          <input id="c-org" required placeholder="Entreprise, association, institution, collectif…">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="label">Type de mission</div>
+            <select id="c-type" required>
+              <option value="">Sélectionnez une option</option>
+              <option>Audit / diagnostic / analyse</option>
+              <option>Organisation / stratégie / dossier</option>
+              <option>Investigation / veille / synthèse documentaire</option>
+              <option>Prototype / outil / site statique</option>
+              <option>Autre (à préciser dans la description)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="label">Budget indicatif</div>
+            <select id="c-budget">
+              <option value="">À discuter</option>
+              <option>Test / petit périmètre</option>
+              <option>Mission significative</option>
+              <option>Accompagnement sur plusieurs bounties</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label">Lien vers le dépôt GitHub <span class="opt">(ou “à créer”)</span></div>
+          <input id="c-repo" placeholder="https://github.com/… ou 'à créer ensemble'">
+        </div>
+
+        <div class="form-group">
+          <div class="label">Enjeux & objectifs de la bounty</div>
+          <textarea id="c-context" required placeholder="Décrivez en quelques lignes ce que vous attendez de cette bounty, dans quel contexte et avec quel impact attendu."></textarea>
+        </div>
+
+        <div class="form-group">
+          <div class="label">Délai souhaité</div>
+          <input id="c-deadline" placeholder="Ex : avant telle date, sur tel trimestre, etc.">
+        </div>
+
+        <div class="form-group">
+          <div class="label">Contraintes & remarques <span class="opt">(facultatif)</span></div>
+          <textarea id="c-notes" placeholder="Ex : confidentialité, contraintes légales, contraintes internes, contraintes techniques, etc."></textarea>
+        </div>
+
+        <p class="small">
+          🔒 Le formulaire ne stocke rien&nbsp;: il prépare simplement un email sur votre propre messagerie avec toutes
+          ces informations. Vous gardez le contrôle sur ce qui est envoyé.
+        </p>
+
+        <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+          <button class="btn-main" type="submit">
+            Préparer & ouvrir l’email de proposition
+          </button>
+
+          <div class="btn-row">
+            <button class="btn-ghost" type="button" onclick="copyEmailText()">
+              Copier le message
+            </button>
+            <button class="btn-ghost" type="button" onclick="downloadMarkdown()">
+              Exporter en Markdown
+            </button>
+            <button class="btn-ghost" type="button" onclick="copyRepoTemplate()">
+              Copier un modèle de dépôt-bounty
+            </button>
+          </div>
+
+          <div class="status" id="status-msg">
+            Un brouillon d’email sera généré. Vous pourrez le modifier, puis l’envoyer.
+          </div>
+        </div>
+      </form>
+
+      <div class="email-preview" id="email-preview-box" style="display:none;">
+        <div class="label">Aperçu du message généré</div>
+        <textarea id="email-preview" readonly></textarea>
+      </div>
+
+      <p class="small" style="margin-top:10px;">
+        💡 Conseil&nbsp;: même un dépôt minimal avec un seul fichier <span style="font-family:var(--mono);">README.md</span>
+        suffit pour commencer, tant que le besoin est clairement expliqué.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <strong>BountyRepo</strong> · Initiative indépendante à but lucratif, au service de vos projets les plus sérieux.
+    </div>
+    <div>
+      Contact direct : <span id="footer-email">contact@votre-domaine.fr</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // 👉 À PERSONNALISER : mets ton adresse email ici
+  const BOUNTY_EMAIL = "contact@votre-domaine.fr";
+
+  document.getElementById("footer-email").textContent = BOUNTY_EMAIL;
+
+  let lastEmailText = "";
+  let lastEmailSubject = "";
+
+  function scrollToId(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const offset = window.scrollY + rect.top - 100;
+    window.scrollTo({ top: offset, behavior: "smooth" });
+  }
+
+  function buildEmailFromForm() {
+    const name = document.getElementById("c-name").value.trim();
+    const email = document.getElementById("c-email").value.trim();
+    const org = document.getElementById("c-org").value.trim();
+    const type = document.getElementById("c-type").value;
+    const budget = document.getElementById("c-budget").value;
+    const repo = document.getElementById("c-repo").value.trim();
+    const context = document.getElementById("c-context").value.trim();
+    const deadline = document.getElementById("c-deadline").value.trim();
+    const notes = document.getElementById("c-notes").value.trim();
+
+    return {
+      name, email, org, type, budget, repo, context, deadline, notes
+    };
+  }
+
+  function handleContact(event) {
+    event.preventDefault();
+
+    const statusEl = document.getElementById("status-msg");
+    const previewBox = document.getElementById("email-preview-box");
+    const previewArea = document.getElementById("email-preview");
+
+    const { name, email, org, type, budget, repo, context, deadline, notes } = buildEmailFromForm();
+
+    if (!name || !email || !org || !type || !context) {
+      statusEl.textContent = "Merci de remplir les champs principaux : nom, email, organisation, type de mission, enjeux & objectifs.";
+      statusEl.classList.remove("ok");
+      statusEl.classList.add("warn");
+      return;
+    }
+
+    let subject = "Proposition de dépôt-bounty GitHub – " + org;
+    let bodyLines = [];
+
+    bodyLines.push("Bonjour,");
+    bodyLines.push("");
+    bodyLines.push("Je vous contacte via la page BountyRepo pour proposer une mission structurée autour d’un dépôt GitHub.");
+    bodyLines.push("");
+    bodyLines.push("• Nom / Prénom : " + name);
+    bodyLines.push("• Email : " + email);
+    bodyLines.push("• Organisation : " + org);
+    bodyLines.push("• Type de mission : " + type);
+    if (budget) bodyLines.push("• Budget indicatif : " + budget);
+    if (repo) bodyLines.push("• Dépôt GitHub : " + repo);
+    bodyLines.push("");
+    bodyLines.push("Enjeux & objectifs de la bounty :");
+    bodyLines.push(context);
+    bodyLines.push("");
+    if (deadline) {
+      bodyLines.push("Délai souhaité :");
+      bodyLines.push(deadline);
+      bodyLines.push("");
+    }
+    if (notes) {
+      bodyLines.push("Contraintes & remarques :");
+      bodyLines.push(notes);
+      bodyLines.push("");
+    }
+    bodyLines.push("Je suis disponible pour préciser le besoin et étudier avec vous la meilleure manière de cadrer la mission (devis, phases, livrables).");
+    bodyLines.push("");
+    bodyLines.push("Cordialement,");
+    bodyLines.push(name);
+
+    const bodyText = bodyLines.join("\n");
+
+    // stocker pour les autres boutons
+    lastEmailSubject = subject;
+    lastEmailText = bodyText;
+
+    // afficher l’aperçu
+    previewArea.value = bodyText;
+    previewBox.style.display = "block";
+
+    statusEl.textContent = "Message généré. Ouverture de votre messagerie… Vous pouvez aussi copier le mail ou l’exporter en Markdown.";
+    statusEl.classList.remove("warn");
+    statusEl.classList.add("ok");
+
+    const mailtoUrl =
+      "mailto:" + encodeURIComponent(BOUNTY_EMAIL) +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(bodyText);
+
+    window.location.href = mailtoUrl;
+  }
+
+  function copyEmailText() {
+    const statusEl = document.getElementById("status-msg");
+    if (!lastEmailText) {
+      statusEl.textContent = "Générez d’abord le message (bouton bleu) avant de le copier.";
+      statusEl.classList.remove("ok");
+      statusEl.classList.add("warn");
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastEmailText).then(() => {
+        statusEl.textContent = "Message copié dans le presse-papiers. Collez-le où vous voulez (messagerie, éditeur, etc.).";
+        statusEl.classList.remove("warn");
+        statusEl.classList.add("ok");
+      }).catch(() => {
+        statusEl.textContent = "Impossible d’accéder au presse-papiers. Sélectionnez et copiez le texte de l’aperçu à la main.";
+        statusEl.classList.remove("ok");
+        statusEl.classList.add("warn");
+      });
+    } else {
+      statusEl.textContent = "Votre navigateur ne permet pas la copie automatique. Utilisez l’aperçu pour copier à la main.";
+      statusEl.classList.remove("ok");
+      statusEl.classList.add("warn");
+    }
+  }
+
+  function downloadMarkdown() {
+    const statusEl = document.getElementById("status-msg");
+    if (!lastEmailText) {
+      statusEl.textContent = "Générez d’abord le message (bouton bleu) avant de l’exporter en Markdown.";
+      statusEl.classList.remove("ok");
+      statusEl.classList.add("warn");
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0,10);
+    const header = "# Proposition de dépôt-bounty GitHub\n\n";
+    const subjectLine = lastEmailSubject ? "**Sujet :** " + lastEmailSubject + "\n\n" : "";
+    const markdownContent = header + subjectLine + "```text\n" + lastEmailText + "\n```";
+
+    const blob = new Blob([markdownContent], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "bounty-proposition-" + today + ".md";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      a.remove();
+    }, 0);
+
+    statusEl.textContent = "Fichier Markdown généré. Vous pouvez l’ajouter à un dépôt GitHub ou le transmettre tel quel.";
+    statusEl.classList.remove("warn");
+    statusEl.classList.add("ok");
+  }
+
+  function copyRepoTemplate() {
+    const template = [
+      "# dépôt-bounty – modèle",
+      "",
+      "Ce dépôt est conçu pour accueillir une mission confiée à un prestataire externe,",
+      "avec un suivi du travail directement dans GitHub.",
+      "",
+      "## 1. Contexte",
+      "- Qui nous sommes",
+      "- Quel est le problème / l’opportunité",
+      "- Pourquoi nous cherchons un prestataire externe",
+      "",
+      "## 2. Objectifs de la bounty",
+      "- Objectif principal",
+      "- Critères de réussite",
+      "- Livrables attendus (formats, publics visés)",
+      "",
+      "## 3. Périmètre",
+      "- Ce qui est inclus",
+      "- Ce qui est explicitement exclu",
+      "",
+      "## 4. Ressources dans ce dépôt",
+      "- /01_contexte : documents, liens, historique",
+      "- /02_backlog : idées, tâches, priorités",
+      "- /03_donnees : données brutes éventuelles",
+      "",
+      "## 5. Organisation",
+      "- Contact principal",
+      "- Cadre décisionnel (qui valide quoi)",
+      "- Contraintes (confidentialité, légales, techniques)",
+      "",
+      "## 6. Modalités financières",
+      "- Budget cible",
+      "- Modalités de paiement (acompte, solde, etc.)",
+      "",
+      "## 7. Historique de la bounty",
+      "- À compléter au fur et à mesure (dates clés, décisions)."
+    ].join("\n");
+
+    const statusEl = document.getElementById("status-msg");
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(template).then(() => {
+        statusEl.textContent = "Modèle de README de dépôt-bounty copié dans le presse-papiers. Collez-le dans votre dépôt GitHub.";
+        statusEl.classList.remove("warn");
+        statusEl.classList.add("ok");
+      }).catch(() => {
+        statusEl.textContent = "Impossible d’accéder au presse-papiers. Copiez-collez manuellement à partir du site.";
+        statusEl.classList.remove("ok");
+        statusEl.classList.add("warn");
+        console.log(template);
+      });
+    } else {
+      statusEl.textContent = "Votre navigateur ne permet pas la copie automatique. Sélectionnez le texte et copiez-le manuellement.";
+      statusEl.classList.remove("ok");
+      statusEl.classList.add("warn");
+      console.log(template);
+    }
+  }
+</script>
+</body>
+</html>
