@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Amazing.AI Black Friday • Hyper Boutique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #030712;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #f97316;
+      --accent2: #22c55e;
+      --accent3: #38bdf8;
+      --danger: #ef4444;
+      --border: #1f2937;
+      --card: #020617;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at 0 0,#111827,#020617 60%);
+      color: var(--fg);
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: var(--accent3); }
+
+    /* HEADER */
+
+    .bf-banner {
+      background: radial-gradient(circle at 0 0,#f97316,#7c2d12);
+      color: #fff;
+      padding: 6px 10px;
+      font-size: 12px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+
+    .bf-banner span {
+      font-weight: 700;
+    }
+
+    header {
+      background: #020617;
+      border-bottom: 1px solid #111827;
+      padding: 8px 10px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .header-search {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      align-items: stretch;
+      gap: 4px;
+    }
+
+    .header-search input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid #111827;
+      padding: 6px 10px;
+      background: #020617;
+      color: var(--fg);
+      font-size: 13px;
+    }
+
+    .header-search button {
+      border-radius: 999px;
+      border: 1px solid #f97316;
+      background: radial-gradient(circle at 20% 0,#fed7aa,#f97316);
+      color: #020617;
+      font-size: 13px;
+      padding: 6px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 3px 8px;
+      border: 1px solid #111827;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: default;
+    }
+
+    .pill-cta {
+      cursor: pointer;
+      border-color: var(--accent3);
+      color: var(--accent3);
+    }
+
+    .pill span.count {
+      font-weight: 600;
+      color: var(--accent2);
+    }
+
+    /* LAYOUT */
+
+    main {
+      flex: 1;
+      padding: 10px;
+    }
+
+    .layout {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0,1.6fr) minmax(0,3fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    /* SIDEBAR / FILTRES */
+
+    .sidebar {
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #111827;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .sidebar h2 {
+      font-size: 13px;
+      margin: 0 0 6px;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+
+    .tag {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 3px 7px;
+      border: 1px solid #111827;
+      background: #020617;
+      color: var(--soft);
+      cursor: pointer;
+    }
+
+    .tag.active {
+      border-color: var(--accent);
+      background: #111827;
+      color: #fed7aa;
+    }
+
+    .sidebar-section {
+      margin-top: 8px;
+      border-top: 1px solid #111827;
+      padding-top: 6px;
+    }
+
+    .sidebar-section strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .sidebar small {
+      color: var(--soft);
+      display: block;
+      margin-top: 3px;
+    }
+
+    /* CATALOGUE */
+
+    .catalogue {
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #111827;
+      padding: 8px 10px 10px;
+    }
+
+    .catalog-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .catalog-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .sort-select {
+      border-radius: 999px;
+      border: 1px solid #111827;
+      background: #020617;
+      color: var(--fg);
+      font-size: 11px;
+      padding: 3px 8px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
+      gap: 8px;
+    }
+
+    .product-card {
+      border-radius: 12px;
+      border: 1px solid #111827;
+      background: radial-gradient(circle at 0 0,#f973160f,transparent 55%), #020617;
+      padding: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: transform .08s ease-out, box-shadow .08s ease-out, border-color .08s ease-out;
+      position: relative;
+      min-height: 150px;
+    }
+
+    .product-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.9);
+      border-color: var(--accent);
+    }
+
+    .product-tagline {
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    .product-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .product-price {
+      font-size: 13px;
+      display: flex;
+      gap: 4px;
+      align-items: baseline;
+    }
+
+    .product-price span.old {
+      font-size: 11px;
+      color: var(--soft);
+      text-decoration: line-through;
+    }
+
+    .product-price span.promo {
+      font-size: 11px;
+      color: var(--accent2);
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 1px 5px;
+      border: 1px solid #111827;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .badge-ai {
+      border-color: var(--accent3);
+      color: var(--accent3);
+    }
+
+    .badge-soldout {
+      border-color: var(--danger);
+      color: #fecaca;
+    }
+
+    .badge-phone {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .status-label {
+      font-size: 10px;
+      color: var(--accent2);
+    }
+
+    .status-label.soldout {
+      color: var(--danger);
+    }
+
+    .order-hint {
+      font-size: 10px;
+      margin-top: auto;
+      color: var(--soft);
+    }
+
+    .ai-spark {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 10px;
+      color: #facc15;
+    }
+
+    /* MODALE PRODUIT */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 12px;
+    }
+
+    .modal-backdrop.visible {
+      display: flex;
+    }
+
+    .modal {
+      width: min(420px,100%);
+      max-height: min(560px,100%);
+      background: #020617;
+      border-radius: 16px;
+      border: 1px solid #111827;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.95);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    .modal-header {
+      padding: 8px 10px 6px;
+      border-bottom: 1px solid #111827;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .modal-title-block {
+      min-width: 0;
+    }
+
+    .modal-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .modal-sub {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      color: var(--soft);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 8px 10px 6px;
+      overflow-y: auto;
+    }
+
+    .modal-body p {
+      margin: 4px 0;
+      color: var(--soft);
+      font-size: 12px;
+    }
+
+    .modal-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--soft);
+      margin-top: 6px;
+      margin-bottom: 2px;
+    }
+
+    .modal-summary-box {
+      border-radius: 10px;
+      border: 1px dashed #111827;
+      padding: 5px 7px;
+      background: #020617;
+      margin-bottom: 4px;
+    }
+
+    .modal-summary-box ul {
+      margin: 4px 0 0;
+      padding-left: 18px;
+      font-size: 12px;
+    }
+
+    .modal-summary-box li {
+      margin-bottom: 2px;
+    }
+
+    .modal-footer {
+      padding: 6px 10px 8px;
+      border-top: 1px solid #111827;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      font-size: 11px;
+      padding: 4px 9px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      background: radial-gradient(circle at 20% 0,#fed7aa,#f97316);
+      color: #1f2937;
+      font-weight: 600;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn[disabled] {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .gift-box {
+      margin-top: 4px;
+      border-radius: 10px;
+      border: 1px solid #111827;
+      padding: 6px 7px;
+      background: #020617;
+      font-size: 11px;
+    }
+
+    .gift-box img {
+      display: block;
+      margin-top: 4px;
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #111827;
+    }
+
+    .gift-box a {
+      font-size: 11px;
+      word-break: break-all;
+    }
+
+    /* MINI BARRE STATUT */
+
+    .bf-helper {
+      margin-top: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px dashed #111827;
+      font-size: 11px;
+      color: var(--soft);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bf-helper span {
+      color: var(--accent3);
+    }
+  </style>
+</head>
+<body>
+<div class="bf-banner">
+  <span>BLACK FRIDAY • AMAZING.AI</span> – les algos ont perdu la tête, profitez des bugs de prix.
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      Amazi<span>n.n</span>
+    </div>
+    <form class="header-search" onsubmit="event.preventDefault();">
+      <input id="searchInput" type="search" placeholder="Chercher un gadget, un smartphone, un concept fictif…" />
+      <button type="submit" id="searchBtn">Chercher</button>
+    </form>
+    <div class="header-right">
+      <div class="pill" title="Commandes juste pour le rôle">
+        Panier <span class="count" id="cartCount">0</span>
+      </div>
+      <div class="pill pill-cta" id="resetBtn">
+        Réinitialiser la boutique
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h2>Filtres rapides</h2>
+      <div class="tag-cloud" id="tagCloud">
+        <button class="tag active" data-tag="all">Tout voir</button>
+        <button class="tag" data-tag="smartphone">Smartphones fictifs</button>
+        <button class="tag" data-tag="gadget">Gadgets inutiles</button>
+        <button class="tag" data-tag="epuise">Épuisé</button>
+        <button class="tag" data-tag="ia">IA survoltée</button>
+        <button class="tag" data-tag="kit">Kit de survie numérique</button>
+      </div>
+
+      <div class="sidebar-section">
+        <strong>Mode d’emploi</strong>
+        <small>
+          1. Clique sur un article<br>
+          2. Lis le résumé express<br>
+          3. “Valider la commande” pour obtenir, si dispo, le lien vers le fichier HTML + un cadeau visuel.
+        </small>
+      </div>
+
+      <div class="sidebar-section">
+        <strong>Smartphones maison</strong>
+        <small>
+          • <code>samsong.html</code><br>
+          • <code>karyon-one.html</code><br>
+          • <code>cybrog-one.html</code><br>
+          Place-les dans le même dossier que cette page pour que les liens soient valides.
+        </small>
+      </div>
+    </aside>
+
+    <!-- CATALOGUE -->
+    <section class="catalogue">
+      <div class="catalog-header">
+        <div>
+          <div class="catalog-title">Catalogue Black Friday sous amphétamines</div>
+          <div style="font-size:11px;color:var(--soft);">
+            Articles factices, promos hallucinées, IA qui recommande n’importe quoi.
+          </div>
+        </div>
+        <select class="sort-select" id="sortSelect">
+          <option value="reco">Tri : recommandations IA</option>
+          <option value="price-asc">Prix croissant</option>
+          <option value="price-desc">Prix décroissant</option>
+        </select>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- Cartes produits générées en JS -->
+      </div>
+
+      <div class="bf-helper">
+        <span>Astuce :</span> pour les smartphones, “Valider la commande” te donne un lien direct vers le fichier HTML et une image cadeau.
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- MODALE PRODUIT -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title-block">
+        <div class="modal-title" id="modalTitle">Produit</div>
+        <div class="modal-sub" id="modalSub">Résumé express & commande fictive</div>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">Détails</div>
+      <p id="modalDescription"></p>
+      <p id="modalPriceLine" style="font-size:12px;"></p>
+
+      <div class="modal-section-title">Résumé express</div>
+      <div class="modal-summary-box" id="modalSummaryBox">
+        <ul id="modalSummaryList"></ul>
+      </div>
+
+      <div class="modal-section-title">Commande & goodies</div>
+      <p style="font-size:11px;">
+        Ici tu peux “commander” le produit ou juste son idée. Rien n’est expédié dans la vraie vie,
+        mais certains articles débloquent un lien de téléchargement + un visuel bonus.
+      </p>
+
+      <div class="gift-box" id="giftBox" style="display:none;">
+        <strong>Confirmation de commande</strong>
+        <p id="giftMessage" style="margin-top:4px;"></p>
+        <div id="giftLinks"></div>
+        <img id="giftImage" src="" alt="Cadeau de fidélité" style="display:none;" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="btnSummary">
+        Voir le résumé seulement
+      </button>
+      <button class="btn primary" id="btnOrder">
+        Valider la commande
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const products = [
+    {
+      id: "samsong",
+      name: "Samsong • Matin gris & mini-jeu",
+      tagline: "Smartphone fictif pour scroller les actus et cliquer partout",
+      category: "smartphone",
+      price: 12.50,
+      oldPrice: 39.90,
+      promo: "-69%",
+      status: "inStock",
+      badges: ["smartphone","ia"],
+      aiSpark: true,
+      description: "Interface smartphone HTML qui simule un réveil fatigué, des actus, des notifs et un mini-jeu 'Tape le glitch'. Parfait pour montrer que tu es 'occupé' alors que tu joues.",
+      summary: [
+        "100 % HTML/CSS/JS, aucun serveur derrière",
+        "Flux d’actus factices + mini-jeu intégré",
+        "Lien de téléchargement : samsong.html (même dossier)"
+      ],
+      htmlFile: "samsong.html",
+      giftImage: "https://dl.ouaisfi.eu/images/coin.png"
+    },
+    {
+      id: "karyon",
+      name: "KARYON One • Simu smartphone pro",
+      tagline: "Modèle sérieux pour briller en réunion",
+      category: "smartphone",
+      price: 18.90,
+      oldPrice: 59.00,
+      promo: "-68%",
+      status: "inStock",
+      badges: ["smartphone"],
+      aiSpark: false,
+      description: "Smartphone de démo très sérieux, avec mode développeur, logs, onglets Console/Réseau/Système et inspecteur visuel pour surligner les éléments cliquables.",
+      summary: [
+        "Panneau dev intégré (console, réseau, système)",
+        "Idéal pour faire croire que tu audites Internet",
+        "Lien de téléchargement : karyon-one.html (même dossier)"
+      ],
+      htmlFile: "karyon-one.html",
+      giftImage: "https://dl.ouaisfi.eu/images/ck-1.gif"
+    },
+    {
+      id: "cybrog",
+      name: "CYBROG • Neural Core v1",
+      tagline: "Terminal de technophile ultrageek / hacker narratif",
+      category: "smartphone",
+      price: 23.99,
+      oldPrice: 79.99,
+      promo: "-70%",
+      status: "inStock",
+      badges: ["smartphone","ia","kit"],
+      aiSpark: true,
+      description: "Interface de 'neural core' pour jouer au hacker éthique : console, netwatch fictif, missions de veille, panel dev, ghost mode et inspecteur.",
+      summary: [
+        "Parfait comme prop de jeu de rôle en veille citoyenne",
+        "Panel hack/dev, logs & ghost mode purement narratifs",
+        "Lien de téléchargement : cybrog-one.html (même dossier)"
+      ],
+      htmlFile: "cybrog-one.html",
+      giftImage: "https://dl.ouaisfi.eu/gifs/hello%c2%b7Baltringue.gif"
+    },
+    {
+      id: "mug",
+      name: "Mug thermique '404 Coffee Not Found'",
+      tagline: "Accessoire officiel des nuits de veille",
+      category: "gadget",
+      price: 8.90,
+      oldPrice: 14.90,
+      promo: "-40%",
+      status: "inStock",
+      badges: ["gadget"],
+      aiSpark: false,
+      description: "Un mug noir mat qui annonce clairement ta dépendance au café et aux erreurs HTTP existentielles.",
+      summary: [
+        "Compatible café, thé et crises métaphysiques",
+        "Réchauffe les mains, pas le climat de la réunion",
+        "Produit 100 % conceptuel, aucun fichier à télécharger"
+      ]
+    },
+    {
+      id: "keyboard",
+      name: "Clavier mécanique 'Clickbait MK-I'",
+      tagline: "Bruit de tempête à chaque mail envoyé",
+      category: "gadget",
+      price: 49.00,
+      oldPrice: 89.00,
+      promo: "-45%",
+      status: "inStock",
+      badges: ["gadget","ia"],
+      aiSpark: true,
+      description: "Clavier imaginaire dont chaque touche déclenche un mini scénario où tu réponds trop tard, trop long ou trop poli.",
+      summary: [
+        "Switchs fictifs ultra bruyants pour montrer que tu bosses",
+        "Raccourci mental : Alt + F4 = 'Je répondrai plus tard'",
+        "Pas de fichier, juste une idée à recycler dans un jeu"
+      ]
+    },
+    {
+      id: "survival-kit",
+      name: "Kit de survie numérique citoyenne",
+      tagline: "Pour garder la tête froide dans un océan de flux",
+      category: "kit",
+      price: 0.00,
+      oldPrice: 25.00,
+      promo: "GRATUIT",
+      status: "inStock",
+      badges: ["kit","ia"],
+      aiSpark: true,
+      description: "Un kit conceptuel qui contient : une méthode pour trier l’info, quelques règles d’hygiène numérique et la permission officielle de déconnecter.",
+      summary: [
+        "Checklist mentale : ralentir, douter, recouper",
+        "Parfait à embedder dans tes futurs jeux ou sites",
+        "Pas de fichier unique, à reconstituer à partir de tes pages"
+      ]
+    },
+    {
+      id: "headset",
+      name: "Casque 'Noise Cancelling Social'",
+      tagline: "Filtre surtout les conversations inutiles",
+      category: "gadget",
+      price: 79.90,
+      oldPrice: 129.00,
+      promo: "-38%",
+      status: "soldout",
+      badges: ["gadget","epuise"],
+      aiSpark: false,
+      description: "Casque purement théorique qui coupe automatiquement le son quand quelqu’un commence une phrase par 'objectivement…'.",
+      summary: [
+        "Version actuelle : ÉPUISÉE (comme toi)",
+        "Tu peux juste emprunter l’idée pour un personnage de jeu",
+        "Aucun téléchargement, aucun stock"
+      ]
+    },
+    {
+      id: "keyboard-virtuel",
+      name: "Clavier virtuel 'Brouillon perpétuel'",
+      tagline: "Tu tapes, rien n’est enregistré",
+      category: "gadget",
+      price: 12.00,
+      oldPrice: 29.00,
+      promo: "-59%",
+      status: "soon",
+      badges: ["gadget"],
+      aiSpark: false,
+      description: "Conçu pour brainstormer sans pression : aucune touche n’a de mémoire, tout est supposé s’effacer dès que tu fermes l’onglet (dans ta tête).",
+      summary: [
+        "Idéal pour les idées inavouables ou absurdes",
+        "Peut être simulé avec n’importe quelle textarea en HTML",
+        "Pas de fichier dédié : c’est une consigne de design"
+      ]
+    },
+    {
+      id: "ai-assistant",
+      name: "Assistant IA 'Trop Enthousiaste Pro Max'",
+      tagline: "Répond avant que tu finisses ta phrase",
+      category: "ia",
+      price: 999.99,
+      oldPrice: 9999.99,
+      promo: "-90%",
+      status: "inStock",
+      badges: ["ia"],
+      aiSpark: true,
+      description: "Un assistant fictif sous amphétamines qui propose toujours trois fois trop d’idées, de fonctionnalités et de bullet points.",
+      summary: [
+        "Ne remplace aucun humain, mais propose des pistes",
+        "Peut être incarné par toi + un modèle de langage",
+        "Pas de fichier, juste une meta-blague sur ce site"
+      ]
+    },
+    {
+      id: "dummy-phone",
+      name: "Smartphone factice 'Placeholder X'",
+      tagline: "Juste un bloc rectangulaire pour les maquettes",
+      category: "smartphone",
+      price: 5.00,
+      oldPrice: 19.00,
+      promo: "-74%",
+      status: "inStock",
+      badges: ["smartphone"],
+      aiSpark: false,
+      description: "Un smartphone totalement vide pour tester des interfaces, des jeux ou des prototypes sans s’attacher au matériel.",
+      summary: [
+        "Idéal pour illustrer 'un autre modèle à venir'",
+        "Peut pointer vers n’importe quel futur fichier HTML",
+        "À compléter quand tu créeras un nouveau terminal"
+      ]
+    }
+  ];
+
+  let filteredTag = "all";
+  let currentSort = "reco";
+  let currentProduct = null;
+  let cartCount = 0;
+
+  const productGrid = document.getElementById("productGrid");
+  const tagCloud = document.getElementById("tagCloud");
+  const sortSelect = document.getElementById("sortSelect");
+  const searchInput = document.getElementById("searchInput");
+  const searchBtn = document.getElementById("searchBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const cartCountEl = document.getElementById("cartCount");
+
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalSub = document.getElementById("modalSub");
+  const modalDescription = document.getElementById("modalDescription");
+  const modalPriceLine = document.getElementById("modalPriceLine");
+  const modalSummaryList = document.getElementById("modalSummaryList");
+  const giftBox = document.getElementById("giftBox");
+  const giftMessage = document.getElementById("giftMessage");
+  const giftLinks = document.getElementById("giftLinks");
+  const giftImage = document.getElementById("giftImage");
+  const btnSummary = document.getElementById("btnSummary");
+  const btnOrder = document.getElementById("btnOrder");
+  const modalClose = document.getElementById("modalClose");
+
+  function formatPrice(num) {
+    if (num === 0) return "0,00 €";
+    return num.toFixed(2).replace(".", ",") + " €";
+  }
+
+  function renderProducts() {
+    productGrid.innerHTML = "";
+    let list = [...products];
+
+    // filtre tag
+    if (filteredTag !== "all") {
+      list = list.filter(p => {
+        if (filteredTag === "smartphone") return p.category === "smartphone";
+        if (filteredTag === "gadget") return p.category === "gadget";
+        if (filteredTag === "epuise") return p.status === "soldout";
+        if (filteredTag === "ia") return p.badges?.includes("ia");
+        if (filteredTag === "kit") return p.badges?.includes("kit");
+        return true;
+      });
+    }
+
+    // filtre recherche
+    const q = searchInput.value.trim().toLowerCase();
+    if (q) {
+      list = list.filter(p =>
+        (p.name + " " + p.tagline + " " + p.description)
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+
+    // tri
+    if (currentSort === "price-asc") {
+      list.sort((a, b) => a.price - b.price);
+    } else if (currentSort === "price-desc") {
+      list.sort((a, b) => b.price - a.price);
+    } else {
+      // reco IA = léger mélange mais smartphones en haut
+      list.sort((a, b) => {
+        const score = p => (p.category === "smartphone" ? -10 : 0) + (p.aiSpark ? -2 : 0);
+        return score(a) - score(b);
+      });
+    }
+
+    list.forEach(prod => {
+      const card = document.createElement("article");
+      card.className = "product-card";
+      card.dataset.id = prod.id;
+
+      const tagIcon = prod.aiSpark ? "⚡" : "★";
+
+      card.innerHTML = `
+        <div class="ai-spark">${tagIcon}</div>
+        <div class="product-tagline">${prod.tagline}</div>
+        <div class="product-name">${prod.name}</div>
+        <div class="product-price">
+          <span>${formatPrice(prod.price)}</span>
+          ${prod.oldPrice ? `<span class="old">${formatPrice(prod.oldPrice)}</span>` : ""}
+          ${prod.promo ? `<span class="promo">${prod.promo}</span>` : ""}
+        </div>
+        <div class="product-meta">
+          <div>
+            ${prod.badges?.includes("smartphone") ? `<span class="badge badge-phone">smartphone</span>` : ""}
+            ${prod.badges?.includes("gadget") ? `<span class="badge">gadget</span>` : ""}
+            ${prod.badges?.includes("ia") ? `<span class="badge badge-ai">ia</span>` : ""}
+            ${prod.badges?.includes("kit") ? `<span class="badge">kit</span>` : ""}
+            ${prod.status === "soldout" ? `<span class="badge badge-soldout">épuisé</span>` : ""}
+          </div>
+          <div class="status-label ${prod.status === "soldout" ? "soldout" : ""}">
+            ${prod.status === "soldout" ? "Épuisé" : prod.status === "soon" ? "Bientôt dispo" : "En stock"}
+          </div>
+        </div>
+        <div class="order-hint">
+          Cliquez pour voir le résumé et simuler une commande.
+        </div>
+      `;
+
+      card.addEventListener("click", () => openProductModal(prod.id));
+      productGrid.appendChild(card);
+    });
+
+    if (!list.length) {
+      const empty = document.createElement("div");
+      empty.style.fontSize = "12px";
+      empty.style.color = "#9ca3af";
+      empty.style.marginTop = "6px";
+      empty.textContent = "Aucun article ne correspond à vos critères. Essayez un autre mot-clé ou désactivez les filtres.";
+      productGrid.appendChild(empty);
+    }
+  }
+
+  function setTag(tag) {
+    filteredTag = tag;
+    document.querySelectorAll(".tag").forEach(t => {
+      t.classList.toggle("active", t.dataset.tag === tag);
+    });
+    renderProducts();
+  }
+
+  tagCloud.addEventListener("click", e => {
+    const tag = e.target.closest(".tag");
+    if (!tag) return;
+    setTag(tag.dataset.tag);
+  });
+
+  sortSelect.addEventListener("change", () => {
+    currentSort = sortSelect.value;
+    renderProducts();
+  });
+
+  searchBtn.addEventListener("click", () => {
+    renderProducts();
+  });
+
+  searchInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      renderProducts();
+    }
+  });
+
+  resetBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    currentSort = "reco";
+    sortSelect.value = "reco";
+    setTag("all");
+    cartCount = 0;
+    cartCountEl.textContent = "0";
+    closeModal();
+  });
+
+  function openProductModal(id) {
+    const prod = products.find(p => p.id === id);
+    if (!prod) return;
+    currentProduct = prod;
+    giftBox.style.display = "none";
+    giftImage.style.display = "none";
+    giftImage.src = "";
+    giftLinks.innerHTML = "";
+    giftMessage.textContent = "";
+
+    modalTitle.textContent = prod.name;
+    modalSub.textContent = prod.status === "soldout"
+      ? "Article épuisé, mais réutilisable dans un scénario."
+      : "Simulez une commande ou récupérez l’idée.";
+
+    modalDescription.textContent = prod.description;
+
+    let priceLine = `Prix Black Friday : <strong>${formatPrice(prod.price)}</strong>`;
+    if (prod.oldPrice) {
+      priceLine += ` · Prix d'avant : <span style="text-decoration:line-through;color:#9ca3af;">${formatPrice(prod.oldPrice)}</span>`;
+    }
+    if (prod.promo) {
+      priceLine += ` · Promo : <span style="color:#22c55e;">${prod.promo}</span>`;
+    }
+    modalPriceLine.innerHTML = priceLine;
+
+    modalSummaryList.innerHTML = "";
+    (prod.summary || []).forEach(s => {
+      const li = document.createElement("li");
+      li.textContent = s;
+      modalSummaryList.appendChild(li);
+    });
+
+    // bouton commande
+    if (prod.status === "soldout") {
+      btnOrder.disabled = true;
+      btnOrder.textContent = "Impossible de commander (épuisé)";
+    } else {
+      btnOrder.disabled = false;
+      btnOrder.textContent = "Valider la commande";
+    }
+
+    modalBackdrop.classList.add("visible");
+  }
+
+  function closeModal() {
+    modalBackdrop.classList.remove("visible");
+    currentProduct = null;
+  }
+
+  modalClose.addEventListener("click", closeModal);
+  modalBackdrop.addEventListener("click", e => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+
+  btnSummary.addEventListener("click", () => {
+    if (!currentProduct) return;
+    giftBox.style.display = "block";
+    giftMessage.textContent =
+      "Résumé consulté. Tu peux déjà réutiliser ce concept dans un jeu, un site ou une maquette, sans rien commander.";
+    giftLinks.innerHTML = "";
+    giftImage.style.display = "none";
+  });
+
+  btnOrder.addEventListener("click", () => {
+    if (!currentProduct || currentProduct.status === "soldout") return;
+    giftBox.style.display = "block";
+    cartCount++;
+    cartCountEl.textContent = String(cartCount);
+
+    const prod = currentProduct;
+    giftLinks.innerHTML = "";
+    if (prod.htmlFile) {
+      giftMessage.innerHTML =
+        "Commande fictive validée. Tu peux maintenant télécharger le fichier HTML du terminal, et récupérer une image en cadeau de fidélité potentielle.";
+      const link = document.createElement("a");
+      link.href = prod.htmlFile;
+      link.download = prod.htmlFile;
+      link.textContent = `Télécharger ${prod.htmlFile}`;
+      giftLinks.appendChild(link);
+      if (prod.giftImage) {
+        giftImage.src = prod.giftImage;
+        giftImage.style.display = "block";
+      }
+    } else {
+      giftMessage.textContent =
+        "Commande fictive confirmée. Cet article est purement conceptuel : pas de fichier HTML dédié, mais tu peux en faire un module dans un de tes sites ou jeux.";
+      giftImage.style.display = "none";
+    }
+  });
+
+  // init
+  renderProducts();
+</script>
+</body>
+</html>
