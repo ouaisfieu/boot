@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projet S – Saison 1 (Manuel académique)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0f172a;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148,163,184,0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      padding: 2rem 1.5rem 1rem;
+      border-bottom: 1px solid rgba(148,163,184,0.2);
+      text-align: center;
+    }
+    .title {
+      font-size: clamp(1.9rem, 3vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0 16px rgba(56,189,248,0.6);
+      margin: 0.2rem 0;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .3rem .8rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+    .subtitle {
+      max-width: 720px;
+      margin: 0.8rem auto 0;
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    .nav-back {
+      text-align: left;
+      margin-bottom: 1rem;
+    }
+    .nav-back a {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .35rem .75rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: .78rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .nav-back a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.8fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(2,6,23,0.98));
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      padding: 1.3rem 1.4rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin: 0 0 .6rem;
+    }
+    h3 {
+      font-size: .98rem;
+      margin: 0.8rem 0 .4rem;
+    }
+    p {
+      margin: 0 0 .5rem;
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+    .small {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    ul, ol {
+      margin: .3rem 0 .7rem;
+      padding-left: 1.1rem;
+      font-size: .88rem;
+    }
+    li { margin-bottom: .25rem; }
+    .tag {
+      display: inline-flex;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-right: .35rem;
+      margin-bottom: .35rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: .15rem .5rem;
+      border-radius: .6rem;
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-right: .3rem;
+    }
+    .table-like {
+      border-radius: 1.1rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      font-size: .85rem;
+    }
+    .table-row {
+      display: grid;
+      grid-template-columns: 0.9fr 2.1fr;
+      gap: .5rem;
+      padding: .5rem .75rem;
+    }
+    .table-row:nth-child(odd) {
+      background: rgba(15,23,42,0.9);
+    }
+    .table-head {
+      background: rgba(15,23,42,1);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: .75rem;
+    }
+    .table-cell-label {
+      color: var(--muted);
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .5rem;
+      margin-bottom: .4rem;
+      font-size: .88rem;
+    }
+    .checklist-item input {
+      margin-top: .1rem;
+      accent-color: var(--accent);
+    }
+    .pill-level {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .4rem;
+      width: 100%;
+      border-radius: .8rem;
+      border: 1px solid var(--border);
+      padding: .4rem .65rem;
+      font-size: .8rem;
+      margin-bottom: .4rem;
+      background: rgba(15,23,42,0.9);
+    }
+    .pill-level span:first-child {
+      font-weight: 600;
+      color: var(--accent);
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .8rem;
+      background: rgba(15,23,42,0.9);
+      border-radius: .4rem;
+      padding: .05rem .3rem;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+    /* Highlight for progress */
+    .done-label {
+      color: #22c55e;
+      font-weight: 600;
+      font-size: .78rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="pill">Manuel académique · Saison 1</div>
+    <h1 class="title">PROJET S – SAISON 1</h1>
+    <p class="subtitle">
+      Cette page présente une <strong>structure rigoureuse</strong> de la première saison de jeu. Elle est conçue
+      pour des débutant·e·s et peut être utilisée comme <strong>support de cours, de TP ou d’atelier</strong>.
+      Tout est actionnable immédiatement.
+    </p>
+  </header>
+
+  <main>
+    <div class="nav-back">
+      <!-- Adapte le lien en fonction de l’emplacement réel de ton index.html -->
+      <a href="index.html" title="Retour à l’accueil du jeu">
+        ← Retour au jeu (index)
+      </a>
+    </div>
+
+    <div class="layout">
+      <!-- Colonne gauche : contenu académique -->
+      <section>
+        <article class="card">
+          <h2>1. Cadre général</h2>
+          <p>
+            <strong>Titre de la saison :</strong> <em>Initiation à Projet S : observer, documenter, questionner le réel</em>
+          </p>
+          <p>
+            <span class="badge">Public : débutant·e·s</span>
+            <span class="badge">Durée indicative : 4 semaines</span>
+            <span class="badge">Format : IRL · distanciel · asynchrone</span>
+          </p>
+          <p class="small">
+            Aucun prérequis n’est nécessaire, si ce n’est disposer d’un accès à internet et à au moins une
+            plateforme publique (blog, réseau social, pad, forum…).
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>2. Objectifs pédagogiques</h2>
+          <p>À l’issue de cette saison, le joueur / la joueuse doit être en mesure de&nbsp;:</p>
+          <ul>
+            <li>Définir ce qu’est un jeu pervasif IRL asynchrone et le rôle d’une <strong>instance</strong>.</li>
+            <li>Repérer au moins une absurdité organisationnelle et un dispositif de surveillance dans son environnement.</li>
+            <li>Produire et publier au moins <strong>trois traces publiques</strong> (texte, photo, thread…) avec des tags dédiés.</li>
+            <li>Tenir un <strong>journal de bord</strong> (physique ou numérique) simple mais structuré.</li>
+            <li>Rédiger une <strong>brève synthèse</strong> (1 page maximum) et formuler une mission originale.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>3. Déroulé de la saison</h2>
+          <p class="small">
+            Le tableau ci-dessous propose une progression de référence sur quatre semaines. Elle peut être compressée ou étendue selon le contexte.
+          </p>
+
+          <div class="table-like">
+            <div class="table-row table-head">
+              <div>Semaine / étape</div>
+              <div>Activités et missions</div>
+            </div>
+
+            <div class="table-row">
+              <div class="table-cell-label">0 – Entrée dans le jeu</div>
+              <div>
+                Lecture de <code>index.html</code> et de cette page. Choix d’un
+                <strong>pseudo</strong> et éventuellement d’un <strong>ID d’instance</strong> (ex. <code>Instance-017</code>).
+                Création d’un <strong>journal de bord</strong> (carnet papier ou document numérique).
+              </div>
+            </div>
+
+            <div class="table-row">
+              <div class="table-cell-label">1 – Observation</div>
+              <div>
+                Réalisation des missions <strong>S-00</strong> (« Tu es déjà dedans ») et <strong>S-01</strong> (« Absurdex local »).<br />
+                Noter pour chaque mission : date, lieu, trace produite, lien public, remarques personnelles.
+              </div>
+            </div>
+
+            <div class="table-row">
+              <div class="table-cell-label">2 – Cartographie</div>
+              <div>
+                Réalisation de la mission <strong>S-02</strong> (« Caméra, je te vois »).<br />
+                Cartographier les dispositifs observés (liste ou schéma) et consigner le ressenti associé.
+              </div>
+            </div>
+
+            <div class="table-row">
+              <div class="table-cell-label">3 – Interaction</div>
+              <div>
+                Réalisation de la mission <strong>S-03</strong> (« Instance rencontrée »).<br />
+                Recueillir un témoignage (avec consentement) et l’anonymiser dans le journal de bord.
+              </div>
+            </div>
+
+            <div class="table-row">
+              <div class="table-cell-label">4 – Création & synthèse</div>
+              <div>
+                Réalisation des missions <strong>S-04</strong> (« Trace statique ») et <strong>S-05</strong> (« Le murmure à S »).<br />
+                Rédaction d’une <strong>synthèse de saison</strong> (1 page) + proposition d’au moins une nouvelle mission.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>4. Évaluation (auto-évaluation)</h2>
+          <p class="small">
+            L’évaluation est <strong>autoportée</strong> : le joueur / la joueuse coche les éléments réalisés.
+            Les données restent sur l’appareil (aucun envoi automatique).
+          </p>
+
+          <div id="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" data-key="missions" id="chk-missions" />
+              <label for="chk-missions">J’ai réalisé au moins <strong>4 missions</strong> parmi S-00 à S-05.</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="traces" id="chk-traces" />
+              <label for="chk-traces">J’ai produit au moins <strong>3 traces publiques</strong> avec des tags (<code>#ProjetS</code>, etc.).</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="journal" id="chk-journal" />
+              <label for="chk-journal">J’ai tenu un <strong>journal de bord</strong> pendant toute la saison.</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="synthese" id="chk-synthese" />
+              <label for="chk-synthese">J’ai rédigé une <strong>synthèse de saison</strong> (≈ 1 page).</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="missionOriginale" id="chk-missionOriginale" />
+              <label for="chk-missionOriginale">J’ai formulé au moins <strong>une mission originale</strong>.</label>
+            </div>
+          </div>
+
+          <h3>Niveaux d’achèvement</h3>
+          <div id="levelDisplay" class="small">
+            Coche les cases ci-dessus pour estimer ton niveau à la fin de la saison.
+          </div>
+
+          <div style="margin-top:.5rem;">
+            <div class="pill-level">
+              <span>Niveau 1 – Initié·e</span>
+              <span>2–3 missions réalisées, début de journal</span>
+            </div>
+            <div class="pill-level">
+              <span>Niveau 2 – Cartographe</span>
+              <span>4–5 missions, 3+ traces, journal suivi</span>
+            </div>
+            <div class="pill-level">
+              <span>Niveau 3 – Faiseur/Faiseuse de quêtes</span>
+              <span>Niveau 2 + au moins 1 mission originale</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Colonne droite : mode d’emploi et glossaire -->
+      <section>
+        <article class="card">
+          <h2>5. Mode d’emploi pour débutant·e</h2>
+          <p><strong>Étapes minimales pour démarrer immédiatement :</strong></p>
+          <ol>
+            <li>Ouvrir <code>index.html</code> et parcourir les missions S-00 à S-05.</li>
+            <li>Revenir sur cette page <em>“Saison 1”</em> pour voir le déroulé proposé.</li>
+            <li>Créer un <strong>journal de bord</strong> (document, carnet, note). Écrire en haut :</li>
+          </ol>
+          <p style="margin-left:1rem;font-size:.85rem;">
+            « Projet S – Saison 1 – [ton pseudo / ID d’instance] »
+          </p>
+          <ol start="4">
+            <li>Réaliser <strong>S-00</strong> et consigner la date, le lieu, le lien vers la trace publique.</li>
+            <li>Continuer dans l’ordre proposé (S-01 → S-02 → S-03 → S-04 → S-05).</li>
+            <li>À la fin, compléter la <strong>checklist d’auto-évaluation</strong> ci-contre.</li>
+          </ol>
+        </article>
+
+        <article class="card">
+          <h2>6. Glossaire</h2>
+          <p><span class="tag">MOORPG</span> Jeu de rôle à grande échelle, où beaucoup de personnes jouent en parallèle, en ligne et hors ligne.</p>
+          <p><span class="tag">IRL</span> « In Real Life » : dans la vie réelle, par opposition à la simulation numérique pure.</p>
+          <p><span class="tag">Asynchrone</span> Chacun joue au moment qui lui convient, sans obligation de connexion simultanée.</p>
+          <p><span class="tag">Instance</span> Une personne qui participe au jeu en utilisant sa propre vie comme “personnage”.</p>
+          <p><span class="tag">Trace publique</span> Publication accessible (blog, réseau social, forum…), identifiable par des <em>tags</em> (ex. <code>#ProjetS</code>).</p>
+        </article>
+
+        <article class="card">
+          <h2>7. Journal de bord – modèle minimal</h2>
+          <p class="small">
+            Tu peux recopier ce modèle dans un carnet ou un document numérique.
+          </p>
+          <ul>
+            <li><strong>Page de garde :</strong> Pseudo, ID d’instance, dates de début et de fin de saison.</li>
+            <li>
+              <strong>Pour chaque mission :</strong>
+              <ul>
+                <li>Mission (ex. S-01 – Absurdex local)</li>
+                <li>Date et lieu</li>
+                <li>Type de trace (photo, texte, thread…)</li>
+                <li>Plateforme utilisée + lien (si possible)</li>
+                <li>Ce que j’ai observé / ressenti (5–10 lignes)</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Fin de saison :</strong>
+              <ul>
+                <li>Ce que j’ai appris sur mon environnement</li>
+                <li>Ce que j’ai appris sur moi</li>
+                <li>Une idée de mission originale (format S-xx)</li>
+              </ul>
+            </li>
+          </ul>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      Ce document est un support statique : tu peux le copier sur une clé USB, l’imprimer ou l’utiliser en atelier.
+      Aucune donnée n’est envoyée en ligne sans ton action explicite.
+    </p>
+  </footer>
+
+  <script>
+    // Petite logique locale pour la checklist (stockage sur l’appareil)
+    const STORAGE_KEY = "projetS_saison1_checklist_v1";
+    const levelDisplay = document.getElementById("levelDisplay");
+    const checklist = document.getElementById("checklist");
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    const state = loadState();
+
+    // Initialiser les cases
+    checklist.querySelectorAll("input[type=checkbox]").forEach(input => {
+      const key = input.dataset.key;
+      if (state[key]) input.checked = true;
+      input.addEventListener("change", () => {
+        state[key] = input.checked;
+        saveState(state);
+        updateLevel();
+      });
+    });
+
+    function updateLevel() {
+      const values = checklist.querySelectorAll("input[type=checkbox]");
+      let count = 0;
+      values.forEach(i => { if (i.checked) count++; });
+
+      if (count === 0) {
+        levelDisplay.textContent = "Coche les cases au fur et à mesure de ta progression.";
+        return;
+      }
+      if (count <= 2) {
+        levelDisplay.innerHTML = "<span class='done-label'>Estimation :</span> Niveau 1 – Initié·e (tu as commencé à explorer la saison).";
+      } else if (count <= 4) {
+        levelDisplay.innerHTML = "<span class='done-label'>Estimation :</span> Niveau 2 – Cartographe (tu as parcouru l’essentiel de la saison).";
+      } else {
+        levelDisplay.innerHTML = "<span class='done-label'>Estimation :</span> Niveau 3 – Faiseur/Faiseuse de quêtes (tu es prêt·e à créer tes propres missions).";
+      }
+    }
+
+    updateLevel();
+  </script>
+</body>
+</html>
