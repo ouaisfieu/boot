@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manual de Survie · Cartes & scènes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #02081b;
+      --card: #020817;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.25);
+      --accent-2: #f97316;
+      --border: rgba(148,163,184,0.45);
+      --shadow: 0 22px 48px rgba(15,23,42,0.98);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text);
+    }
+
+    body {
+      position: relative;
+      padding: 14px 10px 24px;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    header.hero {
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.22), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(248,250,252,0.06), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 45%, #020817 100%);
+      box-shadow: var(--shadow);
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .hero-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 260px;
+    }
+
+    .hero-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 20%, #bbf7d0, #22c55e 45%, #14532d 95%);
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 30px rgba(34,197,94,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 22px;
+      color: #022c22;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .hero-title {
+      font-size: 18px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .hero-sub strong {
+      color: var(--accent);
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.65);
+      background: rgba(15,23,42,0.95);
+      color: var(--text-soft);
+    }
+
+    .hero-right {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-soft);
+      align-items: flex-end;
+    }
+
+    .hero-right span.code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+    }
+
+    .hero-right small {
+      opacity: 0.85;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .hero-btn {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .hero-btn.primary {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+      box-shadow: 0 0 12px rgba(34,197,94,0.7);
+    }
+
+    @media (max-width: 720px) {
+      .hero-right {
+        align-items: flex-start;
+      }
+    }
+
+    /* LAYOUT PRINCIPAL */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), #020617);
+      box-shadow: var(--shadow);
+      padding: 10px 10px 8px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+
+    .pill {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      white-space: nowrap;
+    }
+
+    /* COLONNE GAUCHE : CARTE / LISTE */
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+
+    .filter-pill {
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      border-color: var(--accent);
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+      color: #bbf7d0;
+      box-shadow: 0 0 10px rgba(34,197,94,0.6);
+    }
+
+    .progress-line {
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .progress-bar-wrap {
+      flex: 1;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+      transition: width 0.2s ease-out;
+    }
+
+    .map-container {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(2,6,23,0.96);
+      padding: 8px 9px 8px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 8px;
+      min-height: 220px;
+    }
+
+    @media (max-width: 720px) {
+      .map-container {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Timeline verticale */
+
+
+    .timeline {
+      position: relative;
+      padding-left: 16px;
+      border-right: 1px dashed rgba(55,65,81,0.9);
+      margin-right: 4px;
+    }
+
+    @media (max-width: 720px) {
+      .timeline {
+        border-right: none;
+        border-bottom: 1px dashed rgba(55,65,81,0.9);
+        padding-bottom: 6px;
+        margin-bottom: 6px;
+      }
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      background: linear-gradient(to bottom, rgba(148,163,184,0.7), rgba(55,65,81,0.2));
+    }
+
+    .scene-node {
+      position: relative;
+      margin-bottom: 8px;
+      padding-left: 10px;
+      cursor: pointer;
+    }
+
+    .scene-node:last-child {
+      margin-bottom: 0;
+    }
+
+    .scene-node-dot {
+      position: absolute;
+      left: -2px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 2px solid rgba(15,23,42,1);
+      background: rgba(55,65,81,1);
+      box-shadow: 0 0 0 1px rgba(15,23,42,1);
+    }
+
+    .scene-node-dot.unlocked {
+      background: var(--accent);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 0 12px rgba(34,197,94,0.8);
+    }
+
+    .scene-node-dot.current {
+      background: var(--accent-2);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 0 12px rgba(249,115,22,0.8);
+    }
+
+    .scene-node-body {
+      font-size: 12px;
+      color: var(--text-soft);
+      padding: 4px 6px;
+      border-radius: 10px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .scene-node-title {
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 600;
+      margin-bottom: 1px;
+    }
+
+    .scene-node-meta {
+      font-size: 11px;
+    }
+
+    .scene-node.active .scene-node-body {
+      background: rgba(15,23,42,0.98);
+      color: var(--text);
+    }
+
+    /* Liste rapide */
+
+    .scene-list {
+      font-size: 12px;
+      color: var(--text-soft);
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .scene-list-item {
+      padding: 4px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.96);
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .scene-list-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .scene-list-item-title {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .scene-list-tags {
+      font-size: 10px;
+      color: var(--text-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+
+    .status-pill {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.98);
+      white-space: nowrap;
+    }
+
+    .status-pill.unlocked {
+      border-color: var(--accent);
+      color: #bbf7d0;
+    }
+
+    .status-pill.current {
+      border-color: var(--accent-2);
+      color: #fed7aa;
+    }
+
+    /* COLONNE DROITE : DÉTAIL */
+
+    .detail-header {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(2,6,23,0.96);
+      padding: 8px 9px 7px;
+      margin-bottom: 6px;
+    }
+
+    .detail-title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .detail-title-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .detail-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: flex-end;
+      font-size: 10px;
+    }
+
+    .detail-tag {
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-soft);
+    }
+
+    .detail-status {
+      font-size: 11px;
+      margin-top: 3px;
+      color: var(--text-soft);
+    }
+
+    .detail-body {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(2,6,23,0.96);
+      padding: 8px 9px 8px;
+      font-size: 12px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .detail-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 3px;
+    }
+
+    .detail-body p {
+      margin: 0 0 5px;
+    }
+
+    .detail-body ul {
+      margin: 0 0 5px 16px;
+      padding: 0;
+    }
+
+    .detail-body li {
+      margin-bottom: 3px;
+    }
+
+    .detail-footer {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .detail-footer a {
+      text-decoration: none;
+    }
+
+    .detail-btn {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .detail-btn.primary {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+    }
+
+    footer {
+      margin-top: 10px;
+      font-size: 10px;
+      color: var(--text-soft);
+      opacity: 0.85;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="shell">
+    <header class="hero">
+      <div class="hero-left">
+        <div class="hero-icon">🗺️</div>
+        <div class="hero-text">
+          <div class="hero-title">Cartes & scènes</div>
+          <div class="hero-sub">
+            Vue d’ensemble du <strong>Manual de Survie</strong> : où se passent les scènes,
+            ce qu’elles racontent, et lesquelles tu as déjà traversées.
+          </div>
+          <div class="hero-tags">
+            <span class="tag">Progression non linéaire</span>
+            <span class="tag">Scènes réalistes</span>
+            <span class="tag">Lecture pédagogique</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <span class="code">/root/cartes.html</span>
+        <small><span id="summaryProgress"></span></small>
+        <div class="hero-buttons">
+          <a href="menu.html" class="hero-btn">← Menu du jeu</a>
+          <a href="societe-jeu.html" class="hero-btn primary">🎮 Interface de jeu</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- COLONNE GAUCHE -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="dot"></span>
+            <span>Carte simplifiée des scènes</span>
+          </div>
+          <span class="pill">Vue globale de l’univers jouable</span>
+        </div>
+
+        <div class="filters" id="filters">
+          <span class="filter-pill active" data-filter="all">Tout</span>
+          <span class="filter-pill" data-filter="travail">Travail / engagement</span>
+          <span class="filter-pill" data-filter="ecran">Écran & réseaux</span>
+          <span class="filter-pill" data-filter="relationnel">Relations</span>
+        </div>
+
+        <div class="progress-line">
+          <span id="progressLabel">Scènes rencontrées : 0 / 0</span>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+        </div>
+
+        <div class="map-container">
+          <div class="timeline" id="timeline"></div>
+          <div class="scene-list" id="sceneList"></div>
+        </div>
+      </section>
+
+      <!-- COLONNE DROITE -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="dot"></span>
+            <span>Détail de la scène sélectionnée</span>
+          </div>
+          <span class="pill" id="statusPill">Sélectionne une scène</span>
+        </div>
+
+        <div class="detail-header">
+          <div class="detail-title-row">
+            <div class="detail-title-text" id="detailTitle">Aucune scène sélectionnée</div>
+            <div class="detail-badges" id="detailBadges"></div>
+          </div>
+          <div class="detail-status" id="detailStatusText">
+            Clique sur une scène dans la carte de gauche pour voir ce qu’elle raconte.
+          </div>
+        </div>
+
+        <div class="detail-body" id="detailBody">
+          <!-- contenu rempli par JS -->
+        </div>
+
+        <div class="detail-footer">
+          <div>
+            <span id="detailHint">Astuce : tu peux utiliser cette page pour te repérer dans les thèmes abordés.</span>
+          </div>
+          <div>
+            <a href="societe-jeu.html" class="detail-btn primary">Jouer une session classique</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Cette page sert de <strong>carte mentale</strong> du jeu : tu peux voir les scènes comme des morceaux de ta propre vie,
+      sans obligation de tout « compléter ».
+    </footer>
+  </div>
+
+  <script>
+    // Scènes alignées sur celles de societe-jeu.html
+    const scenes = [
+      {
+        id: "reunion_participative",
+        title: "Réunion participative déjà décidée",
+        domain: "travail",
+        location: "Travail / engagement associatif",
+        theme: "Participation décorative",
+        intensity: "moyenne",
+        description: "On te demande ton avis sur un projet déjà ficelé. Tu dois jongler entre intégrité, stratégie et fatigue.",
+        whatItRepresents: [
+          "Toutes les réunions où on te sollicite pour la forme plus que pour le fond.",
+          "Le tiraillement entre : préserver ta place, dire ce que tu vois, ou observer pour plus tard."
+        ],
+        focus: [
+          "Identifier une « fausse participation » sans te dire que tu dramatises.",
+          "Voir qu’il existe plusieurs manières de ne pas être dupe (dire, noter, débriefer ailleurs…)."
+        ]
+      },
+      {
+        id: "reseaux_sociaux",
+        title: "Matin gris, réseaux sociaux en feu",
+        domain: "ecran",
+        location: "Écran dans la cuisine / lit / métro",
+        theme: "Indignation connectée",
+        intensity: "variable",
+        description: "Ton fil d’actus balance un mélange d’injustice, de catastrophes, de blagues. Tu hésites entre réagir, te taire ou filtrer.",
+        whatItRepresents: [
+          "Les journées qui commencent avec une dose massive d’informations avant même le premier café.",
+          "La pression à « prendre position » sur tout, tout le temps, sous l’œil des algorithmes."
+        ],
+        focus: [
+          "Repérer combien d’énergie tu investis dans le fait de répondre (ou non).",
+          "Te donner l’autorisation de choisir le canal : public, privé, ou silence provisoire."
+        ]
+      },
+      {
+        id: "discussion_privee",
+        title: "Discussion au boulot / à la cafet’",
+        domain: "relationnel",
+        location: "Travail, cafet’, pause clope, repas de famille",
+        theme: "Désaccord tranquille (ou pas)",
+        intensity: "plutôt élevée",
+        description: "Quelqu’un expose une opinion qui te heurte. Tu peux laisser couler, monter au créneau, ou explorer ce qu’il y a derrière.",
+        whatItRepresents: [
+          "Les désaccords concrets avec des gens avec qui tu dois continuer à coexister.",
+          "La difficulté à choisir entre se préserver, se taire, ou risquer une mise au clair."
+        ],
+        focus: [
+          "Prendre au sérieux ce que ça te fait, dans ton corps, quand tu n’es pas d’accord.",
+          "Construire un micro-espace pour poser des questions plutôt que tirer au mortier."
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "MSDA_GAME_STATE_V1";
+
+    const filtersContainer = document.getElementById("filters");
+    const progressBar = document.getElementById("progressBar");
+    const progressLabel = document.getElementById("progressLabel");
+    const summaryProgress = document.getElementById("summaryProgress");
+    const timelineEl = document.getElementById("timeline");
+    const sceneListEl = document.getElementById("sceneList");
+
+    const statusPill = document.getElementById("statusPill");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailBadges = document.getElementById("detailBadges");
+    const detailStatusText = document.getElementById("detailStatusText");
+    const detailBody = document.getElementById("detailBody");
+
+    let selectedSceneId = null;
+    let activeFilter = "all";
+    let visitedSet = new Set();
+    let currentSceneId = null;
+
+    function loadGameState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return;
+
+        if (parsed.history && Array.isArray(parsed.history)) {
+          parsed.history.forEach(h => {
+            if (h && h.sceneId) visitedSet.add(h.sceneId);
+          });
+        }
+        if (typeof parsed.currentSceneIndex === "number") {
+          const idx = parsed.currentSceneIndex;
+          if (idx >= 0 && idx < scenes.length) {
+            currentSceneId = scenes[idx].id;
+            visitedSet.add(currentSceneId);
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function computeProgress() {
+      const total = scenes.length;
+      const visited = scenes.filter(s => visitedSet.has(s.id)).length;
+      const pct = total > 0 ? Math.round((visited / total) * 100) : 0;
+
+      progressBar.style.width = pct + "%";
+      progressLabel.textContent = `Scènes rencontrées : ${visited} / ${total}`;
+      summaryProgress.textContent = `Progression : ${visited} scène(s) touchée(s) sur ${total} disponibles.`;
+    }
+
+    function getStatusForScene(sceneId) {
+      const visited = visitedSet.has(sceneId);
+      const isCurrent = currentSceneId === sceneId;
+      if (isCurrent) return { label: "En cours / récemment jouée", type: "current" };
+      if (visited) return { label: "Déjà rencontrée dans une session", type: "unlocked" };
+      return { label: "Pas encore rencontrée dans cette session", type: "locked" };
+    }
+
+    function renderTimeline() {
+      timelineEl.innerHTML = "";
+      const filtered = scenes.filter(s => {
+        if (activeFilter === "all") return true;
+        return s.domain === activeFilter;
+      });
+
+      filtered.forEach((scene, index) => {
+        const status = getStatusForScene(scene.id);
+        const node = document.createElement("div");
+        node.className = "scene-node" + (scene.id === selectedSceneId ? " active" : "");
+
+        const dot = document.createElement("div");
+        dot.className = "scene-node-dot";
+        if (status.type === "unlocked") dot.classList.add("unlocked");
+        if (status.type === "current") dot.classList.add("current");
+
+        const body = document.createElement("div");
+        body.className = "scene-node-body";
+        body.innerHTML = `
+          <div class="scene-node-title">${index + 1}. ${scene.title}</div>
+          <div class="scene-node-meta">${scene.theme} · ${scene.location}</div>
+        `;
+
+        node.appendChild(dot);
+        node.appendChild(body);
+        node.addEventListener("click", () => selectScene(scene.id));
+        timelineEl.appendChild(node);
+      });
+
+      if (!filtered.length) {
+        timelineEl.innerHTML = "<div style='font-size:12px;color:var(--text-soft);'>Aucune scène ne correspond à ce filtre pour l’instant.</div>";
+      }
+    }
+
+    function renderSceneList() {
+      sceneListEl.innerHTML = "";
+      const filtered = scenes.filter(s => {
+        if (activeFilter === "all") return true;
+        return s.domain === activeFilter;
+      });
+
+      filtered.forEach(scene => {
+        const status = getStatusForScene(scene.id);
+        const item = document.createElement("div");
+        item.className = "scene-list-item";
+
+        const left = document.createElement("div");
+        left.style.flex = "1";
+        left.innerHTML = `
+          <div class="scene-list-item-title">${scene.title}</div>
+          <div class="scene-list-tags">
+            <span>${scene.theme}</span>
+            <span>${scene.location}</span>
+          </div>
+        `;
+
+        const right = document.createElement("div");
+        const statusSpan = document.createElement("span");
+        statusSpan.className = "status-pill " + (status.type || "");
+        statusSpan.textContent = status.label;
+        right.appendChild(statusSpan);
+
+        item.appendChild(left);
+        item.appendChild(right);
+        item.addEventListener("click", () => selectScene(scene.id));
+        sceneListEl.appendChild(item);
+      });
+
+      if (!filtered.length) {
+        sceneListEl.innerHTML = "<div style='font-size:12px;color:var(--text-soft);'>Rien à afficher pour ce filtre.</div>";
+      }
+    }
+
+    function selectScene(sceneId) {
+      selectedSceneId = sceneId;
+      renderTimeline();
+      renderSceneList();
+      renderDetail();
+    }
+
+    function renderDetail() {
+      const scene = scenes.find(s => s.id === selectedSceneId);
+      if (!scene) {
+        detailTitle.textContent = "Aucune scène sélectionnée";
+        detailBadges.innerHTML = "";
+        detailStatusText.textContent = "Clique sur une scène dans la carte de gauche pour en voir le détail.";
+        detailBody.innerHTML = "";
+        statusPill.textContent = "Sélectionne une scène";
+        return;
+      }
+
+      const status = getStatusForScene(scene.id);
+      detailTitle.textContent = scene.title;
+
+      // badges
+      detailBadges.innerHTML = "";
+      const badgeDomain = document.createElement("span");
+      badgeDomain.className = "detail-tag";
+      if (scene.domain === "travail") badgeDomain.textContent = "Travail / engagement";
+      else if (scene.domain === "ecran") badgeDomain.textContent = "Écran & réseaux";
+      else if (scene.domain === "relationnel") badgeDomain.textContent = "Relations";
+      else badgeDomain.textContent = "Divers";
+      detailBadges.appendChild(badgeDomain);
+
+      const badgeIntensity = document.createElement("span");
+      badgeIntensity.className = "detail-tag";
+      badgeIntensity.textContent = "Intensité : " + scene.intensity;
+      detailBadges.appendChild(badgeIntensity);
+
+      // status
+      detailStatusText.textContent = status.label;
+      statusPill.textContent =
+        status.type === "current" ? "Scène en cours" :
+        status.type === "unlocked" ? "Scène déjà traversée" :
+        "Scène encore intacte";
+
+      // body
+      detailBody.innerHTML =
+        `<div class="detail-section-title">Description rapide</div>` +
+        `<p>${scene.description}</p>` +
+        `<div class="detail-section-title">Ce que cette scène représente</div>` +
+        `<ul>${scene.whatItRepresents.map(t => `<li>${t}</li>`).join("")}</ul>` +
+        `<div class="detail-section-title">Focales possibles</div>` +
+        `<ul>${scene.focus.map(t => `<li>${t}</li>`).join("")}</ul>`;
+    }
+
+    function attachFilterListeners() {
+      filtersContainer.querySelectorAll(".filter-pill").forEach(pill => {
+        pill.addEventListener("click", () => {
+          filtersContainer.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+          pill.classList.add("active");
+          activeFilter = pill.dataset.filter || "all";
+          renderTimeline();
+          renderSceneList();
+        });
+      });
+    }
+
+    function init() {
+      loadGameState();
+      computeProgress();
+      attachFilterListeners();
+      renderTimeline();
+      renderSceneList();
+      // sélectionner la scène courante ou la première
+      if (currentSceneId && scenes.find(s => s.id === currentSceneId)) {
+        selectScene(currentSceneId);
+      } else if (scenes.length) {
+        selectScene(scenes[0].id);
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
