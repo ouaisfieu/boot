@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Interface du Système v3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #02091b;
+      --bg-softer: #020817;
+      --fg: #e5e7eb;
+      --fg-soft: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.15);
+      --danger: #f97373;
+      --border: #1f2933;
+      --radius-lg: 1.2rem;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.4);
+      --shadow-sm: 0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    body.theme-alt {
+      --bg: #05010a;
+      --bg-soft: #0b0218;
+      --bg-softer: #05000f;
+      --accent: #ec4899;
+      --accent-soft: rgba(236, 72, 153, 0.16);
+      --shadow-soft: 0 20px 50px rgba(0,0,0,0.8);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top, #020617 0%, #000 60%, #020617 100%);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(120deg, rgba(15,118,110,0.35), rgba(34,197,94,0.22), rgba(129,140,248,0.16));
+      border-radius: 1.5rem;
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148,163,184,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.15), transparent 55%),
+        radial-gradient(circle at 90% 0%, rgba(239,68,68,0.1), transparent 50%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.8);
+      background:
+        radial-gradient(circle at 30% 0%, rgba(248,250,252,0.9), transparent 55%),
+        radial-gradient(circle at 70% 100%, rgba(16,185,129,0.9), transparent 55%),
+        radial-gradient(circle at 10% 100%, rgba(59,130,246,0.9), transparent 50%);
+      box-shadow: 0 0 0 1px rgba(248,250,252,0.3), 0 0 25px rgba(16,185,129,0.5);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .brand-logo::after {
+      content: "∞";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: rgba(15,23,42,0.95);
+      text-shadow: 0 0 16px rgba(248,250,252,0.7);
+    }
+
+    .brand-text-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .brand-text-sub {
+      font-size: 0.82rem;
+      color: #e5e7eb;
+      opacity: 0.85;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      font-size: 0.72rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.8);
+      background: rgba(15,23,42,0.6);
+      backdrop-filter: blur(10px);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--fg-soft);
+    }
+
+    .chip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    .chip-danger-dot {
+      background: var(--danger);
+      box-shadow: 0 0 12px var(--danger);
+    }
+
+    .header-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-top: 0.3rem;
+    }
+
+    .header-title {
+      font-size: 1.0rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .header-sub {
+      font-size: 0.78rem;
+      max-width: 60ch;
+      color: rgba(15,23,42,0.16);
+    }
+
+    .header-sub span {
+      color: #e5e7eb;
+      opacity: 0.9;
+    }
+
+    .layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 0;
+    }
+
+    nav {
+      background: rgba(15,23,42,0.85);
+      border-radius: 1.25rem;
+      padding: 0.3rem;
+      border: 1px solid rgba(30,64,175,0.7);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      gap: 0.3rem;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    nav::-webkit-scrollbar { height: 4px; }
+    nav::-webkit-scrollbar-thumb {
+      background: rgba(148,163,184,0.7);
+      border-radius: 999px;
+    }
+
+    .nav-btn {
+      flex-shrink: 0;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--fg-soft);
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .nav-btn span.icon { font-size: 0.9rem; }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--accent-soft), rgba(129,140,248,0.1));
+      border-color: rgba(74,222,128,0.8);
+      color: var(--fg);
+    }
+
+    .nav-btn:not(.active):hover {
+      border-color: rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.8);
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    .content-inner {
+      background: radial-gradient(circle at top, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.98) 24%, #020617 95%);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(15,23,42,0.95);
+      box-shadow: var(--shadow-soft);
+      padding: 0.9rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-inner::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(34,197,94,0.15), transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(59,130,246,0.12), transparent 45%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .content-scroll {
+      position: relative;
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 0.1rem;
+      scrollbar-width: thin;
+    }
+    .content-scroll::-webkit-scrollbar { width: 4px; }
+    .content-scroll::-webkit-scrollbar-thumb {
+      background: rgba(55,65,81,0.9);
+      border-radius: 999px;
+    }
+
+    .view { display: none; animation: fadeIn 0.25s ease-out; }
+    .view.active { display: block; }
+
+    .view-header { margin-bottom: 0.65rem; }
+    .view-title {
+      font-size: 0.9rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--fg-soft);
+      margin-bottom: 0.25rem;
+    }
+    .view-subtitle {
+      font-size: 0.8rem;
+      color: var(--fg-soft);
+      max-width: 60ch;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+    @media (min-width: 640px) {
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .card {
+      background: linear-gradient(145deg, rgba(15,23,42,0.96), #020617);
+      border-radius: 1.1rem;
+      border: 1px solid rgba(31,41,55,0.95);
+      box-shadow: var(--shadow-sm);
+      padding: 0.7rem 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-accent {
+      border-color: rgba(34,197,94,0.6);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.2), var(--shadow-sm);
+    }
+
+    .card-badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.3rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .badge {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 0.12rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      color: #e5e7eb;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .badge-soft {
+      border-color: rgba(55,65,81,0.9);
+      color: var(--fg-soft);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .card-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    .card-meta {
+      font-size: 0.7rem;
+      color: var(--fg-soft);
+      margin-bottom: 0.3rem;
+    }
+
+    .card-body {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+    }
+
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.45rem;
+    }
+
+    .stat-chip {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      color: var(--fg-soft);
+      background: rgba(15,23,42,0.95);
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.2rem;
+    }
+    .stat-chip strong {
+      color: var(--accent);
+      font-size: 0.82rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(15,23,42,1);
+      overflow: hidden;
+      margin-top: 0.4rem;
+      position: relative;
+    }
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(34,197,94,1), rgba(129,140,248,0.9));
+      width: var(--value, 35%);
+    }
+
+    .mission-card {
+      width: 100%;
+      text-align: left;
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.18), rgba(15,23,42,1) 60%);
+      border-radius: 1rem;
+      border: 1px solid rgba(55,65,81,0.95);
+      padding: 0.6rem 0.7rem;
+      cursor: pointer;
+      color: inherit;
+      font: inherit;
+    }
+    .mission-card:hover {
+      border-color: rgba(74,222,128,0.9);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.25), var(--shadow-sm);
+    }
+    .mission-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+    .mission-meta {
+      font-size: 0.7rem;
+      color: var(--fg-soft);
+      margin-bottom: 0.25rem;
+    }
+    .mission-body {
+      font-size: 0.78rem;
+      color: #d1fae5;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      padding: 0.4rem 0.5rem;
+      border-radius: 0.7rem;
+      border: 1px solid rgba(31,41,55,0.95);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .list-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+
+    .list-title { font-weight: 500; }
+
+    .list-sub {
+      font-size: 0.7rem;
+      color: var(--fg-soft);
+    }
+
+    .pill {
+      font-size: 0.65rem;
+      padding: 0.16rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      color: var(--fg-soft);
+    }
+
+    .pill-link {
+      cursor: pointer;
+      border-color: rgba(59,130,246,0.9);
+      color: #bfdbfe;
+      background: rgba(15,23,42,0.95);
+    }
+    .pill-link:hover {
+      background: rgba(37,99,235,0.25);
+    }
+
+    .console {
+      background: #020617;
+      border-radius: 1rem;
+      border: 1px solid rgba(30,64,175,0.95);
+      padding: 0.6rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      box-shadow: inset 0 0 0 1px rgba(15,23,42,0.95);
+    }
+
+    .console-screen {
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.12), #020617 55%);
+      border-radius: 0.7rem;
+      border: 1px solid rgba(15,23,42,0.95);
+      padding: 0.45rem 0.5rem;
+      max-height: 190px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      scrollbar-width: thin;
+    }
+    .console-screen::-webkit-scrollbar { width: 4px; }
+    .console-screen::-webkit-scrollbar-thumb {
+      background: rgba(22,163,74,0.9);
+      border-radius: 999px;
+    }
+
+    .console-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .console-prompt { color: var(--accent); }
+
+    .console-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(55,65,81,0.9);
+      padding: 0.2rem 0.15rem;
+      color: var(--fg);
+      outline: none;
+      min-width: 0;
+    }
+    .console-input::placeholder {
+      color: rgba(75,85,99,0.8);
+    }
+
+    .console-hint {
+      font-size: 0.7rem;
+      color: var(--fg-soft);
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      color: var(--fg-soft);
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.9);
+      color: var(--fg-soft);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(148,163,184,0.9);
+      background: rgba(15,23,42,1);
+    }
+
+    .secret-zone {
+      display: none;
+      margin-top: 0.6rem;
+      border-radius: 1rem;
+      border: 1px dashed rgba(236,72,153,0.7);
+      background: radial-gradient(circle at 50% 0, rgba(236,72,153,0.12), rgba(15,23,42,1) 60%);
+      padding: 0.6rem 0.7rem;
+      font-size: 0.78rem;
+    }
+    .secret-zone.visible { display: block; }
+
+    footer {
+      font-size: 0.7rem;
+      color: var(--fg-soft);
+      text-align: center;
+      padding: 0.2rem 0;
+      opacity: 0.8;
+    }
+
+    /* Dossiers : layout list + inspector avec preview PDF */
+
+    .dossier-toolbar {
+      margin: 0.3rem 0 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--fg-soft);
+    }
+
+    .dossier-search {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      max-width: 240px;
+    }
+
+    .dossier-search input {
+      width: 100%;
+      padding: 0.25rem 0.6rem 0.25rem 1.35rem;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.95);
+      background: rgba(15,23,42,0.95);
+      color: var(--fg);
+      font-size: 0.75rem;
+      outline: none;
+    }
+    .dossier-search input::placeholder {
+      color: rgba(75,85,99,0.85);
+    }
+
+    .dossier-search-icon {
+      position: absolute;
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: rgba(148,163,184,0.9);
+    }
+
+    .dossiers-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .dossiers-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+
+    .card-inspector {
+      margin-top: 0.35rem;
+      min-height: 220px;
+    }
+
+    @media (min-width: 900px) {
+      .dossiers-layout {
+        flex-direction: row;
+        gap: 0.6rem;
+      }
+      .dossiers-list {
+        flex: 0 0 52%;
+      }
+      .card-inspector {
+        flex: 0 0 48%;
+        margin-top: 0;
+      }
+    }
+
+    .inspector-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.4rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .inspector-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .inspector-meta {
+      font-size: 0.7rem;
+      color: var(--fg-soft);
+    }
+
+    .inspector-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      font-size: 0.65rem;
+      margin-top: 0.15rem;
+    }
+
+    .inspector-tag {
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.95);
+      background: rgba(15,23,42,0.95);
+      color: var(--fg-soft);
+    }
+
+    .inspector-tabs {
+      margin-top: 0.2rem;
+      display: inline-flex;
+      gap: 0.25rem;
+      border-radius: 999px;
+      padding: 0.15rem;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(31,41,55,0.95);
+      font-size: 0.7rem;
+    }
+
+    .inspector-tab {
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--fg-soft);
+      cursor: pointer;
+    }
+    .inspector-tab.active {
+      background: rgba(15,23,42,1);
+      color: var(--fg);
+      border: 1px solid rgba(55,65,81,0.95);
+    }
+
+    .inspector-body {
+      margin-top: 0.5rem;
+      font-size: 0.78rem;
+      color: #e5e7eb;
+    }
+
+    .inspector-section { display: none; }
+    .inspector-section.active { display: block; }
+
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.35rem 0.45rem;
+      border-radius: 0.5rem;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(31,41,55,0.95);
+    }
+
+    .file-main {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .file-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 0.4rem;
+      background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(59,130,246,0.3));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+
+    .file-labels {
+      display: flex;
+      flex-direction: column;
+      gap: 0.05rem;
+    }
+
+    .file-name { font-size: 0.76rem; }
+
+    .file-meta {
+      font-size: 0.68rem;
+      color: var(--fg-soft);
+    }
+
+    .file-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      align-items: flex-end;
+    }
+
+    .file-open,
+    .file-preview-btn {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(59,130,246,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #bfdbfe;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .file-open:hover,
+    .file-preview-btn:hover {
+      background: rgba(37,99,235,0.35);
+    }
+
+    .file-preview-btn {
+      border-color: rgba(34,197,94,0.9);
+      color: #bbf7d0;
+    }
+    .file-preview-btn:hover {
+      background: rgba(22,163,74,0.35);
+    }
+
+    .inspector-empty {
+      font-size: 0.76rem;
+      color: var(--fg-soft);
+    }
+
+    .pdf-preview-wrapper {
+      margin-top: 0.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(31,41,55,0.95);
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.12), rgba(15,23,42,1) 60%);
+      overflow: hidden;
+    }
+
+    .pdf-preview-header {
+      padding: 0.25rem 0.55rem;
+      font-size: 0.7rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--fg-soft);
+    }
+
+    .pdf-preview-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 70%;
+    }
+
+    .pdf-preview-open {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(59,130,246,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #bfdbfe;
+      text-decoration: none;
+    }
+
+    .pdf-preview-open:hover {
+      background: rgba(37,99,235,0.35);
+    }
+
+    .pdf-preview-frame {
+      width: 100%;
+      border: none;
+      display: block;
+      background: #020617;
+    }
+
+    /* Hauteur différente mobile / desktop */
+    @media (max-width: 639px) {
+      .pdf-preview-frame { height: 260px; }
+    }
+    @media (min-width: 640px) {
+      .pdf-preview-frame { height: 380px; }
+    }
+
+    /* Modal missions */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.85);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 40;
+    }
+    .modal-backdrop.show { display: flex; }
+
+    .modal {
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.16), rgba(15,23,42,1) 50%);
+      border-radius: 1.25rem;
+      border: 1px solid rgba(55,65,81,0.95);
+      max-width: 540px;
+      width: 100%;
+      max-height: 90vh;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 0.7rem 0.8rem 0.4rem;
+      border-bottom: 1px solid rgba(31,41,55,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .modal-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .modal-tag {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 0.12rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(34,197,94,0.8);
+      color: #bbf7d0;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .modal-body {
+      padding: 0.6rem 0.8rem 0.75rem;
+      font-size: 0.78rem;
+      color: #e5e7eb;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .modal-body::-webkit-scrollbar { width: 4px; }
+    .modal-body::-webkit-scrollbar-thumb {
+      background: rgba(55,65,81,0.9);
+      border-radius: 999px;
+    }
+
+    .modal-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--fg-soft);
+      margin-bottom: 0.2rem;
+    }
+
+    .modal-section { margin-bottom: 0.5rem; }
+
+    .modal-actions {
+      padding: 0.45rem 0.8rem 0.6rem;
+      border-top: 1px solid rgba(31,41,55,0.95);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.4rem;
+    }
+
+    .btn {
+      font-size: 0.75rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .btn-outline {
+      border-color: rgba(55,65,81,0.95);
+      background: rgba(15,23,42,0.9);
+      color: var(--fg-soft);
+    }
+    .btn-outline:hover {
+      border-color: rgba(148,163,184,0.9);
+    }
+
+    .btn-primary {
+      border-color: rgba(34,197,94,0.9);
+      background: linear-gradient(135deg, rgba(34,197,94,1), rgba(52,211,153,0.9));
+      color: #0f172a;
+      font-weight: 500;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="header-inner">
+        <div class="brand-row">
+          <div class="brand">
+            <div class="brand-logo" title="Konami code activable au clavier"></div>
+            <div>
+              <div class="brand-text-title">Interface du Système</div>
+              <div class="brand-text-sub">
+                Centre de contrôle pour trier, analyser et rejouer le monde à partir d’un simple navigateur.
+              </div>
+            </div>
+          </div>
+          <div class="chip-row">
+            <div class="chip">
+              <span class="chip-dot"></span> Système en ligne
+            </div>
+            <button class="chip btn-theme-toggle" type="button">
+              <span class="chip-dot chip-danger-dot"></span> Basculer ambiance
+            </button>
+          </div>
+        </div>
+        <div class="header-bottom">
+          <div class="header-title">Session locale · Mode préparation</div>
+          <div class="header-sub">
+            <span>Utilise cette interface comme tableau de bord :</span> veille citoyenne, missions de tri de
+            l’Internet, dossiers stratégiques et console d’exploration.
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <nav>
+        <button class="nav-btn active" data-view-target="dashboard">
+          <span class="icon">◎</span>
+          <span>Tableau de bord</span>
+        </button>
+        <button class="nav-btn" data-view-target="modules">
+          <span class="icon">▤</span>
+          <span>Modules</span>
+        </button>
+        <button class="nav-btn" data-view-target="missions">
+          <span class="icon">✉</span>
+          <span>Missions</span>
+        </button>
+        <button class="nav-btn" data-view-target="dossiers">
+          <span class="icon">☰</span>
+          <span>Dossiers</span>
+        </button>
+        <button class="nav-btn" data-view-target="console">
+          <span class="icon">⌘</span>
+          <span>Console</span>
+        </button>
+      </nav>
+
+      <div class="content">
+        <div class="content-inner">
+          <div class="toolbar">
+            <div>
+              <span>Instance locale · <strong>non connectée</strong></span>
+            </div>
+            <div class="toolbar-right">
+              <span>Astuce : tape <code style="font-size:0.72rem;">help</code> dans la console</span>
+              <button type="button" class="btn-ghost btn-scroll-top">↑ Haut</button>
+            </div>
+          </div>
+
+          <div class="content-scroll" id="content-scroll">
+            <!-- DASHBOARD -->
+            <section class="view active" id="view-dashboard">
+              <div class="view-header">
+                <div class="view-title">Vue d’ensemble</div>
+                <div class="view-subtitle">
+                  Résumé rapide de ton « système » : dossiers, modules, missions et état de la veille. 
+                  Tous les chiffres sont fictifs : à toi de les remplacer par des données réelles.
+                </div>
+              </div>
+              <div class="grid grid-2">
+                <div class="card card-accent">
+                  <div class="card-badge-row">
+                    <span class="badge">Veille citoyenne</span>
+                    <span class="badge-soft">Scan rapide</span>
+                  </div>
+                  <div class="card-title">Radar d’attention</div>
+                  <div class="card-meta">
+                    Indicateurs fictifs pour représenter ce que ton réseau surveille en priorité.
+                  </div>
+                  <div class="card-body">
+                    <div class="stat-row">
+                      <div class="stat-chip">Info-crises · <strong>7</strong> flux actifs</div>
+                      <div class="stat-chip">Dossiers belges · <strong>12</strong> ouverts</div>
+                      <div class="stat-chip">Observateurs · <strong>5</strong> profils</div>
+                    </div>
+                    <div class="progress-bar" style="--value:72%;">
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">État du jeu</span>
+                    <span class="badge-soft">IRL / en ligne</span>
+                  </div>
+                  <div class="card-title">Progression du « joueur »</div>
+                  <div class="card-meta">
+                    Sert de mini-fiche de perso : tu peux transformer ces éléments en JSON plus tard.
+                  </div>
+                  <div class="card-body">
+                    <div class="stat-row">
+                      <div class="stat-chip">Alignement · <strong>Chaotique lucide</strong></div>
+                      <div class="stat-chip">Exp. de terrain · <strong>+10 ans</strong></div>
+                      <div class="stat-chip">Temps dispo · <strong>variable</strong></div>
+                    </div>
+                    <div class="progress-bar" style="--value:54%;">
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">Prochaine étape</span>
+                    <span class="badge-soft">Suggestion</span>
+                  </div>
+                  <div class="card-title">Choisis un point d’entrée</div>
+                  <div class="card-body">
+                    <ul style="margin:0.25rem 0 0.1rem 1.05rem; padding:0; font-size:0.78rem; line-height:1.45;">
+                      <li>Commencer par <strong>Modules</strong> pour cartographier ce que tu veux intégrer.</li>
+                      <li>Passer par <strong>Missions</strong> pour tester la mécanique de « tri d’Internet ».</li>
+                      <li>Aller dans la <strong>Console</strong> pour jouer en mode terminal (prototype).</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">Customisation</span>
+                    <span class="badge-soft">Instance locale</span>
+                  </div>
+                  <div class="card-title">Comment t’approprier l’interface</div>
+                  <div class="card-body">
+                    <p style="margin:0 0 0.2rem;">
+                      Tout est statique : tu peux éditer ce fichier, brancher tes vrais PDF, tes pages HTML,
+                      ton intranet, ou l’utiliser comme maquette à répliquer ailleurs.
+                    </p>
+                    <p style="margin:0; color:var(--fg-soft); font-size:0.75rem;">
+                      Idée : garde ce fichier comme <em>interface maître</em> et clone-le en différentes « salles »
+                      de ton univers (recrutement, formation, jeu, labo…).
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- MODULES -->
+            <section class="view" id="view-modules">
+              <div class="view-header">
+                <div class="view-title">Modules du système</div>
+                <div class="view-subtitle">
+                  Chaque module correspond à un bloc de ton écosystème : veille, intelligence non marchande,
+                  jeu, intranet… Tu peux transformer chaque carte en lien vers un autre site ou une autre page.
+                </div>
+              </div>
+              <div class="grid grid-3">
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">Module</span>
+                    <span class="badge-soft">#01</span>
+                  </div>
+                  <div class="card-title">Veille citoyenne</div>
+                  <div class="card-body">
+                    <p style="margin:0 0 0.4rem;">
+                      Cellule dédiée à la surveillance de la chose publique : décisions, budgets, marchés,
+                      conflits d’intérêts, promesses électorales, etc.
+                    </p>
+                    <div class="stat-row">
+                      <span class="stat-chip"><strong>Entrée :</strong> open data, médias</span>
+                      <span class="stat-chip"><strong>Sortie :</strong> alertes, dossiers</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">Module</span>
+                    <span class="badge-soft">#02</span>
+                  </div>
+                  <div class="card-title">OSINT & IE</div>
+                  <div class="card-body">
+                    <p style="margin:0 0 0.4rem;">
+                      Atelier de renseignement open source + intelligence (non) économique pour comprendre
+                      les rapports de force autour de l’information.
+                    </p>
+                    <div class="stat-row">
+                      <span class="stat-chip"><strong>Focus :</strong> sources ouvertes</span>
+                      <span class="stat-chip"><strong>Outils :</strong> moteurs, cartos, docs</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">Module</span>
+                    <span class="badge-soft">#03</span>
+                  </div>
+                  <div class="card-title">Guerre narrative</div>
+                  <div class="card-body">
+                    <p style="margin:0 0 0.4rem;">
+                      Analyse des récits qui façonnent le réel, et prototypage de contre-récits pédagogiques
+                      pour l’éducation populaire.
+                    </p>
+                    <div class="stat-row">
+                      <span class="stat-chip"><strong>Terrain :</strong> réseaux, médias</span>
+                      <span class="stat-chip"><strong>Mode :</strong> contre-propagande éducative</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">Module</span>
+                    <span class="badge-soft">#04</span>
+                  </div>
+                  <div class="card-title">Intranet & tri d’Internet</div>
+                  <div class="card-body">
+                    <p style="margin:0 0 0.4rem;">
+                      Espace « backoffice » : on récupère des bouts du web, on les trie, on les classe, on en fait
+                      un intranet stratégique réutilisable.
+                    </p>
+                    <div class="stat-row">
+                      <span class="stat-chip"><strong>Support :</strong> fichiers locaux, GitHub</span>
+                      <span class="stat-chip"><strong>Usage :</strong> livrables augmentés</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">Module</span>
+                    <span class="badge-soft">#05</span>
+                  </div>
+                  <div class="card-title">Jeux & tests</div>
+                  <div class="card-body">
+                    <p style="margin:0 0 0.4rem;">
+                      Tous les tests de recrutement, examens d’alignement, jeux de rôle IRL, interfaces
+                      expérimentales et autres portails « bizarres ».
+                    </p>
+                    <div class="stat-row">
+                      <span class="stat-chip"><strong>Format :</strong> HTML/CSS/JS only</span>
+                      <span class="stat-chip"><strong>Niveau :</strong> ARG / éducation pop</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-badge-row">
+                    <span class="badge">Module</span>
+                    <span class="badge-soft">#06</span>
+                  </div>
+                  <div class="card-title">Archives & journal</div>
+                  <div class="card-body">
+                    <p style="margin:0 0 0.4rem;">
+                      Journal, journal de bord, versions précédentes, PDF, exports, notes internes. 
+                      Bref, le « lore » de tout ce que tu es en train de construire.
+                    </p>
+                    <div class="stat-row">
+                      <span class="stat-chip"><strong>Support :</strong> Hugo, Git, dossiers</span>
+                      <span class="stat-chip"><strong>Usage :</strong> mémoire longue</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- MISSIONS -->
+            <section class="view" id="view-missions">
+              <div class="view-header">
+                <div class="view-title">Missions</div>
+                <div class="view-subtitle">
+                  Quelques missions types pour tester le « système ». Chaque carte ouvre un briefing détaillé
+                  dans une modale. À adapter et durcir à ta sauce.
+                </div>
+              </div>
+              <div class="grid">
+                <button class="mission-card" data-mission-id="mission1">
+                  <div class="mission-title">Récupérer un bout d’Internet</div>
+                  <div class="mission-meta">Difficulté : <strong>Débutant · Lecture, tri, synthèse</strong></div>
+                  <div class="mission-body">
+                    Télécharger un dépôt GitHub, comprendre ce qu’il raconte, produire un livrable augmenté.
+                  </div>
+                </button>
+
+                <button class="mission-card" data-mission-id="mission2">
+                  <div class="mission-title">Construire un intranet classifié</div>
+                  <div class="mission-meta">Difficulté : <strong>Intermédiaire · Organisation & design</strong></div>
+                  <div class="mission-body">
+                    Transformer un dossier chaotique de PDF/HTML en mini-intranet statique structuré et navigable.
+                  </div>
+                </button>
+
+                <button class="mission-card" data-mission-id="mission3">
+                  <div class="mission-title">Cartographier un conflit narratif</div>
+                  <div class="mission-meta">Difficulté : <strong>Avancé · Analyse & pédagogie</strong></div>
+                  <div class="mission-body">
+                    Identifier les récits en présence (acteurs, cibles, effets) et construire une fiche pédagogique.
+                  </div>
+                </button>
+              </div>
+            </section>
+
+            <!-- DOSSIERS -->
+            <section class="view" id="view-dossiers">
+              <div class="view-header">
+                <div class="view-title">Dossiers stratégiques</div>
+                <div class="view-subtitle">
+                  Sur mobile : liste des dossiers puis panneau de lecture en-dessous.  
+                  Sur grand écran : liste à gauche, lecteur à droite, avec aperçu du PDF intégré quand c’est possible.
+                </div>
+              </div>
+
+              <div class="dossier-toolbar">
+                <div class="dossier-search">
+                  <span class="dossier-search-icon">🔎</span>
+                  <input id="dossier-search-input" type="text" placeholder="Filtrer les dossiers…" />
+                </div>
+                <span>Astuce : clic sur <strong>Ouvrir</strong> pour charger le dossier dans le panneau de lecture.</span>
+              </div>
+
+              <div class="dossiers-layout">
+                <!-- liste -->
+                <div class="dossiers-list">
+                  <div class="card">
+                    <div class="card-badge-row">
+                      <span class="badge">Bloc</span>
+                      <span class="badge-soft">Information & pouvoir</span>
+                    </div>
+                    <div class="list">
+                      <div class="list-item" data-dossier-id="info-rapports">
+                        <div class="list-main">
+                          <div class="list-title">Information & rapports de force</div>
+                          <div class="list-sub">
+                            Comment l’information redistribue les positions de pouvoir entre États, entreprises et citoyens.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                      <div class="list-item" data-dossier-id="empowerment">
+                        <div class="list-main">
+                          <div class="list-title">Empouvoirement individuel & collectif</div>
+                          <div class="list-sub">
+                            DIKW, littératie, capacité d’agir, éducation populaire.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                      <div class="list-item" data-dossier-id="info-economique">
+                        <div class="list-main">
+                          <div class="list-title">Information comme pouvoir économique</div>
+                          <div class="list-sub">
+                            GAFAM, données, souveraineté numérique, guerre économique.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-badge-row">
+                      <span class="badge">Bloc</span>
+                      <span class="badge-soft">Conflits hybrides</span>
+                    </div>
+                    <div class="list">
+                      <div class="list-item" data-dossier-id="guerre-hybride">
+                        <div class="list-main">
+                          <div class="list-title">Guerre hybride</div>
+                          <div class="list-sub">
+                            Combinaisons militaires, cyber, économiques, informationnelles.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                      <div class="list-item" data-dossier-id="guerre-info-bxl">
+                        <div class="list-main">
+                          <div class="list-title">Guerre de l’information à Bruxelles</div>
+                          <div class="list-sub">
+                            Rôle de Bruxelles comme cible et hub d’influence.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                      <div class="list-item" data-dossier-id="guerre-narrative">
+                        <div class="list-main">
+                          <div class="list-title">Guerre narrative</div>
+                          <div class="list-sub">
+                            Récits, biais narratif, contre-récits pédagogiques.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-badge-row">
+                      <span class="badge">Bloc</span>
+                      <span class="badge-soft">Intelligence non marchande</span>
+                    </div>
+                    <div class="list">
+                      <div class="list-item" data-dossier-id="secteur-associatif">
+                        <div class="list-main">
+                          <div class="list-title">Secteur associatif comme 5e pouvoir</div>
+                          <div class="list-sub">
+                            Rôle des asbl, éducation permanente, veille citoyenne.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                      <div class="list-item" data-dossier-id="essaimage-veille">
+                        <div class="list-main">
+                          <div class="list-title">Stratégies d’essaimage de la veille</div>
+                          <div class="list-sub">
+                            Comment multiplier les cellules de veille sans centralisation rigide.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                      <div class="list-item" data-dossier-id="eco-intelligente">
+                        <div class="list-main">
+                          <div class="list-title">Économie « intelligente » vs « stupide »</div>
+                          <div class="list-sub">
+                            Coopératives, communs, monnaies locales vs dérives spéculatives.
+                          </div>
+                        </div>
+                        <span class="pill pill-link dossier-open">Ouvrir</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- inspecteur -->
+                <div class="card card-inspector" id="dossier-inspector">
+                  <div class="card-badge-row">
+                    <span class="badge">Panneau de lecture</span>
+                    <span class="badge-soft" id="dossier-inspector-status">Aucun dossier sélectionné</span>
+                  </div>
+                  <div class="inspector-header">
+                    <div>
+                      <div class="inspector-title" id="dossier-inspector-title">
+                        Sélectionne un dossier dans la liste pour afficher le détail ici.
+                      </div>
+                      <div class="inspector-meta" id="dossier-inspector-meta">
+                        Résumé, fichiers associés, notes, et aperçu intégré du PDF si disponible.
+                      </div>
+                      <div class="inspector-tags" id="dossier-inspector-tags"></div>
+                    </div>
+                    <div class="inspector-tabs">
+                      <button class="inspector-tab active" data-tab="resume">Résumé</button>
+                      <button class="inspector-tab" data-tab="fichiers">Fichiers</button>
+                      <button class="inspector-tab" data-tab="notes">Notes</button>
+                    </div>
+                  </div>
+                  <div class="inspector-body">
+                    <div class="inspector-section active" data-tab-section="resume" id="dossier-inspector-resume">
+                      <p class="inspector-empty">
+                        Rien à afficher pour l’instant.  
+                        Astuce : tu peux relier un dossier à un vrai PDF ou à une page Hugo dans le tableau
+                        <code>dossiersData</code> plus bas.
+                      </p>
+                    </div>
+                    <div class="inspector-section" data-tab-section="fichiers" id="dossier-inspector-fichiers">
+                      <p class="inspector-empty">
+                        Aucun fichier chargé.  
+                        Ajoute des éléments dans <code>dossiersData[id].files</code> pour remplir cette liste.
+                      </p>
+                    </div>
+                    <div class="inspector-section" data-tab-section="notes" id="dossier-inspector-notes">
+                      <p class="inspector-empty">
+                        Notes pédagogiques, questions d’animation, idées de jeu, etc.  
+                        Tu peux t’en servir comme scénario d’atelier.
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- preview PDF -->
+                  <div class="pdf-preview-wrapper" id="pdf-preview-wrapper" style="display:none;">
+                    <div class="pdf-preview-header">
+                      <span class="pdf-preview-title" id="pdf-preview-title">Aperçu PDF</span>
+                      <a href="#" target="_blank" rel="noopener noreferrer" class="pdf-preview-open" id="pdf-preview-link">
+                        Ouvrir en grand
+                      </a>
+                    </div>
+                    <iframe id="pdf-preview-frame" class="pdf-preview-frame" src=""></iframe>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- CONSOLE -->
+            <section class="view" id="view-console">
+              <div class="view-header">
+                <div class="view-title">Console du système</div>
+                <div class="view-subtitle">
+                  Mini-terminal côté navigateur. Tout est purement cosmétique, mais tu peux étendre le
+                  parseur de commandes pour qu’il ouvre tes vraies pages ou fichiers.
+                </div>
+              </div>
+              <div class="console">
+                <div class="console-screen" id="console-screen">
+[system] Interface du Système v3 chargée.
+[system] Tape "help" pour voir les commandes disponibles.
+                </div>
+                <div class="console-input-row">
+                  <span class="console-prompt">&gt;</span>
+                  <input
+                    id="console-input"
+                    class="console-input"
+                    type="text"
+                    autocomplete="off"
+                    placeholder='help · modules · missions · clear…'
+                  />
+                </div>
+                <div class="console-hint">
+                  Suggestion : utilise la console comme « voix off » qui commente ce que l’utilisateur est
+                  en train de faire dans le reste de l’interface.
+                </div>
+              </div>
+
+              <div class="secret-zone" id="secret-zone">
+                <div class="modal-section-title">Zone secrète déverrouillée</div>
+                <p style="margin:0 0 0.35rem;">
+                  Konami code détecté. Cette zone peut servir de labo caché : instructions pour les complices,
+                  journaux de tests, liens vers des versions expérimentales…
+                </p>
+                <p style="margin:0; font-size:0.74rem; color:var(--fg-soft);">
+                  Actuellement, elle est juste décorative. À toi de décider ce qu’elle déclenche dans le reste de
+                  ton univers.
+                </p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      Interface statique · 100 % HTML/CSS/JS · à forker, découper, infecter dans tout ton écosystème.
+    </footer>
+  </div>
+
+  <!-- Modal missions -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">Titre de la mission</div>
+        <span class="modal-tag">Briefing</span>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-title">Objectif</div>
+          <div id="modal-objective"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Livrable attendu</div>
+          <div id="modal-deliverable"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Pistes & contraintes</div>
+          <div id="modal-notes"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="modal-close">Fermer</button>
+        <button type="button" class="btn btn-primary">
+          <span>Marquer comme reçu</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Navigation entre vues ---
+    const navButtons = document.querySelectorAll(".nav-btn");
+    const views = document.querySelectorAll(".view");
+
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-view-target");
+        navButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        views.forEach(view => {
+          view.classList.toggle("active", view.id === "view-" + target);
+        });
+      });
+    });
+
+    // --- Scroll top ---
+    const scrollContainer = document.getElementById("content-scroll");
+    document.querySelector(".btn-scroll-top").addEventListener("click", () => {
+      scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // --- Thème ---
+    document.querySelector(".btn-theme-toggle").addEventListener("click", () => {
+      document.body.classList.toggle("theme-alt");
+    });
+
+    // --- Missions & modale ---
+    const missions = {
+      mission1: {
+        title: "Récupérer un bout d’Internet",
+        objective:
+          "Choisir un dépôt GitHub public ou un répertoire HTML/PDF, le télécharger et en comprendre la logique globale.",
+        deliverable:
+          "Un mini-rapport (1 à 3 pages) qui explique : 1) ce qu’est ce dépôt, 2) ce qu’il contient, 3) comment on pourrait s’en servir dans le cadre de la veille citoyenne ou de l’éducation populaire.",
+        notes:
+          "• Proposer au moins une manière de l’intégrer à ton intranet.\n• Identifier les risques (juridiques, politiques, narratifs…) liés à son contenu.\n• Bonus : produire une version plus lisible pour le grand public."
+      },
+      mission2: {
+        title: "Construire un intranet classifié",
+        objective:
+          "À partir d’un dossier réel rempli de fichiers (PDF, DOCX, HTML, images), créer un mini-site statique qui structure l’ensemble.",
+        deliverable:
+          "Une arborescence statique (HTML/CSS/JS) avec : une page d’accueil, une navigation simple, des sections par thème, et une page « À propos » expliquant ce que l’intranet contient.",
+        notes:
+          "• Garder la structure simple et reproductible.\n• Préciser dans un README comment quelqu’un d’autre peut cloner, adapter et alimenter cet intranet.\n• Bonus : prévoir un mode « public » et un mode « interne »."
+      },
+      mission3: {
+        title: "Cartographier un conflit narratif",
+        objective:
+          "Choisir un sujet polarisant (local ou international) et cartographier les narratifs en présence (acteurs, cibles, objectifs, publics).",
+        deliverable:
+          "Une fiche synthétique avec : 1) contexte, 2) principaux récits, 3) tactiques de diffusion (médias, réseaux, influenceurs), 4) effets sur le débat public.",
+        notes:
+          "• Identifier au moins un angle pédagogique pour l’éducation populaire.\n• Proposer un atelier ou un jeu pour faire comprendre ce conflit narratif sans tomber dans la simple opinion.\n• Bonus : relier le conflit à des enjeux belges ou locaux."
+      }
+    };
+
+    const modalBackdrop = document.getElementById("modal-backdrop");
+    const modalTitle = document.getElementById("modal-title");
+    const modalObjective = document.getElementById("modal-objective");
+    const modalDeliverable = document.getElementById("modal-deliverable");
+    const modalNotes = document.getElementById("modal-notes");
+    const modalClose = document.getElementById("modal-close");
+
+    function openModal(missionId) {
+      const mission = missions[missionId];
+      if (!mission) return;
+      modalTitle.textContent = mission.title;
+      modalObjective.textContent = mission.objective;
+      modalDeliverable.textContent = mission.deliverable;
+      modalNotes.textContent = mission.notes;
+      modalBackdrop.classList.add("show");
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove("show");
+    }
+
+    document.querySelectorAll(".mission-card").forEach(card => {
+      card.addEventListener("click", () => {
+        const id = card.getAttribute("data-mission-id");
+        openModal(id);
+      });
+    });
+
+    modalClose.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", e => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    // --- Console ---
+    const consoleScreen = document.getElementById("console-screen");
+    const consoleInput = document.getElementById("console-input");
+
+    function printToConsole(text) {
+      consoleScreen.textContent += "\n" + text;
+      consoleScreen.scrollTop = consoleScreen.scrollHeight;
+    }
+
+    function handleCommand(cmdRaw) {
+      const cmd = cmdRaw.trim().toLowerCase();
+      if (!cmd) return;
+
+      printToConsole("> " + cmdRaw);
+
+      if (cmd === "help") {
+        printToConsole(
+          "[system] Commandes disponibles :\n" +
+          "  help       · affiche cette aide\n" +
+          "  modules    · liste les modules du système\n" +
+          "  missions   · rappelle les missions\n" +
+          "  clear      · efface l’écran\n" +
+          "  whoami     · profil du joueur (fictif)\n" +
+          "  idée       · donne une idée de prochaine action"
+        );
+      } else if (cmd === "modules") {
+        printToConsole(
+          "[system] Modules : veille_citoyenne, osint_ie, guerre_narrative, intranet, jeux_tests, archives.\n" +
+          "[system] Tu peux transformer ces noms en URLs ou en chemins réels dans ton écosystème."
+        );
+      } else if (cmd === "missions") {
+        printToConsole(
+          "[system] Missions en mémoire :\n" +
+          "  1. Récupérer un bout d’Internet\n" +
+          "  2. Construire un intranet classifié\n" +
+          "  3. Cartographier un conflit narratif\n" +
+          "[system] Clique sur l’onglet « Missions » pour les briefs détaillés."
+        );
+      } else if (cmd === "clear") {
+        consoleScreen.textContent = "[system] Écran nettoyé.";
+      } else if (cmd === "whoami") {
+        printToConsole(
+          "[system] Profil : joueur anonyme, niveau « débutant hardcore full stack en baratin de haut vol »."
+        );
+      } else if (cmd === "idée" || cmd === "idee") {
+        printToConsole(
+          "[system] Idée : choisis un seul dossier PDF, fais-en un article pédagogique statique, et branche-le ici."
+        );
+      } else {
+        printToConsole("[system] Commande inconnue. Essaie « help ».");
+      }
+    }
+
+    consoleInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        const value = consoleInput.value;
+        handleCommand(value);
+        consoleInput.value = "";
+      }
+    });
+
+    document.querySelector('[data-view-target="console"]').addEventListener("click", () => {
+      setTimeout(() => consoleInput.focus(), 150);
+    });
+
+    // --- Konami code (↑ ↑ ↓ ↓ ← → ← → B A) ---
+    const konamiSequence = [
+      "ArrowUp","ArrowUp","ArrowDown","ArrowDown",
+      "ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"
+    ];
+    let konamiPosition = 0;
+    const secretZone = document.getElementById("secret-zone");
+    const logo = document.querySelector(".brand-logo");
+
+    function unlockSecretZone() {
+      if (!secretZone.classList.contains("visible")) {
+        secretZone.classList.add("visible");
+        printToConsole("[system] Konami code détecté. Zone secrète déverrouillée.");
+      }
+    }
+
+    document.addEventListener("keydown", e => {
+      const key = e.key;
+      const expectedKey = konamiSequence[konamiPosition];
+
+      if (key === expectedKey) {
+        konamiPosition++;
+        if (konamiPosition === konamiSequence.length) {
+          unlockSecretZone();
+          konamiPosition = 0;
+        }
+      } else {
+        konamiPosition = 0;
+      }
+    });
+
+    logo.addEventListener("click", unlockSecretZone);
+
+    // --- Dossiers : données & panneau de lecture + preview PDF ---
+    const dossiersData = {
+      "info-rapports": {
+        title: "Information & rapports de force",
+        meta: "Bloc « Information & pouvoir » · Niveau : intermédiaire · Lecture : ~30 min",
+        tags: ["pouvoir", "géopolitique", "médias", "citoyenneté"],
+        resume: `
+L’objectif de ce dossier est de comprendre comment la circulation de l’information restructure les rapports
+de force entre États, grandes entreprises, plateformes numériques et citoyens.
+
+Il explore :
+• les asymétries d’accès à l’information (secrets, fuites, opacité),
+• la manière dont les données deviennent un levier de pression,
+• le rôle des intermédiaires (médias, lobbys, think tanks, ONG).`,
+        files: [
+          {
+            name: "information-rapports-acteurs-economiques.pdf",
+            href: "information-rapports-acteurs-economiques.pdf",
+            type: "PDF",
+            meta: "Synthèse des rapports de force"
+          },
+          {
+            name: "notes_information.html",
+            href: "notes_information.html",
+            type: "HTML",
+            meta: "Version web / annotée"
+          }
+        ],
+        notes: `
+Pistes pédagogiques :
+• Faire cartographier par un groupe les acteurs et flux d’information autour d’un cas concret.
+• Demander : « Qui sait quoi, sur qui, avec quelles conséquences ? ».
+• Simuler une situation où un nouveau flux d’info apparaît (fuite, enquête, leak) et observer ce que cela change.`
+      },
+      "empowerment": {
+        title: "Empouvoirement individuel & collectif",
+        meta: "Bloc « Information & pouvoir » · Niveau : débutant+ · Lecture : ~20 min",
+        tags: ["éducation populaire", "littératie", "DIKW", "capacité d’agir"],
+        resume: `
+Dossier centré sur la façon dont on passe de données brutes à de l’action collective :
+• DIKW : Data → Information → Knowledge → Wisdom,
+• compétences de base : lire, vérifier, relier, raconter,
+• empouvoirement : capacité à agir individuellement et à plusieurs.
+
+Il pose aussi la question : comment éviter de transformer tout ça
+en simple « coaching de développement personnel » dépolitisé ?`,
+        files: [
+          {
+            name: "empouvoirement-individuel-collectif.pdf",
+            href: "empouvoirement-individuel-collectif.pdf",
+            type: "PDF",
+            meta: "Texte de fond"
+          }
+        ],
+        notes: `
+Idées d’atelier :
+• Demander aux participant·es d’apporter une info qu’iels jugent importante.
+• Travailler le chemin : d’où ça vient ? qui en parle ? qui est impacté ?
+• Faire construire une mini-fiche « comment j’explique ça à quelqu’un qui n’a pas le temps ».`
+      },
+      "info-economique": {
+        title: "Information comme pouvoir économique",
+        meta: "Bloc « Information & pouvoir » · Niveau : avancé · Lecture : ~40 min",
+        tags: ["guerre économique", "plateformes", "données", "stratégies"],
+        resume: `
+Ici, l’information est vue comme arme économique :
+• surveillance concurrentielle, renseignement d’affaires,
+• plateformes qui captent et verrouillent les données,
+• asymétrie entre acteurs globaux et structures locales.
+
+Point de tension : comment développer une intelligence économique
+non cannibale, tournée vers le commun et non la prédation ?`,
+        files: [
+          {
+            name: "economie-information.pdf",
+            href: "economie.pdf",
+            type: "PDF",
+            meta: "Dossier sur information & économie"
+          }
+        ],
+        notes: `
+Piste de jeu de rôle :
+• Diviser un groupe en « petit acteur local » vs « gros acteur global ».
+• Distribuer des cartes « informations obtenues », « fuites », « campagnes médiatiques ».
+• Observer comment chacun essaie de survivre / prospérer avec ce qu’il sait.`
+      },
+      "guerre-hybride": {
+        title: "Guerre hybride",
+        meta: "Bloc « Conflits hybrides » · Niveau : avancé · Lecture : ~45 min",
+        tags: ["sécurité", "géopolitique", "hybride", "cyber"],
+        resume: `
+Le concept de guerre hybride mêle :
+• actions militaires classiques,
+• opérations cyber,
+• pressions économiques et énergétiques,
+• campagnes d’influence et d’information.
+
+L’enjeu pour la société civile : comprendre qu’il ne s’agit pas seulement
+de chars et d’avions, mais aussi de récits, de dépendances et de données.`,
+        files: [
+          {
+            name: "guerre-hybride.pdf",
+            href: "La guerre hybride _ définition, enjeux et perspectives internationales.pdf",
+            type: "PDF",
+            meta: "Référence de base"
+          }
+        ],
+        notes: `
+Piste atelier :
+• Partir d’un conflit réel.
+• Demander : quelles dimensions « hybrides » repérez-vous ?
+• Inviter à imaginer la position d’une petite association locale prise dans ces flux.`
+      },
+      "guerre-info-bxl": {
+        title: "Guerre de l’information à Bruxelles",
+        meta: "Bloc « Conflits hybrides » · Niveau : intermédiaire · Lecture : ~30 min",
+        tags: ["bruxelles", "eu", "lobbies", "influence"],
+        resume: `
+Bruxelles est à la fois :
+• capitale de la Belgique,
+• capitale de l’Union européenne,
+• terrain de jeu pour lobbys, États, entreprises, ONG.
+
+Ce dossier explore comment la ville devient un hub d’influence où l’information
+circule, se déforme, se monnaie et se neutralise parfois dans la complexité institutionnelle.`,
+        files: [
+          {
+            name: "guerre-information-bruxelles.pdf",
+            href: "La-guerre-de-l-information-a-Bruxelles.pdf",
+            type: "PDF",
+            meta: "Étude sur Bruxelles"
+          }
+        ],
+        notes: `
+Idée :
+• Cartographier les lieux symboliques (bâtiments UE, sièges de lobbys, médias…).
+• Faire un « city game » de veille citoyenne : qui influence quoi, où, comment ?`
+      },
+      "guerre-narrative": {
+        title: "Guerre narrative",
+        meta: "Bloc « Conflits hybrides » · Niveau : intermédiaire · Lecture : ~25 min",
+        tags: ["récits", "propagande", "contre-récits", "méthodo"],
+        resume: `
+Au-delà des fake news isolées, ce dossier parle de guerre narrative :
+• récits maîtres, mythes, boucs émissaires,
+• framing des problèmes et solutions,
+• fatigue attentionnelle et sidération.
+
+Objectif : armer les gens non pas pour « gagner » la guerre,
+mais pour la reconnaître, la décaler, la démonter.`,
+        files: [
+          {
+            name: "guerre-narrative.pdf",
+            href: "guerre-narrative-claude.pdf",
+            type: "PDF",
+            meta: "Analyse des logiques narratives"
+          }
+        ],
+        notes: `
+Atelier possible :
+• Repérer les éléments de récit dans une une, un tweet, un discours.
+• Jouer à réécrire la même info dans plusieurs cadres différents et en observer les effets.`
+      },
+      "secteur-associatif": {
+        title: "Secteur associatif comme 5e pouvoir",
+        meta: "Bloc « Intelligence non marchande » · Niveau : intermédiaire · Lecture : ~30 min",
+        tags: ["asbl", "5e pouvoir", "éducation permanente", "non-marchand"],
+        resume: `
+Le secteur associatif est présenté ici comme un « cinquième pouvoir » potentiel :
+ni législatif, ni exécutif, ni judiciaire, ni médiatique, mais capable d’agir sur tous.
+
+On y parle :
+• d’éducation permanente,
+• de veille citoyenne,
+• de rapports de force avec pouvoirs publics et marchés.`,
+        files: [
+          {
+            name: "intelligence-non-marchande_vs_economique.pdf",
+            href: "intelligence_non_marchande_vs_economique.pdf",
+            type: "PDF",
+            meta: "Texte de référence"
+          }
+        ],
+        notes: `
+Question clé :
+• Comment éviter que ce « cinquième pouvoir » soit juste un amortisseur social ?
+• Quelles conditions pour qu’il devienne un véritable contre-pouvoir structurant ?`
+      },
+      "essaimage-veille": {
+        title: "Stratégies d’essaimage de la veille",
+        meta: "Bloc « Intelligence non marchande » · Niveau : opérationnel · Lecture : ~25 min",
+        tags: ["essaimage", "cellules de veille", "méthodo", "réseau de réseaux"],
+        resume: `
+Ce dossier se concentre sur le « comment » :
+• créer des cellules de veille citoyenne dans des asbl, collectifs, lieux de vie,
+• sans tout centraliser dans une grosse machine bureaucratique,
+• en gardant la souplesse, l’autonomie et l’envie de jouer.
+
+Il s’agit de bâtir un « réseau de réseaux » plutôt qu’un centre unique.`,
+        files: [
+          {
+            name: "strategie-essaimage-veille.pdf",
+            href: "Stratégie pour essaimer la veille citoyenne via l’éducation populaire en Belgique francophone.pdf",
+            type: "PDF",
+            meta: "Stratégie détaillée"
+          }
+        ],
+        notes: `
+Piste :
+• Imaginer différents niveaux de cellules (micro-locales, sectorielles, thématiques).
+• Lister les prérequis minimum (temps, outils, accompagnement) pour chacune.`
+      },
+      "eco-intelligente": {
+        title: "Économie « intelligente » vs « stupide »",
+        meta: "Bloc « Intelligence non marchande » · Niveau : exploratoire · Lecture : ~20 min",
+        tags: ["économie", "communs", "coopératives", "critiques"],
+        resume: `
+Dernier dossier : une réflexion sur ce qui rend une économie « intelligente » ou « stupide » :
+• finance spéculative vs économie réelle,
+• communs, coopératives, circuits courts,
+• rôle de l’information dans l’allocation des ressources.
+
+Point de départ pour relier veille citoyenne et alternatives concrètes.`,
+        files: [
+          {
+            name: "economie.pdf",
+            href: "economie.pdf",
+            type: "PDF",
+            meta: "Note de synthèse"
+          }
+        ],
+        notes: `
+Idée d’usage :
+• Utiliser ce dossier comme base pour un débat mouvant.
+• Poser des cas concrets (plateforme géante, coopérative, service public…) et demander :
+« qu’est-ce qui est intelligent, pour qui, et pourquoi ? ».`
+      }
+    };
+
+    const inspector = {
+      status: document.getElementById("dossier-inspector-status"),
+      title: document.getElementById("dossier-inspector-title"),
+      meta: document.getElementById("dossier-inspector-meta"),
+      tags: document.getElementById("dossier-inspector-tags"),
+      resume: document.getElementById("dossier-inspector-resume"),
+      fichiers: document.getElementById("dossier-inspector-fichiers"),
+      notes: document.getElementById("dossier-inspector-notes"),
+      card: document.getElementById("dossier-inspector")
+    };
+
+    const pdfPreviewWrapper = document.getElementById("pdf-preview-wrapper");
+    const pdfPreviewFrame = document.getElementById("pdf-preview-frame");
+    const pdfPreviewTitle = document.getElementById("pdf-preview-title");
+    const pdfPreviewLink = document.getElementById("pdf-preview-link");
+
+    function setInspectorEmpty() {
+      inspector.status.textContent = "Aucun dossier sélectionné";
+      inspector.title.textContent = "Sélectionne un dossier dans la liste pour afficher le détail ici.";
+      inspector.meta.textContent =
+        "Résumé, fichiers associés, notes, et aperçu intégré du PDF si disponible.";
+      inspector.tags.innerHTML = "";
+      inspector.resume.innerHTML =
+        '<p class="inspector-empty">Rien à afficher pour l’instant.</p>';
+      inspector.fichiers.innerHTML =
+        '<p class="inspector-empty">Aucun fichier chargé.</p>';
+      inspector.notes.innerHTML =
+        '<p class="inspector-empty">Notes pédagogiques, questions d’animation, idées de jeu, etc.</p>';
+      hidePdfPreview();
+    }
+
+    function formatMultiline(text) {
+      return text.trim().replace(/\n/g, "<br>");
+    }
+
+    function hidePdfPreview() {
+      pdfPreviewWrapper.style.display = "none";
+      pdfPreviewFrame.src = "";
+    }
+
+    function showPdfPreview(file) {
+      if (!file || file.type !== "PDF") return;
+      pdfPreviewWrapper.style.display = "block";
+      pdfPreviewFrame.src = file.href;
+      pdfPreviewTitle.textContent = file.name;
+      pdfPreviewLink.href = file.href;
+    }
+
+    function renderFiles(files) {
+      if (!files || files.length === 0) {
+        inspector.fichiers.innerHTML =
+          '<p class="inspector-empty">Aucun fichier associé à ce dossier.</p>';
+        hidePdfPreview();
+        return;
+      }
+      const wrapper = document.createElement("div");
+      wrapper.className = "file-list";
+      files.forEach((f, index) => {
+        const item = document.createElement("div");
+        item.className = "file-item";
+        item.innerHTML = `
+          <div class="file-main">
+            <div class="file-icon">${f.type === "PDF" ? "📄" : "🗂"}</div>
+            <div class="file-labels">
+              <div class="file-name">${f.name}</div>
+              <div class="file-meta">${f.type} · ${f.meta || ""}</div>
+            </div>
+          </div>
+          <div class="file-actions">
+            <a class="file-open" href="${f.href}" target="_blank" rel="noopener noreferrer">Ouvrir</a>
+            ${f.type === "PDF"
+              ? '<button type="button" class="file-preview-btn" data-index="'+index+'">Aperçu</button>'
+              : ""}
+          </div>
+        `;
+        wrapper.appendChild(item);
+      });
+      inspector.fichiers.innerHTML = "";
+      inspector.fichiers.appendChild(wrapper);
+
+      // lier les boutons "Aperçu"
+      wrapper.querySelectorAll(".file-preview-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = parseInt(btn.getAttribute("data-index"), 10);
+          const file = files[idx];
+          showPdfPreview(file);
+        });
+      });
+
+      // auto-preview : premier PDF si dispo
+      const firstPdf = files.find(f => f.type === "PDF");
+      if (firstPdf) {
+        showPdfPreview(firstPdf);
+      } else {
+        hidePdfPreview();
+      }
+    }
+
+    function setInspectorDossier(id) {
+      const dossier = dossiersData[id];
+      if (!dossier) {
+        setInspectorEmpty();
+        return;
+      }
+      inspector.status.textContent = "Dossier sélectionné";
+      inspector.title.textContent = dossier.title;
+      inspector.meta.textContent = dossier.meta || "";
+      inspector.tags.innerHTML = "";
+      (dossier.tags || []).forEach(tag => {
+        const span = document.createElement("span");
+        span.className = "inspector-tag";
+        span.textContent = tag;
+        inspector.tags.appendChild(span);
+      });
+
+      inspector.resume.innerHTML =
+        '<p style="margin:0;">' + formatMultiline(dossier.resume) + "</p>";
+      renderFiles(dossier.files);
+      inspector.notes.innerHTML =
+        '<p style="margin:0;">' + formatMultiline(dossier.notes) + "</p>";
+
+      // Scroll au panneau sur mobile
+      const rect = inspector.card.getBoundingClientRect();
+      const isMobile = window.innerWidth < 900;
+      if (isMobile) {
+        const offset = rect.top + scrollContainer.scrollTop - 60;
+        scrollContainer.scrollTo({ top: offset, behavior: "smooth" });
+      }
+    }
+
+    // Clic sur "Ouvrir"
+    document.querySelectorAll(".dossier-open").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const item = btn.closest(".list-item");
+        const id = item.getAttribute("data-dossier-id");
+        setInspectorDossier(id);
+      });
+    });
+
+    // Onglets inspecteur
+    const inspectorTabs = document.querySelectorAll(".inspector-tab");
+    const inspectorSections = document.querySelectorAll(".inspector-section");
+
+    inspectorTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.getAttribute("data-tab");
+        inspectorTabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        inspectorSections.forEach(sec => {
+          const secTab = sec.getAttribute("data-tab-section");
+          sec.classList.toggle("active", secTab === target);
+        });
+      });
+    });
+
+    // Filtre dossiers
+    const dossierSearchInput = document.getElementById("dossier-search-input");
+    dossierSearchInput.addEventListener("input", () => {
+      const q = dossierSearchInput.value.toLowerCase().trim();
+      document.querySelectorAll("#view-dossiers .list-item").forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(q) ? "" : "none";
+      });
+    });
+
+    // Init
+    setInspectorEmpty();
+  </script>
+</body>
+</html>
