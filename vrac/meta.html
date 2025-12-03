@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>NE-PAS-TAPER-CE-MOT · méta-moteur de tout ce qu’on a vu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Baloo+2:wght@500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --fg: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.18);
+      --accent-2: #22c55e;
+      --accent-2-soft: rgba(34,197,94,0.2);
+      --danger: #fb7185;
+      --danger-soft: rgba(248,113,113,0.18);
+      --border: #1f2937;
+      --card: #020617;
+      --card-alt: #020617;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%),
+        radial-gradient(circle at bottom, #020617 0, #000 65%);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      padding: 1.2rem 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    main {
+      max-width: 960px;
+      width: 100%;
+      margin: auto;
+    }
+
+    .shell {
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,0.16), transparent 58%),
+        radial-gradient(circle at bottom right, rgba(34,197,94,0.15), transparent 60%),
+        var(--card);
+      border-radius: 26px;
+      border: 1px solid rgba(15,23,42,1);
+      box-shadow:
+        0 26px 80px rgba(15,23,42,0.95),
+        0 0 0 1px rgba(15,23,42,0.9);
+      padding: 1.2rem 1.3rem 1.1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 0.9rem;
+    }
+
+    .logo {
+      font-family: "Baloo 2", cursive;
+      font-size: clamp(1.9rem, 4vw + 1rem, 2.6rem);
+      letter-spacing: 0.03em;
+      margin-bottom: 0.2rem;
+    }
+
+    .logo span:nth-child(1) { color: #38bdf8; }
+    .logo span:nth-child(2) { color: #fbbf24; }
+    .logo span:nth-child(3) { color: #22c55e; }
+    .logo span:nth-child(4) { color: #f97316; }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .subtitle strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    /* Barre de recherche */
+
+    .search-shell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(15,23,42,0.95);
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 0.4rem 0.6rem;
+      box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+    }
+
+    .search-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, var(--accent-soft), #020617);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    #searchInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--fg);
+      font-size: 0.95rem;
+      padding: 0.25rem 0.1rem;
+      outline: none;
+    }
+
+    #searchInput::placeholder {
+      color: rgba(148,163,184,0.9);
+    }
+
+    .search-warning {
+      margin-top: 0.35rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .search-warning strong {
+      color: var(--danger);
+    }
+
+    .search-buttons {
+      margin-top: 0.6rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--fg);
+      font-size: 0.82rem;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(56,189,248,0.26), #020617);
+      color: #e0f2fe;
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 12px 30px rgba(56,189,248,0.7);
+    }
+
+    .btn-ghost {
+      border-style: dashed;
+      color: var(--muted);
+    }
+
+    .chips-row {
+      margin-top: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      justify-content: center;
+    }
+
+    .chip {
+      font-size: 0.74rem;
+      padding: 0.12rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.96);
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    /* Résultats */
+
+    .results-shell {
+      margin-top: 1rem;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.95);
+      padding: 0.75rem 0.8rem 0.85rem;
+      box-shadow: 0 18px 48px rgba(15,23,42,1);
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .results-title {
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+
+    .results-count {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    #resultsList {
+      margin-top: 0.3rem;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .result-card {
+      border-radius: 14px;
+      border: 1px solid #111827;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.16), transparent 55%), #020617;
+      padding: 0.55rem 0.6rem 0.6rem;
+      font-size: 0.86rem;
+      box-shadow: 0 12px 30px rgba(15,23,42,0.96);
+    }
+
+    .result-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .result-title a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .result-title a:hover {
+      text-decoration: underline;
+    }
+
+    .result-category {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .result-desc {
+      font-size: 0.8rem;
+      color: var(--fg);
+    }
+
+    .result-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.35rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.05rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      color: #cbd5f5;
+      background: rgba(15,23,42,0.96);
+    }
+
+    .tag-soft {
+      border-style: dashed;
+      color: var(--muted);
+    }
+
+    .result-actions {
+      margin-top: 0.4rem;
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-mini {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.96);
+      color: var(--fg);
+      font-size: 0.72rem;
+      padding: 0.18rem 0.6rem;
+      cursor: pointer;
+    }
+
+    .btn-mini-primary {
+      border-color: rgba(56,189,248,0.85);
+      color: #e0f2fe;
+    }
+
+    .btn-mini-soft {
+      border-style: dashed;
+      color: var(--muted);
+    }
+
+    /* Bandeau bas */
+
+    footer {
+      margin-top: 0.7rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* Modal / alerte GOOGLE */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(248,113,113,0.25), rgba(15,23,42,0.96));
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal {
+      max-width: 420px;
+      width: 90%;
+      background: #020617;
+      border-radius: 22px;
+      border: 1px solid rgba(248,113,113,0.8);
+      padding: 0.9rem 0.95rem 0.85rem;
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 30px 80px rgba(15,23,42,1),
+        0 0 40px rgba(248,113,113,0.7);
+    }
+
+    .modal-title {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      font-size: 0.98rem;
+      color: #fecaca;
+      margin-bottom: 0.3rem;
+    }
+
+    .modal-body {
+      font-size: 0.84rem;
+      color: #fee2e2;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-hint {
+      font-size: 0.75rem;
+      color: #fecaca;
+    }
+
+    .modal-buttons {
+      margin-top: 0.6rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(248,113,113,0.9);
+      background: rgba(15,23,42,0.96);
+      color: #fecaca;
+      font-size: 0.78rem;
+      padding: 0.32rem 0.7rem;
+      cursor: pointer;
+    }
+
+    .modal-btn-soft {
+      border-style: dashed;
+      color: #fecaca;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        padding: 0.9rem 0.85rem 1rem;
+      }
+      .results-shell {
+        padding: 0.7rem 0.7rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="shell">
+    <header>
+      <div class="logo">
+        <span>N</span><span>E</span><span>P</span><span>S</span>
+      </div>
+      <p class="subtitle">
+        Un faux moteur de recherche pour tout ton écosystème  
+        (tests, intranets, jeux, journaux, crypto, etc.) –  
+        <strong>sans jamais taper le mot interdit</strong>.
+      </p>
+    </header>
+
+    <section class="search-shell">
+      <form id="searchForm" autocomplete="off">
+        <div class="search-box">
+          <div class="search-icon">🔎</div>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder='Tape un thème (ex : "bénévolat", "intranet", "journal", "jeu", "crypto")'
+          />
+        </div>
+      </form>
+      <div class="search-warning">
+        ⚠️ Ne tape <strong>jamais</strong> le mot <strong>g**gle</strong> ici.  
+        Ce méta-moteur ne sert qu’à retrouver <em>tes</em> trucs à toi.
+      </div>
+
+      <div class="search-buttons">
+        <button class="btn btn-primary" type="button" id="btnLucky">J’ai (plus ou moins) de la chance</button>
+        <button class="btn btn-ghost" type="button" id="btnReset">Tout afficher</button>
+      </div>
+
+      <div class="chips-row">
+        <span class="chip" data-query="portfolio">Portfolio & recrutement</span>
+        <span class="chip" data-query="bénévolat">Bénévolat & mouvements</span>
+        <span class="chip" data-query="intranet">Organisation & intranet</span>
+        <span class="chip" data-query="jeu">Jeux & tests</span>
+        <span class="chip" data-query="journal">Journal & santé mentale</span>
+        <span class="chip" data-query="crypto">Crypto associative</span>
+        <span class="chip" data-query="tutoriel">Tutoriels web & sites</span>
+      </div>
+    </section>
+
+    <section class="results-shell">
+      <div class="results-header">
+        <div class="results-title" id="resultsTitle">Modules recommandés</div>
+        <div class="results-count" id="resultsCount"></div>
+      </div>
+      <div id="resultsList"></div>
+    </section>
+
+    <footer>
+      NE-PAS-TAPER-CE-MOT est juste une porte d’entrée vers tous tes prototypes.  
+      Tu peux adapter les liens, les titres et les descriptions dans le code selon tes fichiers réels.
+    </footer>
+  </div>
+</main>
+
+<!-- Modal GOOGLE interdit -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-title">
+      <span>🚫</span>
+      <strong>Mot interdit détecté</strong>
+    </div>
+    <div class="modal-body">
+      Ce méta-moteur ne sert pas à chercher l’autre moteur de recherche.
+      Ici, c’est pour explorer <strong>tes projets</strong>, tes tests, tes intranets, tes jeux,
+      tes journaux, tes idées.
+    </div>
+    <div class="modal-hint">
+      Essaie plutôt des mots comme <code>bénévolat</code>, <code>journal</code>, <code>morpion</code>,
+      <code>organisation</code>, <code>crypto</code>, <code>tutoriel</code>...
+    </div>
+    <div class="modal-buttons">
+      <button class="modal-btn-soft modal-btn" type="button" id="btnModalClear">Ok, je re-essaie</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- "Index" de tout ce qu'on a vu (version simplifiée / regroupée) ---
+
+  const modules = [
+    // PORTFOLIO / CARRIÈRE / LOBBY / ESPION
+    {
+      id: "portfolio-benevolat-cpcp",
+      title: "Portfolio & bénévolat – CPCP / Mouvements",
+      category: "Portfolio & Recrutement",
+      description:
+        "Page de présentation de tes compétences (admin, éducation permanente, veille, jeux sérieux), orientée demande de bénévolat ou de mission ciblée.",
+      tags: ["portfolio", "bénévolat", "CPCP", "éducation permanente", "vie pro"],
+      url: "portfolio-benevolat.html"
+    },
+    {
+      id: "portfolio-lobby",
+      title: "Portfolio du parfait lobbyiste (critique & transparent)",
+      category: "Portfolio & Recrutement",
+      description:
+        "Site vitrine pour expliquer comment tu comprends les rapports de force, la médiation, la communication politique – en mode réfléchi, pas cynique.",
+      tags: ["lobby", "plaidoyer citoyen", "analyse", "tests"],
+      url: "lobby.html"
+    },
+    {
+      id: "portfolio-espion",
+      title: "Profil 'espion' civil & veille stratégique",
+      category: "Portfolio & Recrutement",
+      description:
+        "Une version 'agent de renseignement citoyen' pour la Sûreté de l'État, le SPF Intérieur, etc. Tests, scénarios, simulations de veille non marchande.",
+      tags: ["renseignement", "veille", "jeu sérieux", "tests d’entrée"],
+      url: "espion.html"
+    },
+
+    // ORGANISATION & INTRANET
+    {
+      id: "organisation",
+      title: "L’Organisation – Société Anonyme Sociale (SAS)",
+      category: "Organisation & Intranet",
+      description:
+        "Site principal d’une 'Organisation' cryptique mais sérieuse, avec page d’accueil, intranet, organigramme, plan de recrutement et tests d’entrée.",
+      tags: ["intranet", "recrutement", "tests", "SAS"],
+      url: "organisation.html"
+    },
+    {
+      id: "organisation-derriere",
+      title: "L’organisation derrière l’Organisation",
+      category: "Organisation & Intranet",
+      description:
+        "Meta-niveau : un site qui avoue qu’on ne sait presque rien de la structure réelle derrière tout ça, mais qui tente de cartographier le non-savoir.",
+      tags: ["meta", "non-savoir", "structure cachée"],
+      url: "organisation-behind.html"
+    },
+    {
+      id: "intranet-secret-s",
+      title: "Intranet de S. – couche publique / privée / confidentielle",
+      category: "Organisation & Intranet",
+      description:
+        "Intranet complet pour 'S.', qui pilote l’organisation derrière l’organisation de 'P'. Portails, accès différenciés, commandes internes.",
+      tags: ["intranet", "multi-couches", "secret", "console"],
+      url: "intranet-s.html"
+    },
+
+    // MOUVEMENTS & EDUCATION PERMANENTE
+    {
+      id: "mouvement-ep",
+      title: "Mouvement d’éducation permanente – prendre la place du plus grand",
+      category: "Mouvements & Éducation permanente",
+      description:
+        "Site ultra sérieux d’un mouvement d’éducation permanente fictif mais crédible, avec intranet, console et stratégie pour devenir un acteur majeur.",
+      tags: ["mouvement", "éducation permanente", "FWB", "intranet"],
+      url: "mouvement-ep.html"
+    },
+    {
+      id: "test-moc",
+      title: "Test d’entrée – MOC & alliés",
+      category: "Mouvements & Éducation permanente",
+      description:
+        "Site de test d’entrée pour le MOC, avec annexe intégrée, quiz, embeds, et petite couche de mise à distance critique.",
+      tags: ["MOC", "mouvement ouvrier", "quiz", "annexes"],
+      url: "moc-test.html"
+    },
+    {
+      id: "test-pac",
+      title: "Test d’entrée – Présence & Action Culturelles",
+      category: "Mouvements & Éducation permanente",
+      description:
+        "Page de test pour un fan club (non officiel) de PAC, avec quiz, embeds, rapport, humour et clins d’œil à la culture politique.",
+      tags: ["PAC", "culture", "quiz", "humour"],
+      url: "pac-test.html"
+    },
+
+    // JEUX / TESTS / GAMIFICATION
+    {
+      id: "morpion-de-360",
+      title: "Morpion & dé 360 couleurs",
+      category: "Jeux & Tests",
+      description:
+        "Un morpion classique où chaque victoire débloque une combinaison liée à une facette colorée d’un dé 3D, avec export CSV/JSON.",
+      tags: ["jeu", "morpion", "3D", "export", "prototypage"],
+      url: "morpion-de-360.html"
+    },
+    {
+      id: "recrutement-tests",
+      title: "Batterie de tests de recrutement pour P",
+      category: "Jeux & Tests",
+      description:
+        "Ensemble de tests autoguidés (niveaux, easter eggs, docs embarqués) pour rejoindre les projets de P. ou constituer une réserve de recrutement.",
+      tags: ["tests", "recrutement", "niveaux", "ARG"],
+      url: "recrutement-p.html"
+    },
+    {
+      id: "jeu-1250",
+      title: "Jeu concours '12,50' – site statique le plus wow",
+      category: "Jeux & Tests",
+      description:
+        "Concours fictif : créer le site HTML/CSS/JS le plus spectaculaire, avec défis, easter eggs, cheatcodes, ambiance matrix.",
+      tags: ["jeu concours", "HTML/CSS/JS", "matrix", "gamification"],
+      url: "1250.html"
+    },
+    {
+      id: "jeu-polar-ia",
+      title: "Jeu narratif polar noir contrôlé par l’IA",
+      category: "Jeux & Tests",
+      description:
+        "Expérience interactive façon polar noir, vue parfois par Claire, avec flashbacks et IA qui contrôle (presque) tout.",
+      tags: ["polar noir", "IA", "narration", "jeu"],
+      url: "jeu-polar.html"
+    },
+
+    // JOURNAL & SANTE MENTALE
+    {
+      id: "journal-vrac",
+      title: "Site de la vie d’une personne un peu en vrac",
+      category: "Journal & Santé mentale",
+      description:
+        "Appli de journal minimal pour quelqu’un qui dort à 5h, se réveille à 10h, se rendort à 13h, regrette des livres et doit voir son/sa psy à 11h.",
+      tags: ["journal", "sommeil", "psy", "rapport exportable"],
+      url: "journal-vie.html"
+    },
+
+    // CRYPTO & ECONOMIE
+    {
+      id: "crypto-associative",
+      title: "Système de crypto associative sur papier",
+      category: "Économie & Crypto",
+      description:
+        "Site explicatif sur la façon de créer une 'crypto' non spéculative pour associations, avec billets papier, contributeurs, niveaux d’implication.",
+      tags: ["crypto", "associatif", "économie", "pédagogie"],
+      url: "crypto-associative.html"
+    },
+
+    // TUTORIELS WEB / PORTAILS
+    {
+      id: "tutoriel-web-scratchy",
+      title: "Tutoriels 'from scratch' pour sites statiques",
+      category: "Tutoriels & Portails",
+      description:
+        "Pages pas-à-pas pour créer des sites HTML/CSS/JS en mode ultra accessible (version 'j’ai 5 ans et je suis bourré', etc.).",
+      tags: ["tutoriel", "HTML", "CSS", "JS", "pédagogie"],
+      url: "pas-a-pas.html"
+    },
+    {
+      id: "portail-dashboard",
+      title: "Dashboard / portail vers tous les dossiers & tests",
+      category: "Tutoriels & Portails",
+      description:
+        "Grand portail façon 'tableau de bord' pour accéder à tous les dossiers (plaidoyer citoyen, Pikachu, etc.) et à leurs tests associés.",
+      tags: ["portail", "dashboard", "tests", "dossiers"],
+      url: "dashboard.html"
+    }
+  ];
+
+  // --- DOM helpers ---
+  const $ = (id) => document.getElementById(id);
+
+  const searchInput = $("searchInput");
+  const searchForm = $("searchForm");
+  const resultsList = $("resultsList");
+  const resultsTitle = $("resultsTitle");
+  const resultsCount = $("resultsCount");
+  const btnLucky = $("btnLucky");
+  const btnReset = $("btnReset");
+  const chips = document.querySelectorAll(".chip");
+
+  const modalBackdrop = $("modalBackdrop");
+  const btnModalClear = $("btnModalClear");
+
+  // --- Recherche ---
+
+  function normalize(text) {
+    return (text || "").toLowerCase();
+  }
+
+  function matchesQuery(module, query) {
+    if (!query) return true;
+    const q = normalize(query);
+
+    const haystack = [
+      module.title,
+      module.category,
+      module.description,
+      ...(module.tags || [])
+    ].join(" ").toLowerCase();
+
+    return q.split(/\s+/).every((part) => haystack.includes(part));
+  }
+
+  function renderResults(list, query) {
+    resultsList.innerHTML = "";
+    if (!list.length) {
+      resultsTitle.textContent = query ? `Aucun module trouvé pour « ${query} »` : "Aucun module enregistré";
+      resultsCount.textContent = "";
+      return;
+    }
+
+    if (query) {
+      resultsTitle.textContent = `Résultats pour « ${query} »`;
+    } else {
+      resultsTitle.textContent = "Modules recommandés";
+    }
+    resultsCount.textContent = `${list.length} module${list.length > 1 ? "s" : ""}`;
+
+    list.forEach((m) => {
+      const card = document.createElement("article");
+      card.className = "result-card";
+
+      const titleDiv = document.createElement("div");
+      titleDiv.className = "result-title";
+      const link = document.createElement("a");
+      link.href = m.url || "#";
+      link.textContent = m.title;
+      titleDiv.appendChild(link);
+
+      const cat = document.createElement("div");
+      cat.className = "result-category";
+      cat.textContent = m.category;
+
+      const desc = document.createElement("div");
+      desc.className = "result-desc";
+      desc.textContent = m.description;
+
+      const tagsDiv = document.createElement("div");
+      tagsDiv.className = "result-tags";
+      (m.tags || []).forEach((t) => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsDiv.appendChild(span);
+      });
+
+      const actions = document.createElement("div");
+      actions.className = "result-actions";
+
+      const btnOpen = document.createElement("button");
+      btnOpen.className = "btn-mini btn-mini-primary";
+      btnOpen.type = "button";
+      btnOpen.textContent = "Ouvrir (lien fictif)";
+      btnOpen.addEventListener("click", () => {
+        window.location.href = m.url || "#";
+      });
+
+      const btnFilter = document.createElement("button");
+      btnFilter.className = "btn-mini btn-mini-soft";
+      btnFilter.type = "button";
+      btnFilter.textContent = "Filtrer sur cette catégorie";
+      btnFilter.addEventListener("click", () => {
+        searchInput.value = m.category.split(" ")[0];
+        performSearch(m.category.split(" ")[0]);
+      });
+
+      actions.appendChild(btnOpen);
+      actions.appendChild(btnFilter);
+
+      card.appendChild(titleDiv);
+      card.appendChild(cat);
+      card.appendChild(desc);
+      if (m.tags && m.tags.length) card.appendChild(tagsDiv);
+      card.appendChild(actions);
+      resultsList.appendChild(card);
+    });
+  }
+
+  function containsForbiddenWord(query) {
+    const q = normalize(query);
+    if (!q) return false;
+    // On attrape plusieurs variantes possibles
+    return ["google", "gogle", "gugel", "g00gle"].some((word) => q.includes(word));
+  }
+
+  function showForbiddenModal() {
+    modalBackdrop.style.display = "flex";
+  }
+
+  function hideForbiddenModal() {
+    modalBackdrop.style.display = "none";
+    searchInput.value = "";
+    searchInput.focus();
+  }
+
+  function performSearch(query) {
+    const q = (query !== undefined ? query : searchInput.value || "").trim();
+
+    if (containsForbiddenWord(q)) {
+      showForbiddenModal();
+      renderResults(modules, ""); // on revient à l'ensemble, mais on ne l’indique pas explicitement
+      return;
+    }
+
+    const filtered = modules.filter((m) => matchesQuery(m, q));
+    renderResults(filtered, q);
+  }
+
+  // --- Événements ---
+
+  searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    performSearch();
+  });
+
+  searchInput.addEventListener("input", () => {
+    // Recherche 'live' très tolérante
+    performSearch();
+  });
+
+  btnLucky.addEventListener("click", () => {
+    if (!modules.length) return;
+    const idx = Math.floor(Math.random() * modules.length);
+    const chosen = modules[idx];
+    searchInput.value = chosen.tags[0] || chosen.category.split(" ")[0] || "";
+    performSearch(searchInput.value);
+  });
+
+  btnReset.addEventListener("click", () => {
+    searchInput.value = "";
+    renderResults(modules, "");
+  });
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const q = chip.dataset.query || "";
+      searchInput.value = q;
+      performSearch(q);
+    });
+  });
+
+  btnModalClear.addEventListener("click", hideForbiddenModal);
+  modalBackdrop.addEventListener("click", (e) => {
+    if (e.target === modalBackdrop) hideForbiddenModal();
+  });
+
+  // --- Init ---
+  renderResults(modules, "");
+</script>
+</body>
+</html>
