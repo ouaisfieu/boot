@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Digicode Psychédélique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg1: #05001a;
+      --bg2: #220033;
+      --accent: #ff00ff;
+      --accent2: #00e5ff;
+      --accent3: #ffe600;
+      --text: #f7f7ff;
+      --danger: #ff3366;
+      --success: #47ffb2;
+      --glass: rgba(10, 10, 30, 0.75);
+      --border-glow: 0 0 15px rgba(255, 0, 255, 0.7),
+                      0 0 35px rgba(0, 229, 255, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 0% 0%, #ff00ff 0, transparent 55%),
+                  radial-gradient(circle at 100% 100%, #00e5ff 0, transparent 55%),
+                  radial-gradient(circle at 20% 80%, #ffe600 0, transparent 45%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+      animation: bg-move 22s infinite alternate ease-in-out;
+    }
+
+    @keyframes bg-move {
+      0% {
+        background-position: 0% 0%, 100% 100%, 20% 80%, 0 0;
+      }
+      100% {
+        background-position: 20% 20%, 80% 80%, 40% 60%, 100% 100%;
+      }
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (min-width: 800px) {
+      .app {
+        flex-direction: row;
+        gap: 20px;
+      }
+    }
+
+    .panel {
+      background: linear-gradient(135deg, rgba(10, 10, 30, 0.9), rgba(5, 0, 40, 0.85));
+      border-radius: 24px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255, 0, 255, 0.2), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(0, 255, 200, 0.15), transparent 60%);
+      mix-blend-mode: screen;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-size: 1.2rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title span.code-name {
+      font-size: 0.85rem;
+      text-transform: none;
+      color: rgba(255, 255, 255, 0.8);
+      letter-spacing: 0.05em;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 320px;
+    }
+
+    /* DIGICODE */
+
+    .digicode {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .code-display-wrapper {
+      border-radius: 16px;
+      padding: 10px 12px;
+      background: radial-gradient(circle at 0 0, rgba(255, 0, 255, 0.2), transparent 60%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: var(--border-glow);
+    }
+
+    .code-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+
+    .rules-hint {
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+
+    .code-display {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .digit-slots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .digit-slot {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: var(--accent3);
+      background: radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.15), transparent 60%);
+      box-shadow: 0 0 10px rgba(255, 230, 0, 0.6);
+    }
+
+    .digit-slot.empty {
+      color: rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+      border-style: dashed;
+    }
+
+    .code-status {
+      font-size: 0.7rem;
+      text-align: right;
+      min-height: 20px;
+    }
+
+    .code-status.ok {
+      color: var(--success);
+    }
+
+    .code-status.error {
+      color: var(--danger);
+    }
+
+    .hint-text {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.75);
+      margin-top: 4px;
+    }
+
+    .hint-text strong {
+      color: var(--accent3);
+    }
+
+    /* KEYPAD */
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .key {
+      border-radius: 999px;
+      padding: 13px 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.12), transparent 55%),
+                  linear-gradient(135deg, rgba(40, 40, 80, 0.9), rgba(20, 10, 60, 0.95));
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.09s ease, box-shadow 0.09s ease, border-color 0.09s ease;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.55);
+    }
+
+    .key::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 0, 255, 0.25), rgba(0, 229, 255, 0.25));
+      mix-blend-mode: screen;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .key:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .key:active::before {
+      opacity: 1;
+    }
+
+    .key.function {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .key.ok {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.9);
+    }
+
+    .key.alt {
+      border-color: var(--danger);
+      color: var(--danger);
+      text-shadow: 0 0 8px rgba(255, 51, 102, 0.9);
+    }
+
+    .key.zero {
+      grid-column: 2;
+    }
+
+    .actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-open {
+      flex: 1;
+      border-radius: 999px;
+      padding: 9px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(255, 0, 255, 0.2));
+      color: #fff;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      text-align: center;
+      min-width: 160px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+    }
+
+    .btn-open[disabled] {
+      opacity: 0.35;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn-open:not([disabled]):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.7);
+    }
+
+    .btn-open-icon {
+      font-size: 1rem;
+    }
+
+    .current-url {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.8);
+      word-break: break-all;
+      max-width: 100%;
+    }
+
+    /* VIEWER */
+
+    .viewer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 280px;
+    }
+
+    @media (min-width: 800px) {
+      .panel.digicode-panel {
+        flex: 0 0 40%;
+      }
+      .panel.viewer-panel {
+        flex: 1;
+      }
+      .viewer {
+        min-height: 420px;
+      }
+    }
+
+    .viewer-frame {
+      flex: 1;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.7);
+      position: relative;
+      background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.15), transparent 55%),
+                  linear-gradient(145deg, #070515, #04010d);
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+    }
+
+    .viewer-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.06), transparent 55%),
+                  radial-gradient(circle at 0 100%, rgba(255, 0, 255, 0.08), transparent 55%);
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      padding: 12px;
+      font-size: 0.8rem;
+    }
+
+    .viewer-overlay span.big {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--accent2);
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.9);
+    }
+
+    .viewer-overlay span.sub {
+      opacity: 0.8;
+    }
+
+    .viewer-note {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .rules-line {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 2px;
+    }
+
+    .rules-line code {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.7rem;
+      color: var(--accent3);
+    }
+
+    /* small shake on error */
+    .shake {
+      animation: shake 0.18s ease-in-out 0s 2;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      50% { transform: translateX(3px); }
+      75% { transform: translateX(-2px); }
+      100% { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- PANEL DIGICODE -->
+    <section class="panel digicode-panel">
+      <div class="panel-inner">
+        <header class="panel-header">
+          <div class="title">
+            ◉ DIGICODE
+            <span class="code-name">instance&nbsp;: <span style="color:var(--accent3)">#psy-4D</span></span>
+          </div>
+          <div class="subtitle">
+            Tape un code à 4 chiffres pour ouvrir un portail.  
+            S’il n’existe pas… le système tombe sur <strong>mouse-dun</strong>.
+          </div>
+        </header>
+
+        <div class="digicode">
+          <div class="code-display-wrapper" id="codeDisplayWrapper">
+            <div class="code-label-row">
+              <div>Code d’accès (4 chiffres)</div>
+              <div class="rules-hint">Règle d’or&nbsp;: <em>t’as rien compris</em>.</div>
+            </div>
+            <div class="code-display">
+              <div class="digit-slots" id="digitSlots">
+                <div class="digit-slot empty">•</div>
+                <div class="digit-slot empty">•</div>
+                <div class="digit-slot empty">•</div>
+                <div class="digit-slot empty">•</div>
+              </div>
+              <div class="code-status" id="codeStatus"></div>
+            </div>
+            <p class="hint-text">
+              Codes prédéfinis dans le code source.  
+              Sinon, retour automatique vers <strong>https://mouse-dun.vercel.app/</strong>.
+            </p>
+          </div>
+
+          <div class="keypad" id="keypad">
+            <!-- Les chiffres seront injectés en JS ou écrits à la main -->
+            <button class="key" data-key="1">1</button>
+            <button class="key" data-key="2">2</button>
+            <button class="key" data-key="3">3</button>
+
+            <button class="key" data-key="4">4</button>
+            <button class="key" data-key="5">5</button>
+            <button class="key" data-key="6">6</button>
+
+            <button class="key" data-key="7">7</button>
+            <button class="key" data-key="8">8</button>
+            <button class="key" data-key="9">9</button>
+
+            <button class="key function alt" data-action="clear">Reset</button>
+            <button class="key zero" data-key="0">0</button>
+            <button class="key function ok" data-action="submit">OK</button>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-open" id="openNewTabBtn" disabled>
+              <span class="btn-open-icon">⧉</span>
+              <span>Ouvrir dans un nouvel onglet</span>
+            </button>
+            <div class="current-url">
+              Cible actuelle&nbsp;: <span id="currentUrlText">aucune (en attente de code)</span>
+            </div>
+          </div>
+
+          <div class="rules-line">
+            <strong>Règles officielles&nbsp;:</strong>
+            <br>1. On ne parle jamais des règles.
+            <br>2. Il n’y a pas de règle.
+            <br>3. On s’en fout pas mal.
+            <br>Indice sur la règle d’or&nbsp;: <em>t’as rien compris</em>.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL VISIONNEUSE -->
+    <section class="panel viewer-panel">
+      <div class="panel-inner">
+        <header class="panel-header">
+          <div class="title">
+            ☉ Visionneuse
+            <span class="code-name">mode&nbsp;: <span style="color:var(--accent2)">web-portal</span></span>
+          </div>
+          <div class="subtitle">
+            Affiche le site correspondant au code, ou le <strong>fallback</strong> si le code
+            est <em>vide</em> d’existence.
+          </div>
+        </header>
+
+        <div class="viewer">
+          <div class="viewer-frame">
+            <iframe id="siteFrame" src="about:blank" loading="lazy" title="Visionneuse de site web"></iframe>
+            <div class="viewer-overlay" id="viewerOverlay">
+              <span class="big">&lt;vide&gt;vide&lt;/vide&gt;</span>
+              <span class="sub">
+                En attente d’un code à 4 chiffres.<br />
+                Chaque entrée est un test. Chaque portail mène quelque part.
+              </span>
+            </div>
+          </div>
+          <div class="viewer-note">
+            Note&nbsp;: certains sites refusent d’être affichés dans une iframe (sécurité navigateur).  
+            Dans ce cas, utilise le bouton <strong>«&nbsp;Ouvrir dans un nouvel onglet&nbsp;»</strong>.
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ==========================
+    // CONFIG : CODES → URLS
+    // ==========================
+    // Tu peux modifier/ajouter des codes ici.
+    const CODE_MAP = {
+      // code : url
+      "0000": "https://mouse-dun.vercel.app/",
+      "1337": "https://rg-ashy.vercel.app/",
+      "1984": "https://mouse-dun.vercel.app/",
+      "4242": "https://mouse-dun.vercel.app/"
+    };
+
+    const DEFAULT_URL = "https://mouse-dun.vercel.app/";
+
+    // ==========================
+    // STATE
+    // ==========================
+    let currentCode = "";
+    let currentUrl = null;
+
+    const digitSlots = Array.from(document.querySelectorAll(".digit-slot"));
+    const codeStatus = document.getElementById("codeStatus");
+    const codeDisplayWrapper = document.getElementById("codeDisplayWrapper");
+    const openNewTabBtn = document.getElementById("openNewTabBtn");
+    const currentUrlText = document.getElementById("currentUrlText");
+    const siteFrame = document.getElementById("siteFrame");
+    const viewerOverlay = document.getElementById("viewerOverlay");
+
+    // ==========================
+    // FONCTIONS UTILITAIRES
+    // ==========================
+    function updateDigitSlots() {
+      const digits = currentCode.split("");
+      digitSlots.forEach((slot, index) => {
+        const d = digits[index];
+        if (d !== undefined) {
+          slot.textContent = d;
+          slot.classList.remove("empty");
+        } else {
+          slot.textContent = "•";
+          slot.classList.add("empty");
+        }
+      });
+    }
+
+    function setStatus(message, type) {
+      codeStatus.textContent = message || "";
+      codeStatus.classList.remove("ok", "error");
+      if (type === "ok") codeStatus.classList.add("ok");
+      if (type === "error") codeStatus.classList.add("error");
+    }
+
+    function setCurrentUrl(url, isFallback) {
+      currentUrl = url;
+      siteFrame.src = url;
+      openNewTabBtn.disabled = false;
+      viewerOverlay.style.display = "none";
+
+      if (isFallback) {
+        currentUrlText.textContent = url + " (fallback / code inconnu)";
+      } else {
+        currentUrlText.textContent = url;
+      }
+    }
+
+    function clearCode() {
+      currentCode = "";
+      updateDigitSlots();
+      setStatus("", null);
+      codeDisplayWrapper.classList.remove("shake");
+      // Laisser l’URL actuelle affichée, on efface juste le code.
+    }
+
+    function submitCode() {
+      if (currentCode.length < 4) {
+        // Petit shake
+        codeDisplayWrapper.classList.remove("shake");
+        void codeDisplayWrapper.offsetWidth; // reflow
+        codeDisplayWrapper.classList.add("shake");
+        setStatus("Tape d’abord 4 chiffres.", "error");
+        return;
+      }
+
+      const url = CODE_MAP[currentCode] || DEFAULT_URL;
+      const isFallback = !(currentCode in CODE_MAP);
+
+      if (isFallback) {
+        setStatus("Code inconnu → redirection vers mouse-dun.", "error");
+      } else {
+        setStatus("Code reconnu → ouverture du portail.", "ok");
+      }
+
+      setCurrentUrl(url, isFallback);
+    }
+
+    // ==========================
+    // EVENTS
+    // ==========================
+    document.getElementById("keypad").addEventListener("click", (event) => {
+      const btn = event.target.closest(".key");
+      if (!btn) return;
+
+      const digit = btn.getAttribute("data-key");
+      const action = btn.getAttribute("data-action");
+
+      if (digit !== null) {
+        if (currentCode.length >= 4) {
+          // si déjà 4 chiffres, on remplace le code par ce nouveau 1er chiffre
+          currentCode = digit;
+        } else {
+          currentCode += digit;
+        }
+        updateDigitSlots();
+        setStatus("", null);
+
+        if (currentCode.length === 4) {
+          // auto submit dès 4 chiffres
+          submitCode();
+        }
+      } else if (action === "clear") {
+        clearCode();
+      } else if (action === "submit") {
+        submitCode();
+      }
+    });
+
+    openNewTabBtn.addEventListener("click", () => {
+      if (!currentUrl) return;
+      window.open(currentUrl, "_blank", "noopener,noreferrer");
+    });
+
+    // Optional : clavier physique (0-9 et Enter / Backspace)
+    document.addEventListener("keydown", (e) => {
+      if (e.key >= "0" && e.key <= "9") {
+        if (currentCode.length >= 4) {
+          currentCode = e.key;
+        } else {
+          currentCode += e.key;
+        }
+        updateDigitSlots();
+        setStatus("", null);
+        if (currentCode.length === 4) {
+          submitCode();
+        }
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        if (currentCode.length > 0) {
+          currentCode = currentCode.slice(0, -1);
+          updateDigitSlots();
+          setStatus("", null);
+        }
+      } else if (e.key === "Enter") {
+        submitCode();
+      }
+    });
+  </script>
+</body>
+</html>
