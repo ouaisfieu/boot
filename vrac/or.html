@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ATLAS – Lore & Univers du Jeu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Atlas de l'univers du jeu : ORGA-X, Division Opérations Stratégiques, WebTok, et l'ensemble du lore autour des organisations dystopiques." />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --accent: #22d3ee;
+      --accent-strong: #38bdf8;
+      --accent-soft: rgba(34,211,238,0.16);
+      --accent-warn: #f97316;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --danger: #fb7185;
+      --success: #22c55e;
+      --radius-lg: 18px;
+      --shadow-soft: 0 16px 40px rgba(0,0,0,0.8);
+      --transition: 0.2s ease;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: var(--accent-strong); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(16px);
+      background: rgba(15,23,42,0.96);
+      border-bottom: 1px solid rgba(148,163,184,0.4);
+    }
+
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .logo-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 20%, #e5e7eb 0, #22d3ee 35%, #0f172a 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #e0f2fe;
+      box-shadow: 0 0 0 2px rgba(56,189,248,0.6), 0 0 18px rgba(56,189,248,0.8);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-strong);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    section {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    section + section {
+      margin-top: 4px;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      margin: 0 0 4px;
+    }
+
+    .section-sub {
+      font-size: 0.86rem;
+      color: var(--muted);
+      max-width: 700px;
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+
+    .section-sub strong {
+      color: #e5e7eb;
+    }
+
+    /* Hero */
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 18px 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.96);
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.1rem, 3vw, 2.5rem);
+      margin: 4px 0 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(to right, #7dd3fc, #22d3ee, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-lead {
+      font-size: 0.96rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .hero-lead strong {
+      color: #e5e7eb;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 7px 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.86rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: background var(--transition), border-color var(--transition),
+                  transform var(--transition), box-shadow var(--transition),
+                  color var(--transition);
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #22d3ee, #38bdf8);
+      border-color: transparent;
+      color: #020617;
+      font-weight: 600;
+      box-shadow: 0 14px 32px rgba(56,189,248,0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 42px rgba(56,189,248,0.7);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.96);
+      border-color: rgba(148,163,184,0.9);
+      transform: translateY(-1px);
+    }
+
+    .hero-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .hero-card {
+      background: radial-gradient(circle at top, rgba(56,189,248,0.18) 0, #020617 55%, #000 100%);
+      border-radius: 22px;
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 14px 14px 10px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+      font-size: 0.82rem;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 10% 0, rgba(125,211,252,0.3), transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(129,140,248,0.4), transparent 55%);
+      opacity: 0.8;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .hero-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-card h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .pill-accent {
+      border-color: rgba(56,189,248,0.9);
+      background: var(--accent-soft);
+      color: #e0f2fe;
+    }
+
+    .pill-warn {
+      border-color: rgba(248,148,94,0.9);
+      background: rgba(67,20,7,0.9);
+      color: #fed7aa;
+    }
+
+    /* Cards & grids */
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: rgba(15,23,42,0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: 10px 12px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.9);
+      font-size: 0.84rem;
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .card small {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .list {
+      padding-left: 17px;
+      margin: 4px 0 0;
+    }
+
+    .list li {
+      margin-bottom: 2px;
+    }
+
+    /* Timeline */
+
+    .timeline {
+      border-left: 1px solid rgba(148,163,184,0.5);
+      margin: 4px 0 0;
+      padding-left: 12px;
+      display: grid;
+      gap: 6px;
+      font-size: 0.82rem;
+    }
+
+    .timeline-step {
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-step::before {
+      content: "";
+      position: absolute;
+      left: -14px;
+      top: 4px;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 2px solid #38bdf8;
+      background: #020617;
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.25);
+    }
+
+    .timeline-step strong {
+      display: block;
+    }
+
+    /* Factions tabs */
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: transparent;
+      color: var(--muted);
+      padding: 3px 9px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition), transform var(--transition);
+    }
+
+    .tab-btn.active {
+      background: var(--accent-soft);
+      color: #e0f2fe;
+      border-color: rgba(56,189,248,0.9);
+      transform: translateY(-1px);
+    }
+
+    .faction-panel {
+      display: none;
+      font-size: 0.84rem;
+    }
+
+    .faction-panel.active {
+      display: block;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--muted);
+    }
+
+    .chip-main {
+      border-color: rgba(56,189,248,0.9);
+      color: #e0f2fe;
+      background: var(--accent-soft);
+    }
+
+    .chip-bad {
+      border-color: rgba(248,113,113,0.9);
+      color: #fecaca;
+      background: rgba(127,29,29,0.9);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(0, 2.2fr);
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-card {
+        order: -1;
+      }
+
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Details */
+
+    details {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    details summary {
+      cursor: pointer;
+      padding: 3px 0;
+      outline: none;
+    }
+
+    details[open] summary {
+      color: var(--accent-strong);
+    }
+
+    /* Footer */
+
+    footer {
+      margin-top: 18px;
+      padding: 10px 18px 16px;
+      border-top: 1px solid rgba(30,64,175,0.6);
+      background: radial-gradient(circle at top, rgba(30,64,175,0.45), #020617);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <div class="logo">
+      <div class="logo-mark">AT</div>
+      ATLAS – Univers du jeu
+    </div>
+    <nav class="nav-links">
+      <a href="#synopsis">Synopsis</a>
+      <a href="#chronologie">Chronologie</a>
+      <a href="#factions">Organisations</a>
+      <a href="#technos">Technos in-game</a>
+      <a href="#parcours">Parcours joueur</a>
+      <a href="#meta">Mode d’emploi</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="badge">
+        <div class="badge-dot"></div>
+        Dossier de référence – Lore & univers partagé
+      </div>
+      <h1>
+        Un monde où les <span>organisations</span> deviennent le terrain de jeu.
+      </h1>
+      <p class="hero-lead">
+        Cet atlas rassemble tout l’univers du jeu : le cabinet <strong>ORGA-X</strong> qui chasse les
+        absurdités bureaucratiques, l’Agence gouvernementale et sa <strong>Division Opérations Stratégiques (DOS)</strong>,
+        ainsi que <strong>WebTok</strong>, l’interface qui fait défiler les sites comme un flux infini d’informations
+        à trier. Tu y joues un·e professionnel·le coincé·e entre la promesse d’optimisation totale et la peur de la dystopie.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" type="button"
+                onclick="document.getElementById('synopsis').scrollIntoView({behavior:'smooth'})">
+          Commencer par le synopsis
+        </button>
+        <button class="btn btn-ghost" type="button"
+                onclick="document.getElementById('parcours').scrollIntoView({behavior:'smooth'})">
+          Voir le parcours complet du joueur
+        </button>
+      </div>
+      <div class="hero-meta">
+        Site statique unique (HTML/CSS/JS) – à poser à côté des autres pages du jeu (tests de recrutement, WebTok, etc.).
+      </div>
+    </div>
+
+    <aside class="hero-card">
+      <div class="hero-card-inner">
+        <h2>Ce que contient cet ATLAS</h2>
+        <ul class="list">
+          <li>La <strong>vision globale</strong> du monde du jeu.</li>
+          <li>Les <strong>factions principales</strong> et leurs contradictions.</li>
+          <li>Les <strong>technos diégétiques</strong> (intranet DOS, WebTok, bacs à courrier…).</li>
+          <li>Le <strong>parcours du joueur</strong> à travers les différentes pages.</li>
+        </ul>
+        <div class="pill-row">
+          <span class="pill pill-accent">Peut servir de guide pour les joueurs</span>
+          <span class="pill">Peut servir de bible pour les auteurs</span>
+          <span class="pill pill-warn">Univers volontairement très proche du réel</span>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- SYNOPSIS -->
+  <section id="synopsis">
+    <h2 class="section-title">Synopsis général</h2>
+    <p class="section-sub">
+      Le jeu se déroule dans un monde très proche du nôtre, où les organisations – entreprises, agences publiques,
+      services de renseignement – sont prises entre deux forces : le besoin de <strong>simplifier</strong> pour survivre
+      et la tentation de <strong>tout contrôler</strong> grâce aux données et aux outils numériques. Toi, joueur·se,
+      tu navigues entre ces deux pôles en participant à des missions qui ressemblent à de simples exercices de bureau…
+      mais qui posent des questions d’éthique et de pouvoir très concrètes.
+    </p>
+
+    <div class="cards">
+      <article class="card">
+        <h3>Point de départ</h3>
+        <small>ORGA-X – Cabinet de conseil</small>
+        <p>
+          Tu es recruté·e (ou en passe de l’être) par <strong>ORGA-X</strong>, un cabinet indépendant obsédé par les
+          « absurdités organisationnelles ». Leur promesse : libérer le travail réel des procédures inutiles,
+          des tableaux Excel qui ne servent à personne, des outils de surveillance décorés de jolis mots.
+        </p>
+        <p>
+          Premier contact : un <strong>bac à courrier de recrutement</strong> qui simule ta première matinée au cabinet.
+        </p>
+      </article>
+
+      <article class="card">
+        <h3>Fêlure dans le décor</h3>
+        <small>Partenariat avec l’Agence de renseignement</small>
+        <p>
+          ORGA-X est mandaté par une <strong>Agence Gouvernementale d’Analyse et de Renseignement (AGAR)</strong>.
+          Objectif officiel : <em>simplifier</em> la façon dont l’information circule entre services. Objectif officieux :
+          mettre en place une <strong>Division Opérations Stratégiques (DOS)</strong> capable de coordonner les opérations
+          sensibles et de tout tracer dans un intranet unique.
+        </p>
+      </article>
+
+      <article class="card">
+        <h3>L’enjeu caché</h3>
+        <small>Intranet, scoring, flux d’infos</small>
+        <p>
+          Les outils qu’on te demande de concevoir (intranet DOS, flux WebTok, dispositifs de scoring, etc.) peuvent
+          aussi bien <strong>protéger</strong> que <strong>encercler</strong> les agents. Tout l’univers du jeu tourne autour
+          de cette question : jusqu’où es-tu prêt·e à aller pour rendre les organisations efficaces, sans les transformer
+          en machines dystopiques ?
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- CHRONOLOGIE -->
+  <section id="chronologie">
+    <h2 class="section-title">Chronologie diégétique</h2>
+    <p class="section-sub">
+      La chronologie ci-dessous peut servir de squelette pour tes scénarios, missions et variantes. Chaque étape
+      correspond à une page que tu peux déjà avoir : test bac à courrier, site de l’Agence, WebTok, etc.
+    </p>
+
+    <div class="cards">
+      <article class="card">
+        <h3>Fil rouge</h3>
+        <div class="timeline">
+          <div class="timeline-step">
+            <strong>Épisode 1 – « Première matinée »</strong>
+            Tu passes le <strong>test bac à courrier</strong> d’ORGA-X : prioriser, arbitrer, refuser la panique
+            organisationnelle. C’est la porte d’entrée dans l’univers.
+          </div>
+          <div class="timeline-step">
+            <strong>Épisode 2 – « Appel d’offre discret »</strong>
+            ORGA-X reçoit une mission de l’AGAR : concevoir l’intranet de la future Division Opérations Stratégiques
+            d’une seconde agence de renseignement. C’est le <strong>test DOS</strong>.
+          </div>
+          <div class="timeline-step">
+            <strong>Épisode 3 – « Flux parallèles »</strong>
+            WebTok apparaît comme un outil officieux permettant de <strong>scroller des sites et documents</strong> pour
+            repérer incohérences, signaux faibles, propagande, absurdités.
+          </div>
+          <div class="timeline-step">
+            <strong>Épisode 4 – « Garde-fous »</strong>
+            Tu dois définir des <strong>limites explicites</strong> : ce que l’intranet ne fera jamais, ce que le scoring
+            ne mesurera pas, les espaces où le doute reste possible.
+          </div>
+          <div class="timeline-step">
+            <strong>Épisode 5 – « Effet miroir »</strong>
+            Tu découvres que les mêmes logiques sont à l’œuvre dans d’autres organisations (hors jeu).
+            Ton rôle change : de simple candidat·e à personne qui sait voir les mécanismes.
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FACTIONS / ORGANISATIONS -->
+  <section id="factions">
+    <h2 class="section-title">Organisations & factions</h2>
+    <p class="section-sub">
+      L’univers du jeu repose sur quelques <strong>organisations clés</strong>. Tu peux les faire apparaître dans tes
+      scénarios, documents, mails, consignes, ou même les renommer si tu crées un fork de l’univers.
+    </p>
+
+    <div class="two-col">
+      <article class="card">
+        <h3>Factions principales</h3>
+        <div class="tabs">
+          <button type="button" class="tab-btn active" data-faction="orgaX">ORGA-X</button>
+          <button type="button" class="tab-btn" data-faction="agar">AGAR</button>
+          <button type="button" class="tab-btn" data-faction="dos">DOS</button>
+          <button type="button" class="tab-btn" data-faction="joueurs">Joueurs & vivants</button>
+        </div>
+
+        <div id="faction-orgaX" class="faction-panel active">
+          <p>
+            <span class="chip chip-main">ORGA-X – Cabinet de simplification</span>
+          </p>
+          <ul class="list">
+            <li><strong>Rôle officiel :</strong> traquer les absurdités organisationnelles et simplifier les process.</li>
+            <li><strong>Rôle réel dans le jeu :</strong> mettre le joueur en situation de <em>décider</em> ce qui est
+              absurde ou pas, et d’assumer les conséquences.</li>
+            <li><strong>Ambivalence :</strong> peut devenir complice d’une simplification qui cache une surveillance accrue.</li>
+          </ul>
+        </div>
+
+        <div id="faction-agar" class="faction-panel">
+          <p>
+            <span class="chip chip-main">AGAR – Agence Gouvernementale d’Analyse & de Renseignement</span>
+          </p>
+          <ul class="list">
+            <li><strong>Rôle officiel :</strong> centraliser l’analyse stratégique des données nationales et internationales.</li>
+            <li><strong>Rôle dans le jeu :</strong> commanditaire du projet d’intranet DOS, client d’ORGA-X.</li>
+            <li><strong>Ligne de tension :</strong> entre protection des citoyens et tentation du pilotage par indicateurs.</li>
+          </ul>
+        </div>
+
+        <div id="faction-dos" class="faction-panel">
+          <p>
+            <span class="chip chip-main">DOS – Division Opérations Stratégiques</span>
+          </p>
+          <ul class="list">
+            <li><strong>Rôle officiel :</strong> coordonner les opérations sensibles, éviter les silos entre services.</li>
+            <li><strong>Rôle dans le jeu :</strong> prétexte à construire un <strong>intranet total</strong> et une
+              gouvernance d’information.</li>
+            <li><strong>Danger :</strong> si tout passe par la DOS, la DOS devient le filtre unique de la réalité.</li>
+          </ul>
+        </div>
+
+        <div id="faction-joueurs" class="faction-panel">
+          <p>
+            <span class="chip">Agents, consultants, citoyens… et toi.</span>
+          </p>
+          <ul class="list">
+            <li><strong>Posture :</strong> pris·e entre loyauté, désir d’efficacité et malaise face à certains usages.</li>
+            <li><strong>Capacité clé :</strong> voir que ce qui est présenté comme « neutre » ne l’est jamais complètement.</li>
+            <li><strong>Arc narratif :</strong> passer de la simple exécution des consignes à la formulation de garde-fous.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Absurdités organisationnelles & dystopie soft</h3>
+        <p>
+          L’univers est rempli de <strong>micro-absurdités</strong> qui, prises une par une, semblent banales :
+        </p>
+        <ul class="list">
+          <li>Notifications de scoring de productivité qui ne disent pas à quoi sert le score.</li>
+          <li>Réunions « flash » sans ordre du jour, mais à fort enjeu symbolique.</li>
+          <li>Demande de relecture cosmétique qui consomme un temps précieux.</li>
+        </ul>
+        <p>
+          Ces éléments ne sont pas juste du décor : ils sont autant de <strong>leviers de gameplay</strong> : ce que
+          tu choisis de traiter, d’ignorer, de contester fait évoluer le récit.
+        </p>
+        <p>
+          Tu peux les recycler ou en inventer d’autres pour enrichir l’univers :
+        </p>
+        <ul class="list">
+          <li>Formulaires absurdes, KPI contradictoires, injonctions paradoxales…</li>
+          <li>Outils numériques « tout-en-un » qui enregistrent plus qu’ils n’aident.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- TECHNOLOGIES IN-GAME -->
+  <section id="technos">
+    <h2 class="section-title">Technologies & dispositifs in-game</h2>
+    <p class="section-sub">
+      Plusieurs dispositifs sont à la fois des outils de jeu (<em>pour toi</em>) et des technologies diégétiques
+      (<em>dans l’univers</em>). Ils structurent le gameplay et le lore.
+    </p>
+
+    <div class="cards">
+      <article class="card">
+        <h3>Bac à courrier ORGA-X</h3>
+        <small>Test de recrutement / simulateur de première matinée</small>
+        <p>
+          Tu reçois une pile de mails contradictoires : client furieux, DRH, DPO, direction, outils de scoring, etc.
+          C’est une <strong>épreuve de priorisation</strong>, mais aussi un miroir : comment tu hiérarchises
+          les risques, les humains, les symboles ?
+        </p>
+        <p>
+          In-game, c’est la façon dont ORGA-X repère les gens capables de travailler dans un environnement saturé
+          sans devenir eux-mêmes des rouages aveugles.
+        </p>
+        <details>
+          <summary>Liens possibles</summary>
+          <p>Tu peux lier ce site-là depuis l’ATLAS en ajoutant une phrase :  
+            <em>« Voir le bac à courrier : bac.html »</em> une fois que ton fichier sera nommé.</p>
+        </details>
+      </article>
+
+      <article class="card">
+        <h3>Intranet DOS</h3>
+        <small>Test d’entrée pour la Division Opérations Stratégiques</small>
+        <p>
+          Le test DOS te demande de <strong>construire l’arborescence d’un intranet</strong> pour coordonner une autre
+          agence de renseignement. Tu manipules un corpus figé (Internet filtré + documents classifiés simulés).
+        </p>
+        <p>
+          In-game, l’intranet DOS est à la fois une promesse de clarté et un danger : si tout passe par lui, le récit
+          des opérations est entièrement médiatisé par l’outil.
+        </p>
+      </article>
+
+      <article class="card">
+        <h3>WebTok</h3>
+        <small>Flux de sites à scroller façon TikTok</small>
+        <p>
+          WebTok est un « TikTok de sites web » : tu scrolles des pages entières comme des clips. C’est ton interface
+          pour <strong>explorer les sources</strong>, repérer propagande, anomalies, mensonges, signaux faibles.
+        </p>
+        <p>
+          In-game, WebTok peut être un outil officiel de veille, ou un outil officieux utilisé par quelques
+          agents pour vérifier ce que raconte l’intranet officiel.
+        </p>
+      </article>
+
+      <article class="card">
+        <h3>Scoring & métriques</h3>
+        <small>Technos omniprésentes mais jamais neutres</small>
+        <p>
+          Les scores de productivité, les KPI, les tableaux de bord sont des personnages à part entière. Ils ne sont
+          jamais neutres : ils privilégient certains comportements et en invisibilisent d’autres.
+        </p>
+        <p>
+          Tu peux décider dans tes scénarios que certains personnages n’existent, aux yeux de l’organisation,
+          que par leurs scores.
+        </p>
+        <p>
+          <span class="chip chip-bad">Danger : basculer en dystopie sans s’en rendre compte</span>
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- PARCOURS JOUEUR -->
+  <section id="parcours">
+    <h2 class="section-title">Parcours du joueur à travers les pages</h2>
+    <p class="section-sub">
+      Ce site peut aussi servir de <strong>hub de navigation</strong> entre les différentes pages HTML de ton
+      univers (tests, intranet, WebTok, etc.). Voici un parcours type que tu peux adapter à ta clé USB ou ton intranet.
+    </p>
+
+    <div class="two-col">
+      <article class="card">
+        <h3>Chemin narratif proposé</h3>
+        <ol class="list">
+          <li>
+            <strong>ATLAS (ce site)</strong> – lecture rapide du contexte, des factions, du ton.
+          </li>
+          <li>
+            <strong>Test ORGA-X « bac à courrier »</strong> – immersion dans la première matinée de travail,
+            révélation des priorités du joueur.
+          </li>
+          <li>
+            <strong>Site de l’Agence & DOS</strong> – prise de conscience des enjeux sécuritaires et politiques.
+          </li>
+          <li>
+            <strong>Test Intranet DOS</strong> – session de 4 h de tri, d’architecture d’information, de choix éthiques.
+          </li>
+          <li>
+            <strong>WebTok</strong> – exploration libre d’un flux de sites, prolongement de l’univers, détection d’échos
+            avec le monde réel.
+          </li>
+        </ol>
+        <details>
+          <summary>Exemple de structure de fichiers</summary>
+          <ul class="list">
+            <li><code>atlas-lore.html</code> (ce fichier)</li>
+            <li><code>orga-bac-courrier.html</code> (test ORGA-X)</li>
+            <li><code>agence-dos.html</code> (site DOS + test intranet)</li>
+            <li><code>webtok.html</code> (flux de sites)</li>
+          </ul>
+        </details>
+      </article>
+
+      <article class="card">
+        <h3>Ce que le jeu teste vraiment</h3>
+        <ul class="list">
+          <li>Ta capacité à voir les <strong>absurdités organisationnelles</strong>.</li>
+          <li>Ta façon de <strong>arbitrer</strong> entre efficacité, confort, éthique, risque.</li>
+          <li>Ta propension à <strong>refuser certaines fonctionnalités</strong> (scoring total, surveillance globale…).</li>
+          <li>Ta faculté à documenter tes choix, à dire : « ceci est une limite ». </li>
+        </ul>
+        <p>
+          Rien n’empêche de transformer ce parcours en <strong>vrai recrutement</strong>, ou en atelier de formation,
+          ou en expérience narrative purement fictionnelle.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- META / MODE D'EMPLOI -->
+  <section id="meta">
+    <h2 class="section-title">Mode d’emploi de ce site (pour toi créateur·rice)</h2>
+    <p class="section-sub">
+      Ce fichier est pensé pour être <strong>autonome</strong> : tu peux le modifier, le dupliquer, l’annoter.
+      C’est la « bible » de ton univers. Pas besoin de backend, de framework, de BDD.
+    </p>
+
+    <div class="cards">
+      <article class="card">
+        <h3>Comment l’utiliser concrètement</h3>
+        <ul class="list">
+          <li>Sauvegarde ce contenu dans <code>atlas-lore.html</code>.</li>
+          <li>Mets-le au même endroit que tes autres fichiers HTML (tests, WebTok, etc.).</li>
+          <li>Ajoute dans chaque page un lien vers l’ATLAS (ex. « Comprendre l’univers »).</li>
+          <li>Ajoute ici des liens concrets vers tes fichiers réels (noms, chemins, etc.).</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:4px;">
+          Tu peux aussi écrire dans les sections ci-dessus tes propres organisations, variations, épisodes.
+        </p>
+      </article>
+
+      <article class="card">
+        <h3>Étendre le lore</h3>
+        <p>
+          Rien ne t’empêche d’ajouter d’autres couches :
+        </p>
+        <ul class="list">
+          <li>Une cellule de contre-pouvoir interne à l’AGAR.</li>
+          <li>Des syndicats, collectifs, groupes d’agents qui refusent certains outils.</li>
+          <li>Des ONG ou journalistes qui observent de l’extérieur les dérives.</li>
+        </ul>
+        <p>
+          Tu peux aussi créer des <strong>artefacts supplémentaires</strong> : faux rapports, copies d’écran de l’intranet,
+          extractions WebTok, etc.
+        </p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      ATLAS – Univers du jeu ORGA-X / DOS / WebTok (fiction pédagogique, aucun lien avec une institution réelle).
+    </div>
+    <div>
+      1 seul fichier HTML, déployable sur clé USB, intranet ou hébergement statique. À toi de le faire vivre.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Gestion des onglets "factions"
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const factionPanels = document.querySelectorAll('.faction-panel');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-faction');
+
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      factionPanels.forEach(panel => {
+        panel.classList.remove('active');
+      });
+      const panel = document.getElementById('faction-' + target);
+      if (panel) panel.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
