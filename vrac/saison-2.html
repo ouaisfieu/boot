@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projet S – Saison 2 (Aujourd'hui mon chat est mort)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0f172a;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148,163,184,0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      padding: 2rem 1.5rem 1rem;
+      border-bottom: 1px solid rgba(148,163,184,0.2);
+      text-align: center;
+    }
+    .title {
+      font-size: clamp(1.9rem, 3vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0 16px rgba(56,189,248,0.6);
+      margin: 0.2rem 0;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .3rem .8rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+    .subtitle {
+      max-width: 720px;
+      margin: 0.8rem auto 0;
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    .nav-back {
+      text-align: left;
+      margin-bottom: 1rem;
+    }
+    .nav-back a {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .35rem .75rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: .78rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .nav-back a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(2,6,23,0.98));
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      padding: 1.3rem 1.4rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin: 0 0 .6rem;
+    }
+    h3 {
+      font-size: .98rem;
+      margin: 0.8rem 0 .4rem;
+    }
+    p {
+      margin: 0 0 .5rem;
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+    .prologue {
+      font-size: .9rem;
+      line-height: 1.6;
+      text-align: justify;
+    }
+    .prologue p {
+      margin-bottom: .7rem;
+    }
+    .small {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    ul, ol {
+      margin: .3rem 0 .7rem;
+      padding-left: 1.1rem;
+      font-size: .88rem;
+    }
+    li { margin-bottom: .25rem; }
+    .tag {
+      display: inline-flex;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-right: .35rem;
+      margin-bottom: .35rem;
+    }
+    .mission-block {
+      border-radius: 1.1rem;
+      border: 1px solid var(--border);
+      padding: .7rem .8rem;
+      margin-bottom: .8rem;
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.98));
+      font-size: .88rem;
+    }
+    .mission-id {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: .2rem;
+    }
+    .mission-title {
+      font-weight: 600;
+      margin-bottom: .2rem;
+    }
+    .mission-meta {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .35rem;
+    }
+    .mission-tags {
+      margin-top: .3rem;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .5rem;
+      margin-bottom: .4rem;
+      font-size: .88rem;
+    }
+    .checklist-item input {
+      margin-top: .1rem;
+      accent-color: var(--accent);
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .8rem;
+      background: rgba(15,23,42,0.9);
+      border-radius: .4rem;
+      padding: .05rem .3rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="pill">Saison 2 · Pastiche narratif jouable</div>
+    <h1 class="title">PROJET S – AUJOURD'HUI MON CHAT EST MORT</h1>
+    <p class="subtitle">
+      Saison 2 est construite comme un pastiche de <em>L’Étranger</em> : style neutre, distance affective,
+      lumière trop forte. Le texte ci-dessous sert de <strong>prologue jouable</strong> : chaque fragment peut devenir
+      une mission IRL dans ton MOORPG distanciel asynchrone.
+    </p>
+  </header>
+
+  <main>
+    <div class="nav-back">
+      <a href="index.html">← Retour au jeu (index)</a>
+      &nbsp;·&nbsp;
+      <a href="saison1.html">Saison 1</a>
+    </div>
+
+    <div class="layout">
+      <!-- Colonne gauche : Prologue -->
+      <section>
+        <article class="card">
+          <h2>Prologue – « Aujourd’hui mon chat est mort »</h2>
+          <div class="prologue">
+            <p>Aujourd’hui mon chat est mort. Je le sais parce qu’il ne m’a pas réveillé.</p>
+
+            <p>D’habitude, vers sept heures, il traverse la chambre en ligne droite, comme s’il ne voyait pas les meubles. Il saute sur le lit, marche sur moi, miaule doucement et s’assoit juste assez près pour que je sente son poids. C’est ma première notification de la journée. Ce matin, il n’y en a pas eu. Le réveil du téléphone a sonné, puis un deuxième, puis un troisième. J’ai éteint les alarmes une à une. La lumière passait déjà sous le rideau. Le monde s’était mis à jour sans moi.</p>
+
+            <p>Je me suis levé un peu tard. Le sol était froid. En allant vers la cuisine, j’ai remarqué que je ne l’avais pas croisé. C’était étrange, mais pas encore inquiétant. Le frigo s’est allumé quand je l’ai ouvert. Le halo blanc m’a fait cligner des yeux. J’ai bu un peu d’eau au goulot. Ensuite seulement, j’ai regardé dans son bol. Les croquettes d’hier soir étaient intactes.</p>
+
+            <p>Je l’ai trouvé sous la table, couché sur le côté. Il avait l’air normal, seulement plus immobile que d’habitude. J’ai attendu qu’il respire. Il ne l’a pas fait. Alors j’ai compris.</p>
+
+            <p>Je ne savais pas quoi faire, alors j’ai regardé l’heure sur mon téléphone. Il était 8h43. J’ai eu le réflexe d’ouvrir une application de messagerie pour écrire à quelqu’un, puis je ne l’ai pas fait. Je ne savais pas par où commencer. « Aujourd’hui mon chat est mort » me paraissait trop simple, mais c’était la seule phrase vraie que j’avais.</p>
+
+            <p>Je me suis assis par terre à côté de lui. La cuisine faisait un bruit léger de réfrigérateur et d’immeuble. Dehors, une voiture a klaxonné sans urgence. Un voisin au-dessus a tiré une chaise. Tout était exactement comme hier, à ceci près que mon chat ne respirait plus. Je ne sentais rien de particulier. J’étais seulement un peu en retard.</p>
+
+            <p>Je devais travailler. Mon calendrier affichait six réunions, trois tâches en retard, deux rappels de facture et un « penser à respirer » que j’avais programmé moi-même un soir de lucidité. Les icônes colorées clignotaient comme des petites alarmes sans gravité. J’ai déplacé les réunions d’un geste du doigt, de « aujourd’hui » à « demain », puis de « demain » à « plus tard ». Pour mon chat, il n’y avait pas de bouton.</p>
+
+            <p>Le vétérinaire ouvrait à neuf heures. Le site précisait que, pour les urgences, il fallait appeler. Ce n’était pas une urgence : c’était trop tard. J’ai cherché quand même « que faire quand son chat meurt » sur un moteur de recherche. Les résultats se ressemblaient tous. Il fallait garder son calme, vérifier une dernière fois, contacter un professionnel, envisager la crémation, informer les enfants. Je n’ai pas d’enfants. Je n’ai pas rappelé ma mère. J’ai lu plusieurs fois la même page sans vraiment lire.</p>
+
+            <p>La fenêtre donnait sur une cour étroite. Le ciel était bleu, presque blanc, comme sur les photos de vacances des autres. Un voisin fumait en t-shirt, malgré le froid. Il regardait son téléphone en soufflant la fumée par le nez. Je me suis demandé s’il savait, lui, que mon chat était mort, à quelques mètres, derrière une cloison trop mince. Il ne pouvait pas savoir. Pourtant, j’avais l’impression que le monde entier le savait, sauf moi, et qu’il faisait semblant de continuer.</p>
+
+            <p>J’ai pensé au climat, quelques secondes, sans transition. On disait que des espèces entières disparaissaient sans qu’on les voit. Là, j’en avais une, entière, allongée sous ma table. C’était plus simple à comprendre : je pouvais toucher son corps, constater qu’il était froid. Pour le reste, c’était trop grand. On en parlait en degrés, en courbes et en pourcentages. Mon chat, lui, était à zéro.</p>
+
+            <p>Le logiciel de messagerie de mon travail s’est mis à clignoter. On se demandait où j’étais. Une collègue écrivait : « Tu es là ? On t’attend. » J’ai regardé la phrase s’afficher et j’ai pensé que, justement, j’étais là, mais pas au bon endroit. Mon corps était dans la cuisine, mon chat était mort, et quelque part sur un serveur, une petite pastille verte disait que j’étais « en ligne ».</p>
+
+            <p>Je me suis fait un café. Le goût était le même que d’habitude. La machine vibrait sur le plan de travail. Pendant qu’elle coulait, j’ai pris une photo de mon chat avec mon téléphone. Ce n’était pas pour la garder, seulement pour vérifier que tout ça était réel. Sur l’écran, il avait l’air de dormir. J’ai effacé la photo aussitôt. Je me suis demandé combien d’images de choses mortes circulaient, sans qu’on oublie jamais de les liker.</p>
+
+            <p>J’ai fini par écrire à ma collègue : « J’arrive un peu en retard. Problème à la maison. » Elle a répondu : « Ok, courage », avec un emoji. J’ai trouvé ça gentil. Je n’ai pas précisé. Ça ne me paraissait pas nécessaire de dire que mon chat était mort. De toute façon, nous avions déjà beaucoup de sujets en retard : des projets, des échéances, des plans de transformation. La mort de mon chat n’entrait dans aucun tableau de bord.</p>
+
+            <p>Je me suis habillé pour sortir. En enfilant mon manteau, j’ai pensé qu’il fallait peut-être que je prévienne quelqu’un. Je n’ai pas su qui. Ceux que j’aimais vraiment étaient loin, dans d’autres villes, d’autres fuseaux horaires. Nous parlions surtout en messages vocaux, qu’on écoutait en différé, comme si nos voix voyageaient dans le temps. Leur dire que mon chat était mort voulait dire ouvrir une conversation sur ce que je faisais de ma vie. Ce n’était pas le bon jour pour ça.</p>
+
+            <p>Dans la cage d’escalier, il faisait froid. L’ampoule du palier clignotait par intermittence. Elle s’allumait, puis s’éteignait, avec un petit bruit sec. J’ai pensé que mon chat n’aurait pas aimé ce bruit, mais qu’il ne l’entendrait plus jamais. Le monde continuait à produire des sons pour des oreilles qui n’étaient plus là.</p>
+
+            <p>En bas de l’immeuble, j’ai croisé la factrice. Elle m’a salué. J’ai répondu mécaniquement. Elle m’a tendu un paquet en demandant une signature. J’ai signé sans lire. Sur le carton, il y avait une mention : « livraison express ». Je l’ai trouvé ironique. Mon chat, lui, avait quitté la vie sans notification, sans suivi de colis, sans numéro de ticket.</p>
+
+            <p>En marchant vers le vétérinaire, j’ai ouvert une application d’actualités. Il y avait un article sur une nouvelle crise, une autre sur une guerre, une autre encore sur “la perte de sens chez les jeunes actifs”. Les titres défilaient avec assurance. Tout semblait grave et lointain à la fois. J’ai refermé l’application. Je me suis concentré sur mes pieds, sur le trottoir, sur le froid qui traversait mon jean.</p>
+
+            <p>Je me suis dit que mon chat était probablement la seule chose vraiment finie de ma journée. Tout le reste était en attente : les projets, les crises, les plans, même ma propre fatigue. Rien n’avait de forme claire. Seule la mort de mon chat avait un contour net. Elle tenait sous la table de ma cuisine.</p>
+
+            <p>Je me suis surpris à me demander si S, quelque part, avait prévu ça. Je ne savais pas qui était S, ni si S existait vraiment, mais c’était plus simple de l’imaginer derrière la lumière blanche de l’écran, en train de regarder ma journée comme une scène. Peut-être que, pour S, la mort de mon chat n’était qu’une petite quête secondaire dans un jeu plus vaste. Pour moi, c’était tout ce que j’avais à faire ce matin.</p>
+
+            <p>En arrivant devant la porte du vétérinaire, j’ai regardé l’heure une dernière fois. Il était neuf heures pile. J’ai eu un bref mouvement de satisfaction : au moins, pour ça, je n’étais pas en retard.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- Colonne droite : mode d'emploi et missions IRL -->
+      <section>
+        <article class="card">
+          <h2>Comment utiliser ce prologue dans le jeu&nbsp;?</h2>
+          <p class="small">
+            Cette saison est conçue comme un <strong>atelier existentiel jouable</strong>. On lit le texte par fragments.
+            Après certains passages, on sort dans le monde réel pour accomplir une petite mission.
+          </p>
+          <ol>
+            <li>Lis le prologue en entier ou par blocs de 3–4 paragraphes.</li>
+            <li>Repère les moments où tu te dis&nbsp;: « ça, je le vis aussi ».</li>
+            <li>Choisis une mission ci-dessous et exécute-la IRL, à ton rythme.</li>
+            <li>Publie une trace publique (texte, photo, audio) avec les tags proposés.</li>
+            <li>Note dans ton journal de bord comment le texte et ta vie se répondent.</li>
+          </ol>
+        </article>
+
+        <article class="card">
+          <h2>Missions de la Saison 2 (extraits)</h2>
+
+          <div class="mission-block">
+            <div class="mission-id">S2-01</div>
+            <div class="mission-title">Notification silencieuse</div>
+            <div class="mission-meta">Observation · 15–20 min · Diff. 1/5</div>
+            <p>
+              Identifie aujourd’hui le moment où, d’habitude, tu reçois une notification (message, rappel, mail)
+              que tu n’as pas reçue. Note ce qui a rempli le silence à la place.
+            </p>
+            <p>
+              Publie un court texte ou une photo qui représente ce silence.<br />
+              Ajoute une phrase simple, factuelle, à la manière du prologue.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S2-01</span>
+              <span class="tag">#NotificationSilencieuse</span>
+            </div>
+          </div>
+
+          <div class="mission-block">
+            <div class="mission-id">S2-02</div>
+            <div class="mission-title">Calendrier déplacé</div>
+            <div class="mission-meta">Investigation · 20–30 min · Diff. 2/5</div>
+            <p>
+              Parcours ton agenda (papier ou numérique) et repère tout ce que tu as déplacé « à plus tard »
+              depuis un mois. Liste ces éléments comme si c’était les chapitres d’un roman.
+            </p>
+            <p>
+              Publie cette liste ou un extrait, sans commentaire explicatif, juste les titres.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S2-02</span>
+              <span class="tag">#PlusTard</span>
+            </div>
+          </div>
+
+          <div class="mission-block">
+            <div class="mission-id">S2-03</div>
+            <div class="mission-title">Climats personnels</div>
+            <div class="mission-meta">Réflexion · 20–40 min · Diff. 3/5</div>
+            <p>
+              Lis le passage où le narrateur pense au climat en regardant son chat mort.
+              Choisis ensuite un objet précis de ton quotidien et décris-le comme s’il était
+              la seule preuve tangible d’une crise beaucoup plus grande.
+            </p>
+            <p>
+              Publie ce petit texte (10–15 lignes) sans expliquer de quelle crise il s’agit.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S2-03</span>
+              <span class="tag">#ClimatIntime</span>
+            </div>
+          </div>
+
+          <div class="mission-block">
+            <div class="mission-id">S2-04</div>
+            <div class="mission-title">En ligne / hors ligne</div>
+            <div class="mission-meta">Observation sociale · 15–25 min · Diff. 2/5</div>
+            <p>
+              Observe un moment où ton statut dit « en ligne » alors que tu te sens
+              absent·e, ou l’inverse. Décris précisément la scène (lieu, lumière, bruit).
+            </p>
+            <p>
+              Publie la description en une ou deux phrases, neutres, sans psychologie explicite.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S2-04</span>
+              <span class="tag">#EnLigne</span>
+            </div>
+          </div>
+
+          <div class="mission-block">
+            <div class="mission-id">S2-05</div>
+            <div class="mission-title">S nous regarde</div>
+            <div class="mission-meta">Meta · 10–20 min · Diff. 1/5</div>
+            <p>
+              Choisis un moment banal de ta journée (au travail, dans les transports, chez toi).
+              Imagine que S regarde la scène comme un game designer.
+            </p>
+            <p>
+              Écris une courte note adressée à S, en une ou deux phrases, à la manière du narrateur&nbsp;:
+              simple, descriptive, avec un léger décalage.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S2-05</span>
+              <span class="tag">#CherS</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Suivi minimal de la Saison 2</h2>
+          <p class="small">
+            Rien n’est envoyé en ligne automatiquement. Tu peux utiliser ces cases pour suivre ta progression.
+            Les données restent dans le stockage local de ton navigateur.
+          </p>
+
+          <div id="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" data-key="prologue" id="chk-prologue" />
+              <label for="chk-prologue">J’ai lu le prologue au moins une fois en entier.</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="mission" id="chk-mission" />
+              <label for="chk-mission">J’ai réalisé au moins une mission S2-0x.</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="trace" id="chk-trace" />
+              <label for="chk-trace">J’ai publié au moins une trace publique en lien avec le prologue.</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="journal" id="chk-journal" />
+              <label for="chk-journal">J’ai noté dans mon journal ce que ce texte dit de notre époque.</label>
+            </div>
+          </div>
+
+          <p id="progressText" class="small" style="margin-top:.5rem;">
+            Coche les cases pour voir comment la Saison 2 se cristallise dans ta vie.
+          </p>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      Page statique – tu peux la copier sur une clé USB, l’ouvrir hors-ligne, ou l’imprimer.
+      Les missions restent valables tant qu’il y aura des notifications, des agendas et des problèmes « à plus tard ».
+    </p>
+  </footer>
+
+  <script>
+    // Checklist locale pour la saison 2
+    const STORAGE_KEY_S2 = "projetS_saison2_checklist_v1";
+    const checklist = document.getElementById("checklist");
+    const progressText = document.getElementById("progressText");
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_S2) || "{}");
+      } catch {
+        return {};
+      }
+    }
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY_S2, JSON.stringify(state));
+    }
+
+    const state = loadState();
+
+    checklist.querySelectorAll("input[type=checkbox]").forEach(input => {
+      const key = input.dataset.key;
+      if (state[key]) input.checked = true;
+      input.addEventListener("change", () => {
+        state[key] = input.checked;
+        saveState(state);
+        updateProgress();
+      });
+    });
+
+    function updateProgress() {
+      const boxes = checklist.querySelectorAll("input[type=checkbox]");
+      let count = 0;
+      boxes.forEach(b => { if (b.checked) count++; });
+
+      if (count === 0) {
+        progressText.textContent = "Coche une première case quand tu auras lu ou agi. Avant, ce n’est qu’un texte.";
+      } else if (count === 1) {
+        progressText.textContent = "Tu as commencé à laisser le texte déborder dans ta vie. Continue.";
+      } else if (count === 2 || count === 3) {
+        progressText.textContent = "La Saison 2 est en cours : le prologue et tes journées commencent à se répondre.";
+      } else {
+        progressText.textContent = "Tu as traversé la Saison 2 : la mort du chat est devenue un prisme sur ton époque.";
+      }
+    }
+
+    updateProgress();
+  </script>
+</body>
+</html>
