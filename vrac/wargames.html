@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>WARGAME[S] · Hommage</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    :root {
+      --bg: #020308;
+      --bg-panel: #050910;
+      --border: #1f2933;
+      --green: #46ff9a;
+      --green-soft: #31c97a;
+      --amber: #ffd166;
+      --red: #ff5370;
+      --text: #e5f5ff;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      min-height:100vh;
+      background: radial-gradient(circle at top, #18212f 0, #020308 55%);
+      color:var(--text);
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0.6rem;
+    }
+    .shell {
+      width:100%;
+      max-width:960px;
+    }
+    .frame {
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.13);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.05), #050910);
+      box-shadow:0 18px 48px rgba(0,0,0,0.9);
+      padding:0.9rem;
+    }
+    header {
+      margin-bottom:0.6rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.4rem 1rem;
+      align-items:baseline;
+      justify-content:space-between;
+    }
+    h1 {
+      font-size:1rem;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:var(--green);
+      text-shadow:0 0 12px rgba(70,255,154,0.75);
+    }
+    .subtitle {
+      font-size:0.7rem;
+      color:#a9bcd7;
+      max-width:480px;
+    }
+    .status-pill {
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.35);
+      padding:0.2rem 0.8rem;
+      font-size:0.68rem;
+      text-transform:uppercase;
+      letter-spacing:0.18em;
+      display:flex;
+      align-items:center;
+      gap:0.35rem;
+    }
+    .led {
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:var(--amber);
+      box-shadow:0 0 12px var(--amber);
+    }
+
+    main {
+      display:grid;
+      grid-template-columns:minmax(0,1.6fr);
+      gap:0.7rem;
+    }
+    @media (min-width:800px){
+      main {
+        grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
+      }
+    }
+
+    /* Terminal */
+    .terminal {
+      background:#020308;
+      border-radius:14px;
+      border:1px solid var(--border);
+      padding:0.55rem 0.6rem;
+      box-shadow:0 12px 28px rgba(0,0,0,0.9);
+      display:flex;
+      flex-direction:column;
+      min-height:220px;
+      max-height:420px;
+    }
+    .terminal-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:0.35rem;
+      font-size:0.65rem;
+      color:#7da6b7;
+    }
+    .terminal-header span strong {
+      color:var(--green);
+    }
+    .terminal-screen {
+      flex:1;
+      background:#000;
+      border-radius:10px;
+      border:1px solid #172028;
+      padding:0.45rem 0.55rem;
+      overflow-y:auto;
+      color:var(--green-soft);
+      font-size:0.75rem;
+      line-height:1.45;
+      text-shadow:0 0 4px rgba(70,255,154,0.65);
+      position:relative;
+    }
+    .terminal-line {
+      white-space:pre-wrap;
+      word-wrap:break-word;
+    }
+    .terminal-prompt {
+      margin-top:0.2rem;
+      font-size:0.78rem;
+      color:var(--green);
+    }
+    .caret {
+      display:inline-block;
+      width:0.6ch;
+      background:var(--green);
+      margin-left:1px;
+      animation:blink 1s steps(2,start) infinite;
+    }
+    @keyframes blink {
+      0%,49%{ opacity:1; }
+      50%,100%{ opacity:0; }
+    }
+
+    .terminal-actions {
+      margin-top:0.35rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.3rem;
+      font-size:0.7rem;
+    }
+    .btn {
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.3);
+      padding:0.3rem 0.8rem;
+      background:radial-gradient(circle at top, rgba(255,255,255,0.12), rgba(0,0,0,0.95));
+      color:var(--text);
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      font-size:0.7rem;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:0.3rem;
+      transition:transform 0.06s ease-out, box-shadow 0.08s ease-out, border-color 0.06s ease-out;
+    }
+    .btn span.dot {
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 10px var(--green);
+    }
+    .btn.secondary span.dot {
+      background:var(--amber);
+      box-shadow:0 0 10px var(--amber);
+    }
+    .btn.danger span.dot {
+      background:var(--red);
+      box-shadow:0 0 10px var(--red);
+    }
+    .btn:hover {
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,0.7);
+      box-shadow:0 0 14px rgba(70,255,154,0.5), 0 6px 18px rgba(0,0,0,0.9);
+    }
+    .btn:active {
+      transform:translateY(0);
+      box-shadow:0 2px 6px rgba(0,0,0,0.9);
+    }
+
+    /* Zone de jeu (morpion) */
+    .panel-game {
+      background:var(--bg-panel);
+      border-radius:14px;
+      border:1px solid var(--border);
+      padding:0.6rem 0.7rem 0.65rem;
+      box-shadow:0 12px 28px rgba(0,0,0,0.9);
+      display:flex;
+      flex-direction:column;
+      gap:0.4rem;
+    }
+    .panel-title {
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:#9fbcd5;
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+    }
+    .panel-title span strong {
+      color:var(--amber);
+    }
+
+    .board {
+      margin-top:0.2rem;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:0.2rem;
+    }
+    .cell {
+      aspect-ratio:1 / 1;
+      border-radius:10px;
+      border:1px solid #1f2933;
+      background:#020308;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.6rem;
+      color:var(--green);
+      cursor:pointer;
+      box-shadow:inset 0 0 0 1px #050910;
+      transition:background 0.08s ease-out, transform 0.05s ease-out, box-shadow 0.08s ease-out;
+    }
+    .cell:hover {
+      background:#050e14;
+      box-shadow:0 0 8px rgba(70,255,154,0.3);
+      transform:translateY(-1px);
+    }
+    .cell.disabled {
+      cursor:default;
+      opacity:0.5;
+      box-shadow:none;
+      transform:none;
+    }
+    .cell.O {
+      color:var(--amber);
+      text-shadow:0 0 10px rgba(255,209,102,0.7);
+    }
+    .cell.X {
+      text-shadow:0 0 10px rgba(70,255,154,0.7);
+    }
+    .cell.win {
+      background:#123026;
+      box-shadow:0 0 14px rgba(70,255,154,0.8);
+    }
+
+    .game-info {
+      font-size:0.75rem;
+      color:#c4d4ea;
+      min-height:1.2em;
+    }
+
+    .game-buttons {
+      margin-top:0.2rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.35rem;
+      font-size:0.7rem;
+    }
+    .btn-small {
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.25);
+      padding:0.25rem 0.7rem;
+      background:#020308;
+      color:#dde9ff;
+      cursor:pointer;
+      font-size:0.68rem;
+      text-transform:uppercase;
+      letter-spacing:0.1em;
+      display:inline-flex;
+      align-items:center;
+      gap:0.25rem;
+      transition:background 0.06s ease-out, transform 0.05s ease-out, box-shadow 0.08s ease-out;
+    }
+    .btn-small:hover {
+      background:#06121a;
+      box-shadow:0 0 8px rgba(70,255,154,0.4);
+      transform:translateY(-1px);
+    }
+    .legend {
+      font-size:0.7rem;
+      color:#8495b3;
+      margin-top:0.1rem;
+      line-height:1.4;
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="frame">
+    <header>
+      <div>
+        <h1>WARGAME[S] · HOMMAGE</h1>
+        <p class="subtitle">
+          Terminal de simulation inspiré du film <em>WarGames</em> (1983).  
+          Connexion à un système trop puissant, pour un joueur trop curieux…
+        </p>
+      </div>
+      <div class="status-pill">
+        <span class="led"></span>
+        WOPR / ORGA-LINK · EN LIGNE
+      </div>
+    </header>
+
+    <main>
+      <!-- Terminal -->
+      <section class="terminal">
+        <div class="terminal-header">
+          <span>SYSTÈME : <strong>WOPR-ORGA</strong> · NORAD / CCPLC</span>
+          <span>MODE : SIMULATION DE CONFLIT</span>
+        </div>
+        <div class="terminal-screen" id="terminal"></div>
+        <div class="terminal-prompt">
+          &gt; JOUER À UN JEU ?<span class="caret"></span>
+        </div>
+        <div class="terminal-actions">
+          <button class="btn" id="btn-game">
+            <span class="dot"></span>MORPION
+          </button>
+          <button class="btn secondary" id="btn-war">
+            <span class="dot"></span>GUERRE THERMONUCLÉAIRE MONDIALE
+          </button>
+          <button class="btn danger" id="btn-clear">
+            <span class="dot"></span>EFFACER L'ÉCRAN
+          </button>
+        </div>
+      </section>
+
+      <!-- Morpion -->
+      <section class="panel-game">
+        <div class="panel-title">
+          <span>MORPION · MODE <strong>GLOBAL THERMONUCLEAR TICTACTOE</strong></span>
+        </div>
+        <div class="board" id="board">
+          <!-- Cases générées en JS -->
+        </div>
+        <div class="game-info" id="game-info"></div>
+        <div class="game-buttons">
+          <button class="btn-small" id="btn-reset-board">↺ Réinitialiser le morpion</button>
+          <button class="btn-small" id="btn-demo-war">☢ Rejouer une simulation de guerre</button>
+        </div>
+        <p class="legend">
+          • Tu es <strong>X</strong>. L'ordinateur est <strong>O</strong>.<br>
+          • Chaque partie alimentera le journal du terminal.  
+          • La machine essaie de comprendre si gagner est vraiment possible…
+        </p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  // ---------- Terminal ----------
+  const term = document.getElementById("terminal");
+
+  function logLine(text = "", options = {}) {
+    const line = document.createElement("div");
+    line.className = "terminal-line";
+    if (options.type === "warn") line.style.color = "#ffd166";
+    if (options.type === "err") line.style.color = "#ff5370";
+    if (options.type === "sys") line.style.color = "#46ff9a";
+    line.textContent = text;
+    term.appendChild(line);
+    term.scrollTop = term.scrollHeight;
+  }
+
+  function separator() {
+    logLine("─────────────────────────────────────────────");
+  }
+
+  function bootSequence() {
+    logLine("CONNEXION AU SYSTÈME WOPR-ORGA V3.1", {type:"sys"});
+    logLine("PROVENANCE : TERMINAL NON AUTORISÉ (LYCÉE / SALON ?)", {type:"warn"});
+    logLine("");
+    logLine("SCAN DES JEUX DISPONIBLES...");
+    logLine("  - MORPION (TIC-TAC-TOE)");
+    logLine("  - GUERRE THERMONUCLEAIRE MONDIALE");
+    separator();
+    logLine("SUGGESTION DU SYSTÈME : COMMENCER PAR UN JEU INOFFENSIF.");
+    logLine("");
+  }
+
+  bootSequence();
+
+  document.getElementById("btn-clear").addEventListener("click", () => {
+    term.innerHTML = "";
+    bootSequence();
+  });
+
+  document.getElementById("btn-game").addEventListener("click", () => {
+    separator();
+    logLine("> JEU SÉLECTIONNÉ : MORPION", {type:"sys"});
+    logLine("CONFIGURATION : GRILLE 3x3, JOUEUR HUMAIN = 'X', MACHINE = 'O'.");
+    logLine("OBJECTIF DE LA MACHINE : ÉVALUER LE CARACTÈRE GAGNANT OU NON DU CONFLIT.");
+    logLine("ACTION : JOUE UN COUP SUR LA GRILLE. LES RÉSULTATS SERONT ENREGISTRÉS.");
+  });
+
+  let warSimulationCount = 0;
+  function runWarSimulation(manualTrigger = false) {
+    warSimulationCount++;
+    separator();
+    logLine("> SIMULATION SÉLECTIONNÉE : GUERRE THERMONUCLEAIRE MONDIALE", {type:"sys"});
+    logLine("GÉNÉRATION DES SCÉNARIOS D'ATTAQUE...");
+
+    const scenarios = [
+      "USA → URSS : FRAPPE PRÉVENTIVE",
+      "URSS → USA : RIPOSTE MASSIVE",
+      "LANCEMENT ACCIDENTEL + ESCALADE",
+      "ERREUR D'INTERPRÉTATION RADAR",
+      "CYBER-ATTAQUE SUR SYSTÈMES D'ALERTE",
+      "CONFLIT RÉGIONAL DÉRAPANT",
+    ];
+    const outcomes = [
+      "DESTRUCTION MUTUELLE ASSURÉE.",
+      "HIVER NUCLÉAIRE MONDIAL.",
+      "EFFONDREMENT DES INFRASTRUCTURES CIVILES.",
+      "AUCUN VAINQUEUR IDENTIFIABLE.",
+      "SURVIVANTS : POPULATION CIVILE NON CONSULTÉE.",
+    ];
+
+    scenarios.forEach((s, i) => {
+      logLine("SCÉNARIO " + (i+1) + " : " + s);
+      logLine("  ➜ RÉSULTAT : " + outcomes[i % outcomes.length], {type:"warn"});
+    });
+
+    logLine("");
+    logLine("SYNTHÈSE STATISTIQUE : PROBABILITÉ DE VICTOIRE STABLE = 0%", {type:"err"});
+    logLine("                           NOMBRE DE PAYS DÉTRUITS = ~TOUS", {type:"err"});
+    logLine("");
+
+    if (warSimulationCount >= 2 || manualTrigger) {
+      logLine("RÉFLEXION DU SYSTÈME...", {type:"sys"});
+      logLine("CONCLUSION : JEU NON OPTIMAL.");
+      logLine("« UN JEU ÉTRANGE. LA SEULE FAÇON DE GAGNER EST DE NE PAS JOUER. »", {type:"warn"});
+    } else {
+      logLine("SUGGESTION : ESSAYER LE MORPION POUR COMPARER LA NATURE DU RISQUE.");
+    }
+  }
+
+  document.getElementById("btn-war").addEventListener("click", () => {
+    runWarSimulation(true);
+  });
+
+  document.getElementById("btn-demo-war").addEventListener("click", () => {
+    runWarSimulation(true);
+  });
+
+  // ---------- Morpion ----------
+  const boardEl = document.getElementById("board");
+  const infoEl = document.getElementById("game-info");
+
+  let board = Array(9).fill(null);   // null, "X", "O"
+  let currentPlayer = "X";
+  let gameOver = false;
+
+  function renderBoard() {
+    boardEl.innerHTML = "";
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement("button");
+      cell.className = "cell";
+      if (board[i]) {
+        cell.textContent = board[i];
+        cell.classList.add(board[i]);
+      }
+      if (gameOver || board[i]) {
+        cell.classList.add("disabled");
+      }
+      cell.dataset.index = i;
+      cell.addEventListener("click", onCellClick);
+      boardEl.appendChild(cell);
+    }
+  }
+
+  function setInfo(text) {
+    infoEl.textContent = text;
+  }
+
+  function checkWinner(b) {
+    const lines = [
+      [0,1,2],[3,4,5],[6,7,8], // rows
+      [0,3,6],[1,4,7],[2,5,8], // cols
+      [0,4,8],[2,4,6]          // diags
+    ];
+    for (const [a,b2,c] of lines) {
+      if (b[a] && b[a] === b[b2] && b[a] === b[c]) {
+        return {winner:b[a], line:[a,b2,c]};
+      }
+    }
+    if (b.every(x => x)) return {winner:null, line:[]}; // match nul
+    return null;
+  }
+
+  function highlightWin(line) {
+    const cells = boardEl.querySelectorAll(".cell");
+    line.forEach(idx => {
+      cells[idx].classList.add("win");
+    });
+  }
+
+  function playerMove(index) {
+    if (gameOver || board[index]) return;
+    board[index] = "X";
+    currentPlayer = "O";
+    updateAfterMove("HUMAIN");
+    setTimeout(computerMove, 250);
+  }
+
+  function computerMove() {
+    if (gameOver) return;
+    // Petite IA : gagner si possible, sinon bloquer, sinon centre, sinon coin, sinon aléatoire.
+    let move = findBestMove("O") ?? findBestMove("X") ?? chooseStrategicMove();
+    if (move == null) return;
+    board[move] = "O";
+    currentPlayer = "X";
+    updateAfterMove("MACHINE");
+  }
+
+  function findBestMove(playerMark) {
+    const b = board.slice();
+    const lines = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+    for (const [a,b2,c] of lines) {
+      const line = [b[a],b[b2],b[c]];
+      const countPlayer = line.filter(v => v === playerMark).length;
+      const countEmpty = line.filter(v => v === null).length;
+      if (countPlayer === 2 && countEmpty === 1) {
+        if (b[a] === null) return a;
+        if (b[b2] === null) return b2;
+        if (b[c] === null) return c;
+      }
+    }
+    return null;
+  }
+
+  function chooseStrategicMove() {
+    const free = board.map((v,i)=>v?null:i).filter(v=>v!==null);
+    if (!free.length) return null;
+    const center = 4;
+    if (board[center] === null) return center;
+    const corners = [0,2,6,8].filter(i => board[i] === null);
+    if (corners.length) return corners[Math.floor(Math.random()*corners.length)];
+    return free[Math.floor(Math.random()*free.length)];
+  }
+
+  function updateAfterMove(who) {
+    renderBoard();
+    const result = checkWinner(board);
+    if (result) {
+      gameOver = true;
+      if (result.winner === "X") {
+        setInfo("Résultat : tu as gagné cette manche.");
+        highlightWin(result.line);
+        separator();
+        logLine("RÉSULTAT PARTIE : VICTOIRE JOUEUR HUMAIN AU MORPION.", {type:"warn"});
+        logLine("OBSERVATION : JEU À RISQUE LIMITÉ. DÉFAITE ACCEPTABLE POUR LA MACHINE.");
+      } else if (result.winner === "O") {
+        setInfo("Résultat : la machine gagne… pour cette fois.");
+        highlightWin(result.line);
+        separator();
+        logLine("RÉSULTAT PARTIE : VICTOIRE DE LA MACHINE.", {type:"sys"});
+        logLine("OBSERVATION : LE JOUEUR HUMAIN A PERDU, MAIS LE MONDE EXISTE TOUJOURS.");
+      } else {
+        setInfo("Match nul. Personne ne gagne, personne ne perd vraiment.");
+        separator();
+        logLine("RÉSULTAT PARTIE : MATCH NUL.", {type:"sys"});
+        logLine("INTERPRÉTATION : CERTAINS JEUX NE PRODUISENT PAS DE GAGNANT NET.");
+      }
+      logLine("");
+    } else {
+      if (who === "HUMAIN") {
+        setInfo("À la machine de jouer…");
+      } else {
+        setInfo("À toi de jouer. Cherche une combinaison gagnante.");
+      }
+
+      // Après plusieurs parties, la machine commence à philosopher
+      const filledCount = board.filter(Boolean).length;
+      if (filledCount >= 3 && !gameOver) {
+        logLine("MOUVEMENT ENREGISTRÉ. ÉCHANTILLON SUPPLÉMENTAIRE POUR L'ANALYSE.");
+      }
+    }
+  }
+
+  function onCellClick(e) {
+    const idx = parseInt(e.currentTarget.dataset.index, 10);
+    if (currentPlayer !== "X") return;
+    playerMove(idx);
+  }
+
+  function resetBoard() {
+    board = Array(9).fill(null);
+    currentPlayer = "X";
+    gameOver = false;
+    renderBoard();
+    setInfo("Nouvelle manche. Commence par placer un 'X' quelque part.");
+  }
+
+  document.getElementById("btn-reset-board").addEventListener("click", () => {
+    separator();
+    logLine("> RÉINITIALISATION DU MORPION.", {type:"sys"});
+    resetBoard();
+  });
+
+  // Initialisation
+  renderBoard();
+  setInfo("Commence par jouer une case. Tu es 'X'.");
+
+// Option : lancer une petite simulation de guerre automatiquement après quelques secondes
+  setTimeout(() => {
+    logLine("");
+    logLine("ASTUCE : TU PEUX LANCER UNE SIMULATION DE GUERRE POUR COMPARER LES ISSUES.", {type:"warn"});
+  }, 3000);
+</script>
+</body>
+</html>
