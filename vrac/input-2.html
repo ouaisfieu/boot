@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kali Chrome – Mini navigateur offline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --accent: #22c55e;
+      --accent2: #0ea5e9;
+      --accent3: #f97316;
+      --muted: #6b7280;
+      --border: #1f2937;
+      --shadow: 0 18px 48px rgba(0,0,0,0.85);
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+
+    * { box-sizing:border-box; margin:0; padding:0; }
+
+    html, body {
+      height:100%;
+    }
+
+    body {
+      font-family:var(--sans);
+      background: radial-gradient(circle at top, #020617 0, #000 55%);
+      color:#e5e7eb;
+    }
+
+    .window {
+      position:fixed;
+      inset:10px;
+      margin:auto;
+      max-width:1220px;
+      min-width:280px;
+      max-height:calc(100% - 20px);
+      border-radius:16px;
+      border:1px solid #111827;
+      background:radial-gradient(circle at top, #020617 0, #020617 60%);
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    /* TITRE / BARRE FAÇON FENÊTRE KALI */
+
+    .titlebar {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:6px 10px;
+      background:linear-gradient(90deg,#020617,#0b1120);
+      border-bottom:1px solid #111827;
+    }
+
+    .title-left {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+
+    .traffic {
+      display:flex;
+      gap:5px;
+    }
+
+    .dot {
+      width:10px;
+      height:10px;
+      border-radius:999px;
+    }
+
+    .dot.red { background:#ef4444; }
+    .dot.yellow { background:#facc15; }
+    .dot.green { background:#22c55e; }
+
+    .logo {
+      font-family:var(--mono);
+      font-size:0.86rem;
+      color:#e5e7eb;
+    }
+
+    .logo span.k {
+      color:var(--accent2);
+    }
+    .logo span.c {
+      color:var(--accent);
+    }
+
+    .title-right {
+      font-family:var(--mono);
+      font-size:0.72rem;
+      color:#4b5563;
+    }
+
+    /* TOOLBAR NAVIGATION */
+
+    .toolbar {
+      padding:6px 8px;
+      background:#020617;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      align-items:center;
+    }
+
+    .nav-buttons {
+      display:flex;
+      gap:4px;
+      align-items:center;
+    }
+
+    .btn {
+      min-width:26px;
+      height:26px;
+      border-radius:999px;
+      border:1px solid #1e293b;
+      background:#020617;
+      color:#9ca3af;
+      font-size:0.8rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:background .08s,border-color .08s,transform .06s,color .08s;
+    }
+
+    .btn span {
+      transform:translateY(-1px);
+    }
+
+    .btn:hover {
+      background:#0f172a;
+      border-color:#374151;
+      color:#e5e7eb;
+      transform:translateY(-1px);
+    }
+
+    .btn:active {
+      transform:translateY(0);
+    }
+
+    .btn.primary {
+      border-color:#22c55e;
+      color:#bbf7d0;
+    }
+
+    .address-wrapper {
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      min-width:160px;
+    }
+
+    .lock {
+      width:18px;
+      height:18px;
+      border-radius:999px;
+      border:1px solid #22c55e;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.7rem;
+      color:#22c55e;
+    }
+
+    .bar {
+      flex:1;
+      height:30px;
+      border-radius:999px;
+      border:1px solid #1f2937;
+      background:#020617;
+      display:flex;
+      align-items:center;
+      padding:0 8px;
+      gap:6px;
+      box-shadow:0 0 0 1px rgba(15,23,42,0.7);
+    }
+
+    #address {
+      border:none;
+      background:transparent;
+      outline:none;
+      flex:1;
+      font-size:0.84rem;
+      color:#e5e7eb;
+      font-family:var(--mono);
+    }
+
+    #address::placeholder {
+      color:#6b7280;
+    }
+
+    .protocol-pill {
+      font-family:var(--mono);
+      font-size:0.7rem;
+      padding:2px 6px;
+      border-radius:999px;
+      border:1px solid #1e293b;
+      color:#4ade80;
+      background:#020617;
+    }
+
+    .security-hint {
+      font-size:0.7rem;
+      color:#6b7280;
+      font-family:var(--mono);
+      margin-left:2px;
+    }
+
+    /* CONTENU */
+
+    .content {
+      flex:1;
+      background:#020617;
+      position:relative;
+    }
+
+    iframe {
+      border:none;
+      width:100%;
+      height:100%;
+      background:#020617;
+    }
+
+    .start-screen {
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(circle at top, #020617 0, #000 60%);
+      pointer-events:none;
+    }
+
+    .start-inner {
+      max-width:420px;
+      padding:14px 14px 12px;
+      border-radius:18px;
+      border:1px solid #1e293b;
+      background:rgba(15,23,42,0.96);
+      box-shadow:0 18px 40px rgba(0,0,0,0.95);
+      text-align:left;
+      pointer-events:auto;
+    }
+
+    .start-title {
+      font-family:var(--mono);
+      font-size:0.9rem;
+      margin-bottom:4px;
+    }
+
+    .start-title span {
+      color:var(--accent);
+    }
+
+    .start-text {
+      font-size:0.78rem;
+      color:#9ca3af;
+      margin-bottom:6px;
+    }
+
+    .start-list {
+      font-size:0.78rem;
+      color:#9ca3af;
+      margin-left:16px;
+      margin-bottom:6px;
+    }
+
+    .start-list li { margin-bottom:3px; }
+
+    .start-note {
+      font-size:0.74rem;
+      color:#6b7280;
+      margin-top:3px;
+    }
+
+    .start-btns {
+      margin-top:8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+
+    .small-btn {
+      padding:5px 8px;
+      border-radius:999px;
+      border:1px solid #1f2937;
+      background:#020617;
+      color:#9ca3af;
+      font-size:0.74rem;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .small-btn:hover {
+      border-color:#22c55e;
+      color:#e5e7eb;
+    }
+
+    .statusbar {
+      padding:4px 8px 5px;
+      background:#020617;
+      border-top:1px solid var(--border);
+      font-size:0.72rem;
+      font-family:var(--mono);
+      color:#6b7280;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:6px;
+    }
+
+    .status-sec {
+      color:#22c55e;
+    }
+
+    .status-warn {
+      color:#f97316;
+    }
+
+    .hidden {
+      display:none;
+    }
+  </style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="title-left">
+      <div class="traffic">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="logo">
+        <span class="k">Kali</span> <span class="c">Chrome</span>
+      </div>
+    </div>
+    <div class="title-right" id="title-right">
+      idle · waiting for URL…
+    </div>
+  </div>
+
+  <!-- BARRE D'OUTILS -->
+  <div class="toolbar">
+    <div class="nav-buttons">
+      <button class="btn" type="button" id="btn-back" title="Retour">
+        <span>←</span>
+      </button>
+      <button class="btn" type="button" id="btn-forward" title="Avancer">
+        <span>→</span>
+      </button>
+      <button class="btn primary" type="button" id="btn-reload" title="Recharger">
+        ⟳
+      </button>
+    </div>
+
+    <div class="address-wrapper">
+      <div class="lock" title="Ce n’est PAS un VPN, juste une iframe.">
+        🔒
+      </div>
+      <div class="bar">
+        <span class="protocol-pill" id="proto-pill">https://</span>
+        <input id="address" type="text" spellcheck="false"
+               placeholder="tape une adresse (ex. example.com, https://...)">
+      </div>
+    </div>
+
+    <span class="security-hint">
+      ⚠ tu restes dans ton vrai navigateur (pas d’anonymat magique)
+    </span>
+  </div>
+
+  <!-- CONTENU : VIEWER -->
+  <div class="content">
+    <iframe id="viewer" src="about:blank" referrerpolicy="no-referrer"></iframe>
+
+    <div class="start-screen" id="start-screen">
+      <div class="start-inner">
+        <div class="start-title">
+          [ <span>Kali Chrome</span> ] mini-navigateur statique
+        </div>
+        <div class="start-text">
+          Ce fichier est juste une enveloppe HTML/JS qui embarque un site dans une iframe.
+          Ça ressemble à un navigateur, mais :
+        </div>
+        <ul class="start-list">
+          <li>ça utilise la connexion de ton navigateur actuel ;</li>
+          <li>ça ne masque pas ton IP ni tes cookies ;</li>
+          <li>certains sites refusent d’être affichés (sécurité X-Frame-Options / CSP).</li>
+        </ul>
+        <div class="start-note">
+          Pour “explorer en tranquillité”, ça veut dire surtout : visuellement à part,
+          dans un cadre type Kali, mais pas “invisible sur Internet”.
+        </div>
+
+        <div class="start-btns">
+          <button class="small-btn" type="button"
+                  onclick="quickOpen('https://example.com')">
+            Ouvrir un site de test
+          </button>
+          <button class="small-btn" type="button"
+                  onclick="quickOpen('https://duckduckgo.com')">
+            Ouvrir un moteur de recherche
+          </button>
+          <button class="small-btn" type="button"
+                  onclick="quickOpen('https://www.debian.org')">
+            Ouvrir debian.org
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="statusbar">
+    <div id="status-left">
+      ready · type URL + Entrée
+    </div>
+    <div id="status-right">
+      <span class="status-sec">sandbox: iframe</span>
+      · <span class="status-warn">pas un VPN, pas Tor</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Mini “navigateur” : gestion d’historique basique + iframe
+
+  const addressInput = document.getElementById("address");
+  const viewer = document.getElementById("viewer");
+  const btnBack = document.getElementById("btn-back");
+  const btnForward = document.getElementById("btn-forward");
+  const btnReload = document.getElementById("btn-reload");
+  const statusLeft = document.getElementById("status-left");
+  const titleRight = document.getElementById("title-right");
+  const startScreen = document.getElementById("start-screen");
+  const protoPill = document.getElementById("proto-pill");
+
+  let historyStack = [];
+  let historyIndex = -1;
+
+  function normaliseUrl(input) {
+    let url = input.trim();
+    if (!url) return null;
+
+    // Si l’utilisateur tape juste "example.com" on préfixe
+    if (!/^https?:\/\//i.test(url)) {
+      url = "https://" + url;
+    }
+    return url;
+  }
+
+  function updateButtons() {
+    btnBack.disabled = historyIndex <= 0;
+    btnForward.disabled = historyIndex < 0 || historyIndex >= historyStack.length - 1;
+
+    btnBack.style.opacity = btnBack.disabled ? 0.4 : 1;
+    btnForward.style.opacity = btnForward.disabled ? 0.4 : 1;
+  }
+
+  function setStatus(text) {
+    statusLeft.textContent = text;
+  }
+
+  function updateProtoPill(url) {
+    if (!url) {
+      protoPill.textContent = "https://";
+      protoPill.style.color = "#4ade80";
+      return;
+    }
+    if (url.startsWith("https://")) {
+      protoPill.textContent = "https://";
+      protoPill.style.color = "#4ade80";
+    } else if (url.startsWith("http://")) {
+      protoPill.textContent = "http://";
+      protoPill.style.color = "#f97316";
+    } else {
+      protoPill.textContent = "url:";
+      protoPill.style.color = "#22c55e";
+    }
+  }
+
+  function loadUrl(url, pushToHistory = true) {
+    if (!url) return;
+    startScreen.classList.add("hidden");
+    viewer.src = url;
+    addressInput.value = url;
+    updateProtoPill(url);
+    setStatus("loading " + url + " …");
+    titleRight.textContent = "loading…";
+
+    if (pushToHistory) {
+      // Coupe tout ce qui est devant si on navigue après être revenu en arrière
+      if (historyIndex < historyStack.length - 1) {
+        historyStack = historyStack.slice(0, historyIndex + 1);
+      }
+      historyStack.push(url);
+      historyIndex = historyStack.length - 1;
+    }
+    updateButtons();
+  }
+
+  function quickOpen(url) {
+    loadUrl(url, true);
+  }
+
+  // Navigation
+  btnBack.addEventListener("click", () => {
+    if (historyIndex > 0) {
+      historyIndex--;
+      const url = historyStack[historyIndex];
+      loadUrl(url, false);
+    }
+  });
+
+  btnForward.addEventListener("click", () => {
+    if (historyIndex < historyStack.length - 1) {
+      historyIndex++;
+      const url = historyStack[historyIndex];
+      loadUrl(url, false);
+    }
+  });
+
+  btnReload.addEventListener("click", () => {
+    if (historyIndex >= 0) {
+      const url = historyStack[historyIndex];
+      // On recharge l’iframe
+      viewer.src = url;
+      setStatus("reload " + url + " …");
+      titleRight.textContent = "reloading…";
+    }
+  });
+
+  addressInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const url = normaliseUrl(addressInput.value);
+      if (!url) {
+        setStatus("aucune URL");
+        return;
+      }
+      loadUrl(url, true);
+    }
+  });
+
+  // Mise à jour de statut lorsque l’iframe change
+  viewer.addEventListener("load", () => {
+    const current = historyStack[historyIndex] || "about:blank";
+    setStatus("loaded " + current);
+    titleRight.textContent = current;
+  });
+
+  // Raccourci : remplir avec un exemple si on clique deux fois dans l’address vide
+  let clickTimer;
+  addressInput.addEventListener("click", () => {
+    if (clickTimer) {
+      clearTimeout(clickTimer);
+      clickTimer = null;
+      if (!addressInput.value.trim()) {
+        addressInput.value = "https://example.com";
+      }
+      addressInput.select();
+      return;
+    }
+    clickTimer = setTimeout(() => {
+      clickTimer = null;
+    }, 250);
+  });
+
+  // Au démarrage
+  updateButtons();
+  updateProtoPill("");
+</script>
+</body>
+</html>
