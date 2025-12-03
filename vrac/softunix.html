@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulateur · Du bouton ON à la première recherche</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #02081b;
+      --card: #020817;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.25);
+      --accent-2: #f97316;
+      --border: rgba(148,163,184,0.45);
+      --shadow: 0 18px 40px rgba(15,23,42,0.96);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body {
+      position: relative;
+      padding: 10px 10px 20px;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    header.hero {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 0 0, rgba(244,114,182,0.35), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.18), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 40%, #020817 100%);
+      box-shadow: var(--shadow);
+      padding: 10px 12px 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .hero-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 240px;
+    }
+
+    .hero-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 25% 0, #fee2e2, #f97316 40%, #a855f7 80%);
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 30px rgba(244,114,182,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 26px;
+      color: #1b0f28;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hero-title {
+      font-size: 17px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .hero-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .hero-sub strong {
+      color: var(--accent);
+    }
+
+    .hero-right {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-soft);
+      align-items: flex-end;
+    }
+
+    .hero-right span.code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+    }
+
+    .hero-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: flex-end;
+    }
+
+    .step-pill {
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.95);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .step-pill span.num {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.95);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .step-pill.active {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      box-shadow: 0 0 10px rgba(34,197,94,0.7);
+    }
+
+    @media (max-width: 720px) {
+      .hero-right {
+        align-items: flex-start;
+      }
+    }
+
+    /* MAIN CARD */
+
+    .main-card {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), #020617);
+      box-shadow: var(--shadow);
+      padding: 10px 10px 8px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      border-radius: 16px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(2,6,23,0.96);
+      padding: 8px 9px 7px;
+    }
+
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .panel-title span.icon {
+      font-size: 14px;
+    }
+
+    /* Étapes écrans */
+
+    .step-screen {
+      display: none;
+    }
+
+    .step-screen.active {
+      display: block;
+    }
+
+    /* Étape 0 : PC éteint */
+
+    .power-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      text-align: center;
+      background: radial-gradient(circle at center, #020617, #000);
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 18px 10px;
+    }
+
+    .power-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 999px;
+      border: 4px solid rgba(148,163,184,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      cursor: pointer;
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 0 20px rgba(15,23,42,1);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+    }
+
+    .power-circle:hover {
+      border-color: var(--accent);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 0 26px rgba(34,197,94,0.8);
+      transform: scale(1.02);
+    }
+
+    .power-circle span {
+      font-size: 40px;
+      color: var(--accent);
+    }
+
+    .power-text {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    /* Étape 1 : BIOS */
+
+    .bios-terminal {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      background: radial-gradient(circle at top left, #020617, #000);
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 7px 8px 6px;
+      color: #bbf7d0;
+      max-height: 230px;
+      overflow-y: auto;
+    }
+
+    .bios-line {
+      margin-bottom: 2px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .bios-line.cmd { color: #4ade80; }
+    .bios-line.info { color: var(--text-soft); }
+    .bios-line.ok   { color: #22c55e; }
+    .bios-line.warn { color: #facc15; }
+
+    .bios-controls {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    /* Étape 2 : Boot OS */
+
+    .boot-screen {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top, #020617, #000);
+      padding: 18px 8px 12px;
+      text-align: center;
+      min-height: 220px;
+    }
+
+    .boot-logo {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .boot-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 25% 0, #fef9c3, #f97316 40%, #a855f7 80%);
+      box-shadow:
+        0 0 0 3px rgba(2,6,23,1),
+        0 0 40px rgba(244,114,182,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+
+    .boot-title {
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .boot-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .boot-bar-wrap {
+      margin: 10px auto 0;
+      max-width: 260px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      overflow: hidden;
+    }
+
+    .boot-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #f97316, #a855f7, #22c55e);
+      transition: width 0.2s ease-out;
+    }
+
+    .boot-tip {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+
+    /* Étape 3 : Installation */
+
+    .wizard {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(2,6,23,0.96);
+      padding: 8px 9px 7px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .wizard-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .field-row label {
+      flex: 0 0 auto;
+      min-width: 90px;
+    }
+
+    .field-row input {
+      flex: 1;
+      padding: 3px 5px;
+      border-radius: 6px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: #020617;
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .field-row input:focus {
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.6);
+      border-color: var(--accent);
+    }
+
+    .install-status {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    /* Étape 4 : Bureau */
+
+    .desktop {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top, #0f172a, #020617 60%, #000 100%);
+      padding: 8px 9px 34px;
+      position: relative;
+      min-height: 220px;
+      overflow: hidden;
+    }
+
+    .desktop-icons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .desk-icon {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .desk-icon-graphic {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 30% 0, #fef3c7, #f97316 45%, #a855f7 80%);
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        0 0 24px rgba(244,114,182,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    .desk-icon-label {
+      font-size: 11px;
+      color: #e5e7eb;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    }
+
+    .taskbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 26px;
+      background: rgba(15,23,42,0.95);
+      border-top: 1px solid rgba(148,163,184,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .taskbar-left,
+    .taskbar-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .start-btn {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.98);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .start-btn span.logo {
+      font-size: 13px;
+    }
+
+    /* Étape 5 : Navigateur + Google */
+
+    .browser {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.98);
+      padding: 6px 7px 6px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .browser-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .b-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,1);
+    }
+
+    .b-dot.red    { background: #ef4444; }
+    .b-dot.yellow { background: #eab308; }
+    .b-dot.green  { background: #22c55e; }
+
+    .browser-title {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .browser-url {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+      color: var(--text-soft);
+    }
+
+    .browser-body {
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(2,6,23,0.96);
+      padding: 10px 8px 8px;
+      text-align: center;
+    }
+
+    .google-logo {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .google-logo span:nth-child(1) { color: #4285F4; }
+    .google-logo span:nth-child(2) { color: #EA4335; }
+    .google-logo span:nth-child(3) { color: #FBBC05; }
+    .google-logo span:nth-child(4) { color: #4285F4; }
+    .google-logo span:nth-child(5) { color: #34A853; }
+    .google-logo span:nth-child(6) { color: #EA4335; }
+
+    .search-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      max-width: 340px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: #020617;
+    }
+
+    .search-input-wrap span.icon {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    #searchInput {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .search-btn {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.98);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .results {
+      text-align: left;
+      max-width: 480px;
+      margin: 0 auto;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .result-item {
+      margin-bottom: 6px;
+    }
+
+    .result-title {
+      font-size: 12px;
+      color: #93c5fd;
+      margin-bottom: 1px;
+    }
+
+    .result-link {
+      font-size: 10px;
+      color: #22c55e;
+      margin-bottom: 1px;
+    }
+
+    .result-snippet {
+      font-size: 11px;
+    }
+
+    /* PANNEAU EXPLICATION */
+
+    .explain-panel p {
+      margin: 0 0 5px;
+    }
+
+    .explain-panel ul {
+      margin: 0 0 5px 16px;
+      padding: 0;
+    }
+
+    .explain-panel li {
+      margin-bottom: 3px;
+    }
+
+    .objectifs-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+
+    .tip {
+      font-size: 11px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    /* CONTROLES */
+
+    .controls {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .btn {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      background: radial-gradient(circle at 0 0, var(--accent-soft), #020617);
+      box-shadow: 0 0 10px rgba(34,197,94,0.6);
+    }
+
+    .btn.disabled {
+      opacity: 0.4;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    footer {
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--text-soft);
+      opacity: 0.85;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="shell">
+    <header class="hero">
+      <div class="hero-left">
+        <div class="hero-icon">🦄</div>
+        <div class="hero-text">
+          <div class="hero-title">Du bouton ON à Google</div>
+          <div class="hero-sub">
+            Parcours interactif <strong>grand débutant</strong> : on allume l’ordi,
+            on passe par le BIOS, on démarre l’OS… et on finit par une recherche.
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <span class="code">/sim/boot-v2.html</span>
+        <div class="hero-steps">
+          <div class="step-pill active" data-step-pill="0">
+            <span class="num">1</span> Bouton ON
+          </div>
+          <div class="step-pill" data-step-pill="1">
+            <span class="num">2</span> BIOS
+          </div>
+          <div class="step-pill" data-step-pill="2">
+            <span class="num">3</span> Démarrage
+          </div>
+          <div class="step-pill" data-step-pill="3">
+            <span class="num">4</span> Installation
+          </div>
+          <div class="step-pill" data-step-pill="4">
+            <span class="num">5</span> Bureau
+          </div>
+          <div class="step-pill" data-step-pill="5">
+            <span class="num">6</span> Recherche
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-card">
+      <div class="layout">
+        <!-- ÉCRAN -->
+        <section class="panel">
+          <div class="panel-title">
+            <span class="icon">🖥️</span>
+            <span>Écran de l’ordinateur</span>
+          </div>
+
+          <!-- Step 0 : power -->
+          <div class="step-screen active" data-step="0">
+            <div class="power-screen">
+              <div class="power-circle" id="btnPower">
+                <span>⏻</span>
+              </div>
+              <div class="power-text">
+                Ton PC est éteint.<br />
+                Clique sur le bouton pour l’allumer.
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 1 : BIOS -->
+          <div class="step-screen" data-step="1">
+            <div class="bios-terminal" id="biosTerminal">
+              <div class="bios-line info">Unicorn-PC v1.0 · BIOS simplifié</div>
+              <div class="bios-line info">Appuie sur le bouton en-dessous pour dérouler les tests de démarrage.</div>
+            </div>
+            <div class="bios-controls">
+              <span id="biosLabel">Étape BIOS 1/4 : vérification du matériel…</span>
+              <button class="btn primary" id="btnBiosNext">Lancer le test suivant</button>
+            </div>
+          </div>
+
+          <!-- Step 2 : Boot OS -->
+          <div class="step-screen" data-step="2">
+            <div class="boot-screen">
+              <div class="boot-logo">
+                <div class="boot-icon">🦄</div>
+                <div class="boot-title">UNICORN OS</div>
+                <div class="boot-sub">Démarrage magique en cours…</div>
+              </div>
+              <div class="boot-bar-wrap">
+                <div class="boot-bar" id="bootBar"></div>
+              </div>
+              <div class="boot-tip" id="bootTip">Chargement du noyau (le cœur du système)…</div>
+            </div>
+          </div>
+
+          <!-- Step 3 : Installation OS -->
+          <div class="step-screen" data-step="3">
+            <div class="wizard">
+              <div class="wizard-row">
+                <div class="field-row">
+                  <label>Langue :</label>
+                  <input type="text" value="Français" readonly />
+                </div>
+                <div class="field-row">
+                  <label>Pays :</label>
+                  <input type="text" value="Belgique (exemple)" readonly />
+                </div>
+              </div>
+              <div class="wizard-row">
+                <div class="field-row">
+                  <label>Nom du PC :</label>
+                  <input type="text" id="pcName" value="UNICORN-PC" />
+                </div>
+                <div class="field-row">
+                  <label>Ton prénom :</label>
+                  <input type="text" id="userName" placeholder="Optionnel : pour le compte utilisateur" />
+                </div>
+              </div>
+              <div class="wizard-row">
+                <button class="btn primary" id="btnInstall">Installer Unicorn OS</button>
+                <div class="install-status" id="installStatus">Prêt à installer (simulation).</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 : Bureau -->
+          <div class="step-screen" data-step="4">
+            <div class="desktop">
+              <div class="desktop-icons">
+                <div class="desk-icon" id="iconBrowser">
+                  <div class="desk-icon-graphic">🌐</div>
+                  <div class="desk-icon-label">Navigateur Licorne</div>
+                </div>
+                <div class="desk-icon">
+                  <div class="desk-icon-graphic">📁</div>
+                  <div class="desk-icon-label">Dossiers</div>
+                </div>
+              </div>
+              <div class="taskbar">
+                <div class="taskbar-left">
+                  <div class="start-btn" id="startBtn">
+                    <span class="logo">🦄</span> Démarrer
+                  </div>
+                  <span id="startHint">Clique sur le navigateur pour aller sur Internet.</span>
+                </div>
+                <div class="taskbar-right">
+                  <span>🔊</span>
+                  <span>📶</span>
+                  <span>10:42</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5 : Navigateur + Google -->
+          <div class="step-screen" data-step="5">
+            <div class="browser">
+              <div class="browser-header">
+                <div class="browser-dots">
+                  <div class="b-dot red"></div>
+                  <div class="b-dot yellow"></div>
+                  <div class="b-dot green"></div>
+                </div>
+                <div class="browser-title">Navigateur Licorne · Onglet 1</div>
+                <div class="browser-url">https://www.google.com/</div>
+              </div>
+              <div class="browser-body">
+                <div class="google-logo">
+                  <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+                </div>
+                <div class="search-row">
+                  <div class="search-input-wrap">
+                    <span class="icon">🔍</span>
+                    <input id="searchInput" type="text" placeholder="Tape ta première recherche…" />
+                  </div>
+                  <button class="search-btn" id="btnSearch">Rechercher</button>
+                </div>
+                <div class="results" id="resultsBox">
+                  <div style="font-size:11px;color:var(--text-soft);">
+                    Tape quelque chose (par ex. : <em>comment un ordinateur démarre</em>) et on simule les résultats.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPLICATIONS -->
+        <section class="panel explain-panel">
+          <div class="panel-title">
+            <span class="icon">🧠</span>
+            <span>Ce qui se passe vraiment (simplifié)</span>
+          </div>
+          <div id="explainContent"></div>
+          <div class="objectifs-title">Objectifs de cette étape</div>
+          <div id="objectifsContent"></div>
+        </section>
+      </div>
+
+      <div class="controls">
+        <div id="hintStep">Étape 1/6 · On allume la machine.</div>
+        <div>
+          <button class="btn" id="btnPrev">← Étape précédente</button>
+          <button class="btn primary" id="btnNext">Étape suivante →</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      Tu peux utiliser cette page comme mini-cours : refaire la séquence, faire cliquer quelqu’un d’autre,
+      et commenter chaque étape à voix haute.
+    </footer>
+  </div>
+
+  <script>
+    // Texte pédagogique par étape
+    const stepsText = [
+      {
+        hint: "Étape 1/6 · On allume la machine.",
+        explain: `
+          <p>Avant tout, un ordinateur éteint est juste… une boîte silencieuse.</p>
+          <p>Quand tu appuies sur le bouton <strong>ON</strong> :</p>
+          <ul>
+            <li>tu donnes l’ordre à l’alimentation de réveiller les composants,</li>
+            <li>la carte mère commence à exécuter un tout petit programme caché à l’intérieur : le BIOS.</li>
+          </ul>
+          <p>On ne voit encore rien de très graphique, mais c’est le « réveil » de la machine.</p>
+          <div class="tip">Ici, tu dois <strong>cliquer sur le bouton d’alimentation</strong> pour lancer la suite.</div>
+        `,
+        objectifs: `
+          <ul>
+            <li>Comprendre qu’avant Windows, Linux, etc., il y a simplement un bouton ON/OFF.</li>
+            <li>Associer le bouton d’alimentation au « réveil » du PC.</li>
+          </ul>
+        `
+      },
+      {
+        hint: "Étape 2/6 · Le BIOS vérifie que tout va bien.",
+        explain: `
+          <p>Le <strong>BIOS</strong> (ou UEFI) est un petit programme de base stocké sur la carte mère.</p>
+          <p>Il fait plusieurs choses automatiquement :</p>
+          <ul>
+            <li>teste la mémoire (RAM), le disque, le clavier…</li>
+            <li>vérifie qu’il y a bien un endroit d’où démarrer (un disque, une clé USB…)</li>
+            <li>prépare le passage de relais au système d’exploitation.</li>
+          </ul>
+          <p>Dans cette simulation, tu déclenches ces tests en appuyant sur le bouton.</p>
+        `,
+        objectifs: `
+          <ul>
+            <li>Voir que le BIOS vérifie le matériel avant de démarrer le système.</li>
+            <li>Retenir que cette étape est automatique, même si tu ne vois pas tout en vrai.</li>
+          </ul>
+        `
+      },
+      {
+        hint: "Étape 3/6 · L’OS démarre (écran avec logo).",
+        explain: `
+          <p>Une fois que le BIOS a fait ses tests, il lance le <strong>système d’exploitation</strong> (OS).</p>
+          <p>Dans la vraie vie, tu vois souvent :</p>
+          <ul>
+            <li>un logo (Windows, Apple, une distribution Linux…)</li>
+            <li>une barre ou un cercle de chargement.</li>
+          </ul>
+          <p>L’OS charge alors le <strong>noyau</strong> (le cœur du système) puis ses services (souris, réseau, son, etc.).</p>
+        `,
+        objectifs: `
+          <ul>
+            <li>Relier l’écran de chargement avec logo au démarrage du système d’exploitation.</li>
+            <li>Savoir que derrière la barre de progression, il y a plein de petits programmes qui se préparent.</li>
+          </ul>
+        `
+      },
+      {
+        hint: "Étape 4/6 · Installation du système (version simplifiée).",
+        explain: `
+          <p>Quand on installe un OS pour la première fois :</p>
+          <ul>
+            <li>on choisit la langue et le pays,</li>
+            <li>on donne un nom à la machine,</li>
+            <li>on crée au moins un utilisateur (toi).</li>
+          </ul>
+          <p>Ici, on simule cette installation : tu peux mettre ton prénom et cliquer sur « Installer ».</p>
+        `,
+        objectifs: `
+          <ul>
+            <li>Comprendre qu’un OS ne « tombe pas du ciel » : il s’installe.</li>
+            <li>Repérer les infos de base demandées (langue, pays, utilisateur).</li>
+          </ul>
+        `
+      },
+      {
+        hint: "Étape 5/6 · Le bureau : ton terrain de jeu.",
+        explain: `
+          <p>Le <strong>bureau</strong>, c’est l’endroit où tu arrives après le démarrage :</p>
+          <ul>
+            <li>des icônes pour lancer des programmes (navigateur, dossiers, corbeille…)</li>
+            <li>une barre en bas avec un menu « Démarrer » et l’heure,</li>
+            <li>un fond d’écran qui peut être très sérieux ou très licorne.</li>
+          </ul>
+          <p>Pour aller sur Internet, tu lances un programme spécial : le <strong>navigateur</strong>.</p>
+        `,
+        objectifs: `
+          <ul>
+            <li>Associer le bureau à la « base de départ » de ton usage.</li>
+            <li>Repérer l’icône du navigateur comme porte d’entrée vers le web.</li>
+          </ul>
+        `
+      },
+      {
+        hint: "Étape 6/6 · Première recherche sur Google (ou un autre moteur).",
+        explain: `
+          <p>Quand tu ouvres un navigateur et que tu tapes quelque chose dans Google :</p>
+          <ul>
+            <li>ton ordinateur envoie ta question à un serveur quelque part sur Internet,</li>
+            <li>le moteur de recherche renvoie une liste de pages qui semblent correspondre,</li>
+            <li>ton navigateur affiche le tout dans un format lisible.</li>
+          </ul>
+          <p>Ici, on simule les résultats pour t’expliquer ce qui se passe en coulisses.</p>
+        `,
+        objectifs: `
+          <ul>
+            <li>Comprendre qu’une recherche, c’est une « discussion » entre ton PC et d’autres machines.</li>
+            <li>Voir qu’on peut expliquer Internet sans jargon : des questions, des réponses, des liens.</li>
+          </ul>
+        `
+      }
+    ];
+
+    let currentStep = 0;
+    const maxStep = 5;
+
+    const screens = document.querySelectorAll(".step-screen");
+    const stepPills = document.querySelectorAll(".step-pill");
+    const explainContent = document.getElementById("explainContent");
+    const objectifsContent = document.getElementById("objectifsContent");
+    const hintStep = document.getElementById("hintStep");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+
+    // BIOS
+    const biosTerminal = document.getElementById("biosTerminal");
+    const btnBiosNext = document.getElementById("btnBiosNext");
+    const biosLabel = document.getElementById("biosLabel");
+    let biosIndex = 0;
+
+    const biosSteps = [
+      {
+        label: "Étape BIOS 1/4 : vérification du matériel…",
+        lines: [
+          { text: "> check_hardware", type: "cmd" },
+          { text: "  RAM OK · Disque OK · Clavier OK", type: "ok" }
+        ]
+      },
+      {
+        label: "Étape BIOS 2/4 : choix du disque de démarrage…",
+        lines: [
+          { text: "> set_boot_device unicorn-disk0", type: "cmd" },
+          { text: "  Périphérique de démarrage : unicorn-disk0", type: "info" }
+        ]
+      },
+      {
+        label: "Étape BIOS 3/4 : sauvegarde de la configuration…",
+        lines: [
+          { text: "> save_config", type: "cmd" },
+          { text: "  Configuration enregistrée.", type: "ok" }
+        ]
+      },
+      {
+        label: "Étape BIOS 4/4 : redémarrage vers Unicorn OS…",
+        lines: [
+          { text: "> reboot", type: "cmd" },
+          { text: "  Redémarrage en cours, passage à l’OS…", type: "warn" }
+        ]
+      }
+    ];
+
+    function addBiosLines(step) {
+      step.lines.forEach(l => {
+        const div = document.createElement("div");
+        div.className = "bios-line " + l.type;
+        div.textContent = l.text;
+        biosTerminal.appendChild(div);
+      });
+      biosTerminal.scrollTop = biosTerminal.scrollHeight;
+    }
+
+    btnBiosNext.addEventListener("click", () => {
+      if (biosIndex >= biosSteps.length) return;
+      const step = biosSteps[biosIndex];
+      biosLabel.textContent = step.label;
+      addBiosLines(step);
+      biosIndex++;
+      if (biosIndex >= biosSteps.length) {
+        btnBiosNext.disabled = true;
+        btnBiosNext.textContent = "Tests terminés · OS en cours de démarrage…";
+        setTimeout(() => {
+          goToStep(2); // passer au boot
+        }, 1200);
+      }
+    });
+
+    // Boot
+    const bootBar = document.getElementById("bootBar");
+    const bootTip = document.getElementById("bootTip");
+    let bootTimer = null;
+
+    function startBoot() {
+      if (bootTimer) return;
+      let progress = 0;
+      bootBar.style.width = "0%";
+      bootTip.textContent = "Chargement du noyau (le cœur du système)…";
+      bootTimer = setInterval(() => {
+        progress += 8 + Math.random() * 10;
+        if (progress >= 100) {
+          progress = 100;
+          bootBar.style.width = "100%";
+          bootTip.textContent = "Démarrage terminé · prêt à afficher le bureau.";
+          clearInterval(bootTimer);
+          bootTimer = null;
+          setTimeout(() => {
+            goToStep(3);
+          }, 1200);
+          return;
+        }
+        bootBar.style.width = progress + "%";
+        if (progress > 30 && progress < 70) {
+          bootTip.textContent = "Initialisation de la souris, du réseau, du son…";
+        } else if (progress >= 70 && progress < 100) {
+          bootTip.textContent = "Préparation du bureau magique…";
+        }
+      }, 260);
+    }
+
+    // Installation
+    const pcNameInput = document.getElementById("pcName");
+    const userNameInput = document.getElementById("userName");
+    const btnInstall = document.getElementById("btnInstall");
+    const installStatus = document.getElementById("installStatus");
+
+    btnInstall.addEventListener("click", () => {
+      let name = userNameInput.value.trim();
+      const pcName = pcNameInput.value.trim() || "UNICORN-PC";
+      if (!name) name = "Utilisateur";
+
+      installStatus.textContent = "Installation en cours pour « " + name + " » sur « " + pcName + " »…";
+      btnInstall.disabled = true;
+
+      let p = 0;
+      const timer = setInterval(() => {
+        p += 20 + Math.random() * 15;
+        if (p >= 100) {
+          clearInterval(timer);
+          installStatus.textContent = "Installation terminée (simulation). Redémarrage vers le bureau…";
+          setTimeout(() => {
+            goToStep(4);
+          }, 1200);
+          return;
+        }
+        installStatus.textContent = Math.round(p) + "% - copie des fichiers, préparation du premier démarrage…";
+      }, 300);
+    });
+
+    // Bureau
+    const iconBrowser = document.getElementById("iconBrowser");
+    const startBtn = document.getElementById("startBtn");
+    const startHint = document.getElementById("startHint");
+
+    startBtn.addEventListener("click", () => {
+      startHint.textContent = "Menu Démarrer : là où tu trouves tes programmes (dont le navigateur).";
+    });
+
+    iconBrowser.addEventListener("click", () => {
+      goToStep(5);
+      searchInput.focus();
+    });
+
+    // Recherche
+    const searchInput = document.getElementById("searchInput");
+    const btnSearch = document.getElementById("btnSearch");
+    const resultsBox = document.getElementById("resultsBox");
+
+    function simulateSearch(query) {
+      const q = query.trim();
+      if (!q) {
+        resultsBox.innerHTML =
+          '<div style="font-size:11px;color:var(--text-soft);">Tape une question (par ex. « comment un ordinateur démarre »).</div>';
+        return;
+      }
+      resultsBox.innerHTML = "";
+
+      const explain = document.createElement("div");
+      explain.style.marginBottom = "6px";
+      explain.innerHTML =
+        "<strong>Ce qui se passe :</strong> ton navigateur envoie la question « " +
+        q +
+        " » à un serveur de Google. Il renvoie une liste de pages qui semblent correspondre.";
+      resultsBox.appendChild(explain);
+
+      const fakeResults = [
+        {
+          title: "Les étapes du démarrage d’un PC (version simple)",
+          link: "https://exemple.local/demarrage-pc",
+          snippet:
+            "Du bouton ON au bureau, en passant par le BIOS, le noyau et l’ouverture de session."
+        },
+        {
+          title: "Comprendre le BIOS sans jargon",
+          link: "https://exemple.local/bios-pedago",
+          snippet:
+            "Ce que fait vraiment le BIOS au démarrage, et pourquoi tu le vois parfois en texte blanc sur fond noir."
+        },
+        {
+          title: "Premiers pas sur Internet en douceur",
+          link: "https://exemple.local/premiers-pas-web",
+          snippet:
+            "Comment utiliser un navigateur, faire une recherche et reconnaître les liens utiles."
+        }
+      ];
+
+      fakeResults.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "result-item";
+        div.innerHTML = `
+          <div class="result-title">${r.title}</div>
+          <div class="result-link">${r.link}</div>
+          <div class="result-snippet">${r.snippet}</div>
+        `;
+        resultsBox.appendChild(div);
+      });
+    }
+
+    btnSearch.addEventListener("click", () => {
+      simulateSearch(searchInput.value);
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        simulateSearch(searchInput.value);
+      }
+    });
+
+    // Bouton power
+    const btnPower = document.getElementById("btnPower");
+    btnPower.addEventListener("click", () => {
+      goToStep(1);
+    });
+
+    // Navigation globale
+    function updateUI() {
+      screens.forEach(s => {
+        const step = parseInt(s.dataset.step, 10);
+        s.classList.toggle("active", step === currentStep);
+      });
+      stepPills.forEach(p => {
+        const step = parseInt(p.dataset.step-pill, 10);
+        p.classList.toggle("active", step === currentStep);
+      });
+
+      const t = stepsText[currentStep];
+      explainContent.innerHTML = t.explain;
+      objectifsContent.innerHTML = t.objectifs;
+      hintStep.textContent = t.hint;
+
+      if (currentStep === 0) btnPrev.classList.add("disabled");
+      else btnPrev.classList.remove("disabled");
+
+      if (currentStep === maxStep) {
+        btnNext.textContent = "Recommencer depuis le début";
+      } else {
+        btnNext.textContent = "Étape suivante →";
+      }
+    }
+
+    function goToStep(step) {
+      currentStep = Math.max(0, Math.min(maxStep, step));
+      updateUI();
+
+      if (currentStep === 2) startBoot();
+    }
+
+    btnPrev.addEventListener("click", () => {
+      if (currentStep === 0) return;
+      currentStep--;
+      updateUI();
+    });
+
+    btnNext.addEventListener("click", () => {
+      if (currentStep === maxStep) {
+        // reset
+        location.reload();
+      } else {
+        currentStep++;
+        updateUI();
+        if (currentStep === 2) startBoot();
+      }
+    });
+
+    stepPills.forEach(p => {
+      p.addEventListener("click", () => {
+        const step = parseInt(p.dataset.step-pill, 10);
+        goToStep(step);
+      });
+    });
+
+    // Init
+    updateUI();
+    simulateSearch("");
+  </script>
+</body>
+</html>
