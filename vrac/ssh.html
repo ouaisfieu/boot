@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projet S – MOORPG IRL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0f172a;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      padding: 2.5rem 1.5rem 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(148,163,184,0.2);
+    }
+    .title {
+      font-size: clamp(2.1rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(56,189,248,0.6);
+    }
+    .subtitle {
+      max-width: 640px;
+      margin: 1rem auto 0;
+      font-size: 0.98rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .3rem .8rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 800px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(2,6,23,0.98));
+      border-radius: 1.5rem;
+      border: 1px solid rgba(148,163,184,0.25);
+      padding: 1.3rem 1.4rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      margin: 0 0 .6rem;
+    }
+    .steps {
+      list-style: none;
+      padding: 0;
+      margin: 0.3rem 0 0;
+      font-size: .9rem;
+    }
+    .steps li {
+      margin-bottom: .45rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .5rem;
+    }
+    .steps li span.step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,1);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: .75rem;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .tag {
+      display: inline-flex;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-right: .35rem;
+      margin-bottom: .35rem;
+    }
+    .missions-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      margin-bottom: .7rem;
+    }
+    .missions-header h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+    .btn {
+      border: none;
+      outline: none;
+      border-radius: 999px;
+      padding: .4rem .9rem;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: var(--accent);
+      color: #0b1220;
+      box-shadow: 0 8px 22px rgba(56,189,248,0.6);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: none;
+    }
+    .missions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin-top: .4rem;
+    }
+    .mission {
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.98));
+      border-radius: 1.2rem;
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: 1rem;
+      font-size: .9rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .mission.done {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.7);
+      opacity: 0.9;
+    }
+    .mission-id {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: .2rem;
+    }
+    .mission h3 {
+      margin: 0 0 .35rem;
+      font-size: .98rem;
+    }
+    .mission-meta {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .3rem;
+    }
+    .mission p {
+      margin: 0 0 .5rem;
+      line-height: 1.4;
+    }
+    .mission-tags {
+      margin-bottom: .5rem;
+    }
+    .mission-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+      font-size: .75rem;
+    }
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle-pill {
+      width: 30px;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(15,23,42,1);
+      border: 1px solid rgba(148,163,184,0.7);
+      position: relative;
+    }
+    .toggle-dot {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(148,163,184,1);
+      transition: transform .18s ease-out, background .18s;
+    }
+    .mission.done .toggle-dot {
+      transform: translateX(12px);
+      background: #22c55e;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem 1.5rem 2rem;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="pill">
+      <span>MOORPG IRL</span>
+      <span>distanciel · asynchrone</span>
+    </div>
+    <h1 class="title">PROJET S</h1>
+    <p class="subtitle">
+      Tu es déjà en jeu. Tu es une instance. Le monde entier joue sans le savoir.
+      <br />Objectif collectif&nbsp;: retrouver <strong>S</strong>, le ou la créateur·rice du jeu le plus culte de l’histoire,
+      ou au moins devenir <em>copain-copain</em>.
+    </p>
+  </header>
+
+  <main>
+    <div class="grid">
+      <!-- Colonne gauche : comment jouer -->
+      <section class="card">
+        <h2>Comment jouer&nbsp;?</h2>
+        <ul class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <div>
+              <strong>Choisis une mission</strong> dans la liste à droite ou pioche-en une au hasard.
+            </div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div>
+              <strong>Agis pour de vrai</strong> dans ta vie (observer, créer, parler, cartographier…).
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div>
+              <strong>Poste une trace sur le net</strong> (texte, photo, audio, vidéo…) avec les tags recommandés
+              (ex&nbsp;: <code>#ProjetS</code>).
+            </div>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <div>
+              <strong>Marque la mission comme faite</strong> ici pour ton suivi (stocké en local, sur ton appareil).
+            </div>
+          </li>
+          <li>
+            <span class="step-num">5</span>
+            <div>
+              <strong>Lis les traces des autres</strong>, invente de nouvelles missions, propage le jeu dans ton cercle de confiance.
+            </div>
+          </li>
+        </ul>
+
+        <h2 style="margin-top:1.3rem;">Principes officieux</h2>
+        <ul class="steps">
+          <li><span class="step-num">★</span><div>Aucune mission ne doit te mettre toi ou d’autres en danger, ni violer la loi.</div></li>
+          <li><span class="step-num">★</span><div>Les interactions sont toujours respectueuses et consenties.</div></li>
+          <li><span class="step-num">★</span><div>Tout est optionnel, tout est modulable. Le mystère est plus important que l’explication.</div></li>
+        </ul>
+      </section>
+
+      <!-- Colonne droite : missions -->
+      <section class="card">
+        <div class="missions-header">
+          <h2>Missions de départ</h2>
+          <div>
+            <button class="btn" id="randomMissionBtn">Mission aléatoire</button>
+          </div>
+        </div>
+        <div id="randomHint" style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem;">
+          Clique sur «&nbsp;Mission aléatoire&nbsp;» pour mettre en avant une mission.
+        </div>
+        <div class="missions-grid" id="missionsGrid">
+          <!-- Missions injectées par JS -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      Site statique – peut fonctionner depuis une clé USB.  
+      Pour ajouter ou modifier des missions, édite simplement le code JavaScript dans ce fichier.
+    </p>
+  </footer>
+
+  <script>
+    // --- Données des missions ---
+    const missions = [
+      {
+        id: "S-00",
+        title: "Tu es déjà dedans",
+        type: "Meta / Observation",
+        duration: "5–10 min",
+        difficulty: 1,
+        description: "Repère un moment de ta journée où tu te dis : « C’est absurde, bizarre ou étonnamment beau. » Fige-le (photo ou texte court) et poste-le avec les tags ci-dessous, en ajoutant la phrase « Je crois que je jouais déjà avant de le savoir. »",
+        proof: "Photo ou texte en ligne",
+        tags: ["#ProjetS", "#S00"],
+        hook: "S adore les gens qui réalisent qu’ils jouaient déjà."
+      },
+      {
+        id: "S-01",
+        title: "Absurdex local",
+        type: "Investigation / Observation",
+        duration: "15–30 min",
+        difficulty: 2,
+        description: "Trouve une absurdité organisationnelle autour de toi (procédure ridicule, panneau contradictoire, règle inutile…). Documente-la et explique en quoi elle est absurde. Propose, si tu veux, une alternative plus intelligente.",
+        proof: "Photo + court texte",
+        tags: ["#ProjetS", "#S01", "#Absurdex"],
+        hook: "Les absurdités sont des glitchs dans le décor. S les collectionne."
+      },
+      {
+        id: "S-02",
+        title: "Caméra, je te vois",
+        type: "Observation",
+        duration: "20–30 min",
+        difficulty: 2,
+        description: "Sur un trajet de ton choix, recense les dispositifs de surveillance visibles (caméras, capteurs, affiches de contrôle…). Dessine une mini carte ou fais un thread qui les répertorie.",
+        proof: "Photo de la carte ou lien vers le thread",
+        tags: ["#ProjetS", "#S02", "#Surveillance"],
+        hook: "Plus tu vois les yeux du système, plus S voit que tu vois."
+      },
+      {
+        id: "S-03",
+        title: "Instance rencontrée",
+        type: "Interaction sociale (consentie)",
+        duration: "10–20 min",
+        difficulty: 2,
+        description: "Demande à quelqu’un (dans un cadre safe) : « Qu’est-ce qui te semble le plus absurde dans ton quotidien ? » Note ou enregistre sa réponse, avec son accord, et anonymise si besoin.",
+        proof: "Texte ou audio anonymisé",
+        tags: ["#ProjetS", "#S03", "#Instance"],
+        hook: "Chaque réponse est une coordonnée de plus sur la carte du jeu."
+      },
+      {
+        id: "S-04",
+        title: "Trace statique",
+        type: "Création",
+        duration: "30–60 min",
+        difficulty: 3,
+        description: "Crée une affiche, un sticker ou une carte qui mentionne le jeu sans l’expliquer (par ex. « TU ES UNE INSTANCE. »). Place-la dans un lieu public autorisé (panneau, espace d’affichage, etc.) sans rien dégrader.",
+        proof: "Photo de l’affiche en situation",
+        tags: ["#ProjetS", "#S04", "#Signal"],
+        hook: "Plus il y a de signaux, plus S a de chances de tomber dessus."
+      },
+      {
+        id: "S-05",
+        title: "Le murmure à S",
+        type: "Meta / Création",
+        duration: "10–20 min",
+        difficulty: 1,
+        description: "Écris un message directement adressé à S, le ou la créateur·rice supposé·e. Poste-le quelque part de public (blog, réseau social, commentaire) et glisse les tags ci-dessous.",
+        proof: "Lien vers ton message",
+        tags: ["#ProjetS", "#S05", "#DearS"],
+        hook: "Si S existe, il y a des chances qu’il aime qu’on lui écrive."
+      }
+    ];
+
+    // --- Persistence locale ---
+    const STORAGE_KEY = "projetS_missions_done_v1";
+    const loadDone = () => {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      } catch {
+        return [];
+      }
+    };
+    const saveDone = (ids) => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    };
+
+    let doneIds = loadDone();
+
+    const missionsGrid = document.getElementById("missionsGrid");
+    const randomHint = document.getElementById("randomHint");
+    const randomMissionBtn = document.getElementById("randomMissionBtn");
+
+    function renderMissions(highlightId = null) {
+      missionsGrid.innerHTML = "";
+      missions.forEach(m => {
+        const done = doneIds.includes(m.id);
+        const article = document.createElement("article");
+        article.className = "mission" + (done ? " done" : "");
+        if (highlightId && m.id === highlightId) {
+          article.style.boxShadow = "0 0 0 2px rgba(56,189,248,0.9)";
+        }
+
+        article.innerHTML = `
+          <div class="mission-id">${m.id}</div>
+          <h3>${m.title}</h3>
+          <div class="mission-meta">${m.type} · ~${m.duration} · Diff. ${m.difficulty}/5</div>
+          <p>${m.description}</p>
+          <div class="mission-tags">
+            ${m.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+          </div>
+          <div class="mission-footer">
+            <div class="toggle">
+              <div class="toggle-pill"><div class="toggle-dot"></div></div>
+              <span>${done ? "Mission marquée comme faite" : "Marquer comme faite"}</span>
+            </div>
+            <span style="color:var(--muted);max-width:50%;text-align:right;">${m.hook}</span>
+          </div>
+        `;
+
+        const toggle = article.querySelector(".toggle");
+        toggle.addEventListener("click", () => {
+          if (doneIds.includes(m.id)) {
+            doneIds = doneIds.filter(x => x !== m.id);
+          } else {
+            doneIds.push(m.id);
+          }
+          saveDone(doneIds);
+          renderMissions(highlightId);
+        });
+
+        missionsGrid.appendChild(article);
+      });
+    }
+
+    randomMissionBtn.addEventListener("click", () => {
+      const idx = Math.floor(Math.random() * missions.length);
+      const mission = missions[idx];
+      randomHint.textContent = `Mission tirée au hasard : ${mission.id} – ${mission.title}`;
+      renderMissions(mission.id);
+    });
+
+    renderMissions();
+  </script>
+</body>
+</html>
