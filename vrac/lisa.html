@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Intro du jeu · Zalagtiga</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg-sky: #38bdf8;
+      --bg-sky-deep: #0ea5e9;
+      --fg: #0f172a;
+      --soft: #e5e7eb;
+      --accent: #f97316;
+      --accent2: #22c55e;
+      --border-dark: #0f172a;
+      --card: #020617;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: radial-gradient(circle at top, #020617 0, #000 55%, #020617 100%);
+      color: var(--soft);
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 0;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 980px;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* =====================
+       CINÉMATIQUE D'INTRO
+       ===================== */
+
+    #introScene {
+      position: relative;
+      inset: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(to bottom, var(--bg-sky) 0, var(--bg-sky-deep) 30%, #0f172a 80%, #020617 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .intro-sky {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .cloud {
+      position: absolute;
+      width: 180px;
+      height: 70px;
+      background: #f9fafb;
+      border-radius: 50px;
+      box-shadow:
+        -40px 10px 0 0 #f9fafb,
+        40px 12px 0 0 #f9fafb,
+        0 20px 0 0 #f9fafb;
+      opacity: 0.9;
+      animation: floatCloud 40s linear infinite;
+    }
+
+    .cloud:nth-child(1) {
+      top: 12%;
+      left: -20%;
+      animation-duration: 45s;
+      animation-delay: 0s;
+    }
+    .cloud:nth-child(2) {
+      top: 28%;
+      left: -30%;
+      transform: scale(0.8);
+      animation-duration: 55s;
+      animation-delay: 4s;
+    }
+    .cloud:nth-child(3) {
+      top: 40%;
+      left: -25%;
+      transform: scale(1.1);
+      animation-duration: 50s;
+      animation-delay: 8s;
+    }
+
+    @keyframes floatCloud {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(200vw); }
+    }
+
+    .skyline {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 35vh;
+      background:
+        linear-gradient(to top, #020617 0, rgba(2,6,23,0.95) 30%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .skyline::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, #020617 0, transparent 55%),
+        repeating-linear-gradient(
+          to right,
+          #020617 0,
+          #020617 40px,
+          #0b1120 42px
+        );
+      opacity: 0.9;
+    }
+
+    .skyline::after {
+      content: "";
+      position: absolute;
+      bottom: 35%;
+      left: 5%;
+      width: 90%;
+      height: 60%;
+      background:
+        radial-gradient(circle at 40% 50%, rgba(148,163,184,0.3), transparent 65%);
+      opacity: 0.7;
+      filter: blur(2px);
+    }
+
+    .intro-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 760px;
+      padding: 16px 16px 24px;
+      text-align: center;
+      color: #0f172a;
+    }
+
+    .intro-line {
+      font-size: clamp(14px, 3.2vw, 18px);
+      font-weight: 500;
+      text-shadow: 0 2px 6px rgba(248,250,252,0.7);
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      margin: 4px 0;
+    }
+
+    .intro-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .intro-line.small {
+      font-size: clamp(12px, 3vw, 14px);
+      font-weight: 400;
+    }
+
+    .game-logo {
+      margin-top: 10px;
+      opacity: 0;
+      transform: translateY(-25px) scale(0.9);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1.0, 0.36, 1.0);
+    }
+
+    .game-logo.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .logo-main {
+      display: inline-block;
+      padding: 8px 12px 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #fefce8, #f97316);
+      box-shadow:
+        0 0 0 3px rgba(234,179,8,1),
+        0 0 30px rgba(234,179,8,0.9),
+        0 10px 20px rgba(15,23,42,0.9);
+      font-family: "Impact", system-ui, sans-serif;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #0b1120;
+      font-size: clamp(20px, 6vw, 32px);
+    }
+
+    .logo-sub {
+      margin-top: 4px;
+      font-size: clamp(12px, 3vw, 14px);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #0b1120;
+      text-shadow: 0 2px 5px rgba(248,250,252,0.85);
+    }
+
+    .gag-line {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #0f172a;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .gag-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .skip-intro {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 5;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.8);
+      background: rgba(248,250,252,0.9);
+      color: #0f172a;
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .skip-intro span.icon {
+      font-size: 12px;
+    }
+
+    /* Faible motion : on coupe les grosses anims */
+    @media (prefers-reduced-motion: reduce) {
+      .cloud {
+        animation: none;
+      }
+    }
+
+    /* ============
+       MENU DU JEU
+       ============ */
+
+    #menuScreen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      background:
+        radial-gradient(circle at top, #020617 0, #000 55%, #020617 100%);
+      padding: 14px 10px 22px;
+      color: var(--soft);
+    }
+
+    #menuScreen.visible {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .menu-wrap {
+      width: 100%;
+      max-width: 760px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 0 0, rgba(251,191,36,0.12), transparent 60%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.14), transparent 60%),
+        #020617;
+      border: 1px solid #1f2937;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.95);
+      padding: 10px 11px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .menu-header {
+      text-align: center;
+    }
+
+    .menu-eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: #9ca3af;
+    }
+
+    .menu-title {
+      font-size: clamp(18px, 4.5vw, 24px);
+      margin-top: 4px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .menu-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .menu-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 780px) {
+      .menu-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .menu-panel {
+      border-radius: 14px;
+      background: rgba(15,23,42,0.98);
+      border: 1px solid #1f2937;
+      padding: 8px 9px 9px;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-main {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(249,115,22,0.9);
+      background: radial-gradient(circle at 20% 0, #fed7aa, #f97316);
+      color: #0b1120;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 8px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        0 10px 20px rgba(0,0,0,0.9);
+    }
+
+    .btn-main span.icon {
+      font-size: 16px;
+    }
+
+    .btn-main:active {
+      transform: translateY(1px);
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        0 6px 12px rgba(0,0,0,0.8);
+    }
+
+    .btn-secondary {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 12px;
+      padding: 7px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn-secondary small {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+
+    .btn-secondary span.icon {
+      font-size: 14px;
+    }
+
+    .menu-info {
+      font-size: 12px;
+      color: #e5e7eb;
+      margin-bottom: 5px;
+    }
+
+    .menu-list {
+      font-size: 12px;
+      margin: 0;
+      padding-left: 18px;
+      color: #d1d5db;
+    }
+
+    .menu-tagline {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+      font-style: italic;
+      text-align: center;
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    a {
+      color: #fb923c;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 1px;
+    }
+
+    a:hover {
+      color: #fed7aa;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- CINÉMATIQUE D'INTRO -->
+    <section id="introScene">
+      <button id="skipIntro" class="skip-intro">
+        <span class="icon">⏩</span>
+        <span>Passer l'intro</span>
+      </button>
+
+      <div class="intro-sky">
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+      </div>
+      <div class="skyline"></div>
+
+      <div class="intro-content">
+        <div id="line1" class="intro-line small">
+          Un soir imaginaire au-dessus de Bruxelles…
+        </div>
+        <div id="line2" class="intro-line small">
+          La guerre froide fait rage aux infos. Les salles de jeux, elles, font du bruit.
+        </div>
+        <div id="line3" class="intro-line">
+          Quelqu’un a posé une borne d’arcade bizarre près de la place Poelaert.
+        </div>
+
+        <div id="logoBlock" class="game-logo">
+          <div class="logo-main">ZALAGTIGA</div>
+          <div class="logo-sub">le jeu où tu enquêtes sur ta propre époque</div>
+        </div>
+
+        <div id="gagLine" class="gag-line">
+          (Couch gag alternatif : tout le monde scrolle les actus. Tu décides enfin d’appuyer sur “Start”.)
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU DU JEU -->
+    <section id="menuScreen">
+      <div class="menu-wrap">
+        <header class="menu-header">
+          <div class="menu-eyebrow">menu principal</div>
+          <div class="menu-title">ZALAGTIGA · MAP & MINITEL</div>
+          <p class="menu-sub">
+            Choisis comment tu veux entrer dans le jeu : en solo, en équipe, ou en mode “je veux tout comprendre avant de jouer”.
+          </p>
+        </header>
+
+        <div class="menu-layout">
+          <!-- COLONNE GAUCHE : actions principales -->
+          <div class="menu-panel">
+            <div class="panel-title">Lancer une partie</div>
+            <div class="menu-buttons">
+              <!-- Lien vers ton Minitel & MAP -->
+              <a href="minitel-boot-map.html" class="btn-main">
+                <span class="icon">▶</span>
+                <span>Jouer en solo</span>
+              </a>
+
+              <!-- Même page mais instruction pour usage collectif (projection) -->
+              <a href="minitel-boot-map.html" class="btn-secondary">
+                <span>
+                  <strong>Jouer en équipe</strong><br />
+                  <small>Projette la MAP, répartis les cases, lance la discussion.</small>
+                </span>
+                <span class="icon">👥</span>
+              </a>
+
+              <!-- Guide complet -->
+              <a href="guide-jeu-zalagtiga.html" class="btn-secondary">
+                <span>
+                  <strong>Lire le guide du jeu</strong><br />
+                  <small>Règles, factions, arbre de décision, exemples d’usages.</small>
+                </span>
+                <span class="icon">📖</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- COLONNE DROITE : contexte & autres pages -->
+          <div class="menu-panel">
+            <div class="panel-title">Autres entrées du parc</div>
+            <p class="menu-info">
+              Si tu veux l’expérience complète façon “luna park politique & numérique” :
+            </p>
+            <ul class="menu-list">
+              <li>
+                <a href="zalagtiga.html">Borne Zalagtiga</a> — ambiance arcade années 80,
+                générique de la soirée et mur de photos.
+              </li>
+              <li>
+                <a href="recap-arcade.html">Récap arcade</a> — tout le chemin du jeu de piste expliqué proprement.
+              </li>
+              <li>
+                <a href="monitor.html">Monitor / Minitel étendu</a> — annuaire, faux services et autres jouets.
+              </li>
+            </ul>
+            <p class="menu-tagline" id="menuTagline">
+              “Épisode pilote : la fois où tu as décidé de ne plus subir l’info comme un fond sonore.”
+            </p>
+          </div>
+        </div>
+
+        <p class="footer-note">
+          Rien n’est enregistré en ligne : tout se passe dans ton navigateur.  
+          Tu peux copier ces fichiers, les modifier, les détourner pour tes propres expériences d’éducation populaire.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Gestion de la cinématique
+    const line1 = document.getElementById("line1");
+    const line2 = document.getElementById("line2");
+    const line3 = document.getElementById("line3");
+    const logoBlock = document.getElementById("logoBlock");
+    const gagLine = document.getElementById("gagLine");
+
+    const introScene = document.getElementById("introScene");
+    const menuScreen = document.getElementById("menuScreen");
+    const skipIntroBtn = document.getElementById("skipIntro");
+    const menuTagline = document.getElementById("menuTagline");
+
+    let introTimers = [];
+    let introDone = false;
+
+    // Quelques “couch gags” textuels aléatoires
+    const taglines = [
+      "“Épisode pilote : la fois où tu as décidé de ne plus subir l’info comme un fond sonore.”",
+      "“Spécial guest : ton cerveau, pour une fois invité à participer.”",
+      "“Interdit de binge-watcher l’actualité sans passer par la case MAP.”",
+      "“Dans ce générique, personne ne sauve le monde. Mais tout le monde peut le comprendre un peu mieux.”"
+    ];
+
+    function pickTagline() {
+      const t = taglines[Math.floor(Math.random() * taglines.length)];
+      menuTagline.textContent = t;
+    }
+
+    function scheduleIntro() {
+      introTimers.push(setTimeout(() => {
+        line1.classList.add("visible");
+      }, 500));
+
+      introTimers.push(setTimeout(() => {
+        line2.classList.add("visible");
+      }, 2200));
+
+      introTimers.push(setTimeout(() => {
+        line3.classList.add("visible");
+      }, 4000));
+
+      introTimers.push(setTimeout(() => {
+        logoBlock.classList.add("visible");
+      }, 5800));
+
+      introTimers.push(setTimeout(() => {
+        gagLine.classList.add("visible");
+      }, 7400));
+
+      // Passage automatique au menu
+      introTimers.push(setTimeout(() => {
+        showMenu();
+      }, 10000));
+    }
+
+    function clearIntroTimers() {
+      introTimers.forEach(id => clearTimeout(id));
+      introTimers = [];
+    }
+
+    function showMenu() {
+      if (introDone) return;
+      introDone = true;
+      clearIntroTimers();
+      pickTagline();
+
+      introScene.style.transition = "opacity 0.7s ease";
+      introScene.style.opacity = "0";
+
+      setTimeout(() => {
+        introScene.style.display = "none";
+        menuScreen.classList.add("visible");
+      }, 700);
+    }
+
+    skipIntroBtn.addEventListener("click", () => {
+      showMenu();
+    });
+
+    // Lancer la cinématique à la fin du chargement
+    window.addEventListener("load", () => {
+      scheduleIntro();
+    });
+  </script>
+</body>
+</html>
