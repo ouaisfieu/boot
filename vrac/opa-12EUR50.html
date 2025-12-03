@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ordre Pacifisto-Anarchiste des 12,50 · Formulaire d'adhésion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #030712;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #f97316;
+      --accent2: #22c55e;
+      --accent3: #22d3ee;
+      --border: #1f2937;
+      --shadow: 0 24px 60px rgba(0,0,0,0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(251,113,133,0.25), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.22), transparent 60%),
+        linear-gradient(to bottom, #020617, #000 55%, #020617 100%);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 12px 10px 20px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 880px;
+    }
+
+    header.site-header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: var(--soft);
+    }
+
+    h1 {
+      margin: 4px 0 4px;
+      font-size: clamp(20px, 5vw, 26px);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--soft);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Bloc spam */
+
+    .alert-banner {
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(248,250,252,0.08), transparent),
+        radial-gradient(circle at 0 0, rgba(250,204,21,0.20), transparent 60%),
+        #111827;
+      border: 1px solid #facc15;
+      padding: 8px 9px;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 8px;
+      align-items: center;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.9);
+    }
+
+    .alert-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #facc15, #f97316);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        0 0 15px rgba(250,204,21,0.9);
+      font-size: 20px;
+      color: #020617;
+    }
+
+    .alert-body-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 2px;
+    }
+
+    .alert-body-text {
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    /* Layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 780px) {
+      .layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .card {
+      border-radius: 18px;
+      background: rgba(15,23,42,0.98);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 10px 11px 11px;
+    }
+
+    .card-soft {
+      border-radius: 14px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid #374151;
+      padding: 8px 9px;
+      font-size: 13px;
+    }
+
+    h2 {
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 0 0 4px;
+    }
+
+    h3 {
+      font-size: 13px;
+      margin: 6px 0 3px;
+    }
+
+    p {
+      margin: 3px 0;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    small {
+      font-size: 11px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      margin: 4px 0 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      padding: 6px 8px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #f97316;
+      box-shadow: 0 0 0 1px rgba(249,115,22,0.5);
+    }
+
+    .question-block {
+      margin-bottom: 6px;
+    }
+
+    .question-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .question-help {
+      font-size: 11px;
+      color: var(--soft);
+      margin-bottom: 2px;
+    }
+
+    .options-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .options-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 0;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      accent-color: #f97316;
+    }
+
+    .mandatory {
+      font-size: 10px;
+      color: #fb923c;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .warning-text {
+      font-size: 11px;
+      color: #f97316;
+      margin-top: 2px;
+    }
+
+    .commit-block {
+      border-radius: 12px;
+      border: 1px solid #f97316;
+      background: rgba(15,23,42,0.98);
+      padding: 6px 7px;
+      margin-top: 6px;
+      font-size: 12px;
+    }
+
+    .commit-line {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .commit-line input[type="checkbox"] {
+      margin-top: 2px;
+    }
+
+    .commit-text strong {
+      color: #fed7aa;
+    }
+
+    .commit-note {
+      font-size: 10px;
+      color: #fbbf24;
+      margin-top: 2px;
+    }
+
+    .submit-row {
+      margin-top: 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .btn-submit {
+      border-radius: 999px;
+      border: 1px solid rgba(249,115,22,0.9);
+      background: radial-gradient(circle at 20% 0, #fed7aa, #f97316);
+      color: #0b1120;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 7px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        0 10px 20px rgba(0,0,0,0.9);
+    }
+
+    .btn-submit[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-submit span.icon {
+      font-size: 15px;
+    }
+
+    .submit-hint {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .error-msg {
+      font-size: 11px;
+      color: #f97316;
+      min-height: 14px;
+    }
+
+    /* Colonne droite : "doctrine" et étapes recrutement */
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      padding: 1px 6px;
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    .steps-list {
+      padding-left: 18px;
+      margin: 3px 0;
+      font-size: 13px;
+    }
+
+    .fine-print {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    /* Écran de succès */
+
+    #successScreen {
+      margin-top: 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 0 0, rgba(250,204,21,0.16), transparent 60%),
+        rgba(6,78,59,0.97);
+      border: 1px solid #facc15;
+      box-shadow: var(--shadow);
+      padding: 10px 11px 11px;
+      display: none;
+    }
+
+    .success-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 4px;
+    }
+
+    .success-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 720px) {
+      .success-layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .coin-wrap {
+      text-align: center;
+    }
+
+    .coin-wrap img {
+      max-width: 160px;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.9));
+    }
+
+    .success-text {
+      font-size: 13px;
+    }
+
+    .success-steps {
+      padding-left: 18px;
+      margin: 3px 0;
+      font-size: 13px;
+    }
+
+    .nav-links {
+      margin-top: 6px;
+      font-size: 12px;
+    }
+
+    .nav-links a {
+      color: #facc15;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    .nav-links a:hover {
+      color: #fef9c3;
+    }
+
+    a {
+      color: #fb923c;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    a:hover {
+      color: #fed7aa;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="site-header">
+    <div class="eyebrow">message automatique non sollicité</div>
+    <h1>Ordre Pacifisto-Anarchiste des 12,50</h1>
+    <p class="subtitle">
+      Tu as cliqué quelque part. Tu as scanné un truc. Tu t’es perdu·e dans un générique.  
+      Bref, te voilà sur la page d’adhésion semi-officielle à une secte de veille citoyenne
+      très sérieuse, mais radicalement non violente.
+    </p>
+  </header>
+
+  <section class="alert-banner">
+    <div class="alert-icon">✉️</div>
+    <div>
+      <div class="alert-body-title">SPAM bienveillant détecté</div>
+      <div class="alert-body-text">
+        Ce message a été classé comme <strong>spam hautement suspect</strong> par ton libre arbitre.
+        Il contient un <em>questionnaire sectaire sur la veille citoyenne</em> et une obligation
+        morale d’adhérer au montant symbolique de <strong>12,50&nbsp;€ en cash uniquement</strong>.
+      </div>
+    </div>
+  </section>
+
+  <!-- zone questionnaire + doctrine -->
+  <section id="formSection" class="layout">
+    <!-- COL GAUCHE : FORMULAIRE -->
+    <div class="card">
+      <h2>Questionnaire d'auto-radicalisation pacifiste</h2>
+      <p>
+        Réponds le plus honnêtement possible. <strong>Toutes les réponses resteront dans ton navigateur</strong>.
+        Aucun central d’écoute, aucun algorithme extérieur, juste toi et ton sens critique.
+      </p>
+
+      <form id="sectForm" autocomplete="off">
+        <div class="card-soft">
+          <h3>Identité civile minimale</h3>
+          <p><small>(optionnel, mais ça fait sérieux)</small></p>
+
+          <label for="pseudo">Nom de code / pseudo préféré</label>
+          <input id="pseudo" name="pseudo" type="text" placeholder="Ex : Poelaert_404, GalagaBrux, Madame12_50…" />
+
+          <label for="email">Adresse e-mail (jetable, idealement)</label>
+          <input id="email" name="email" type="email" placeholder="Ex : rien.a.foutre@exemple.org" />
+
+          <label for="ville">Ville / territoire mental</label>
+          <input id="ville" name="ville" type="text" placeholder="Ex : Bruxelles, 1160, Internet fatigué…" />
+        </div>
+
+        <div class="card-soft" style="margin-top:6px;">
+          <h3>Veille citoyenne : où en es-tu ?</h3>
+
+          <div class="question-block">
+            <div class="question-title">1. Quand tu vois passer une info choquante, tu…</div>
+            <div class="question-help">Choisis la réponse qui te ressemble le plus.</div>
+            <div class="options-row">
+              <label>
+                <input type="radio" name="q1" value="partage_instinctif" />
+                je la partage direct sans vérifier (ça urge)
+              </label>
+              <label>
+                <input type="radio" name="q1" value="verif_minimale" />
+                je vérifie un peu, mais j’ai la flemme
+              </label>
+              <label>
+                <input type="radio" name="q1" value="verif_serieuse" />
+                je remonte à la source, sinon je laisse tomber
+              </label>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="question-title">2. Les mots “veille citoyenne”, pour toi, c’est plutôt…</div>
+            <div class="options-row">
+              <label>
+                <input type="radio" name="q2" value="espionnage" />
+                un truc d’espions / de paranoïaques
+              </label>
+              <label>
+                <input type="radio" name="q2" value="boulot" />
+                un job pour des pros très sérieux
+              </label>
+              <label>
+                <input type="radio" name="q2" value="hygiène" />
+                une forme d’hygiène mentale collective
+              </label>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="question-title">3. À quelle fréquence te sens-tu noyé·e sous l’info ?</div>
+            <div class="options-row">
+              <label>
+                <input type="radio" name="q3" value="rarement" />
+                rarement, je filtre bien
+              </label>
+              <label>
+                <input type="radio" name="q3" value="souvent" />
+                souvent, mais je fais avec
+              </label>
+              <label>
+                <input type="radio" name="q3" value="constamment" />
+                tout le temps, j’ai envie de jeter mon téléphone
+              </label>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="question-title">4. Si on te propose un outil pour cartographier calmement la réalité…</div>
+            <div class="question-help">comme la MAP du jeu que tu viens de croiser</div>
+            <div class="options-row">
+              <label>
+                <input type="radio" name="q4" value="curieux" />
+                je suis curieux·se, mais j’ai besoin qu’on m’explique
+              </label>
+              <label>
+                <input type="radio" name="q4" value="motivé" />
+                je suis motivé·e, je veux aider à comprendre
+              </label>
+              <label>
+                <input type="radio" name="q4" value="sature" />
+                je suis saturé·e, mais j’aimerais bien y voir plus clair
+              </label>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="question-title">5. Si tu devais résumer ton rapport à la société actuelle…</div>
+            <textarea id="q5" name="q5" placeholder="Tu peux répondre en trois mots, en un pavé, avec des émoticônes, ou ne rien mettre."></textarea>
+          </div>
+        </div>
+
+        <div class="commit-block">
+          <div class="mandatory">condition d'adhésion unique & non négociable</div>
+          <div class="commit-line">
+            <input type="checkbox" id="commit1250" />
+            <div class="commit-text">
+              Je m’engage solennellement à consacrer
+              <strong>12,50&nbsp;€ en cash uniquement</strong> à la cause de la veille citoyenne
+              pacifiste, un jour, quelque part, dans une caisse, une tirelire, une boîte à chaussures
+              ou un bocal transparent, sans jamais l’oublier complètement.
+            </div>
+          </div>
+          <div class="commit-note">
+            ⚠️ Sans cet engagement symbolique, le formulaire refusera obstinément de valider
+            (mais tu restes évidemment totalement libre de fermer cette page et d’aller boire un café).
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <button type="button" id="submitBtn" class="btn-submit" disabled>
+            <span class="icon">☮</span>
+            <span>Valider mon engagement sectaire</span>
+          </button>
+          <div id="errorMsg" class="error-msg"></div>
+          <div class="submit-hint">
+            En validant, tu recevras une <strong>pièce numérique</strong> (image) et la suite de la procédure
+            d’auto-recrutement pacifiste à 12,50.
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- COL DROITE : TEXTE & ÉTAPES -->
+    <div class="card">
+      <h2>Qu'est-ce que cette secte étrange ?</h2>
+      <div class="card-soft">
+        <p>
+          L’<strong>Ordre Pacifisto-Anarchiste des 12,50</strong> est une secte imaginaire qui considère que :
+        </p>
+        <ul class="steps-list">
+          <li>la <strong>veille citoyenne</strong> n’est pas un luxe, mais un réflexe à entraîner ;</li>
+          <li>personne ne devrait faire ça tout·e seul·e dans son coin ;</li>
+          <li>les outils numériques sont des <em>parcs d’attractions pédagogiques</em>, pas des prisons ;</li>
+          <li>les montants symboliques (12,50) valent parfois plus qu’un gros budget mal utilisé.</li>
+        </ul>
+
+        <div class="tag-row">
+          <span class="tag">anarchisme pacifiste</span>
+          <span class="tag">éducation populaire</span>
+          <span class="tag">anti-spam conscient</span>
+        </div>
+
+        <h3 style="margin-top:6px;">La “procédure” en trois temps</h3>
+        <ol class="steps-list">
+          <li><strong>Toi</strong> — tu observations, tu joues, tu notes, tu doutes.</li>
+          <li><strong>Les outils</strong> — comme la MAP, la borne Zalagtiga, les faux minitels.</li>
+          <li><strong>Le collectif</strong> — partager, comparer, confronter sans se bouffer entre nous.</li>
+        </ol>
+
+        <p class="fine-print">
+          Toute ressemblance avec des structures existantes serait purement coincidente, surtout si elles se prennent trop au sérieux.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÉCRAN SUCCÈS -->
+  <section id="successScreen">
+    <div class="success-layout">
+      <div class="coin-wrap">
+        <img src="https://dl.ouaisfi.eu/images/coin.png" alt="Pièce symbolique 12,50" />
+        <p style="font-size:12px;margin-top:4px;">
+          Ceci est ta <strong>Pièce Symbolique de 12,50</strong>.  
+          Tu peux l’enregistrer, l’imprimer, la coller sur un bocal, ou simplement la garder comme mème personnel.
+        </p>
+      </div>
+      <div class="success-text">
+        <div class="success-title">Procédure de recrutement (auto-gérée)</div>
+        <p>
+          Félicitations&nbsp;: tu viens de passer la seule épreuve vraiment sectaire du processus.  
+          Voici la suite de la procédure d’adhésion, à appliquer à ton propre rythme :
+        </p>
+        <ol class="success-steps">
+          <li>
+            Mets physiquement <strong>12,50&nbsp;€ en cash</strong> dans un récipient de ton choix
+            (bocal, tirelire, enveloppe marquée “Veille citoyenne”...).
+          </li>
+          <li>
+            Décide à l’avance à quoi servira cet argent :
+            <em>abonnement à un média indépendant, achat d’un livre, participation à une caisse de solidarité…</em>
+          </li>
+          <li>
+            Reviens dans le jeu :
+            utilise la <strong>MAP échiquier</strong> pour cartographier cet écosystème (média, asso, projet) et ce qu’il change pour toi.
+          </li>
+          <li>
+            Partage un jour ton expérience (avec des gens en chair et en os, ou via un site statique)
+            en expliquant ce que tu as appris et ce que tu ferais différemment.
+          </li>
+        </ol>
+        <p style="font-size:12px;margin-top:3px;">
+          Si tu fais tout ça, tu es officiellement membre de cette secte imaginaire — sans carte, sans numéro,
+          sans hiérarchie, mais avec une pratique concrète de la veille citoyenne non violente.
+        </p>
+
+        <div class="nav-links">
+          <strong>Continuer l’aventure :</strong><br />
+          • Retour au <a href="intro-jeu.html">générique d’intro</a> ·  
+          • Lancer la <a href="minitel-boot-map.html">MAP & Minitel</a> ·  
+          • Lire le <a href="guide-jeu-zalagtiga.html">guide complet du jeu</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  const commitCheckbox = document.getElementById("commit1250");
+  const submitBtn = document.getElementById("submitBtn");
+  const errorMsg = document.getElementById("errorMsg");
+  const formSection = document.getElementById("formSection");
+  const successScreen = document.getElementById("successScreen");
+
+  // Activer / désactiver le bouton selon l'engagement 12,50
+  function updateSubmitState() {
+    if (commitCheckbox.checked) {
+      submitBtn.disabled = false;
+      errorMsg.textContent = "";
+    } else {
+      submitBtn.disabled = true;
+    }
+  }
+
+  commitCheckbox.addEventListener("change", updateSubmitState);
+
+  submitBtn.addEventListener("click", () => {
+    if (!commitCheckbox.checked) {
+      errorMsg.textContent = "Sans engagement symbolique de 12,50 € (au moins dans ta tête), le rite d'entrée échoue.";
+      return;
+    }
+    // On simule la "validation" : on cache le formulaire, on affiche la suite
+    formSection.style.display = "none";
+    successScreen.style.display = "block";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // Initialisation
+  updateSubmitState();
+</script>
+</body>
+</html>
