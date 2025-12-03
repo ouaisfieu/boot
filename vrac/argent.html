@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wiki · Univers & Projets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --bg-soft: #0b1220;
+      --panel: #020617;
+      --border: #1f2937;
+      --accent: #f59e0b;
+      --accent-soft: rgba(245, 158, 11, 0.1);
+      --accent-2: #a855f7;
+      --accent-2-soft: rgba(168, 85, 247, 0.12);
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --transition-fast: 160ms ease-out;
+      --transition-med: 220ms ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOPBAR */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: linear-gradient(to bottom, rgba(2, 6, 23, 0.96), rgba(2, 6, 23, 0.88));
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo-chip {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 20%, #22d3ee 0, #4f46e5 35%, #020617 100%);
+      box-shadow:
+        0 0 10px rgba(56, 189, 248, 0.6),
+        0 0 30px rgba(79, 70, 229, 0.6);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-chip::before {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.75);
+      background:
+        radial-gradient(circle at 0 0, rgba(248, 250, 252, 0.15), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(129, 140, 248, 0.12), transparent 55%);
+    }
+
+    .logo-chip span {
+      position: relative;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #f9fafb;
+    }
+
+    .top-title {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .top-title-main {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .top-title-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+      opacity: 0.9;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip-small {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      color: var(--text-soft);
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.15), rgba(15, 23, 42, 0.8));
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-small span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.24);
+    }
+
+    .chip-small strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .top-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      padding: 6px 11px;
+      font-size: 11px;
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.5), rgba(15, 23, 42, 1));
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7), 0 14px 30px rgba(15, 23, 42, 0.9);
+      white-space: nowrap;
+    }
+
+    .top-btn:hover {
+      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.8), rgba(15, 23, 42, 1));
+      transform: translateY(-1px);
+      border-color: rgba(129, 140, 248, 0.95);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.95);
+    }
+
+    .top-btn span.icon {
+      font-size: 13px;
+    }
+
+    .top-btn span.label {
+      font-weight: 500;
+    }
+
+    .top-toggle {
+      display: none;
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      padding: 6px 9px;
+      background: rgba(15, 23, 42, 0.96);
+      cursor: pointer;
+      transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.9);
+    }
+
+    .top-toggle span {
+      font-size: 15px;
+    }
+
+    .top-toggle:hover {
+      background: rgba(30, 64, 175, 0.85);
+      transform: translateY(-1px);
+    }
+
+    /* LAYOUT */
+
+    .app-root {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 310px;
+      max-width: 100%;
+      border-right: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.15), rgba(2, 6, 23, 0.98));
+      box-shadow: 18px 0 60px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      padding: 12px 10px 14px;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 6px 8px 4px;
+    }
+
+    .sidebar-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 7px 28px 7px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.92));
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.95);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-soft);
+      opacity: 0.85;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .kbd-hint {
+      position: absolute;
+      right: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.85);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      margin-top: 4px;
+      gap: 8px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filter-tab {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.85);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .filter-tab[data-active="true"] {
+      border-color: rgba(245, 158, 11, 0.95);
+      background: radial-gradient(circle at top, rgba(245, 158, 11, 0.25), rgba(15, 23, 42, 0.98));
+      color: #fefce8;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.9);
+    }
+
+    .filter-meta {
+      font-size: 11px;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+
+    .sidebar-body {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden auto;
+      padding: 4px 2px 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(75, 85, 99, 0.9) transparent;
+    }
+
+    .sidebar-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar-body::-webkit-scrollbar-thumb {
+      background: rgba(75, 85, 99, 0.9);
+      border-radius: 999px;
+    }
+
+    .section-group {
+      margin-bottom: 10px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 10px 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-title {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+
+    .section-badge {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .section-chevron {
+      font-size: 12px;
+      color: var(--text-soft);
+      opacity: 0.9;
+      margin-left: 6px;
+    }
+
+    .section-list {
+      padding: 2px 4px 6px;
+    }
+
+    .nav-item {
+      border-radius: 10px;
+      padding: 6px 8px 6px 9px;
+      margin: 2px 2px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-item:hover {
+      background: rgba(15, 23, 42, 0.98);
+      border-color: rgba(55, 65, 81, 0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.9);
+    }
+
+    .nav-item[data-active="true"] {
+      border-color: rgba(245, 158, 11, 0.95);
+      background: radial-gradient(circle at top left, rgba(245, 158, 11, 0.28), rgba(15, 23, 42, 0.98));
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 1);
+    }
+
+    .nav-item-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .nav-item-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-item-kind {
+      font-size: 10px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.95);
+      white-space: nowrap;
+    }
+
+    .nav-item-desc {
+      font-size: 11px;
+      color: var(--text-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-item-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 3px;
+    }
+
+    .tag-pill {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+      white-space: nowrap;
+    }
+
+    .sidebar-footer {
+      padding: 4px 8px 0;
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .sidebar-footer-text {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .sidebar-footer-text strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .sidebar-footer-btn {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .sidebar-footer-btn:hover {
+      background: rgba(37, 99, 235, 0.8);
+      border-color: rgba(129, 140, 248, 0.95);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+    }
+
+    /* CONTENT */
+
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 14px 18px 18px;
+      overflow: hidden auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(75, 85, 99, 0.9) transparent;
+    }
+
+    .content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+      background: rgba(75, 85, 99, 0.9);
+      border-radius: 999px;
+    }
+
+    .content-inner {
+      max-width: 1020px;
+      margin: 0 auto;
+    }
+
+    .breadcrumbs {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .breadcrumbs span {
+      cursor: default;
+    }
+
+    .breadcrumbs a {
+      color: var(--text-soft);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(156, 163, 175, 0.8);
+      padding-bottom: 1px;
+      cursor: pointer;
+    }
+
+    .breadcrumbs a:hover {
+      color: var(--accent);
+      border-color: rgba(245, 158, 11, 0.9);
+    }
+
+    .page-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background:
+        radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.9)),
+        linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.98));
+      box-shadow: var(--shadow-soft);
+      padding: 16px 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0 0, rgba(248, 250, 252, 0.04), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(234, 179, 8, 0.06), transparent 60%),
+        radial-gradient(circle at 0 100%, rgba(147, 51, 234, 0.05), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .page-header {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-title-block {
+      min-width: 0;
+    }
+
+    .page-kicker {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0.95;
+      margin-bottom: 2px;
+    }
+
+    .page-title {
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      margin: 0;
+      color: #f9fafb;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-top: 3px;
+      max-width: 560px;
+    }
+
+    .page-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .page-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .pill.accent {
+      border-color: rgba(245, 158, 11, 0.95);
+      background: radial-gradient(circle at top, rgba(245, 158, 11, 0.3), rgba(15, 23, 42, 0.96));
+      color: #fefce8;
+    }
+
+    .pill.purple {
+      border-color: rgba(168, 85, 247, 0.9);
+      background: radial-gradient(circle at top, rgba(168, 85, 247, 0.26), rgba(15, 23, 42, 0.98));
+      color: #f5f3ff;
+    }
+
+    .pill-ghost {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px dashed rgba(75, 85, 99, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .page-toolbar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .toolbar-btn {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .toolbar-btn span.icon {
+      font-size: 13px;
+    }
+
+    .toolbar-btn:hover {
+      background: rgba(37, 99, 235, 0.8);
+      border-color: rgba(129, 140, 248, 0.95);
+      color: #f9fafb;
+      transform: translateY(-1px);
+    }
+
+    .toolbar-btn[aria-pressed="true"] {
+      background: radial-gradient(circle at top, rgba(245, 158, 11, 0.35), rgba(15, 23, 42, 0.96));
+      border-color: rgba(245, 158, 11, 0.95);
+      color: #fefce8;
+    }
+
+    .page-content {
+      position: relative;
+      z-index: 1;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .page-content h2,
+    .page-content h3,
+    .page-content h4 {
+      margin-top: 16px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .page-content h2 {
+      font-size: 18px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      padding-bottom: 4px;
+    }
+
+    .page-content h3 {
+      font-size: 15px;
+      color: #e5e7eb;
+    }
+
+    .page-content h4 {
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    .page-content p {
+      margin: 6px 0 8px;
+    }
+
+    .page-content ul,
+    .page-content ol {
+      padding-left: 1.3rem;
+      margin: 4px 0 8px;
+    }
+
+    .page-content li {
+      margin: 2px 0;
+    }
+
+    .page-content code {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 6px;
+      padding: 1px 5px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #e5e7eb;
+    }
+
+    .page-content pre {
+      margin: 6px 0 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.95));
+      overflow: auto;
+      font-size: 12px;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .panel {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background: rgba(15, 23, 42, 0.95);
+      padding: 9px 11px 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.15), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+    }
+
+    .panel-badge {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .panel-body {
+      font-size: 13px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-body ul {
+      padding-left: 1.1rem;
+    }
+
+    .panel-body li {
+      margin: 2px 0;
+    }
+
+    .badge-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      margin: 2px 3px 0 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-tag span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 7px 9px 7px;
+      margin: 10px 0 4px;
+      border-left: 3px solid var(--accent);
+      background: radial-gradient(circle at top left, rgba(245, 158, 11, 0.16), rgba(15, 23, 42, 0.96));
+      font-size: 13px;
+    }
+
+    .callout strong {
+      color: #fefce8;
+    }
+
+    .callout.muted {
+      border-left-color: rgba(148, 163, 184, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+    }
+
+    .callout.purple {
+      border-left-color: rgba(168, 85, 247, 0.95);
+      background: radial-gradient(circle at top left, rgba(168, 85, 247, 0.2), rgba(15, 23, 42, 0.96));
+    }
+
+    .pill-link {
+      color: var(--accent);
+      border-bottom: 1px dashed rgba(245, 158, 11, 0.9);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .pill-link:hover {
+      color: #fbbf24;
+    }
+
+    .page-footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-soft);
+      border-top: 1px solid rgba(31, 41, 55, 0.95);
+      padding-top: 7px;
+    }
+
+    .page-footer-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .page-footer-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .link-muted {
+      color: var(--text-soft);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(107, 114, 128, 0.9);
+      cursor: pointer;
+    }
+
+    .link-muted:hover {
+      color: var(--accent);
+      border-color: rgba(245, 158, 11, 0.9);
+    }
+
+    /* MODAL */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      padding: 12px;
+    }
+
+    .modal-backdrop[data-open="true"] {
+      display: flex;
+    }
+
+    .modal {
+      max-width: 640px;
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.98));
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9);
+      padding: 12px 14px 12px;
+      position: relative;
+      max-height: min(520px, 90vh);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .modal-title {
+      font-size: 13px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .modal-close {
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      background: rgba(239, 68, 68, 0.9);
+      border-color: rgba(248, 113, 113, 0.95);
+      color: #fef2f2;
+      transform: translateY(-1px);
+    }
+
+    .modal-body {
+      flex: 1;
+      overflow: auto;
+      padding: 6px 2px 4px;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .modal-body h3 {
+      font-size: 15px;
+      margin: 2px 0 6px;
+    }
+
+    .modal-body p {
+      margin: 4px 0 6px;
+    }
+
+    .modal-body ul {
+      padding-left: 1.1rem;
+      margin: 4px 0 4px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .top-btn {
+        display: none;
+      }
+
+      .top-toggle {
+        display: inline-flex;
+      }
+
+      .sidebar {
+        position: fixed;
+        inset: 52px 0 auto 0;
+        max-height: calc(100vh - 52px);
+        transform: translateX(-100%);
+        transition: transform var(--transition-med);
+        z-index: 30;
+        width: min(330px, 100%);
+      }
+
+      .sidebar[data-open="true"] {
+        transform: translateX(0);
+      }
+
+      .app-root {
+        position: relative;
+      }
+
+      .content {
+        padding: 10px 10px 16px;
+      }
+
+      .page-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page-card {
+        padding: 12px 11px 14px;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .page-meta {
+        align-items: flex-start;
+      }
+
+      .topbar {
+        padding-inline: 8px;
+      }
+
+      .logo-chip {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="logo-chip" aria-hidden="true">
+      <span>P</span>
+    </div>
+    <div class="top-title">
+      <div class="top-title-main">Wiki · Univers & Projets</div>
+      <div class="top-title-sub">Cartographie d'un écosystème d'expériences, de jeux et de ressources</div>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="chip-small">
+      <span class="dot"></span>
+      <span><strong>Mode</strong> lecture & prototype</span>
+    </div>
+    <button class="top-btn" type="button" id="btnRandomPage">
+      <span class="icon">🎲</span>
+      <span class="label">Page aléatoire</span>
+    </button>
+    <button class="top-toggle" type="button" id="btnToggleSidebar" aria-label="Navigation">
+      <span>☰</span>
+    </button>
+  </div>
+</header>
+
+<div class="app-root">
+  <aside class="sidebar" id="sidebar" data-open="false">
+    <div class="sidebar-header">
+      <div class="sidebar-label">Recherche et filtres</div>
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" id="searchInput" type="search" placeholder="Filtrer par titre, tag, type..." />
+        <div class="kbd-hint">/</div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab" type="button" data-filter="all" data-active="true">Tout</button>
+          <button class="filter-tab" type="button" data-filter="univers">Univers</button>
+          <button class="filter-tab" type="button" data-filter="projet">Projets</button>
+          <button class="filter-tab" type="button" data-filter="jeu">Jeux</button>
+        </div>
+        <div class="filter-meta" id="filterMeta">0 pages</div>
+      </div>
+    </div>
+
+    <div class="sidebar-body" id="navContainer">
+      <!-- Navigation injectée en JS -->
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">
+        <strong>Usage :</strong> cliquer, explorer, forker.
+      </div>
+      <button class="sidebar-footer-btn" type="button" id="btnAboutModal">À propos</button>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="content-inner">
+      <nav class="breadcrumbs" id="breadcrumbs">
+        <!-- Fil d'Ariane -->
+      </nav>
+
+      <article class="page-card">
+        <header class="page-header">
+          <div class="page-title-block">
+            <div class="page-kicker">Chargement initial</div>
+            <h1 class="page-title">Sélection en cours...</h1>
+            <p class="page-subtitle">Patiente un instant, la structure du wiki se met en place côté navigateur.</p>
+          </div>
+          <div class="page-meta">
+            <div class="page-meta-row">
+              <span class="pill accent">Client-side · JSON</span>
+            </div>
+            <div class="page-meta-row">
+              <span class="pill-ghost">Aucune donnée envoyée côté serveur</span>
+            </div>
+          </div>
+        </header>
+        <div class="page-content">
+          <p>Si tu vois ce message plus de quelques secondes, c'est que le JavaScript est désactivé ou a planté. Active-le ou inspecte la console pour adapter le fichier à tes besoins.</p>
+        </div>
+      </article>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL A PROPOS -->
+<div class="modal-backdrop" id="aboutModal" data-open="false" aria-hidden="true">
+  <div class="modal">
+    <header class="modal-header">
+      <div class="modal-title">À propos de ce wiki local</div>
+      <button class="modal-close" type="button" id="aboutClose">
+        <span>✕</span>
+        <span>Fermer</span>
+      </button>
+    </header>
+    <div class="modal-body">
+      <h3>Principe</h3>
+      <p>
+        Ce fichier est un wiki statique : tout tient dans ce seul document <code>.html</code>.  
+        Aucune donnée n'est envoyée ailleurs, tout se passe dans ton navigateur.
+      </p>
+      <ul>
+        <li>Navigation pilotée par un petit moteur en <code>JavaScript</code>.</li>
+        <li>Contenu décrit dans une structure JSON interne (<code>pages</code>).</li>
+        <li>Filtre par recherche, tags, type de page.</li>
+        <li>Gestion d'un pseudo-historique via les ancres <code>#id-de-page</code>.</li>
+      </ul>
+
+      <h3>Comment adapter</h3>
+      <ol>
+        <li>Ouvre le fichier dans ton éditeur de code.</li>
+        <li>Recherche <code>const pages = [ ... ]</code> dans le script.</li>
+        <li>Ajoute, modifie, supprime des objets de page selon ta propre cartographie.</li>
+        <li>Utilise l'attribut <code>links</code> pour point­er vers d'autres pages par leur <code>id</code>.</li>
+      </ol>
+
+      <h3>Usage recommandé</h3>
+      <p>
+        Ce wiki sert de hub pour documenter un univers de projets, de jeux, de tests et de dossiers.  
+        Tu peux en faire une base interne, une vitrine publique ou un prototype à forker vers un CMS / générateur statique.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- DONNÉES --------------------------------------------------------------
+
+  const pages = [
+    {
+      id: "accueil",
+      title: "Portail de l'univers",
+      type: "univers",
+      section: "univers",
+      kind: "Hub principal",
+      tags: ["portail", "vue-d-ensemble", "index"],
+      kicker: "Point d'entrée",
+      subtitle: "Une carte mentale mise à plat : univers, projets, sous-projets, jeux et dossiers.",
+      updated: "2025-11",
+      links: ["univers-12-50", "recrutement", "nyxo-os", "casino-642", "ccplc", "argep", "fleur"],
+      content: `
+        <div class="callout">
+          <strong>Objectif :</strong> rassembler, organiser et relier un ensemble de projets, de sous-projets et de jeux dans un même univers cohérent.
+        </div>
+
+        <div class="page-grid">
+          <section class="panel">
+            <header class="panel-header">
+              <div class="panel-title">Axes principaux</div>
+              <div class="panel-badge">Carte rapide</div>
+            </header>
+            <div class="panel-body">
+              <ul>
+                <li><strong>Univers & lore :</strong> chronologie, factions, dispositifs, mythologie interne.</li>
+                <li><strong>Projets structurés :</strong> sites, wikis, dossiers, outils publics ou internes.</li>
+                <li><strong>Jeux & tests :</strong> casinos détournés, jeux de rôle, puzzles, war-room simulées.</li>
+                <li><strong>Outillage :</strong> générateurs statiques, faux OS, intranets, outils d'exploration.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="panel">
+            <header class="panel-header">
+              <div class="panel-title">Points d'entrée</div>
+              <div class="panel-badge">Navigation</div>
+            </header>
+            <div class="panel-body">
+              <p>Quelques portes d'accès rapides :</p>
+              <ul>
+                <li><a class="pill-link" data-goto="univers-12-50">Univers 12,50</a> · cadrage général, ton, méta.</li>
+                <li><a class="pill-link" data-goto="ccplc">CCPLC</a> · test de recrutement déguisé et critique sociale.</li>
+                <li><a class="pill-link" data-goto="nyxo-os">NYXO OS</a> · faux système d'exploitation modulaire.</li>
+                <li><a class="pill-link" data-goto="casino-642">Le 642</a> · casino narratif sur la lignée “LA LOOZE ULTIME”.</li>
+                <li><a class="pill-link" data-goto="jeux-hybrides">Jeu de rôle guerre hybride</a> · mécaniques, campagnes, ressources.</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+
+        <h2>Ce que ce wiki contient</h2>
+        <p>
+          Ce wiki regroupe la vision d'ensemble : chaque page décrit un morceau précis de l'écosystème.  
+          L'objectif est de pouvoir, à partir d'ici :
+        </p>
+        <ul>
+          <li>comprendre les intentions derrière chaque sous-projet ;</li>
+          <li>repérer les liens entre la fiction, le jeu et l'éducation populaire ;</li>
+          <li>avoir une base exploitable pour produire des sites, des jeux ou des dossiers plus aboutis.</li>
+        </ul>
+
+        <h3>Comment naviguer</h3>
+        <ul>
+          <li>Utiliser la barre latérale pour parcourir les catégories (univers, projets, jeux…).</li>
+          <li>Taper des mots-clés (ex. <code>casino</code>, <code>warroom</code>, <code>tarot</code>) dans la recherche.</li>
+          <li>Cliquer sur les liens internes en surbrillance pour suivre le lore.</li>
+          <li>Utiliser le bouton <strong>“Page aléatoire”</strong> pour découvrir des zones oubliées.</li>
+        </ul>
+
+        <div class="callout muted">
+          <strong>Adaptation :</strong> tout le texte est modifiable. Tu peux renommer les projets, changer le ton,
+          fusionner des sections ou ajouter tes propres mondes et dispositifs.
+        </div>
+      `
+    },
+
+    // --- UNIVERS & LORE -----------------------------------------------------
+
+    {
+      id: "univers-12-50",
+      title: "Univers 12,50",
+      type: "univers",
+      section: "univers",
+      kind: "Couché de lore",
+      tags: ["univers", "meta", "narration", "12-50"],
+      kicker: "Méta-cadre",
+      subtitle: "Une galaxie de projets reliés par une même obsession : transformer la curiosité en puissance d'agir.",
+      updated: "2025-11",
+      links: ["casino-642", "ccplc", "nyxo-os", "argep", "fleur", "darkweb-fantasma", "warroom-usb"],
+      content: `
+        <div class="callout purple">
+          <strong>Principe :</strong> l'Univers 12,50 sert de méta-cadre pour l'ensemble des expériences : jeux, sites,
+          dossiers, intranets, faux OS et fausses institutions.
+        </div>
+
+        <h2>Thèmes centraux</h2>
+        <ul>
+          <li><strong>Guerre de l'attention :</strong> casinos, chaînes d'info, dark web fantasmé, réseaux sociaux.</li>
+          <li><strong>Renseignement citoyen :</strong> war-rooms, intranets, dossiers de veille, faux protocoles secrets.</li>
+          <li><strong>Éducation populaire :</strong> tests de recrutement détournés, jeux pédagogiques, wikis bricolés.</li>
+          <li><strong>Mythologie des données :</strong> clé USB perdue, archives classifiées, OS fantômes.</li>
+        </ul>
+
+        <h3>Repères narratifs</h3>
+        <p>Quelques points fixes qui se recoupent dans plusieurs projets :</p>
+        <ul>
+          <li>Une <strong>clé USB</strong> circule entre plusieurs scènes : casino, war-room, dark web, bureau d'étude.</li>
+          <li>Des <strong>faux protocoles de sécurité</strong> se glissent partout (Konami codes, cheatcodes, easter eggs).</li>
+          <li>Des <strong>institutions fictives</strong> coexistent :
+            <ul>
+              <li>une division “Opérations stratégiques” au sein d'une agence de renseignement ;</li>
+              <li>une cellule CCPLC qui “recrute” via des jeux et des tests ;</li>
+              <li>des OS et intranets plus ou moins dystopiques.</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>Logique de conception</h3>
+        <p>
+          Chaque page-projet peut être déployée en site autonome, en mini-jeu ou en module d'un plus grand ensemble.
+          L'univers n'est pas centralisé : il est <strong>réplicable</strong>, <strong>forkable</strong> et <strong>adaptable</strong>.
+        </p>
+
+        <div class="page-grid">
+          <section class="panel">
+            <header class="panel-header">
+              <div class="panel-title">Projets connectés</div>
+              <div class="panel-badge">Lore</div>
+            </header>
+            <div class="panel-body">
+              <ul>
+                <li><a class="pill-link" data-goto="casino-642">Le 642 · Casino</a></li>
+                <li><a class="pill-link" data-goto="ccplc">CCPLC · Recrutement déguisé</a></li>
+                <li><a class="pill-link" data-goto="darkweb-fantasma">Explorateur du dark web fantasmé</a></li>
+                <li><a class="pill-link" data-goto="warroom-usb">Intranet / war-room autour d'une clé USB</a></li>
+                <li><a class="pill-link" data-goto="nyxo-os">NYXO OS · Faux système d'exploitation</a></li>
+                <li><a class="pill-link" data-goto="jeux-hybrides">Jeu de rôle guerre hybride</a></li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="panel">
+            <header class="panel-header">
+              <div class="panel-title">Tags d'univers</div>
+              <div class="panel-badge">Taxonomie</div>
+            </header>
+            <div class="panel-body">
+              <div class="badge-tag"><span class="dot"></span><span>guerre hybride</span></div>
+              <div class="badge-tag"><span class="dot"></span><span>éducation populaire</span></div>
+              <div class="badge-tag"><span class="dot"></span><span>casino narratif</span></div>
+              <div class="badge-tag"><span class="dot"></span><span>dark web fantasmé</span></div>
+              <div class="badge-tag"><span class="dot"></span><span>OS fictif</span></div>
+              <div class="badge-tag"><span class="dot"></span><span>intranet associatif</span></div>
+            </div>
+          </section>
+        </div>
+
+        <h3>Usage de travail</h3>
+        <p>
+          Cette page sert de document-cadre : elle permet d'expliquer rapidement à un·e complice potentiel·le
+          ce qui relie des productions en apparence très différentes.
+        </p>
+      `
+    },
+
+    {
+      id: "lore-chronologie",
+      title: "Chronologie minimale",
+      type: "univers",
+      section: "univers",
+      kind: "Ligne de temps",
+      tags: ["chronologie", "lore", "meta"],
+      kicker: "Lore",
+      subtitle: "Schéma minimal qui peut servir de squelette pour écrire ou jouer dans cet univers.",
+      updated: "2025-11",
+      links: ["univers-12-50", "warroom-usb", "darkweb-fantasma"],
+      content: `
+        <h2>Schéma en quatre temps</h2>
+        <ol>
+          <li><strong>Temps 0 · Fatigue systémique :</strong> précarité, surinformation, désillusion politique, burn-out collectif.</li>
+          <li><strong>Temps 1 · Fuite :</strong> jeux, casinos, réseaux, dark web fantasmé, binge-watch des crises.</li>
+          <li><strong>Temps 2 · Indice :</strong> une clé USB, un fichier, une archive incidente rallument la curiosité.</li>
+          <li><strong>Temps 3 · Organisation :</strong> petits collectifs se constituent, testent des outils, bricolent des protocoles.</li>
+        </ol>
+
+        <div class="callout muted">
+          Cette chronologie est volontairement vague. Elle sert de guide pour placer les projets dans une même
+          continuité, sans figer un scénario unique.
+        </div>
+
+        <h3>Où se situent les projets</h3>
+        <ul>
+          <li><a class="pill-link" data-goto="casino-642">Le 642</a> se situe clairement entre Temps 1 et Temps 2.</li>
+          <li><a class="pill-link" data-goto="darkweb-fantasma">L'explorateur dark web</a> oscille entre fantasme de fuite et enquête réelle.</li>
+          <li><a class="pill-link" data-goto="warroom-usb">La war-room USB</a> matérialise le passage au Temps 3.</li>
+          <li><a class="pill-link" data-goto="ccplc">CCPLC</a> joue avec la frontière entre institution et expérimentation citoyenne.</li>
+        </ul>
+      `
+    },
+
+    // --- PROJETS STRUCTURÉS -------------------------------------------------
+
+    {
+      id: "ccplc",
+      title: "CCPLC · Cellule de Coordination de la Puissance de Lecture Critique",
+      type: "projet",
+      section: "projets",
+      kind: "Recrutement & test",
+      tags: ["test", "recrutement", "lecture-critique", "jeu-serieux"],
+      kicker: "Projet",
+      subtitle: "Une fausse cellule qui recrute pour de vrai : filtres, tests et fiches de profil intellectuel.",
+      updated: "2025-11",
+      links: ["recrutement", "perso-lab", "jeux-hybrides"],
+      content: `
+        <div class="callout">
+          <strong>Idée centrale :</strong> transformer un test de recrutement fictif en outil réel d'auto-évaluation et
+          en porte d'entrée vers des projets plus vastes.
+        </div>
+
+        <h2>Fonctions prévues</h2>
+        <ul>
+          <li><strong>Landing page :</strong> présentation “sérieuse” de la cellule, ton légèrement exagéré.</li>
+          <li><strong>Test principal :</strong> série de questions cliniques mais grand public sur la lecture, l'analyse,
+            la mise en contexte.</li>
+          <li><strong>Export de profil :</strong> fiche statique en HTML (ou JSON) résumant les axes forts/faibles.</li>
+          <li><strong>Cheatcodes :</strong> codes cachés révélant des pages supplémentaires, des dossiers, des jeux.</li>
+        </ul>
+
+        <h3>Articulation avec le reste</h3>
+        <p>Le CCPLC sert de pivot entre :</p>
+        <ul>
+          <li><a class="pill-link" data-goto="perso-lab">Perso·Lab</a> · laboratoire de fiches de personnages.</li>
+          <li><a class="pill-link" data-goto="recrutement">Portail “recrutement” général</a> · index de tests et de jeux.</li>
+          <li><a class="pill-link" data-goto="jeux-hybrides">Jeu de rôle guerre hybride</a> · où les profils peuvent devenir des personnages jouables.</li>
+        </ul>
+
+        <div class="page-grid">
+          <section class="panel">
+            <header class="panel-header">
+              <div class="panel-title">Axes du profil</div>
+              <div class="panel-badge">Exemple</div>
+            </header>
+            <div class="panel-body">
+              <ul>
+                <li>Logique structurée / pensée arborescente.</li>
+                <li>Créativité débordante / divergence contrôlée.</li>
+                <li>Mémoire contextuelle / repérage de motifs.</li>
+                <li>Stratégie tranquille / gestion de la fatigue.</li>
+              </ul>
+              <p>Ces axes peuvent être notés sur 100 et exportés dans une fiche JSON autonome.</p>
+            </div>
+          </section>
+
+          <section class="panel">
+            <header class="panel-header">
+              <div class="panel-title">Mécaniques de jeu</div>
+              <div class="panel-badge">Lore</div>
+            </header>
+            <div class="panel-body">
+              <ul>
+                <li>Questions liées à de faux dossiers PDF, accessibles via des modales.</li>
+                <li>Références cachées à des pages de l'univers (dark web, casino, war-room).</li>
+                <li>Un bouton “don de 12,50” présenté comme option de soutien volontaire.</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      `
+    },
+
+    {
+      id: "recrutement",
+      title: "Portail de recrutement fictif",
+      type: "projet",
+      section: "projets",
+      kind: "Portail",
+      tags: ["recrutement", "test", "portail"],
+      kicker: "Hub",
+      subtitle: "Un faux site de recrutement qui agrège plusieurs épreuves, jeux et tests.",
+      updated: "2025-11",
+      links: ["ccplc", "bac-courrier", "warroom-usb", "perso-lab"],
+      content: `
+        <h2>Concept</h2>
+        <p>
+          Le portail de recrutement présente une série d'épreuves comme si elles faisaient partie du processus d'entrée
+          dans une unité secrète ou une cellule d'analyse. En réalité, ce sont des prétextes pour :
+        </p>
+        <ul>
+          <li>faire découvrir des pages de l'univers ;</li>
+          <li>tester des compétences utiles à la veille citoyenne ;</li>
+          <li>rendre le tout ludique, réplicable et modulable.</li>
+        </ul>
+
+        <h3>Épreuves clés</h3>
+        <ul>
+          <li><strong>Bac à courrier numérique :</strong> tri d'emails, d'articles et de notifications contradictoires.</li>
+          <li><strong>War-room autour d'une clé USB :</strong> priorisation des urgences, revue de presse, scénarios possibles.</li>
+          <li><strong>Test CCPLC :</strong> lecture critique, mémoire contextuelle, stratégies de tri.</li>
+          <li><strong>Jeu “Le 642” :</strong> simulation de hasard, frustration, boucles addictives.</li>
+        </ul>
+      `
+    },
+
+    {
+      id: "bac-courrier",
+      title: "Bac à courrier · Test de tri",
+      type: "projet",
+      section: "projets",
+      kind: "Épreuve",
+      tags: ["tri", "emails", "administratif", "recrutement"],
+      kicker: "Épreuve",
+      subtitle: "Simuler un poste saturé de courriers, notifications et documents contradictoires.",
+      updated: "2025-11",
+      links: ["recrutement"],
+      content: `
+        <h2>But de l'épreuve</h2>
+        <p>
+          Reconstituer, dans un navigateur, un “bac à courrier” qui déborde. Le/la joueuse doit :
+        </p>
+        <ul>
+          <li>classer, archiver, signaler, mettre en attente ;</li>
+          <li>distinguer l'urgent du symbolique ;</li>
+          <li>repérer les signaux faibles dans le bruit administratif.</li>
+        </ul>
+
+        <h3>Interfaces possibles</h3>
+        <ul>
+          <li>Kanban en HTML/CSS/JS pur.</li>
+          <li>Listes d'e-mails + pièces jointes (faux PDF, images, notes).</li>
+          <li>Score basé sur le temps, la cohérence, ou des objectifs cachés.</li>
+        </ul>
+      `
+    },
+
+    {
+      id: "perso-lab",
+      title: "Perso·Lab · Fiches de personnages",
+      type: "projet",
+      section: "projets",
+      kind: "Outil",
+      tags: ["fiches", "personnages", "profil", "jeu-de-role"],
+      kicker: "Outil",
+      subtitle: "Relier profils, personnages et archétypes entre jeux, tests et scénarios.",
+      updated: "2025-11",
+      links: ["ccplc", "jeux-hybrides"],
+      content: `
+        <h2>Rôle dans l'écosystème</h2>
+        <p>
+          Perso·Lab permet de transformer des résultats de tests (par exemple CCPLC) en fiches de personnages utilisables
+          dans les jeux de rôle, les récits ou les simulations de guerre hybride.
+        </p>
+
+        <h3>Champs clés d'une fiche</h3>
+        <ul>
+          <li>Alias public, devise, tags (compétences, traits, pôles d'intérêt).</li>
+          <li>Résumé lisible et notes cachées (lore interne, triggers narratifs).</li>
+          <li>Scores sur plusieurs axes (logique, créativité, mémoire, stratégie tranquille...).</li>
+        </ul>
+
+        <div class="callout muted">
+          Le but n'est pas de psychologiser, mais de fournir un matériau narratif réutilisable d'un jeu à l'autre.
+        </div>
+      `
+    },
+
+    {
+      id: "nyxo-os",
+      title: "NYXO · Système d'exploitation fictif",
+      type: "projet",
+      section: "projets",
+      kind: "Faux OS",
+      tags: ["os", "interface", "fenêtres", "explorateur"],
+      kicker: "Interface",
+      subtitle: "Un bureau web modulaire pour simuler un OS saturé d'outils, de fenêtres et de secrets.",
+      updated: "2025-11",
+      links: ["darkweb-fantasma", "warroom-usb", "casino-642"],
+      content: `
+        <div class="callout">
+          <strong>Intention :</strong> proposer un faux système d'exploitation en HTML/CSS/JS où chaque “module”
+          est en fait une porte d'entrée vers un autre projet.
+        </div>
+
+        <h2>Modules envisagés</h2>
+        <ul>
+          <li><strong>OXYN :</strong> visionneuse de fichiers (PDF, images, Markdown) avec fausses métadonnées.</li>
+          <li><strong>Explorateur dark web :</strong> interface dédiée au projet
+            <a class="pill-link" data-goto="darkweb-fantasma">dark web fantasmé</a>.</li>
+          <li><strong>Casino 642 :</strong> mini-lanceur du jeu “LA LOOZE ULTIME”.</li>
+          <li><strong>War-room USB :</strong> fenêtre dédiée aux “alertes” autour de la clé perdue.</li>
+        </ul>
+
+        <h3>Exigences ergonomiques</h3>
+        <ul>
+          <li>Fenêtres redimensionnables, maximisables, adaptées au mobile.</li>
+          <li>Scroll vertical propre, sans débordement ingérable.</li>
+          <li>Mode “lecture seule” et mode “édition” pour les modules à enrichir.</li>
+        </ul>
+      `
+    },
+
+    {
+      id: "darkweb-fantasma",
+      title: "Explorateur du dark web fantasmé",
+      type: "projet",
+      section: "projets",
+      kind: "Outil / jeu",
+      tags: ["dark-web", "fantasme", "exploration", "veille"],
+      kicker: "Exploration",
+      subtitle: "Simuler une plongée dans un dark web imaginaire pour réfléchir à ce qu'on y projette.",
+      updated: "2025-11",
+      links: ["nyxo-os", "warroom-usb"],
+      content: `
+        <h2>Positionnement</h2>
+        <p>
+          L'explorateur du dark web n'essaie pas de reproduire le vrai dark web. Il en propose une version fantasmée,
+          remplie de faux sites, de dossiers bricolés et d'outils de “veille”.
+        </p>
+
+        <h3>Fonctionnalités imaginées</h3>
+        <ul>
+          <li>Liste de “sites” locaux (HTML, Markdown, PDF) dans un dossier.</li>
+          <li>Visionneuse plein écran avec affichage de métadonnées (exif, pseudo-headers, tags).</li>
+          <li>Option pour annoter les contenus, les tagguer, les lier à d'autres pages du wiki.</li>
+        </ul>
+
+        <div class="callout muted">
+          Ce projet est autant un outil critique qu'un prétexte pour parler de peur, de fantasme de surveillance et de
+          fascination pour l'illégal.
+        </div>
+      `
+    },
+
+    {
+      id: "warroom-usb",
+      title: "War-room · Clé USB perdue",
+      type: "projet",
+      section: "projets",
+      kind: "Intranet",
+      tags: ["war-room", "clé-usb", "revue-de-presse", "panique"],
+      kicker: "Intranet",
+      subtitle: "Une salle de crise virtuelle où tout tourne autour d'une clé USB inconnue.",
+      updated: "2025-11",
+      links: ["darkweb-fantasma", "recrutement"],
+      content: `
+        <h2>Pitch</h2>
+        <p>
+          Une agence de presse sous tension découvre que toute sa ligne éditoriale pourrait dépendre du contenu
+          d'une clé USB perdue, destinée à un certain “S.”. Personne ne sait ce qu'elle contient. Tout le monde panique.
+        </p>
+
+        <h3>Intranet simulé</h3>
+        <ul>
+          <li>Dashboard avec flux d'alertes, timeline, notes internes.</li>
+          <li>Section “revue de presse” qui s'ouvre sur des actus du jour (réelles ou fictives).</li>
+          <li>Onglet “hypothèses” : scénarios possibles à propos de la clé.</li>
+        </ul>
+
+        <div class="callout purple">
+          Cette war-room peut servir de tutoriel déguisé pour comprendre le travail de veille, de recoupement
+          et de gestion de rumeurs.
+        </div>
+      `
+    },
+
+    // --- JEUX ET EXPÉRIENCES -----------------------------------------------
+
+    {
+      id: "casino-642",
+      title: "Le 642 · Casino narratif",
+      type: "jeu",
+      section: "jeux",
+      kind: "Mini-jeu",
+      tags: ["casino", "slot-machine", "addiction", "12-50"],
+      kicker: "Jeu",
+      subtitle: "Une machine à sous cosmique où la combinaison 6-4-2 incarne “LA LOOZE ULTIME”.",
+      updated: "2025-11",
+      links: ["univers-12-50"],
+      content: `
+        <div class="callout">
+          <strong>But :</strong> détourner les mécaniques addictives d'un casino mobile pour pointer les
+          boucles de récompense qui structurent la vie en ligne.
+        </div>
+
+        <h2>Mécaniques de base</h2>
+        <ul>
+          <li>Machine à sous stylisée “cosmos” : néons, constellations, événements cosmiques.</li>
+          <li>Nombreuses animations, bonus, mini-jeux, notifications.</li>
+          <li>La combinaison “642” n'est pas un jackpot, mais la “loose totale”.</li>
+        </ul>
+
+        <h3>Référence à l'univers</h3>
+        <ul>
+          <li>Intégration de la clé USB, de symboles de war-room, de fragments de dark web.</li>
+          <li>Cheatcodes déclenchant des easter eggs (documents, pages cachées, tests CCPLC).</li>
+          <li>Paliers qui débloquent d'autres jeux ou modules (NYXO, CCPLC, etc.).</li>
+        </ul>
+      `
+    },
+
+    {
+      id: "jeux-hybrides",
+      title: "Jeu de rôle · Guerre hybride",
+      type: "jeu",
+      section: "jeux",
+      kind: "Jeu de rôle",
+      tags: ["jeu-de-role", "guerre-hybride", "campagne", "intelligence"],
+      kicker: "Jeu de rôle",
+      subtitle: "Jouer avec les codes de la guerre hybride pour mieux les désamorcer.",
+      updated: "2025-11",
+      links: ["ccplc", "perso-lab", "univers-12-50"],
+      content: `
+        <h2>Intention</h2>
+        <p>
+          Proposer un jeu de rôle modulaire où les joueurs incarnent des acteurs de la guerre hybride (journalistes,
+          analystes, bots, trolls repentis, archivistes) dans un univers proche du réel.
+        </p>
+
+        <h3>Supports</h3>
+        <ul>
+          <li>Fiches de personnage issues de <a class="pill-link" data-goto="perso-lab">Perso·Lab</a>.</li>
+          <li>Pages HTML jouables (faux intranets, OS, casinos, dark web fantasmé).</li>
+          <li>Documents externes (PDF, notes, articles) utilisés comme “pièces à conviction”.</li>
+        </ul>
+
+        <h3>Usage</h3>
+        <p>
+          Le jeu peut être animé en présentiel (projection de pages) ou en ligne (partage de liens, repos GitHub,
+          archives compressées). Les règles peuvent rester légères et évoluer selon le groupe.
+        </p>
+      `
+    },
+
+    // --- OUTILS & INFRA -----------------------------------------------------
+
+    {
+      id: "stack-technique",
+      title: "Stack technique & déploiement",
+      type: "outil",
+      section: "outils",
+      kind: "Documentation",
+      tags: ["hugo", "jekyll", "grav", "html", "static-site"],
+      kicker: "Tech",
+      subtitle: "Résumé des outils utilisés pour publier et relier les différents projets.",
+      updated: "2025-11",
+      links: [],
+      content: `
+        <h2>Philosophie</h2>
+        <p>
+          Partir de fichiers simples (HTML, Markdown, JSON) et les pousser aussi loin que possible avec des outils libres
+          ou très répandus :
+        </p>
+        <ul>
+          <li>Sites statiques (Hugo, Jekyll, Grav) pour le contenu éditorial.</li>
+          <li>Pages HTML/CSS/JS autonomes pour les mini-jeux et prototypes d'OS.</li>
+          <li>Repos Git comme base de diffusion et de collaboration.</li>
+        </ul>
+
+        <h3>Rôle de ce wiki</h3>
+        <p>
+          Ce fichier sert de plan directeur : chaque projet décrit ici peut correspondre à :
+        </p>
+        <ul>
+          <li>un dossier dans un dépôt ;</li>
+          <li>un site autonome déployé via Pages / Vercel / hébergement mutualisé ;</li>
+          <li>un module intégré dans NYXO ou un autre faux OS.</li>
+        </ul>
+      `
+    }
+  ];
+
+  // sections pour la nav
+  const sectionsMeta = [
+    { id: "univers", label: "Univers & lore" },
+    { id: "projets", label: "Projets structurés" },
+    { id: "jeux", label: "Jeux & expériences" },
+    { id: "outils", label: "Outillage & stack" }
+  ];
+
+  // --- ÉTAT ---------------------------------------------------------------
+
+  let currentPageId = "accueil";
+  let currentFilterType = "all";
+  let searchTerm = "";
+
+  // --- UTILITAIRES --------------------------------------------------------
+
+  function normalize(str) {
+    return (str || "")
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function getPageById(id) {
+    return pages.find(p => p.id === id) || null;
+  }
+
+  function filteredPages() {
+    const term = normalize(searchTerm);
+    return pages.filter(p => {
+      if (currentFilterType !== "all") {
+        if (currentFilterType === "univers" && p.section !== "univers") return false;
+        if (currentFilterType === "projet" && p.section !== "projets") return false;
+        if (currentFilterType === "jeu" && p.section !== "jeux") return false;
+      }
+      if (!term) return true;
+      const haystack = normalize([
+        p.title,
+        p.subtitle,
+        p.type,
+        p.kind,
+        (p.tags || []).join(" ")
+      ].join(" "));
+      return haystack.includes(term);
+    });
+  }
+
+  // --- NAVIGATION ---------------------------------------------------------
+
+  function renderSidebar() {
+    const container = document.getElementById("navContainer");
+    container.innerHTML = "";
+
+    const list = filteredPages();
+    const count = list.length;
+    const meta = document.getElementById("filterMeta");
+    meta.textContent = count === 1 ? "1 page" : `${count} pages`;
+
+    sectionsMeta.forEach(section => {
+      const sectionPages = list.filter(p => p.section === section.id);
+      if (!sectionPages.length) return;
+
+      const group = document.createElement("div");
+      group.className = "section-group";
+
+      const header = document.createElement("div");
+      header.className = "section-header";
+
+      const left = document.createElement("div");
+      left.style.display = "flex";
+      left.style.alignItems = "center";
+
+      const titleSpan = document.createElement("div");
+      titleSpan.className = "section-title";
+      titleSpan.textContent = section.label;
+
+      const chevron = document.createElement("span");
+      chevron.className = "section-chevron";
+      chevron.textContent = "▾";
+
+      left.appendChild(titleSpan);
+      left.appendChild(chevron);
+
+      const badge = document.createElement("div");
+      badge.className = "section-badge";
+      badge.textContent = sectionPages.length;
+
+      header.appendChild(left);
+      header.appendChild(badge);
+
+      const listEl = document.createElement("div");
+      listEl.className = "section-list";
+
+      sectionPages.forEach(page => {
+        const item = document.createElement("div");
+        item.className = "nav-item";
+        item.dataset.id = page.id;
+        if (page.id === currentPageId) {
+          item.dataset.active = "true";
+        }
+
+        const mainRow = document.createElement("div");
+        mainRow.className = "nav-item-main";
+
+        const title = document.createElement("div");
+        title.className = "nav-item-title";
+        title.textContent = page.title;
+
+        const kind = document.createElement("div");
+        kind.className = "nav-item-kind";
+        kind.textContent = page.kind || page.type || "";
+
+        mainRow.appendChild(title);
+        mainRow.appendChild(kind);
+
+        const desc = document.createElement("div");
+        desc.className = "nav-item-desc";
+        desc.textContent = page.subtitle || "";
+
+        item.appendChild(mainRow);
+        item.appendChild(desc);
+
+        if (page.tags && page.tags.length) {
+          const tagsRow = document.createElement("div");
+          tagsRow.className = "nav-item-tags";
+          page.tags.slice(0, 3).forEach(t => {
+            const tag = document.createElement("span");
+            tag.className = "tag-pill";
+            tag.textContent = t;
+            tagsRow.appendChild(tag);
+          });
+          item.appendChild(tagsRow);
+        }
+
+        item.addEventListener("click", () => {
+          navigateToPage(page.id);
+          const sidebar = document.getElementById("sidebar");
+          if (window.innerWidth <= 900) {
+            sidebar.dataset.open = "false";
+          }
+        });
+
+        listEl.appendChild(item);
+      });
+
+      group.appendChild(header);
+      group.appendChild(listEl);
+      container.appendChild(group);
+    });
+  }
+
+  function updateFilterTabsUI() {
+    document.querySelectorAll(".filter-tab").forEach(btn => {
+      btn.dataset.active = btn.dataset.filter === currentFilterType ? "true" : "false";
+    });
+  }
+
+  function renderBreadcrumbs(page) {
+    const bc = document.getElementById("breadcrumbs");
+    bc.innerHTML = "";
+
+    const rootLink = document.createElement("a");
+    rootLink.textContent = "Portail";
+    rootLink.href = "javascript:void(0)";
+    rootLink.addEventListener("click", () => navigateToPage("accueil"));
+    bc.appendChild(rootLink);
+
+    const sep1 = document.createElement("span");
+    sep1.textContent = "›";
+    bc.appendChild(sep1);
+
+    const secSpan = document.createElement("span");
+    secSpan.textContent = (sectionsMeta.find(s => s.id === page.section)?.label) || "Section";
+    bc.appendChild(secSpan);
+
+    const sep2 = document.createElement("span");
+    sep2.textContent = "›";
+    bc.appendChild(sep2);
+
+    const currentSpan = document.createElement("span");
+    currentSpan.textContent = page.title;
+    bc.appendChild(currentSpan);
+  }
+
+  function renderPage(pageId) {
+    const page = getPageById(pageId) || getPageById("accueil");
+    if (!page) return;
+
+    currentPageId = page.id;
+
+    const card = document.querySelector(".page-card");
+    const titleEl = card.querySelector(".page-title");
+    const kickerEl = card.querySelector(".page-kicker");
+    const subtitleEl = card.querySelector(".page-subtitle");
+    const metaContainer = card.querySelector(".page-meta");
+    const toolbar = card.querySelector(".page-toolbar");
+    const contentEl = card.querySelector(".page-content");
+
+    if (!toolbar) {
+      const toolbarDiv = document.createElement("div");
+      toolbarDiv.className = "page-toolbar";
+      card.insertBefore(toolbarDiv, contentEl);
+    }
+
+    titleEl.textContent = page.title;
+    kickerEl.textContent = page.kicker || "";
+    subtitleEl.textContent = page.subtitle || "";
+
+    metaContainer.innerHTML = "";
+
+    const row1 = document.createElement("div");
+    row1.className = "page-meta-row";
+
+    const pillType = document.createElement("span");
+    pillType.className = "pill accent";
+    pillType.textContent = page.kind || page.type || "Page";
+    row1.appendChild(pillType);
+
+    if (page.section) {
+      const sec = document.createElement("span");
+      sec.className = "pill";
+      sec.textContent = sectionsMeta.find(s => s.id === page.section)?.label || page.section;
+      row1.appendChild(sec);
+    }
+
+    metaContainer.appendChild(row1);
+
+    const row2 = document.createElement("div");
+    row2.className = "page-meta-row";
+    if (page.tags && page.tags.length) {
+      const tagsSpan = document.createElement("span");
+      tagsSpan.className = "pill-ghost";
+      tagsSpan.textContent = "#" + page.tags[0] + (page.tags.length > 1 ? ` +${page.tags.length - 1}` : "");
+      row2.appendChild(tagsSpan);
+    }
+    if (page.updated) {
+      const upd = document.createElement("span");
+      upd.className = "pill-ghost";
+      upd.textContent = `MàJ ${page.updated}`;
+      row2.appendChild(upd);
+    }
+    metaContainer.appendChild(row2);
+
+    const tb = card.querySelector(".page-toolbar");
+    tb.innerHTML = "";
+
+    const btnOutline = document.createElement("button");
+    btnOutline.type = "button";
+    btnOutline.className = "toolbar-btn";
+    btnOutline.innerHTML = '<span class="icon">🧭</span><span>Arborescence</span>';
+    btnOutline.addEventListener("click", () => {
+      navigateToPage("accueil");
+    });
+    tb.appendChild(btnOutline);
+
+    if (page.links && page.links.length) {
+      const btnLinks = document.createElement("button");
+      btnLinks.type = "button";
+      btnLinks.className = "toolbar-btn";
+      btnLinks.innerHTML = '<span class="icon">🕳️</span><span>Pages liées</span>';
+      btnLinks.addEventListener("click", () => {
+        alert("Les liens internes sont cliquables directement dans le texte (en surbrillance). Ici, tu peux aussi ajouter un panneau latéral ou un mini-graph si tu le souhaites dans le code.");
+      });
+      tb.appendChild(btnLinks);
+    }
+
+    const btnEdit = document.createElement("button");
+    btnEdit.type = "button";
+    btnEdit.className = "toolbar-btn";
+    btnEdit.innerHTML = '<span class="icon">✏️</span><span>Modifier (en local)</span>';
+    btnEdit.addEventListener("click", () => {
+      alert("Pour modifier cette page, ouvre le fichier HTML dans ton éditeur et adapte le contenu de l'entrée 'content' correspondant à l'id \"" + page.id + "\".");
+    });
+    tb.appendChild(btnEdit);
+
+    contentEl.innerHTML = page.content || "";
+    wireInternalLinks(contentEl);
+    renderBreadcrumbs(page);
+    renderSidebar();
+    window.location.hash = "#" + page.id;
+  }
+
+  function wireInternalLinks(scope) {
+    scope.querySelectorAll("[data-goto]").forEach(el => {
+      el.addEventListener("click", () => {
+        const targetId = el.getAttribute("data-goto");
+        if (targetId) {
+          navigateToPage(targetId);
+        }
+      });
+    });
+  }
+
+  function navigateToPage(pageId) {
+    renderPage(pageId);
+  }
+
+  function randomPage() {
+    const list = filteredPages();
+    if (!list.length) return;
+    const pool = list.filter(p => p.id !== currentPageId);
+    const arr = pool.length ? pool : list;
+    const idx = Math.floor(Math.random() * arr.length);
+    navigateToPage(arr[idx].id);
+  }
+
+  // --- MODAL ---------------------------------------------------------------
+
+  function openAboutModal() {
+    const m = document.getElementById("aboutModal");
+    m.dataset.open = "true";
+    m.setAttribute("aria-hidden", "false");
+  }
+
+  function closeAboutModal() {
+    const m = document.getElementById("aboutModal");
+    m.dataset.open = "false";
+    m.setAttribute("aria-hidden", "true");
+  }
+
+  // --- INIT ---------------------------------------------------------------
+
+  function init() {
+    // filtres
+    document.querySelectorAll(".filter-tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentFilterType = btn.dataset.filter || "all";
+        updateFilterTabsUI();
+        renderSidebar();
+      });
+    });
+
+    // recherche
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", e => {
+      searchTerm = e.target.value || "";
+      renderSidebar();
+    });
+
+    // raccourci /
+    window.addEventListener("keydown", e => {
+      if (e.key === "/" && document.activeElement !== searchInput && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+      }
+    });
+
+    // random page
+    document.getElementById("btnRandomPage").addEventListener("click", randomPage);
+
+    // sidebar toggle mobile
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("btnToggleSidebar");
+    toggleBtn.addEventListener("click", () => {
+      const open = sidebar.dataset.open === "true";
+      sidebar.dataset.open = open ? "false" : "true";
+    });
+
+    // modal
+    document.getElementById("btnAboutModal").addEventListener("click", openAboutModal);
+    document.getElementById("aboutClose").addEventListener("click", closeAboutModal);
+    document.getElementById("aboutModal").addEventListener("click", e => {
+      if (e.target.id === "aboutModal") {
+        closeAboutModal();
+      }
+    });
+
+    // hash navigation
+    const hashId = window.location.hash.replace("#", "");
+    const initial = getPageById(hashId) ? hashId : "accueil";
+
+    renderSidebar();
+    renderPage(initial);
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
