@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HUMINT-OS — Boot séquence</title>
+  <style>
+    :root {
+      --bg: #02040a;
+      --bg-deep: #000000;
+      --accent: #00ff88;
+      --accent-soft: rgba(0, 255, 136, 0.25);
+      --accent-alt: #00d4ff;
+      --danger: #ff3366;
+      --text: #e6fff5;
+      --muted: #7f8b95;
+      --font-mono: system-ui, -apple-system, BlinkMacSystemFont, "SF Mono",
+        "Fira Code", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #050814 0, #000 55%);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #app {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #071019 0, #000 55%);
+    }
+
+    /* Scanlines + grain pour l’ambiance */
+    #app::before {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.04),
+        rgba(255, 255, 255, 0.04) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      mix-blend-mode: soft-light;
+      opacity: 0.2;
+      z-index: 2;
+    }
+
+    #app::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: -50px;
+      background-image: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.12) 0,
+        transparent 50%
+      );
+      opacity: 0;
+      animation: flicker 4s infinite;
+      mix-blend-mode: soft-light;
+      z-index: 2;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0; }
+      10% { opacity: 0.35; }
+      11% { opacity: 0; }
+      12% { opacity: 0.25; }
+      14% { opacity: 0; }
+      50% { opacity: 0.15; }
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .terminal-shell {
+      width: 100%;
+      max-width: 720px;
+      min-height: min(540px, 80vh);
+      background: radial-gradient(circle at top left, #071823 0, #02040a 45%, #000 100%);
+      border-radius: 18px;
+      border: 1px solid rgba(0, 255, 136, 0.18);
+      box-shadow:
+        0 0 0 1px rgba(0, 255, 136, 0.08),
+        0 18px 55px rgba(0, 0, 0, 0.9),
+        0 0 55px rgba(0, 255, 136, 0.15);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .terminal-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(0, 255, 136, 0.16), transparent 62%);
+      mix-blend-mode: soft-light;
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(0, 255, 136, 0.14);
+      background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.8),
+        rgba(0, 12, 8, 0.95),
+        rgba(0, 0, 0, 0.8)
+      );
+      position: relative;
+      z-index: 1;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #2b3139;
+    }
+
+    .window-dot.red { background: #ff5f57; }
+    .window-dot.amber { background: #febc2e; }
+    .window-dot.green { background: #27c93f; }
+
+    .terminal-title {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .terminal-body {
+      flex: 1;
+      padding: 14px;
+      padding-top: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-y: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .terminal-line {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .terminal-line.dim {
+      color: var(--muted);
+    }
+
+    .terminal-line.success {
+      color: var(--accent);
+    }
+
+    .terminal-line.error {
+      color: var(--danger);
+    }
+
+    .prompt-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .prompt-prefix {
+      color: var(--accent);
+    }
+
+    .prompt-question {
+      flex: 0 0 auto;
+    }
+
+    .prompt-input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--accent-alt);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      padding: 4px 2px;
+    }
+
+    .prompt-input::placeholder {
+      color: rgba(127, 139, 149, 0.7);
+    }
+
+    /* Loader futuriste */
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .loader-orb {
+      width: 72px;
+      height: 72px;
+      border-radius: 999px;
+      border: 2px solid rgba(0, 255, 136, 0.3);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loader-orb::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        conic-gradient(
+          from 0deg,
+          rgba(0, 255, 136, 0.2),
+          rgba(0, 212, 255, 0.4),
+          rgba(0, 255, 136, 0.1),
+          transparent,
+          rgba(0, 255, 136, 0.2)
+        );
+      animation: spin 1.6s linear infinite;
+    }
+
+    .loader-orb::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      background: radial-gradient(circle at top, #071920, #000);
+      border-radius: inherit;
+    }
+
+    .loader-core {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow:
+        0 0 12px var(--accent),
+        0 0 28px rgba(0, 255, 136, 0.9);
+      position: relative;
+      z-index: 1;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .loader-bars {
+      width: 100%;
+      max-width: 260px;
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      position: relative;
+    }
+
+    .loader-bars-fill {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 255, 136, 0.8),
+        rgba(0, 212, 255, 0.9),
+        transparent
+      );
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+
+    .loader-text-main {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent-alt);
+    }
+
+    .loader-text-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Black screen */
+    .black-screen-inner {
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    /* Menus */
+    .menu-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .menu-section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 9px;
+      border: 1px solid rgba(0, 255, 136, 0.16);
+      background: radial-gradient(circle at top left, rgba(0, 255, 136, 0.07), rgba(0, 0, 0, 0.85));
+      color: var(--text);
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out;
+    }
+
+    .menu-btn span.label-main {
+      display: block;
+    }
+
+    .menu-btn span.label-sub {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .menu-btn span.key {
+      font-size: 11px;
+      color: var(--accent-alt);
+      padding-left: 8px;
+      white-space: nowrap;
+    }
+
+    .menu-btn:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    .menu-btn:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.18);
+    }
+
+    .menu-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Narratif */
+    .narrative-block {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 9px;
+      background: radial-gradient(circle at top left, rgba(0, 255, 136, 0.1), rgba(0, 0, 0, 0.95));
+      border: 1px solid rgba(0, 255, 136, 0.14);
+      margin-bottom: 12px;
+      max-height: 40vh;
+      overflow-y: auto;
+    }
+
+    .narrative-block h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      margin-bottom: 8px;
+      color: var(--accent-alt);
+    }
+
+    .narrative-block p + p {
+      margin-top: 6px;
+    }
+
+    .narrative-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+
+    /* Texte “glitch” léger pour le titre boot */
+    .glitch {
+      position: relative;
+      display: inline-block;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 11px;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-label);
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: screen;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .glitch::before {
+      color: #00d4ff;
+      transform: translateX(-1px);
+    }
+
+    .glitch::after {
+      color: #ff00aa;
+      transform: translateX(1px);
+    }
+
+    /* Responsif */
+    @media (min-width: 768px) {
+      .terminal-body {
+        padding: 16px;
+        font-size: 14px;
+      }
+      .prompt-input {
+        font-size: 14px;
+      }
+      .menu-btn {
+        padding: 11px 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Écran noir -->
+    <section id="black-screen" class="screen active" aria-hidden="true">
+      <div class="black-screen-inner"></div>
+    </section>
+
+    <!-- Loader futuriste -->
+    <section id="loading-screen" class="screen" aria-hidden="true">
+      <div class="terminal-shell" aria-label="Chargement du système HUMINT-OS">
+        <div class="terminal-header">
+          <div class="window-dots">
+            <span class="window-dot red"></span>
+            <span class="window-dot amber"></span>
+            <span class="window-dot green"></span>
+          </div>
+          <div class="terminal-title">HUMINT-OS • initialisation</div>
+        </div>
+        <div class="terminal-body">
+          <div class="loader">
+            <div class="loader-orb">
+              <div class="loader-core"></div>
+            </div>
+            <div class="loader-bars">
+              <div class="loader-bars-fill" id="loader-fill"></div>
+            </div>
+            <p class="loader-text-main">synchronisation des modules</p>
+            <p class="loader-text-sub" id="loader-caption">
+              Chargement du noyau stratégique…
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Boot log -->
+    <section id="boot-screen" class="screen" aria-hidden="true">
+      <div class="terminal-shell">
+        <div class="terminal-header">
+          <div class="window-dots">
+            <span class="window-dot red"></span>
+            <span class="window-dot amber"></span>
+            <span class="window-dot green"></span>
+          </div>
+          <div class="terminal-title">
+            <span class="glitch" data-label="BOOT SEQUENCE">BOOT SEQUENCE</span>
+          </div>
+        </div>
+        <div class="terminal-body" id="boot-log"></div>
+      </div>
+    </section>
+
+    <!-- Console début (o/n) ? -->
+    <section id="console-screen" class="screen" aria-hidden="true">
+      <div class="terminal-shell">
+        <div class="terminal-header">
+          <div class="window-dots">
+            <span class="window-dot red"></span>
+            <span class="window-dot amber"></span>
+            <span class="window-dot green"></span>
+          </div>
+          <div class="terminal-title">HUMINT-OS • console sécurisée</div>
+        </div>
+        <div class="terminal-body" id="console-output">
+          <div class="terminal-line dim">
+            [SYSTEM] Canal chiffré établi. Système prêt.
+          </div>
+          <div class="terminal-line">
+            Tu peux quitter le protocole ou t'enfoncer dans la guerre hybride.
+          </div>
+
+          <div id="prompt-row" class="prompt-row">
+            <span class="prompt-prefix">[root@humint]$</span>
+            <span class="prompt-question">début (o/n) ?</span>
+            <input
+              id="console-input"
+              class="prompt-input"
+              type="text"
+              maxlength="10"
+              autocomplete="off"
+              spellcheck="false"
+              inputmode="text"
+              placeholder="tape « o » ou « n » puis Entrée"
+              aria-label="Répondre à la question : début, oui ou non ?"
+            />
+          </div>
+          <div class="menu-note">
+            Conseil mobile : touche Entrée du clavier virtuel pour valider.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu principal après O -->
+    <section id="main-menu-screen" class="screen" aria-hidden="true">
+      <div class="terminal-shell">
+        <div class="terminal-header">
+          <div class="window-dots">
+            <span class="window-dot red"></span>
+            <span class="window-dot amber"></span>
+            <span class="window-dot green"></span>
+          </div>
+          <div class="terminal-title">MENU • orientation</div>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line dim">
+            [INFO] Bienvenue dans HUMINT-OS. Choisis ton point d'entrée.
+          </div>
+
+          <div class="menu-layout" style="margin-top: 10px;">
+            <div>
+              <div class="menu-section-label">début</div>
+              <div class="menu-buttons">
+                <button class="menu-btn" id="btn-intro-war">
+                  <div>
+                    <span class="label-main">Guerre</span>
+                    <span class="label-sub">Plonge directement dans le narratif de la guerre hybride.</span>
+                  </div>
+                  <span class="key">[Entrer]</span>
+                </button>
+                <button class="menu-btn" id="btn-intro-play">
+                  <div>
+                    <span class="label-main">Jouer</span>
+                    <span class="label-sub">Lancer le jeu OXO dans un nouvel onglet.</span>
+                  </div>
+                  <span class="key">oxo.html</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="menu-section-label">narratif</div>
+              <div class="menu-buttons">
+                <button class="menu-btn" id="btn-narrative">
+                  <div>
+                    <span class="label-main">Comprendre la guerre hybride</span>
+                    <span class="label-sub">
+                      Lecture guidée : comment la guerre déborde le champ militaire.
+                    </span>
+                  </div>
+                  <span class="key">[narratif]</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="menu-note">
+              Tu peux revenir en arrière avec le bouton retour de ton navigateur à tout moment.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Narratif + menu 2 -->
+    <section id="narrative-screen" class="screen" aria-hidden="true">
+      <div class="terminal-shell">
+        <div class="terminal-header">
+          <div class="window-dots">
+            <span class="window-dot red"></span>
+            <span class="window-dot amber"></span>
+            <span class="window-dot green"></span>
+          </div>
+          <div class="terminal-title">NARRATIF • guerre hybride</div>
+        </div>
+        <div class="terminal-body">
+          <div class="narrative-block" id="narrative-block">
+            <h2>Guerre hybride : déborder le champ de bataille</h2>
+            <p>
+              La guerre hybride, c’est l’art de mener un conflit sans le déclarer
+              ouvertement. Plutôt que d’opposer deux armées sur un front clair, on
+              mélange des outils militaires, économiques, numériques, informationnels
+              et psychologiques.
+            </p>
+            <p>
+              Une campagne hybride combine par exemple :
+              pressions économiques, opérations d’influence sur les réseaux sociaux,
+              cyberattaques, soutien discret à des groupes intermédiaires, sabotage,
+              propagande, guerre du droit (lois, traités) et manipulation des médias.
+            </p>
+            <p>
+              Le but n’est pas seulement de “gagner” une bataille, mais de façonner
+              la perception du réel : semer le doute, fragmenter la société adverse,
+              rendre flou qui attaque qui. Si personne ne comprend exactement ce qui
+              se passe, il devient difficile de répondre, encore plus de se défendre
+              collectivement.
+            </p>
+            <p>
+              Dans ce contexte, chaque citoyen devient une cible potentielle
+              (désinformation, captation de données, manipulation émotionnelle),
+              mais aussi un acteur possible : capacité à vérifier les sources,
+              cartographier les récits, documenter les faits, refuser les réflexes
+              de meute.
+            </p>
+            <p>
+              Ce jeu-prototype te propose deux portes d’entrée :
+              soit tu explores un “théâtre d’opérations” (guerre),
+              soit tu joues pour observer tes propres stratégies (jouer).
+              Dans les deux cas, l’idée n’est pas de glorifier la guerre,
+              mais de mieux comprendre les mécaniques de pouvoir.
+            </p>
+          </div>
+
+          <div class="narrative-label">menu</div>
+          <div class="menu-buttons">
+            <button class="menu-btn" id="btn-war-external">
+              <div>
+                <span class="label-main">Guerre</span>
+                <span class="label-sub">
+                  Ouvrir le théâtre d’opérations (boot-a-rat) dans un nouvel onglet.
+                </span>
+              </div>
+              <span class="key">boot-a-rat</span>
+            </button>
+
+            <button class="menu-btn" id="btn-play-oxo">
+              <div>
+                <span class="label-main">Jouer</span>
+                <span class="label-sub">
+                  Lancer le jeu OXO (tic-tac-toe) dans un autre onglet.
+                </span>
+              </div>
+              <span class="key">oxo.html</span>
+            </button>
+          </div>
+
+          <div class="menu-note">
+            Tu peux revenir lire le narratif autant de fois que tu veux : l’important,
+            c’est la façon dont tu observes ce que tu fais ensuite.
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Utilitaires de navigation entre écrans
+    const screens = {
+      black: document.getElementById("black-screen"),
+      loading: document.getElementById("loading-screen"),
+      boot: document.getElementById("boot-screen"),
+      console: document.getElementById("console-screen"),
+      mainMenu: document.getElementById("main-menu-screen"),
+      narrative: document.getElementById("narrative-screen")
+    };
+
+    function showScreen(key) {
+      Object.values(screens).forEach((el) => el.classList.remove("active"));
+      if (screens[key]) {
+        screens[key].classList.add("active");
+      }
+    }
+
+    // Séquence de chargement + boot
+    const loaderFill = document.getElementById("loader-fill");
+    const loaderCaption = document.getElementById("loader-caption");
+    const bootLog = document.getElementById("boot-log");
+
+    const loaderMessages = [
+      "Chargement du noyau stratégique…",
+      "Connexion aux modules HUMINT & Empire…",
+      "Synchronisation des fichiers de jeu…",
+      "Vérification de l’intégrité des narratifs…",
+      "Ouverture du canal joueur…"
+    ];
+
+    const bootMessages = [
+      "[BOOT] HUMINT-OS v0.1-proto",
+      "[OK]  Initialisation du noyau cognitif",
+      "[OK]  Montage des volumes : /renseignement /empire /jeu",
+      "[OK]  Connexion au bus de signaux faibles",
+      "[OK]  Chargement des protocoles de sécurité minimale",
+      "[INFO] Les récits de guerre peuvent être sensibles.",
+      "[INFO] Objectif : comprendre, pas glorifier.",
+      "[READY] Console disponible."
+    ];
+
+    function startSequence() {
+      // 1. Écran noir 2s
+      showScreen("black");
+      setTimeout(() => {
+        // 2. Loader
+        showScreen("loading");
+        startLoader();
+      }, 2000);
+    }
+
+    function startLoader() {
+      let progress = 0;
+      let msgIndex = 0;
+
+      const loaderInterval = setInterval(() => {
+        progress += Math.random() * 18 + 7; // avance irrégulière
+        if (progress > 100) progress = 100;
+
+        loaderFill.style.transform = `scaleX(${progress / 100})`;
+
+        if (progress > (msgIndex + 1) * (100 / loaderMessages.length) && msgIndex < loaderMessages.length) {
+          loaderCaption.textContent = loaderMessages[msgIndex];
+          msgIndex++;
+        }
+
+        if (progress >= 100) {
+          clearInterval(loaderInterval);
+          setTimeout(() => {
+            startBoot();
+          }, 500);
+        }
+      }, 260);
+    }
+
+    function appendBootLine(text, className) {
+      const line = document.createElement("div");
+      line.className = "terminal-line" + (className ? " " + className : "");
+      line.textContent = text;
+      bootLog.appendChild(line);
+      bootLog.scrollTop = bootLog.scrollHeight;
+    }
+
+    function startBoot() {
+      showScreen("boot");
+      let i = 0;
+
+      function nextLine() {
+        if (i >= bootMessages.length) {
+          setTimeout(() => {
+            showConsole();
+          }, 800);
+          return;
+        }
+        const line = bootMessages[i];
+        // petite couleur contextuelle
+        if (line.startsWith("[OK]")) {
+          appendBootLine(line, "success");
+        } else if (line.startsWith("[INFO]")) {
+          appendBootLine(line, "dim");
+        } else {
+          appendBootLine(line);
+        }
+        i++;
+        const delay = 260 + Math.random() * 260;
+        setTimeout(nextLine, delay);
+      }
+
+      nextLine();
+    }
+
+    // Console début (o/n) ?
+    const consoleOutput = document.getElementById("console-output");
+    const consoleInput = document.getElementById("console-input");
+
+    function showConsole() {
+      showScreen("console");
+      // petit délai pour laisser le temps à la transition
+      setTimeout(() => {
+        consoleInput.focus();
+      }, 100);
+    }
+
+    function writeConsoleLine(text, className) {
+      const line = document.createElement("div");
+      line.className = "terminal-line" + (className ? " " + className : "");
+      line.textContent = text;
+      consoleOutput.insertBefore(line, document.getElementById("prompt-row"));
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    function handleConsoleSubmit(valueRaw) {
+      const value = (valueRaw || "").trim().toLowerCase();
+
+      if (!value) {
+        writeConsoleLine("[SYSTEM] Entre « o » ou « n » puis valide.", "dim");
+        return;
+      }
+
+      // Echo de la commande
+      writeConsoleLine("[root@humint]$ " + value);
+
+      if (value === "o" || value === "oui") {
+        writeConsoleLine("[READY] Protocole engagé. Ouverture du menu…", "success");
+        setTimeout(() => {
+          showMainMenu();
+        }, 500);
+      } else if (value === "n" || value === "non") {
+        writeConsoleLine("[EXIT] Sortie du dispositif. Redirection…", "dim");
+        setTimeout(() => {
+          window.location.href = "https://fr.wikipedia.org";
+        }, 600);
+      } else {
+        writeConsoleLine("[ERREUR] Réponse inconnue. Utilise « o » ou « n ».", "error");
+      }
+    }
+
+    consoleInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const value = consoleInput.value;
+        consoleInput.value = "";
+        handleConsoleSubmit(value);
+      }
+    });
+
+    // Menu principal
+    const btnIntroWar = document.getElementById("btn-intro-war");
+    const btnIntroPlay = document.getElementById("btn-intro-play");
+    const btnNarrative = document.getElementById("btn-narrative");
+
+    function showMainMenu() {
+      showScreen("mainMenu");
+    }
+
+    btnIntroWar.addEventListener("click", () => {
+      // guerre (ouvre le narratif suivant)
+      showNarrative();
+    });
+
+    btnNarrative.addEventListener("click", () => {
+      // narratif (explique puis menu suivant)
+      showNarrative();
+    });
+
+    btnIntroPlay.addEventListener("click", () => {
+      // jouer (ouvre oxo.html dans un autre onglet)
+      window.open("oxo.html", "_blank", "noopener,noreferrer");
+    });
+
+    // Narratif + menu 2
+    const btnWarExternal = document.getElementById("btn-war-external");
+    const btnPlayOxo = document.getElementById("btn-play-oxo");
+
+    function showNarrative() {
+      showScreen("narrative");
+    }
+
+    btnWarExternal.addEventListener("click", () => {
+      window.open("https://boot-a-rat.vercel.app/", "_blank", "noopener,noreferrer");
+    });
+
+    btnPlayOxo.addEventListener("click", () => {
+      window.open("oxo.html", "_blank", "noopener,noreferrer");
+    });
+
+    // Lancement de la séquence une fois le DOM prêt
+    window.addEventListener("load", startSequence);
+  </script>
+</body>
+</html>
