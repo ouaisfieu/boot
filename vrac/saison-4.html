@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio du Parfait Connard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #0b1120;
+      --accent: #f97316;
+      --accent-soft: rgba(249,115,22,0.15);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148,163,184,0.4);
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(148,163,184,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(2,6,23,0.92), rgba(2,6,23,0.7));
+    }
+    .logo {
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: .82rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .logo-mark {
+      width: .65rem;
+      height: .65rem;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(249,115,22,0.9);
+    }
+    nav {
+      display: flex;
+      gap: .75rem;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+    }
+    nav a {
+      color: inherit;
+      padding-bottom: .1rem;
+      border-bottom: 1px solid transparent;
+    }
+    nav a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .ego-meter {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+    .ego-bar {
+      width: 90px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15,23,42,1);
+      border: 1px solid rgba(148,163,184,0.6);
+      overflow: hidden;
+      position: relative;
+    }
+    .ego-fill {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--danger));
+      box-shadow: 0 0 14px rgba(248,113,113,0.9);
+    }
+
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: 1.8rem;
+      padding: 1.5rem 0 1rem;
+    }
+    @media (max-width: 880px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--muted);
+    }
+    .hero-kicker span {
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      background: rgba(148,163,184,0.6);
+    }
+    .hero-title {
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      line-height: 1.1;
+    }
+    .hero-title strong {
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(249,115,22,0.8);
+    }
+    .hero-sub {
+      max-width: 540px;
+      font-size: .96rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .hero-sub mark {
+      background: rgba(249,115,22,0.1);
+      color: var(--text);
+      padding: 0 .2rem;
+      border-radius: .3rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      margin-top: .6rem;
+    }
+    .btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: .55rem 1.1rem;
+      font-size: .8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #02131f;
+      border-color: transparent;
+      box-shadow: 0 10px 28px rgba(249,115,22,0.6);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.03);
+    }
+    .btn-ghost {
+      background: rgba(15,23,42,0.9);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      margin-top: .5rem;
+      font-size: .7rem;
+    }
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: .18rem .6rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .hero-right {
+      align-self: center;
+    }
+    .ego-card {
+      border-radius: 1.3rem;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.96));
+      padding: 1.1rem 1.2rem;
+      box-shadow: 0 16px 40px rgba(15,23,42,1);
+      font-size: .86rem;
+    }
+    .ego-card-title {
+      font-size: .9rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+    .ego-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: .2rem;
+    }
+    .ego-subtitle {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .ego-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: .5rem;
+      margin: .6rem 0;
+    }
+    .ego-stat {
+      padding: .45rem .5rem;
+      border-radius: .8rem;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: rgba(15,23,42,0.9);
+      text-align: center;
+    }
+    .ego-stat strong {
+      display: block;
+      font-size: .9rem;
+    }
+    .ego-stat span {
+      font-size: .7rem;
+      color: var(--muted);
+    }
+    .ego-quote {
+      margin-top: .5rem;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    /* Sections */
+    section {
+      margin-top: 2rem;
+    }
+    .section-label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: .6rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0,1.4fr) minmax(0,1.6fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 880px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+    .card {
+      border-radius: 1.3rem;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      padding: 1rem 1.1rem;
+      font-size: .88rem;
+    }
+
+    .about-text p {
+      margin-bottom: .5rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .list-clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .list-clean li {
+      margin-bottom: .45rem;
+      display: flex;
+      gap: .4rem;
+      align-items: flex-start;
+      color: var(--muted);
+    }
+    .list-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      margin-top: .35rem;
+      flex-shrink: 0;
+    }
+
+    /* Skills */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+      gap: .7rem;
+      margin-top: .4rem;
+    }
+    .skill {
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: .55rem .65rem;
+      background: rgba(15,23,42,0.9);
+      font-size: .8rem;
+    }
+    .skill-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: .25rem;
+    }
+    .skill-name { font-weight: 600; }
+    .skill-score {
+      font-size: .74rem;
+      color: var(--muted);
+    }
+    .skill-bar {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(15,23,42,1);
+      border: 1px solid rgba(148,163,184,0.5);
+      overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--danger));
+      width: var(--w,100%);
+    }
+
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
+      gap: 1rem;
+      margin-top: .6rem;
+    }
+    .project {
+      border-radius: 1.1rem;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.98));
+      padding: .8rem .9rem;
+      font-size: .86rem;
+    }
+    .project-name {
+      font-weight: 600;
+      margin-bottom: .2rem;
+    }
+    .project-meta {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+
+    /* Testimonials */
+    .quote {
+      font-size: .86rem;
+      color: var(--muted);
+      border-left: 2px solid rgba(148,163,184,0.6);
+      padding-left: .7rem;
+      margin-bottom: .6rem;
+    }
+    .quote span {
+      display: block;
+      font-size: .75rem;
+      color: #6b7280;
+      margin-top: .1rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem 1.5rem 2rem;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+    .tiny {
+      font-size: .7rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-mark"></div>
+      <span>PARFAIT CONNARD™</span>
+    </div>
+    <nav>
+      <a href="#about">Moi</a>
+      <a href="#skills">Compétences</a>
+      <a href="#projects">Exploits</a>
+      <a href="#testimonials">On-dit</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="ego-meter">
+      <span>Ego</span>
+      <div class="ego-bar"><div class="ego-fill"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-left">
+        <div class="hero-kicker">
+          <span></span>
+          <div>portfolio ultime du parfait connard</div>
+        </div>
+        <h1 class="hero-title">
+          Je suis <strong>le personnage principal</strong><br>
+          de ta journée.
+        </h1>
+        <p class="hero-sub">
+          Je ne sauve pas le monde, mais je le commente avec assurance.
+          J’ai un avis sur tout, surtout sur ce que je ne connais pas.  
+          Ce site est un <mark>autel narcissique minimaliste</mark>&nbsp;: tout est vrai, mais tout est exagéré.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="btnScrollProjects">
+            Voir mes exploits
+          </button>
+          <button class="btn btn-ghost" id="btnCopyLine">
+            Copier ma punchline
+          </button>
+        </div>
+        <div class="hero-badges">
+          <div class="badge">Taux d’auto-satisfaction : 120 %</div>
+          <div class="badge">Responsable de rien, auteur de tout</div>
+          <div class="badge">Bug humain en production</div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="ego-card">
+          <div class="ego-card-title">Dossier du sujet</div>
+          <div class="ego-name">[Ton Nom]</div>
+          <div class="ego-subtitle">Spécialité déclarée : être persuadé d’avoir raison.</div>
+          <div class="ego-stats">
+            <div class="ego-stat">
+              <strong>999+</strong>
+              <span>opinions non sollicitées</span>
+            </div>
+            <div class="ego-stat">
+              <strong>0</strong>
+              <span>remises en question spontanées</span>
+            </div>
+            <div class="ego-stat">
+              <strong>∞</strong>
+              <span>capacité à se la raconter</span>
+            </div>
+          </div>
+          <div class="ego-quote">
+            « Humble, mais uniquement quand ça impressionne. »
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="section-label">à propos</div>
+      <div class="section-title">Mode d’emploi du parfait connard</div>
+      <div class="grid-2">
+        <div class="card about-text">
+          <p>
+            Le parfait connard n’est pas méchant par principe&nbsp;: il est juste
+            <strong>légèrement persuadé</strong> que tout tournerait mieux si on faisait les choses comme lui.
+          </p>
+          <p>
+            Il arrive en réunion en retard, mais avec une phrase qui sonne assez bien pour faire oublier
+            qu’il n’a rien préparé. Il critique beaucoup, mais toujours avec des mots assez techniques
+            pour qu’on hésite à le contredire.
+          </p>
+          <p>
+            Ce portfolio est un miroir déformant&nbsp;: si tu te reconnais, tu as deux options&nbsp;:
+            <br>– en rire,&nbsp;– ou en faire quelque chose.
+          </p>
+        </div>
+        <div class="card">
+          <ul class="list-clean">
+            <li>
+              <div class="list-dot"></div>
+              <div>
+                <strong>Positionnement :</strong> personnage principal autoproclamé, expert auto-certifié,
+                toujours disponible pour expliquer la vie aux autres.
+              </div>
+            </li>
+            <li>
+              <div class="list-dot"></div>
+              <div>
+                <strong>Style :</strong> phrases définitives, demi-sourire, références floues mais dites avec confiance.
+              </div>
+            </li>
+            <li>
+              <div class="list-dot"></div>
+              <div>
+                <strong>Point faible :</strong> être confronté à quelqu’un qui sait vraiment de quoi il parle.
+              </div>
+            </li>
+            <li>
+              <div class="list-dot"></div>
+              <div>
+                <strong>Point fort :</strong> capacité à transformer des petites anecdotes en histoires héroïques.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="section-label">compétences revendiquées</div>
+      <div class="section-title">Ce que je prétends maîtriser</div>
+      <div class="skills-grid">
+        <div class="skill">
+          <div class="skill-top">
+            <span class="skill-name">Blabla technique</span>
+            <span class="skill-score">100 / 100</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" style="--w:100%"></div></div>
+        </div>
+        <div class="skill">
+          <div class="skill-top">
+            <span class="skill-name">Réécrire les specs des autres</span>
+            <span class="skill-score">98 / 100</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" style="--w:98%"></div></div>
+        </div>
+        <div class="skill">
+          <div class="skill-top">
+            <span class="skill-name">Prendre la parole trop longtemps</span>
+            <span class="skill-score">100 / 100</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" style="--w:100%"></div></div>
+        </div>
+        <div class="skill">
+          <div class="skill-top">
+            <span class="skill-name">Ne jamais dire « je ne sais pas »</span>
+            <span class="skill-score">99 / 100</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" style="--w:99%"></div></div>
+        </div>
+        <div class="skill">
+          <div class="skill-top">
+            <span class="skill-name">Se faire passer pour indispensable</span>
+            <span class="skill-score">96 / 100</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" style="--w:96%"></div></div>
+        </div>
+        <div class="skill">
+          <div class="skill-top">
+            <span class="skill-name">Minimiser les efforts des autres</span>
+            <span class="skill-score">90 / 100</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" style="--w:90%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="section-label">exploits narrés par moi-même</div>
+      <div class="section-title">Quelques projets outrageusement survendus</div>
+      <div class="projects-grid">
+        <article class="project">
+          <div class="project-name">Framework de réunion asynchrone</div>
+          <div class="project-meta">Rôle : Expert auto-désigné · Année : 2024</div>
+          <p>
+            J’ai « révolutionné » les réunions en proposant d’envoyer un mail à la place.  
+            Depuis, tout le monde reçoit plus de mails, mais j’ai l’air visionnaire.
+          </p>
+        </article>
+        <article class="project">
+          <div class="project-name">Refonte stratégique de trucs vagues</div>
+          <div class="project-meta">Rôle : Consultant d’opinion · Année : 2023</div>
+          <p>
+            J’ai écrit un document de 30 pages qui dit essentiellement « il faut mieux communiquer ».
+            Personne ne l’a fini, mais tout le monde cite la slide 4.
+          </p>
+        </article>
+        <article class="project">
+          <div class="project-name">Système de priorisation des priorités</div>
+          <div class="project-meta">Rôle : Grand architecte des tableaux Kanban · Année : 2022</div>
+          <p>
+            J’ai inventé un code couleur incompréhensible.  
+            Résultat : plus personne ne comprend rien, mais on dit que « le flux est robuste ».
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials">
+      <div class="section-label">on-dit & dégâts collatéraux</div>
+      <div class="section-title">Ce que les autres disent (malgré tout)</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="quote">
+            « Il a toujours un avis, rarement une solution, mais c’est dit avec tellement de confiance que ça passe. »
+            <span>— Collègue anonyme · canal privé</span>
+          </div>
+          <div class="quote">
+            « Je ne sais pas ce qu’il fait exactement, mais il a l’air important. »
+            <span>— Manager débordé</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="quote">
+            « Sur 10 idées, 9 sont inutiles et 1 est brillante. Le problème, c’est qu’il les défend toutes avec la même intensité. »
+            <span>— Coéquipier épuisé</span>
+          </div>
+          <div class="quote">
+            « Il a raison une fois sur deux, mais il le répète deux fois sur deux. »
+            <span>— Observateur lucide</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="section-label">contact</div>
+      <div class="section-title">Me laisser encore plus de place dans ta vie</div>
+      <div class="grid-2">
+        <div class="card">
+          <p>
+            Tu peux utiliser ce template comme tu veux&nbsp;:  
+            remplace le texte par ta version du parfait connard, ou
+            retourne le truc et fais-en le portfolio du <em>type qui a fini par redescendre sur Terre</em>.
+          </p>
+          <p class="small">
+            Ça reste une caricature. Si tu veux le rendre un peu moins toxique, ajoute une section
+            «&nbsp;Je m’excuse parfois&nbsp;» et une autre «&nbsp;Choses que j’essaie de faire mieux&nbsp;».
+          </p>
+        </div>
+        <div class="card">
+          <p class="small">Place tes vrais liens ici :</p>
+          <ul class="list-clean">
+            <li>
+              <div class="list-dot"></div>
+              <div><strong>Email :</strong> <a href="mailto:parfait.connard@example.com">parfait.connard@example.com</a></div>
+            </li>
+            <li>
+              <div class="list-dot"></div>
+              <div><strong>GitHub :</strong> <a href="https://github.com/ton-pseudo" target="_blank" rel="noreferrer">github.com/ton-pseudo</a></div>
+            </li>
+            <li>
+              <div class="list-dot"></div>
+              <div><strong>Réseau social :</strong> celui où tu parles trop.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Portfolio satirique &middot; Si tu l’utilises tel quel, c’est que tu assumes vraiment.
+    </p>
+    <p class="tiny">
+      Aucun véritable humain ne devrait être traité comme un parfait connard par défaut.  
+      Mais tout le monde connaît un ou une collègue qui coche quelques cases.
+    </p>
+  </footer>
+
+  <script>
+    // Scroll vers les projets
+    document.getElementById("btnScrollProjects")?.addEventListener("click", () => {
+      document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+    });
+
+    // Copie de punchline
+    const punchline = "Je suis le personnage principal de ta journée.";
+    document.getElementById("btnCopyLine")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(punchline);
+        const btn = document.getElementById("btnCopyLine");
+        const old = btn.textContent;
+        btn.textContent = "Punchline copiée ✔";
+        setTimeout(() => btn.textContent = old, 1500);
+      } catch {
+        alert("Punchline : " + punchline);
+      }
+    });
+  </script>
+</body>
+</html>
