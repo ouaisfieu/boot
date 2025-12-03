@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vicipaedia Lorem — Lorem ipsum (encyclopaedia)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --bg-alt: #ffffff;
+      --border: #a2a9b1;
+      --text: #202122;
+      --text-soft: #54595d;
+      --link: #0645ad;
+      --link-visited: #0b0080;
+      --sidebar-bg: #f6f6f6;
+      --toc-bg: #f8f9fa;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    a:visited { color: var(--link-visited); }
+    a:hover { text-decoration: underline; }
+
+    /* HEADER (comme Wikipédia fr) */
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-globe {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+    }
+
+    .header-title {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .header-title-main {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .header-title-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-box {
+      display: flex;
+      max-width: 420px;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 6px 8px;
+      border: none;
+      outline: none;
+      font-size: 13px;
+    }
+
+    .search-btn {
+      border: none;
+      border-left: 1px solid var(--border);
+      padding: 0 10px;
+      background: #f8f9fa;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover { background: #e9ecef; }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .header-link {
+      color: var(--link);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .header-link:hover { text-decoration: underline; }
+
+    .header-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: #f8f9fa;
+      border-radius: 2px;
+      padding: 3px 7px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* LAYOUT GLOBAL */
+
+    .app-main {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .sidebar {
+      width: 180px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      padding: 8px 6px 12px;
+      font-size: 13px;
+      overflow-y: auto;
+    }
+
+    .sidebar-section-title {
+      font-weight: 700;
+      margin: 6px 4px 4px;
+      font-size: 12px;
+    }
+
+    .sidebar-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 6px;
+    }
+
+    .sidebar-list li {
+      margin: 1px 2px;
+    }
+
+    .sidebar-list a { color: var(--link); }
+
+    .main-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .page-tabs {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      border-bottom: 1px solid var(--border);
+      background: #ffffff;
+      padding: 4px 16px 0;
+    }
+
+    .page-tabs-left,
+    .page-tabs-right {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .tab-link {
+      padding: 4px 6px;
+      border-radius: 2px 2px 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      cursor: pointer;
+      color: var(--link);
+    }
+
+    .tab-link[data-active="true"] {
+      border-color: var(--border);
+      border-bottom: 1px solid #ffffff;
+      background: #ffffff;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 10px 16px 40px;
+      background: var(--bg-alt);
+      overflow-y: auto;
+      border-left: 1px solid #ffffff;
+    }
+
+    /* ARTICLE */
+
+    .article-header {
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+      padding-bottom: 3px;
+    }
+
+    .article-title {
+      font-size: 28px;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .article-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 3px;
+    }
+
+    .article-meta {
+      text-align: right;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .article-tools {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .article-tools span {
+      color: var(--link);
+      cursor: pointer;
+    }
+
+    .article-tools span:hover {
+      text-decoration: underline;
+    }
+
+    .article-body {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .article-body p {
+      margin: 4px 0 9px;
+    }
+
+    .article-body h2 {
+      font-size: 20px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+
+    .article-body h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+
+    .article-body h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 10px;
+      margin-bottom: 2px;
+    }
+
+    .article-body ul,
+    .article-body ol {
+      padding-left: 1.6rem;
+      margin-top: 3px;
+      margin-bottom: 8px;
+    }
+
+    .article-body li { margin: 2px 0; }
+
+    .article-body .infobox {
+      float: right;
+      clear: right;
+      width: 260px;
+      margin: 0 0 8px 16px;
+      background: #f8f9fa;
+      border: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .infobox-title {
+      background: #e9ecef;
+      padding: 4px 6px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .infobox-body {
+      padding: 4px 6px;
+    }
+
+    .infobox-body table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .infobox-body th,
+    .infobox-body td {
+      padding: 2px 0;
+      vertical-align: top;
+    }
+
+    .infobox-body th {
+      text-align: left;
+      width: 40%;
+      font-weight: 600;
+    }
+
+    .infobox img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 4px auto 6px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    /* TOC */
+
+    .toc {
+      border: 1px solid var(--border);
+      background: var(--toc-bg);
+      padding: 4px 8px 6px;
+      font-size: 12px;
+      width: 260px;
+      margin-bottom: 10px;
+    }
+
+    .toc-title {
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .toc-number { font-weight: 600; }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .toc li { margin: 2px 0; }
+
+    .toc li ul {
+      padding-left: 12px;
+      margin-top: 2px;
+    }
+
+    /* NAVBOX */
+
+    .navbox {
+      border: 1px solid var(--border);
+      background: #f8f9fa;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .navbox-title {
+      background: #e9ecef;
+      padding: 3px 6px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .navbox-body {
+      padding: 4px 6px 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+    }
+
+    .navbox-column-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .navbox ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .navbox li { margin: 1px 0; }
+
+    /* SEARCH RESULTS PANEL (Special:Search feeling) */
+
+    .search-results-panel {
+      border: 1px solid var(--border);
+      background: #f8f9fa;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .search-results-panel[data-open="true"] { display: block; }
+
+    .search-results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .search-results-title {
+      font-weight: 700;
+    }
+
+    .search-results-close {
+      font-size: 11px;
+      color: var(--link);
+      cursor: pointer;
+    }
+
+    .search-results-close:hover { text-decoration: underline; }
+
+    .search-results-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 4px 0 4px;
+    }
+
+    .search-results-list li {
+      margin: 4px 0;
+    }
+
+    .search-result-title {
+      font-weight: 600;
+    }
+
+    .search-result-snippet {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .search-highlight {
+      background: #fff3cd;
+    }
+
+    /* FOOTER */
+
+    .footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      border-top: 1px solid var(--border);
+      background: #f8f9fa;
+      font-size: 12px;
+      color: var(--text-soft);
+      padding: 6px 10px 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .footer-links a { color: var(--link); }
+
+    .footer-text {
+      font-size: 11px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .infobox {
+        float: none !important;
+        margin: 0 auto 8px !important;
+        width: 100%;
+      }
+
+      .toc { width: 100%; }
+
+      .sidebar {
+        position: fixed;
+        top: 46px;
+        left: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease-out;
+        max-width: 260px;
+        width: 70%;
+        box-shadow: 2px 0 6px rgba(0,0,0,0.25);
+        z-index: 15;
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .header-toggle { display: inline-block; }
+
+      .app-main { margin: 0; }
+
+      .main-content { padding: 10px 10px 28px; }
+
+      .site-header { padding: 4px 6px; }
+
+      .header-title-main { font-size: 16px; }
+
+      .header-globe {
+        width: 30px;
+        height: 30px;
+        font-size: 9px;
+      }
+
+      .header-center { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .article-title { font-size: 22px; }
+      .article-body { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-left">
+    <button class="header-toggle" id="sidebarToggle" type="button">☰</button>
+    <div class="header-logo">
+      <div class="header-globe">LI</div>
+      <div class="header-title">
+        <div class="header-title-main">Vicipaedia Lorem</div>
+        <div class="header-title-sub">L’encyclopédie lorem, totalement fictive</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-center">
+    <form class="search-box" id="searchForm">
+      <input class="search-input" id="searchInput" type="search" placeholder="Rechercher dans Vicipaedia Lorem…" />
+      <button class="search-btn" type="submit">Rechercher</button>
+    </form>
+  </div>
+
+  <div class="header-right">
+    <span class="header-link" onclick="alert('Imitation statique : aucune connexion utilisateur.')">Non connecté</span>
+    <span>·</span>
+    <span class="header-link" onclick="alert('Pour modifier, ouvre ce fichier HTML dans ton éditeur.')">Discussion</span>
+    <span>·</span>
+    <span class="header-link" onclick="alert('Historique simulé : duplique ce fichier pour créer des versions.')">Historique</span>
+  </div>
+</header>
+
+<main class="app-main">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section-title">Articles principaux</div>
+    <ul class="sidebar-list">
+      <li><a href="#art-lorem-encyclopaedia">Lorem ipsum (encyclopaedia)</a></li>
+      <li><a href="#art-lorem-textus">Lorem ipsum (texte)</a></li>
+      <li><a href="#art-lorem-universum">Universum lorem</a></li>
+      <li><a href="#art-lorem-cultura">Culture loremique</a></li>
+      <li><a href="#art-lorem-technologia">Technologie loremique</a></li>
+    </ul>
+
+    <div class="sidebar-section-title">Catégories lorem</div>
+    <ul class="sidebar-list">
+      <li><a href="#cat-encyclopaedia">Encyclopédies imaginaires</a></li>
+      <li><a href="#cat-textus">Textes fictifs</a></li>
+      <li><a href="#cat-cultura">Cultures imaginaires</a></li>
+      <li><a href="#cat-technologia">Technologies imaginaires</a></li>
+      <li><a href="#cat-communia">Communautés lorem</a></li>
+    </ul>
+
+    <div class="sidebar-section-title">Outils</div>
+    <ul class="sidebar-list">
+      <li><a href="#toc">Index des sections</a></li>
+      <li><a href="#notes">Notes</a></li>
+      <li><a href="#bibliographia">Bibliographie lorem</a></li>
+      <li><a href="#vidi-quoque">Voir aussi</a></li>
+    </ul>
+
+    <div class="sidebar-section-title">Langues fictives</div>
+    <ul class="sidebar-list">
+      <li><a href="#lingua-lat">Lorem Latinum</a></li>
+      <li><a href="#lingua-fr">Lorem Francogallicum</a></li>
+      <li><a href="#lingua-en">Lorem Anglicum</a></li>
+      <li><a href="#lingua-mix">Lorem Mixtum</a></li>
+    </ul>
+  </aside>
+
+  <div class="main-column">
+    <nav class="page-tabs">
+      <div class="page-tabs-left">
+        <span class="tab-link" data-active="true">Article</span>
+        <span class="tab-link" onclick="alert('Ici tu pourrais mettre une vraie page de discussion séparée.')">Discussion</span>
+      </div>
+      <div class="page-tabs-right">
+        <span class="tab-link" data-active="true">Lire</span>
+        <span class="tab-link" onclick="alert('« Modifier le code » : ouvre ce fichier dans ton éditeur préféré.')">Modifier le code</span>
+        <span class="tab-link" onclick="alert('Historique factice : crée plusieurs copies de ce fichier pour simuler des versions.')">Voir l’historique</span>
+      </div>
+    </nav>
+
+    <section class="main-content">
+      <!-- Panneau de résultats de recherche -->
+      <section class="search-results-panel" id="searchResults" aria-live="polite">
+        <div class="search-results-header">
+          <div class="search-results-title" id="searchResultsTitle">Résultats de recherche</div>
+          <div class="search-results-close" id="searchResultsClose">[ masquer les résultats ]</div>
+        </div>
+        <ul class="search-results-list" id="searchResultsList"></ul>
+        <div id="searchResultsInfo" style="font-size:11px;color:#54595d;"></div>
+      </section>
+
+      <header class="article-header">
+        <div class="article-meta">
+          Page fictive de démonstration · dernière « modification » : <time>29 novembre 2025</time>
+        </div>
+        <div class="article-tools">
+          <span onclick="alert('Pour modifier le contenu, édite directement ce fichier HTML.')">Modifier</span>
+          <span>|</span>
+          <span onclick="window.print()">Version imprimable</span>
+          <span>|</span>
+          <span onclick="alert('Export PDF non automatique : utilise la fonction d’impression en PDF du navigateur.')">Télécharger en PDF</span>
+        </div>
+        <h1 class="article-title" id="art-lorem-encyclopaedia">Lorem ipsum (encyclopaedia)</h1>
+        <div class="article-subtitle">
+          Article de <em>Vicipaedia Lorem</em>, l’encyclopédie totalement lorem.
+          Pour le texte en lui-même, voir <a href="#art-lorem-textus">Lorem ipsum (texte)</a>.
+        </div>
+      </header>
+
+      <article class="article-body" id="articleBody">
+        <aside class="infobox" aria-label="Infobox de l’article">
+          <div class="infobox-title">Lorem ipsum encyclopaedia</div>
+          <div class="infobox-body">
+            <img
+              src="data:image/svg+xml,%3Csvg%20width%3D%22240%22%20height%3D%22140%22%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Crect%20width%3D%27240%27%20height%3D%27140%27%20fill%3D%27%23f8f9fa%27%20stroke%3D%27%23a2a9b1%27/%3E%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20dominant-baseline%3D%27middle%27%20text-anchor%3D%27middle%27%20fill%3D%27%2354595d%27%20font-size%3D%2712%27%20font-family%3D%27sans-serif%27%3EImago lorem%3C/text%3E%3C/svg%3E"
+              alt="Illustration Lorem"
+            />
+            <table>
+              <tr>
+                <th>Type</th>
+                <td>Encyclopédie en ligne fictive</td>
+              </tr>
+              <tr>
+                <th>Langues</th>
+                <td>
+                  <a href="#lingua-lat">Latinum</a>,
+                  <a href="#lingua-fr">Francogallicum</a>,
+                  <a href="#lingua-en">Anglicum</a>
+                </td>
+              </tr>
+              <tr>
+                <th>Création</th>
+                <td>Die incognito</td>
+              </tr>
+              <tr>
+                <th>Fondateurs</th>
+                <td>Conventus scriptorum <a href="#cat-communia">communium lorem</a></td>
+              </tr>
+              <tr>
+                <th>Nombre d’articles</th>
+                <td>∞ (presque tous en <a href="#art-lorem-textus">lorem ipsum</a>)</td>
+              </tr>
+              <tr>
+                <th>Statut</th>
+                <td>Imaginée comme toujours active</td>
+              </tr>
+              <tr>
+                <th>Site web</th>
+                <td><a href="https://example.org/lorem" target="_blank" rel="noopener">example.org/lorem</a></td>
+              </tr>
+            </table>
+          </div>
+        </aside>
+
+        <p>
+          <strong>Lorem ipsum (encyclopaedia)</strong> est une encyclopédie imaginaire composée exclusivement
+          d’articles en <a href="#art-lorem-textus">lorem ipsum</a>. Cette page reproduit
+          autant que possible la structure d’une vraie page de Wikipédia :
+          infobox, <a href="#toc">sommaire</a>, sections, <a href="#notes">notes</a>,
+          <a href="#bibliographia">bibliographie</a> et boîtes de navigation.
+        </p>
+
+        <p>
+          L’objectif est de fournir un squelette <em>très crédible</em> d’encyclopédie :
+          tout est statique, aucune requête n’est envoyée vers un serveur, mais
+          l’interface se comporte comme une version de démonstration locale,
+          avec un <a href="#special-search">pseudo-Spécial:Recherche</a> entièrement
+          géré en JavaScript.
+        </p>
+
+        <div class="toc" id="toc">
+          <div class="toc-title">Sommaire</div>
+          <ul>
+            <li><span class="toc-number">1</span> <a href="#sec-1">Histoire lorem</a>
+              <ul>
+                <li><span class="toc-number">1.1</span> <a href="#sec-1-1">Origines fictives</a></li>
+                <li><span class="toc-number">1.2</span> <a href="#sec-1-2">Évolution numérique</a></li>
+              </ul>
+            </li>
+            <li><span class="toc-number">2</span> <a href="#sec-2">Structure du site</a>
+              <ul>
+                <li><span class="toc-number">2.1</span> <a href="#sec-2-1">Articles principaux</a></li>
+                <li><span class="toc-number">2.2</span> <a href="#sec-2-2">Navigation latérale</a></li>
+                <li><span class="toc-number">2.3</span> <a href="#sec-2-3">Sommaire automatique</a></li>
+                <li><span class="toc-number">2.4</span> <a href="#sec-2-4">Infobox et modèles</a></li>
+              </ul>
+            </li>
+            <li><span class="toc-number">3</span> <a href="#sec-3">Communauté de rédaction</a>
+              <ul>
+                <li><span class="toc-number">3.1</span> <a href="#sec-3-1">Usages &amp; conventions</a></li>
+                <li><span class="toc-number">3.2</span> <a href="#sec-3-2">Pages de discussion</a></li>
+              </ul>
+            </li>
+            <li><span class="toc-number">4</span> <a href="#sec-4">Usage &amp; licence fictive</a>
+              <ul>
+                <li><span class="toc-number">4.1</span> <a href="#sec-4-1">Réutilisation du lorem</a></li>
+                <li><span class="toc-number">4.2</span> <a href="#sec-4-2">Limitations imaginaires</a></li>
+              </ul>
+            </li>
+            <li><span class="toc-number">5</span> <a href="#sec-5">Notes et liens externes lorem</a></li>
+            <li><span class="toc-number">6</span> <a href="#vidi-quoque">Voir aussi</a></li>
+            <li><span class="toc-number">7</span> <a href="#appendices">Appendices linguistiques</a></li>
+          </ul>
+        </div>
+
+        <h2 id="sec-1">1. Histoire lorem</h2>
+        <p>
+          Dans la fiction, l’encyclopédie est née d’un rassemblement de scriptores lorem ipsum dolor sit amet,
+          consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat.
+        </p>
+        <p>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+          nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+          officia deserunt mollit anim id est laborum. Cette phrase est volontairement répétée
+          en de nombreux articles, comme dans <a href="#art-lorem-cultura">Culture loremique</a>
+          ou <a href="#art-lorem-universum">Universum lorem</a>.
+        </p>
+
+        <h3 id="sec-1-1">1.1 Origines fictives</h3>
+        <p>
+          L’<strong>origine exacte</strong> est décrite dans un document imaginaire,
+          <a href="#note-origo">Origo Lorem</a>, parfois cité dans les
+          <a href="#notes">notes de bas de page</a>. La tradition indique que le tout
+          premier article décrivait uniquement la chaîne
+          <em>« Lorem ipsum dolor sit amet… »</em>, avant que d’autres pages ne soient
+          créées, notamment <a href="#art-lorem-textus">Lorem ipsum (texte)</a>
+          et plusieurs entrées de la <a href="#cat-textus">Catégorie:Textes fictifs</a>.
+        </p>
+
+        <h3 id="sec-1-2">1.2 Évolution numérique</h3>
+        <p>
+          Avec le temps, la plateforme est passée d’une simple page statique à une
+          structure hypertextuelle plus riche. Dans cet exemple, tout est encore
+          concentré dans un seul fichier, mais la navigation interne par
+          <a href="#special-search">recherche</a>, par <a href="#toc">sommaire</a>
+          et par <a href="#vidi-quoque">boîtes de navigation</a> permet déjà
+          d’anticiper le comportement d’une encyclopédie réelle.
+        </p>
+
+        <h2 id="sec-2">2. Structure du site</h2>
+        <p>
+          La structure générale suit celle de Wikipédia : un logo en haut à gauche,
+          une barre de recherche centrée, des liens de compte en haut à droite
+          (ici purement fictifs), une <strong>colonne latérale</strong> avec
+          les liens de navigation, et un <strong>corps d’article</strong>
+          contenant l’infobox, le texte et les modèles de navigation.
+        </p>
+
+        <h3 id="sec-2-1">2.1 Articles principaux</h3>
+        <p id="art-lorem-universum">
+          <strong>Universum lorem</strong> (voir aussi la
+          <a href="#cat-encyclopaedia">Catégorie:Encyclopédies imaginaires</a>)
+          décrit comment tous les articles fictifs s’entrelacent : géographies
+          inventées, « États loremici », institutions culturelles et projets
+          <a href="#art-lorem-technologia">technologiques lorem</a>.
+        </p>
+        <p id="art-lorem-cultura">
+          <strong>Culture loremique</strong> rassemble les pratiques communes
+          dans cet univers : tradition du copier-coller, festivals de placeholder,
+          concours du « paragraphe le plus long », etc. La plupart des textes se réduisent
+          cependant à des variations sur « lorem ipsum dolor sit amet ».
+        </p>
+
+        <h3 id="sec-2-2">2.2 Navigation latérale</h3>
+        <p>
+          La navigation latérale regroupe :
+        </p>
+        <ul>
+          <li>une liste d’<a href="#art-lorem-encyclopaedia">articles principaux</a> ;</li>
+          <li>les <a href="#cat-textus">catégories lorem</a> les plus utilisées ;</li>
+          <li>quelques <a href="#notes">outils</a> pseudo-techniques
+              (notes, bibliographie, etc.).</li>
+        </ul>
+        <p>
+          Ici encore, tout est statique, mais la structure reflète fidèlement
+          celle du vrai site, ce qui rend le clone visuellement crédible.
+        </p>
+
+        <h3 id="sec-2-3">2.3 Sommaire automatique</h3>
+        <p>
+          Dans cette version, le <a href="#toc">sommaire</a> est écrit à la main,
+          mais le comportement est identique : chaque entrée permet de sauter
+          directement à une section, par ancre HTML. Combiné au
+          <a href="#special-search">panneau de recherche</a>, cela donne une
+          expérience de navigation complète sur un simple fichier.
+        </p>
+
+        <h3 id="sec-2-4">2.4 Infobox et modèles</h3>
+        <p>
+          L’<a href="#infobox-lorem">infobox</a> utilise un style proche de celui
+          des modèles réels : titre centré, tableau de propriétés, petite image
+          illustrative. Ce patron peut être dupliqué pour créer d’autres infobox
+          (pour des pays lorem, des personnages fictifs, etc.).
+        </p>
+
+        <h2 id="sec-3">3. Communauté de rédaction</h2>
+        <p>
+          La <strong>communauté lorem</strong> est entièrement inventée, mais
+          elle suit des règles ressemblant à celles des vrais projets collaboratifs :
+          neutralité feinte, discussions interminables en pages de discussion, guerres
+          d’édition sur l’ordre exact des mots « lorem ipsum dolor sit amet »…
+        </p>
+
+        <h3 id="sec-3-1">3.1 Usages &amp; conventions</h3>
+        <p>
+          Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur
+          tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor.
+          Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc
+          egestas porttitor. Ces phrases servent de base à de nombreux
+          <a href="#cat-textus">textes fictifs</a> et sont systématiquement
+          copiées-collées pour tester les marges, les interlignes et
+          le comportement des colonnes.
+        </p>
+
+        <h3 id="sec-3-2">3.2 Pages de discussion</h3>
+        <p>
+          Dans une installation réelle, chaque article aurait une page de discussion
+          séparée (<em>Discussion:Lorem ipsum (encyclopaedia)</em>). Ici, cette
+          discussion est simulée par des alertes JavaScript et peut être implémentée
+          comme une seconde page, ou une section additionnelle utilisant la même mise en forme.
+        </p>
+
+        <h2 id="sec-4">4. Usage &amp; licence fictive</h2>
+        <p>
+          Ce fichier peut servir de modèle pour ton propre mini-wiki statique.
+          Il suffit de sauvegarder ce fichier, de l’ouvrir dans un éditeur, et de
+          remplacer progressivement les blocs de lorem par de vrais contenus.
+        </p>
+
+        <h3 id="sec-4-1">4.1 Réutilisation du lorem</h3>
+        <p>
+          Tout le texte ici est un <strong>placeholder</strong>. Tu peux le réutiliser,
+          le couper, le déplacer, sans aucune contrainte. L’idée est de tester
+          la structure (titres, renvois, notes, liens internes) avant d’investir
+          du temps dans la rédaction.
+        </p>
+
+        <h3 id="sec-4-2">4.2 Limitations imaginaires</h3>
+        <p>
+          Aucune source n’est réelle, mais tu peux définir ta propre « licence lorem »,
+          par exemple « CC-BY-Lorem » ou « GPL (General Placeholder License) », et
+          en faire un article séparé nommé <a href="#art-lorem-licentia">Lorem (licentia)</a>.
+        </p>
+
+        <h2 id="sec-5">5. Notes et liens externes lorem</h2>
+        <p id="notes">
+          Les notes suivantes sont purement imaginaires et ne renvoient à aucune
+          publication existante :
+        </p>
+        <ol>
+          <li id="note-origo">
+            <em>Origo Lorem</em>, manuscrit introuvable, cité dans plusieurs
+            versions de <a href="#art-lorem-universum">Universum lorem</a>.
+          </li>
+          <li>
+            Ipsum L., <em>De arte structurae HTML sine framework</em> — article fictif,
+            souvent utilisé pour justifier l’absence de bibliothèques externes.
+          </li>
+          <li>
+            Dolor S., <em>Tractatus de Placeholderibus</em>, vol. II, cap. 3
+            « De structura wiki », accessible en théorie sur
+            <a href="https://example.com/placeholder-paper" target="_blank" rel="noopener">
+              example.com/placeholder-paper
+            </a>.
+          </li>
+        </ol>
+
+        <h3 id="bibliographia">Bibliographie lorem</h3>
+        <ul>
+          <li><em>Manuale Lorem Ipsum Digitalis</em> — manuel imaginaire sur le texte de remplissage.</li>
+          <li><em>Structura Paginarum Encyclopaedicarum</em> — essai fictif sur les layouts d’encyclopédies.</li>
+          <li><em>CSS Purum et Simplicem</em> — guide inexistant sur le CSS sans framework.</li>
+          <li><em>Hypertextus in Terra Lorem</em> — réflexion sur les liens internes et externes fictifs.</li>
+        </ul>
+
+        <h2 id="vidi-quoque">6. Voir aussi</h2>
+        <div class="navbox">
+          <div class="navbox-title">Système d’articles lorem</div>
+          <div class="navbox-body">
+            <div>
+              <div class="navbox-column-title">Texte &amp; langues</div>
+              <ul>
+                <li><a href="#art-lorem-textus">Lorem ipsum (texte)</a></li>
+                <li><a href="#lingua-lat">Lorem Latinum</a></li>
+                <li><a href="#lingua-fr">Lorem Francogallicum</a></li>
+                <li><a href="#lingua-en">Lorem Anglicum</a></li>
+                <li><a href="#lingua-mix">Lorem Mixtum</a></li>
+              </ul>
+            </div>
+            <div>
+              <div class="navbox-column-title">Univers &amp; culture</div>
+              <ul>
+                <li><a href="#art-lorem-universum">Universum lorem</a></li>
+                <li><a href="#art-lorem-cultura">Culture loremique</a></li>
+                <li><a href="#cat-cultura">Catégorie:Cultures imaginaires</a></li>
+                <li><a href="#cat-communia">Catégorie:Communautés lorem</a></li>
+              </ul>
+            </div>
+            <div>
+              <div class="navbox-column-title">Technologie &amp; site</div>
+              <ul>
+                <li><a href="#art-lorem-technologia">Technologie loremique</a></li>
+                <li><a href="#cat-technologia">Catégorie:Technologies imaginaires</a></li>
+                <li><a href="#sec-2">Structure du site</a></li>
+                <li><a href="#art-lorem-encyclopaedia">Lorem ipsum (encyclopaedia)</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <h2 id="art-lorem-textus">7. Article séparé · Lorem ipsum (texte)</h2>
+        <p>
+          <strong>Lorem ipsum (texte)</strong> est la suite pseudo-latine la plus
+          utilisée pour remplir des colonnes vides. Le passage classique commence
+          par : « Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua », et se
+          poursuit par une série de phrases sans signification précise.
+        </p>
+        <p>
+          Dans ce clone de Wikipédia, cet article sert de <a href="#cat-textus">référence
+          centrale</a> pour tous les contenus factices, qu’il s’agisse de
+          <a href="#art-lorem-universum">l’univers lorem</a>,
+          de <a href="#art-lorem-cultura">la culture loremique</a>
+          ou de <a href="#art-lorem-technologia">la technologie loremique</a>.
+        </p>
+
+        <h2 id="art-lorem-technologia">8. Article séparé · Technologie loremique</h2>
+        <p>
+          La <strong>technologie loremique</strong> désigne l’ensemble des outils imaginaires
+          utilisés pour générer, distribuer et manipuler des textes de remplissage :
+          « LoremPress », « IpsumWiki », « PlaceholderOS », etc. Dans cette page,
+          tout est réduit à un seul fichier HTML, mais le principe peut être étendu.
+        </p>
+        <p id="stack-lorem">
+          L’« <em>infrastructure</em> » de Vicipaedia Lorem se limite ici à :
+          un peu de HTML, de CSS pur, et un script JavaScript pour la
+          <a href="#special-search">recherche côté client</a>.
+          Aucune bibliothèque externe n’est chargée, ce qui facilite la copie et
+          l’adaptation.
+        </p>
+
+        <h2 id="appendices">9. Appendices linguistiques</h2>
+
+        <h3 id="lingua-lat">9.1 Lorem Latinum</h3>
+        <p>
+          <strong>Lingua lorem Latina</strong> combine des mots latins authentiques
+          et des fragments inventés : « Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit », « Sed do eiusmod tempor incididunt ut labore et
+          dolore magna aliqua », etc. Elle sert de base à la plupart des
+          <a href="#cat-textus">textes fictifs</a>.
+        </p>
+
+        <h3 id="lingua-fr">9.2 Lorem Francogallicum</h3>
+        <p>
+          <strong>Lorem Francogallicum</strong> mélange des expressions telles que
+          « Lorem ipsum dolor sit amet, bonjour, ceci est un texte d’exemple fictif ».
+          Ce mélange permet de tester des interfaces bilingues ou multilingues
+          dans un contexte entièrement neutre.
+        </p>
+
+        <h3 id="lingua-en">9.3 Lorem Anglicum</h3>
+        <p>
+          <strong>Lorem English</strong> is a hybrid flavour in which the classic
+          latin-looking sentence is followed by plain English placeholders like
+          « this section will later contain real content ». It is useful for
+          layout tests targeting English-speaking audiences.
+        </p>
+
+        <h3 id="lingua-mix">9.4 Lorem Mixtum</h3>
+        <p>
+          <strong>Lorem Mixtum</strong> est un cocktail : « Lorem ipsum dolor sit amet,
+          ceci est un test, this is only an example, nada de verdad aquí ».
+          Idéal pour casser la tête aux correcteurs orthographiques et tester
+          le rendu de scripts mixtes.
+        </p>
+
+        <hr />
+        <p style="font-size: 11px; color: #54595d;">
+          Catégories :
+          <a id="cat-lorem" href="#cat-textus">Lorem</a> ·
+          <a id="cat-encyclopaedia" href="#art-lorem-encyclopaedia">Encyclopédies imaginaires</a> ·
+          <a id="cat-textus" href="#art-lorem-textus">Textes fictifs</a> ·
+          <a id="cat-cultura" href="#art-lorem-cultura">Cultures imaginaires</a> ·
+          <a id="cat-technologia" href="#art-lorem-technologia">Technologies imaginaires</a> ·
+          <a id="cat-communia" href="#sec-3">Communautés lorem</a>
+        </p>
+      </article>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#art-lorem-encyclopaedia">À propos de Vicipaedia Lorem</a>
+    <a href="#sec-4">À propos de la licence fictive</a>
+    <a href="#notes">Avertissement de non-responsabilité</a>
+    <a href="#art-lorem-encyclopaedia">Version mobile (simulée)</a>
+    <a href="https://example.org" target="_blank" rel="noopener">Lien externe lorem</a>
+  </div>
+  <div class="footer-text">
+    Ce site est un clone statique de type Wikipédia, entièrement hors-ligne et rempli de lorem ipsum.
+    Pour créer ton propre wiki, duplique ce fichier et remplace le contenu section par section.
+  </div>
+</footer>
+
+<script>
+  // --- SIDEBAR RESPONSIVE ---
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebarToggle');
+
+  toggle.addEventListener('click', function () {
+    sidebar.classList.toggle('open');
+  });
+
+  sidebar.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A' && window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 900) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  // --- INDEX DE RECHERCHE « CRÉDIBLE » ---
+
+  const searchForm = document.getElementById('searchForm');
+  const searchInput = document.getElementById('searchInput');
+  const searchPanel = document.getElementById('searchResults');
+  const searchTitle = document.getElementById('searchResultsTitle');
+  const searchList = document.getElementById('searchResultsList');
+  const searchInfo = document.getElementById('searchResultsInfo');
+  const searchClose = document.getElementById('searchResultsClose');
+
+  let searchIndex = [];
+
+  function buildSearchIndex() {
+    const container = document.getElementById('articleBody');
+    const headings = container.querySelectorAll('h1[id], h2[id], h3[id]');
+    searchIndex = [];
+
+    headings.forEach(h => {
+      const id = h.id;
+      const title = h.textContent.trim();
+      let snippet = '';
+
+      // cherche le premier paragraphe après le titre
+      let sibling = h.nextElementSibling;
+      while (sibling && snippet.trim() === '') {
+        if (sibling.tagName === 'P') {
+          snippet = sibling.textContent.trim();
+          break;
+        }
+        sibling = sibling.nextElementSibling;
+      }
+
+      searchIndex.push({
+        id,
+        title,
+        snippet
+      });
+    });
+  }
+
+  function highlightTerm(text, term) {
+    const safeTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp('(' + safeTerm + ')', 'gi');
+    return text.replace(regex, '<span class="search-highlight">$1</span>');
+  }
+
+  function showSearchResults(term) {
+    const q = term.trim();
+    if (!q) {
+      searchPanel.dataset.open = 'false';
+      searchList.innerHTML = '';
+      searchInfo.textContent = '';
+      return;
+    }
+
+    const normalized = q.toLowerCase();
+    const results = searchIndex.filter(entry => {
+      const titleMatch = entry.title.toLowerCase().includes(normalized);
+      const snippetMatch = entry.snippet.toLowerCase().includes(normalized);
+      return titleMatch || snippetMatch;
+    });
+
+    // Si un titre correspond exactement -> comportement « Aller à l’article »
+    const exact = searchIndex.find(entry => entry.title.toLowerCase() === normalized);
+    if (exact) {
+      const el = document.getElementById(exact.id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.location.hash = exact.id;
+        // on affiche quand même un petit panneau de confirmation
+        searchPanel.dataset.open = 'true';
+        searchTitle.textContent = 'Aller directement à : « ' + exact.title + ' »';
+        searchList.innerHTML = '';
+        const li = document.createElement('li');
+        li.innerHTML =
+          '<span class="search-result-title"><a href="#' +
+          exact.id +
+          '">' +
+          exact.title +
+          '</a></span>' +
+          '<div class="search-result-snippet">Correspondance exacte de titre.</div>';
+        searchList.appendChild(li);
+        searchInfo.textContent = 'Astuce : tu peux éditer ce fichier pour ajouter d’autres articles.';
+        return;
+      }
+    }
+
+    searchPanel.dataset.open = 'true';
+    searchTitle.textContent = 'Résultats de recherche pour « ' + q + ' »';
+    searchList.innerHTML = '';
+
+    if (!results.length) {
+      const li = document.createElement('li');
+      li.innerHTML =
+        'Aucun article ne contient « <span class="search-highlight">' +
+        q +
+        '</span> ». ' +
+        'Tu peux créer une nouvelle section dans ce fichier pour la définir.';
+      searchList.appendChild(li);
+      searchInfo.textContent =
+        'Suggestion : ajoute un nouveau <code>&lt;h2 id="ton-id"&gt;</code> dans le HTML, ' +
+        'puis du texte. La recherche l’indexera automatiquement.';
+      return;
+    }
+
+    results.forEach(entry => {
+      const li = document.createElement('li');
+      const href = '#' + entry.id;
+      const highlightedTitle = highlightTerm(entry.title, q);
+      const highlightedSnippet = entry.snippet
+        ? highlightTerm(entry.snippet, q)
+        : '…';
+
+      li.innerHTML =
+        '<div class="search-result-title"><a href="' +
+        href +
+        '">' +
+        highlightedTitle +
+        '</a></div>' +
+        '<div class="search-result-snippet">' +
+        highlightedSnippet +
+        '</div>';
+
+      li.querySelector('a').addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.getElementById(entry.id);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          window.location.hash = entry.id;
+        }
+        searchPanel.dataset.open = 'false';
+      });
+
+      searchList.appendChild(li);
+    });
+
+    searchInfo.textContent =
+      results.length +
+      ' résultat(s) trouvé(s). Ce moteur est entièrement local : aucune donnée n’est envoyée en ligne.';
+  }
+
+  searchForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const value = searchInput.value || '';
+    if (!value.trim()) {
+      alert('Tape un mot-clé (par exemple « lorem », « univers », « technologie »)…');
+      return;
+    }
+    showSearchResults(value);
+  });
+
+  searchClose.addEventListener('click', function () {
+    searchPanel.dataset.open = 'false';
+  });
+
+  // lien interne pour montrer la recherche depuis le texte
+  const specialSearchAnchor = document.createElement('span');
+  specialSearchAnchor.id = 'special-search';
+  // on ne l’affiche pas : il sert juste d’ancre pour le lien dans le texte
+
+  document.addEventListener('DOMContentLoaded', function () {
+    buildSearchIndex();
+  });
+</script>
+</body>
+</html>
