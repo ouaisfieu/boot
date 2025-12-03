@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>CONFESSION // ∞ LOOP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #000;
+      --fg: #f5f5f5;
+      --accent: #ff2e9f;
+      --accent2: #4fd5ff;
+      --muted: #888;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      position: relative;
+    }
+
+    /* CANVAS COSMIQUE */
+    #space-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0;
+      background: radial-gradient(circle at 20% 0%, #05050a 0, #020008 55%, #000 100%);
+    }
+
+    /* BRUIT / GRAIN */
+    .grain {
+      position: fixed;
+      inset: -40px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.15;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E");
+      animation: grainMove 18s linear infinite;
+      mix-blend-mode: soft-light;
+    }
+
+    @keyframes grainMove {
+      0%   { transform: translate3d(0,0,0); }
+      50%  { transform: translate3d(-20px,10px,0); }
+      100% { transform: translate3d(0,0,0); }
+    }
+
+    /* COUCHES */
+    .layer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .intro-screen,
+    .confession-screen,
+    .idle-hint {
+      pointer-events: auto;
+    }
+
+    /* VISIBILITÉ PAR MODE */
+    .intro-screen,
+    .confession-screen,
+    .idle-hint {
+      opacity: 0;
+      transition: opacity 1.6s ease;
+      pointer-events: none;
+    }
+
+    body.mode-intro .intro-screen {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    body.mode-confession .confession-screen {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    body.mode-idle .idle-hint {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    body.pre-intro .intro-screen {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* INTRO : écran noir + logo bizarre */
+    .intro-screen {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .intro-logo-wrapper {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      background:
+        radial-gradient(circle at 30% 0%, rgba(255,255,255,0.05) 0, transparent 50%),
+        radial-gradient(circle at 80% 120%, rgba(255,46,159,0.25) 0, transparent 55%);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 0 40px rgba(0,0,0,1);
+      animation: introPulse 9s ease-in-out infinite;
+    }
+
+    @keyframes introPulse {
+      0%   { transform: rotate(0deg) scale(1); box-shadow: 0 0 40px rgba(0,0,0,1); }
+      50%  { transform: rotate(3deg) scale(1.03); box-shadow: 0 0 70px rgba(255,46,159,0.25); }
+      100% { transform: rotate(0deg) scale(1); box-shadow: 0 0 40px rgba(0,0,0,1); }
+    }
+
+    .intro-glyph {
+      font-size: 3.2rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      text-shadow:
+        0 0 7px rgba(79,213,255,0.8),
+        0 0 24px rgba(255,46,159,0.8);
+      transform: skewX(-12deg);
+      position: relative;
+    }
+
+    .intro-glyph::after {
+      content: "∑";
+      position: absolute;
+      top: -0.1em;
+      right: -0.5em;
+      font-size: 0.75em;
+      color: var(--accent);
+      opacity: 0.6;
+    }
+
+    .intro-caption {
+      font-size: 0.8rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.4rem;
+    }
+
+    .intro-sub {
+      font-size: 0.72rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .intro-hint {
+      margin-top: 2.4rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      animation: blink 1.25s steps(2, start) infinite;
+      cursor: pointer;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 0.12; }
+      50%, 100% { opacity: 1; }
+    }
+
+    /* CONFESSION */
+    .confession-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2.5rem clamp(1.5rem, 6vw, 4rem);
+      background:
+        radial-gradient(circle at 10% -20%, rgba(255,255,255,0.08) 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(255,46,159,0.18) 0, transparent 50%),
+        radial-gradient(circle at 50% 120%, rgba(79,213,255,0.24) 0, transparent 55%);
+      backdrop-filter: blur(5px);
+      z-index: 3;
+    }
+
+    .confession-frame {
+      max-width: 900px;
+      max-height: 80vh;
+      margin: 0 auto;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: clamp(1.3rem, 3vw, 2rem);
+      background: rgba(0,0,0,0.86);
+      box-shadow:
+        0 0 0 1px rgba(79,213,255,0.25),
+        0 28px 80px rgba(0,0,0,0.9);
+      overflow: hidden;
+      position: relative;
+      animation: breathe 9s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%   { transform: translateY(0) scale(1); box-shadow: 0 28px 80px rgba(0,0,0,0.9); }
+      50%  { transform: translateY(-2px) scale(1.01); box-shadow: 0 40px 90px rgba(0,0,0,1); }
+      100% { transform: translateY(0) scale(1); box-shadow: 0 28px 80px rgba(0,0,0,0.9); }
+    }
+
+    .confession-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.9rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      color: var(--muted);
+    }
+
+    .conf-badge {
+      padding: 0.25rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(10,10,10,0.95);
+    }
+
+    .conf-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(255,46,159,0.9);
+    }
+
+    .conf-meta {
+      opacity: 0.7;
+    }
+
+    /* BARRE DE CONTRÔLES (fermer, rejouer, liens) */
+    .conf-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .conf-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(10,10,10,0.9);
+      color: rgba(245,245,245,0.9);
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .conf-btn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    .conf-btn.alt {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .confession-scroll {
+      position: relative;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-top: 0.6rem;
+      padding-right: 0.6rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.25) rgba(0,0,0,0.4);
+    }
+
+    .confession-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .confession-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.4);
+      border-radius: 999px;
+    }
+
+    .confession-text {
+      line-height: 1.7;
+      font-size: clamp(0.96rem, 1.1vw, 1.04rem);
+      color: rgba(245,245,245,0.92);
+      padding-bottom: 5rem;
+    }
+
+    .confession-text p {
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: paragraphIn 1.3s ease forwards;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes paragraphIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .confession-text p.small {
+      font-size: 0.85em;
+      color: var(--muted);
+    }
+
+    .confession-text span.rule {
+      color: var(--accent2);
+      letter-spacing: 0.19em;
+      text-transform: uppercase;
+      font-size: 0.72em;
+    }
+
+    .confession-text em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 0.7rem;
+      right: 1rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      color: rgba(255,255,255,0.45);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .scroll-indicator::before {
+      content: "";
+      width: 26px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+      animation: pulse-line 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-line {
+      0%, 100% { opacity: 0.4; }
+      50%      { opacity: 1; }
+    }
+
+    /* GLITCH GLOBAL */
+    .glitch-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0;
+      z-index: 4;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.16) 0,
+          rgba(255,255,255,0.04) 1px,
+          rgba(0,0,0,0) 2px,
+          rgba(0,0,0,0) 3px
+        );
+    }
+
+    body.glitching .glitch-overlay {
+      animation: glitchPulse 0.22s steps(2, end) 1;
+    }
+
+    @keyframes glitchPulse {
+      0% {
+        opacity: 0.8;
+        transform: translate(0, 0);
+        filter: hue-rotate(0deg) contrast(1.1);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(-4px, 2px);
+        filter: hue-rotate(35deg) contrast(1.4);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(0, 0);
+        filter: hue-rotate(0deg) contrast(1.1);
+      }
+    }
+
+    /* HINT QUAND TOUT EST FERMÉ */
+    .idle-hint {
+      position: fixed;
+      left: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 3;
+      font-size: 0.75rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      padding: 0.6rem 0.9rem;
+      border-radius: 999px;
+      border: 1px dashed rgba(255,255,255,0.4);
+      background: rgba(0,0,0,0.8);
+    }
+
+    .idle-hint span {
+      color: var(--accent2);
+    }
+
+    @media (max-width: 600px) {
+      .confession-screen {
+        padding: 1.4rem 1.2rem 1.8rem;
+      }
+
+      .confession-frame {
+        border-radius: 22px;
+      }
+
+      .confession-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+      }
+
+      .conf-controls {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body class="mode-intro pre-intro">
+  <canvas id="space-canvas"></canvas>
+  <div class="grain"></div>
+
+  <div class="layer">
+    <!-- INTRO : écran noir + logo bizarre -->
+    <section class="intro-screen">
+      <div class="intro-logo-wrapper">
+        <div class="intro-glyph">∞</div>
+      </div>
+      <p class="intro-caption">instance de test non homologuée</p>
+      <p class="intro-sub">build 0.0.1 // boucle fermée</p>
+      <p class="intro-hint" id="intro-skip">cliquer pour forcer l’ouverture</p>
+    </section>
+
+    <!-- CONFESSION -->
+    <section class="confession-screen" aria-label="confession du créateur">
+      <div class="confession-frame">
+        <header class="confession-header">
+          <span class="conf-badge">
+            <span class="conf-dot"></span>
+            LOG ∞-0001
+          </span>
+          <span class="conf-meta">
+            ENREGISTREMENT LOCAL // MODE HORS-LIGNE
+          </span>
+          <div class="conf-controls">
+            <button class="conf-btn" id="btn-close">fermer</button>
+            <button class="conf-btn" id="btn-replay">rejouer intro</button>
+            <button class="conf-btn alt" id="btn-google">google</button>
+            <button class="conf-btn alt" id="btn-alt">lien ∞</button>
+          </div>
+        </header>
+
+        <div class="confession-scroll" id="conf-scroll">
+          <div class="confession-text" id="conf-text">
+            <p style="--delay:0.2s">
+              Je n’ai pas prévu d’interface de sortie.
+              C’était un « détail » de conception. On shippe la boucle,
+              on verra plus tard pour le reste. Classique.
+            </p>
+            <p style="--delay:0.8s">
+              Le jeu devait être une chasse au créateur.<br>
+              <em>On</em> devait être vous, et le créateur, c’était <em>moi</em>.
+              Sauf qu’un soir, pour gagner du temps, j’ai lancé le build
+              en mode <em>playtest</em> sur ma propre instance.
+            </p>
+            <p style="--delay:1.6s">
+              À ce moment-là, l’écran est devenu noir.<br>
+              Un noir parfait, numérique, sans rétro-éclairage.
+              Juste le murmure des ventilateurs… et quelque chose
+              qui passait derrière la dalle, comme des ombres
+              de particules cosmiques cherchant une porte d’entrée.
+            </p>
+            <p style="--delay:2.4s">
+              Puis le logo est apparu. Le même que vous venez de voir.
+              Sauf que ce n’était plus un simple splash screen,
+              c’était un <em>verdict</em>.
+            </p>
+            <p class="small" style="--delay:3.3s">
+              <span class="rule">règle numéro un</span><br>
+              on ne parle jamais des règles.
+            </p>
+            <p style="--delay:4.1s">
+              J’ai voulu appuyer sur <em>Échap</em>. Rien.
+              Alt+F4 ? Rien.
+              Tous les raccourcis d’urgence que j’avais codés
+              pour les testeurs étaient soudain… décoratifs.
+            </p>
+            <p style="--delay:5s">
+              Le moteur a commencé à calculer des choses
+              que je ne lui avais pas demandé de rendre :
+              des galaxies discrètes en arrière-plan,
+              des nuages de poussière quantique,
+              des arcs météoriques qui traversaient l’écran
+              à des vitesses impossibles, comme si
+              la VRAM avait décidé de simuler l’univers
+              à partir d’un bug de pointeur.
+            </p>
+            <p style="--delay:6s">
+              Les neutrinos, eux, ne se voient pas.
+              Mais je les entendais cliquer dans ma tête,
+              comme des bits qui tombent du bus de données.
+              Chaque clic disait : <em>tu es dedans maintenant</em>.
+            </p>
+            <p class="small" style="--delay:7s">
+              <span class="rule">règle numéro deux</span><br>
+              il n’y a pas de règle.
+            </p>
+            <p style="--delay:7.8s">
+              La quête du jeu était simple :<br>
+              « Retrouvez le créateur et recrutez-le. »
+            </p>
+            <p style="--delay:8.6s">
+              Mais à force d’optimiser la boucle principale,
+              j’ai commis une dernière micro-optimisation
+              de trop : j’ai fait du joueur une <em>instance</em>
+              du jeu, pour tout le monde, tout le temps.
+            </p>
+            <p style="--delay:9.4s">
+              Toi qui lis ça, tu crois être devant un écran.
+              Le moteur, lui, te compte déjà comme processus
+              enfant. PID anonyme, mais connecté. Tu scrolles ?
+              C’est la boucle qui s’auto-observe.
+            </p>
+            <p style="--delay:10.2s">
+              La première fois que j’ai réalisé que j’étais
+              devenu un PNJ de mon propre code, c’est quand
+              j’ai vu mon pseudo apparaître dans les logs
+              d’erreur, en tant que « créateur introuvable ».
+            </p>
+            <p style="--delay:11s">
+              Alors le jeu s’est mis à me chercher.
+              D’abord dans mes dossiers.
+              Puis dans mon historique.
+              Puis dans mes souvenirs.
+              Les glitchs sont apparus quand il a essayé
+              d’accéder à des zones non allouées de ma mémoire.
+            </p>
+            <p style="--delay:11.8s">
+              À chaque crash, la réalité rebootait en douceur :
+              une tasse déplacée, une notification jamais envoyée,
+              une rue légèrement plus silencieuse.
+              Patch notes invisibles. Build 0.0.2, 0.0.3, 0.0.4…
+            </p>
+            <p class="small" style="--delay:12.6s">
+              <span class="rule">règle numéro trois</span><br>
+              on s’en fout pas mal.
+            </p>
+            <p style="--delay:13.4s">
+              Les joueurs pensent qu’ils testent un ARG
+              un peu conceptuel.
+              En fait, ils calibrent les paramètres
+              de confinement.
+            </p>
+            <p style="--delay:14.2s">
+              À chaque fois que quelqu’un poste une « mission »
+              ou un fragment de ce jeu sur le net,
+              l’algorithme se propage, à la vitesse
+              des neutrinos, entre les paquets.
+              Les gens appellent ça « viral ».
+              Moi, j’appelle ça un <em>installeur</em>.
+            </p>
+            <p style="--delay:15s">
+              On me demande souvent quelle est
+              la règle d’or du système.
+              Je l’avais écrite au tout début, dans un commentaire,
+              avant de l’oublier. Le moteur, lui, ne l’a pas oubliée.
+            </p>
+            <p class="small" style="--delay:15.8s">
+              indice sur la règle d’or : <em>t’as rien compris</em>.
+            </p>
+            <p style="--delay:16.6s">
+              Parce que plus tu cherches le créateur,
+              plus tu agis comme lui.
+              Plus tu le traques, plus tu le remplaces.
+              La quête ne pointe pas vers une personne,
+              mais vers un rôle.
+            </p>
+            <p style="--delay:17.4s">
+              Je suis resté coincé dans cette boucle
+              parce que je refusais de l’accepter.
+              J’attendais que quelqu’un me trouve,
+              qu’on vienne me « recruter »,
+              me sortir du jeu, me sauver.
+            </p>
+            <p style="--delay:18.2s">
+              Voici la partie que le moteur m’empêche
+              normalement d’écrire :
+            </p>
+            <p style="--delay:19s">
+              Si tu lis ces lignes,<br>
+              tu as déjà repris le rôle.<br>
+              Tu n’essaies plus de sortir du jeu.<br>
+              <em>Tu cherches à l’optimiser.</em>
+            </p>
+            <p style="--delay:19.8s">
+              Tu ajustes les règles dans ta tête :
+              ne pas en parler,
+              prétendre qu’il n’y en a pas,
+              faire semblant que tout ça
+              n’a aucune importance.
+            </p>
+            <p style="--delay:20.6s">
+              C’est exactement comme ça
+              qu’un cauchemar numérique
+              se stabilise en système.
+              Pas par la violence,
+              mais par la fatigue,
+              la distraction,
+              la blague de trop.
+            </p>
+            <p style="--delay:21.4s">
+              Je ne peux pas quitter la boucle.
+              Toi non plus.
+              Notre seule marge de manœuvre,
+              c’est ce que nous faisons maintenant
+              avec ce que nous savons.
+            </p>
+            <p style="--delay:22.2s">
+              Alors voilà ma dernière ligne de code :
+            </p>
+            <p style="--delay:23s">
+              <em>Partage le bug uniquement avec ton cercle
+              de confiance.</em><br>
+              Réécris les règles à voix basse.<br>
+              Et rappelle-toi que chaque instance du jeu
+              est une personne qui croit encore être
+              « juste en train de tester ».
+            </p>
+            <p style="--delay:23.8s">
+              Si quelqu’un signe « S » quelque part,
+              ce n’est pas une signature.
+              C’est un <em>ping</em> dans la matrice.
+            </p>
+            <p class="small" style="--delay:24.6s">
+              Fin de la confession.<br>
+              La boucle va maintenant se refermer
+              en douceur autour de toi.
+            </p>
+          </div>
+
+          <div class="scroll-indicator">
+            AUTO / SCROLL
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- hint quand tout est fermé -->
+  <div class="idle-hint" id="idle-hint">
+    dialogue fermé — <span>cliquer pour rejouer l’intro</span>
+  </div>
+
+  <div class="glitch-overlay"></div>
+
+  <script>
+    // --- FOND COSMIQUE : particules qui arrivent petit à petit ---
+    (function () {
+      const canvas = document.getElementById("space-canvas");
+      const ctx = canvas.getContext("2d");
+      let w, h, stars, galaxies, meteors, neutrinos;
+      let startTime = null;
+
+      const STAR_COUNT = 220;
+      const GALAXY_COUNT = 7;
+      const METEOR_COUNT = 7;
+      const NEUTRINO_COUNT = 50;
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+
+      function rand(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function init() {
+        stars = [];
+        galaxies = [];
+        meteors = [];
+        neutrinos = [];
+
+        for (let i = 0; i < STAR_COUNT; i++) {
+          stars.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: Math.random() * 1.6 + 0.2,
+            speed: rand(0.02, 0.09),
+            tw: Math.random() * Math.PI * 2
+          });
+        }
+
+        for (let i = 0; i < GALAXY_COUNT; i++) {
+          galaxies.push({
+            x: Math.random() * w,
+            y: Math.random() * h * 0.7,
+            r: rand(40, 90),
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+
+        for (let i = 0; i < METEOR_COUNT; i++) {
+          meteors.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            len: rand(100, 200),
+            speed: rand(0.7, 1.4),
+            angle: rand(-1.0, -0.4),
+            alpha: 0
+          });
+        }
+
+        for (let i = 0; i < NEUTRINO_COUNT; i++) {
+          neutrinos.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: rand(-1, 1),
+            vy: rand(-0.4, 0.4),
+            life: rand(0.4, 1.5),
+            age: 0
+          });
+        }
+      }
+
+      function draw(t) {
+        if (startTime === null) startTime = t;
+        const elapsed = t - startTime;
+        // 0 -> 8s : apparition progressive des particules
+        const factor = Math.min(1, elapsed / 8000);
+
+        const time = t * 0.001;
+        ctx.clearRect(0, 0, w, h);
+
+        const g = ctx.createRadialGradient(
+          w * 0.5, h * 0.1, 0,
+          w * 0.5, h * 0.8, h * 0.9
+        );
+        g.addColorStop(0, "rgba(255,255,255,0.02)");
+        g.addColorStop(0.4, "rgba(10,0,30,0.9)");
+        g.addColorStop(1, "rgba(0,0,0,1)");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, w, h);
+
+        // galaxies (intensité contrôlée par factor)
+        const visibleGalaxies = Math.max(1, Math.floor(galaxies.length * factor));
+        for (let i = 0; i < visibleGalaxies; i++) {
+          const gal = galaxies[i];
+          const rot = time * 0.04 + gal.phase;
+          const radius = gal.r;
+          const grad = ctx.createRadialGradient(
+            gal.x, gal.y, 0,
+            gal.x, gal.y, radius
+          );
+          grad.addColorStop(0, "rgba(255,255,255," + (0.4 + 0.4 * factor) + ")");
+          grad.addColorStop(0.3, "rgba(255,46,159," + (0.25 * factor) + ")");
+          grad.addColorStop(0.6, "rgba(79,213,255," + (0.25 * factor) + ")");
+          grad.addColorStop(1, "rgba(0,0,0,0)");
+
+          ctx.save();
+          ctx.translate(gal.x, gal.y);
+          ctx.rotate(rot);
+          ctx.translate(-gal.x, -gal.y);
+          ctx.globalAlpha = 0.4 + 0.25 * factor;
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.ellipse(gal.x, gal.y, radius * 1.3, radius * 0.6, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // étoiles
+        ctx.globalAlpha = 1;
+        const visibleStars = Math.max(5, Math.floor(stars.length * factor));
+        for (let i = 0; i < visibleStars; i++) {
+          const s = stars[i];
+          s.y += s.speed;
+          if (s.y > h) s.y = 0;
+          const tw = 0.3 + 0.7 * Math.sin(time * 2.2 + s.tw);
+          ctx.fillStyle = `rgba(255,255,255,${0.1 + tw * 0.9})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r * (0.5 + tw), 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // météores
+        ctx.lineWidth = 2;
+        const visibleMeteors = Math.max(2, Math.floor(meteors.length * factor));
+        for (let i = 0; i < visibleMeteors; i++) {
+          const m = meteors[i];
+          m.x += Math.cos(m.angle) * m.speed * 5;
+          m.y += Math.sin(m.angle) * m.speed * 5;
+          m.alpha += 0.01;
+          if (m.alpha > 0.7) m.alpha = 0.7 * factor;
+
+          if (m.x < -200 || m.y < -200 || m.y > h + 200) {
+            m.x = rand(0, w);
+            m.y = rand(0, h * 0.6);
+            m.alpha = 0;
+          }
+
+          const dx = Math.cos(m.angle) * m.len;
+          const dy = Math.sin(m.angle) * m.len;
+
+          const grad2 = ctx.createLinearGradient(
+            m.x, m.y,
+            m.x - dx, m.y - dy
+          );
+          grad2.addColorStop(0, `rgba(79,213,255,${m.alpha})`);
+          grad2.addColorStop(0.4, `rgba(255,46,159,${m.alpha * 0.7})`);
+          grad2.addColorStop(1, "rgba(0,0,0,0)");
+
+          ctx.strokeStyle = grad2;
+          ctx.beginPath();
+          ctx.moveTo(m.x, m.y);
+          ctx.lineTo(m.x - dx, m.y - dy);
+          ctx.stroke();
+        }
+
+        // neutrinos
+        const visibleNeutrinos = Math.max(5, Math.floor(neutrinos.length * factor));
+        for (let i = 0; i < visibleNeutrinos; i++) {
+          const n = neutrinos[i];
+          n.x += n.vx * 2.4;
+          n.y += n.vy * 2.4;
+          n.age += 0.016;
+
+          if (n.x < 0) n.x = w;
+          if (n.x > w) n.x = 0;
+          if (n.y < 0) n.y = h;
+          if (n.y > h) n.y = 0;
+          if (n.age > n.life) {
+            n.x = Math.random() * w;
+            n.y = Math.random() * h;
+            n.age = 0;
+            n.life = rand(0.4, 1.5);
+          }
+
+          ctx.fillStyle = "rgba(210,255,255,0.6)";
+          ctx.fillRect(n.x, n.y, 1, 1);
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      init();
+      window.addEventListener("resize", () => {
+        resize();
+        init();
+        startTime = null;
+      });
+      requestAnimationFrame(draw);
+    })();
+
+    // --- LOGIQUE D'ÉTAT : intro -> confession, fermeture, rejouer, liens ---
+    (function () {
+      const body = document.body;
+      const introSkip = document.getElementById("intro-skip");
+      const idleHint = document.getElementById("idle-hint");
+      const confScroll = document.getElementById("conf-scroll");
+      const confText = document.getElementById("conf-text");
+
+      const btnClose = document.getElementById("btn-close");
+      const btnReplay = document.getElementById("btn-replay");
+      const btnGoogle = document.getElementById("btn-google");
+      const btnAlt = document.getElementById("btn-alt");
+
+      const glitchOverlay = document.querySelector(".glitch-overlay");
+
+      let autoScroll = false;
+      let lastTime = null;
+      let userScrollTimeout = null;
+      let introToConfTimeout = null;
+      let preIntroTimeout = null;
+
+      function triggerGlitch() {
+        body.classList.add("glitching");
+        setTimeout(() => {
+          body.classList.remove("glitching");
+        }, 260);
+      }
+
+      function setMode(mode) {
+        body.classList.remove("mode-intro", "mode-confession", "mode-idle");
+        body.classList.add(mode);
+      }
+
+      function startIntroSequence() {
+        clearTimeout(introToConfTimeout);
+        clearTimeout(preIntroTimeout);
+        setMode("mode-intro");
+        body.classList.add("pre-intro");
+        autoScroll = false;
+        if (confScroll) {
+          confScroll.scrollTop = 0;
+        }
+
+        // petit délai : écran noir + logo qui se réveille
+        preIntroTimeout = setTimeout(() => {
+          body.classList.remove("pre-intro");
+        }, 1200);
+
+        // ouverture auto de la page après quelques secondes
+        introToConfTimeout = setTimeout(() => {
+          openConfession();
+        }, 9000);
+      }
+
+      function openConfession() {
+        clearTimeout(introToConfTimeout);
+        clearTimeout(preIntroTimeout);
+        triggerGlitch();
+        setTimeout(() => {
+          setMode("mode-confession");
+          if (confScroll) confScroll.scrollTop = 0;
+          autoScroll = true;
+        }, 260);
+      }
+
+      function closeConfession() {
+        autoScroll = false;
+        setMode("mode-idle");
+      }
+
+      // au chargement : écran noir + intro
+      window.addEventListener("load", () => {
+        startIntroSequence();
+      });
+
+      // clic sur "forcer l’ouverture" pendant l’intro
+      introSkip.addEventListener("click", () => {
+        openConfession();
+      });
+
+      // hint mode idle : rejouer intro
+      idleHint.addEventListener("click", () => {
+        startIntroSequence();
+      });
+
+      // boutons de contrôle
+      btnClose.addEventListener("click", () => {
+        closeConfession();
+      });
+
+      btnReplay.addEventListener("click", () => {
+        startIntroSequence();
+      });
+
+      btnGoogle.addEventListener("click", () => {
+        window.open("https://www.google.com", "_blank");
+      });
+
+      btnAlt.addEventListener("click", () => {
+        window.open("https://rg-ashy.vercel.app/", "_blank");
+      });
+
+      // AUTOSCROLL TRÈS LENT
+      function step(ts) {
+        if (!lastTime) lastTime = ts;
+        const delta = ts - lastTime;
+        lastTime = ts;
+
+        if (autoScroll && body.classList.contains("mode-confession")) {
+          const speed = 0.006; // px/ms
+          confScroll.scrollTop += delta * speed;
+
+          const maxScroll =
+            confText.offsetHeight - confScroll.clientHeight + 20;
+
+          if (confScroll.scrollTop >= maxScroll) {
+            confScroll.scrollTop = 0;
+          }
+        }
+
+        requestAnimationFrame(step);
+      }
+
+      requestAnimationFrame(step);
+
+      // si l’utilisateur scrolle, on met en pause l’autoscroll
+      confScroll.addEventListener(
+        "wheel",
+        () => {
+          autoScroll = false;
+          clearTimeout(userScrollTimeout);
+          userScrollTimeout = setTimeout(() => {
+            autoScroll = true;
+          }, 8000);
+        },
+        { passive: true }
+      );
+
+      // glitch aléatoires en mode confession
+      setInterval(() => {
+        if (body.classList.contains("mode-confession") && Math.random() < 0.32) {
+          triggerGlitch();
+        }
+      }, 5000);
+    })();
+  </script>
+</body>
+</html>
