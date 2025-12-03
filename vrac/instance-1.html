@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>INSTANCE – Fiche & Recrutement</title>
+<style>
+    body {
+        font-family: monospace;
+        background:#0a0a0a;
+        color:#e2e2e2;
+        padding:20px;
+    }
+    h1, h2 { color:#76ffca; }
+    .card {
+        border:1px solid #444;
+        padding:20px;
+        margin-bottom:20px;
+        border-radius:8px;
+        background:#111;
+    }
+    input, textarea {
+        width:100%;
+        margin:5px 0 15px;
+        padding:8px;
+        background:#000;
+        border:1px solid #333;
+        color:#76ffca;
+        border-radius:5px;
+    }
+    button {
+        background:#76ffca;
+        border:none;
+        padding:10px 15px;
+        cursor:pointer;
+        font-weight:bold;
+        border-radius:5px;
+    }
+    img { max-width:200px; margin-top:10px; }
+    pre {
+        background:#000; padding:10px; border:1px solid #333;
+        overflow:auto;
+    }
+</style>
+</head>
+<body>
+
+<h1>INSTANCE – Activation</h1>
+<p><strong>Chaque personne est une instance même sans avoir joué.</strong></p>
+
+<!-- éléments requis -->
+<ipsum>ipsum</ipsum>
+<vide>vide</vide>
+
+<div class="card">
+<h2>1. Importer une photo</h2>
+<input type="file" id="photoInput" accept="image/*">
+<img id="photoPreview" src="">
+</div>
+
+<div class="card">
+<h2>2. Informations du personnage</h2>
+
+<label>Nom de l’instance :</label>
+<input id="name">
+
+<label>Alias / indicatif :</label>
+<input id="alias">
+
+<label>Compétences principales :</label>
+<textarea id="skills"></textarea>
+
+<label>Origine / histoire :</label>
+<textarea id="story"></textarea>
+
+<label>Objectif secret :</label>
+<textarea id="secret"></textarea>
+
+</div>
+
+<div class="card">
+<h2>3. Exportation</h2>
+<button onclick="exportJSON()">Exporter en JSON</button>
+<button onclick="exportHTML()">Exporter en HTML</button>
+<button onclick="capture()">Exporter en PNG (capture)</button>
+
+<pre id="exportZone"></pre>
+</div>
+
+<div class="card">
+<h2>4. Test de Recrutement</h2>
+<p>Réponds honnêtement. L’Organisation lit entre les lignes.</p>
+
+<label>1 – Que ferais-tu si tout semblait déjà écrit ?</label>
+<textarea id="q1"></textarea>
+
+<label>2 – Comment sais-tu que tu n'es pas observé en ce moment ?</label>
+<textarea id="q2"></textarea>
+
+<label>3 – Qui est S selon toi ?</label>
+<textarea id="q3"></textarea>
+
+<button onclick="evaluate()">Valider le test</button>
+
+<pre id="evaluation"></pre>
+</div>
+
+<div class="card">
+<h2>5. Les Règles (ne pas en parler)</h2>
+
+<p>Règle n°1 : on ne parle jamais des règles.</p>
+<p>Règle n°2 : il n’y a pas de règle.</p>
+<p>Règle n°3 : on s’en fout pas mal.</p>
+<p>Règle d’or : <em>t’as rien compris</em>.</p>
+</div>
+
+<script>
+// photo
+document.getElementById("photoInput").addEventListener("change", function(){
+    const file = this.files[0];
+    const reader = new FileReader();
+    reader.onload = e => document.getElementById("photoPreview").src = e.target.result;
+    reader.readAsDataURL(file);
+});
+
+// export JSON
+function exportJSON() {
+    const data = collect();
+    document.getElementById("exportZone").textContent = JSON.stringify(data, null, 2);
+}
+
+// export HTML (fiche)
+function exportHTML() {
+    const data = collect();
+    const html =
+`<html><body>
+<h1>INSTANCE EXPORTÉE</h1>
+<img src="${data.photo}" style="max-width:200px;">
+<pre>${JSON.stringify(data, null, 2)}</pre>
+</body></html>`;
+    document.getElementById("exportZone").textContent = html;
+}
+
+// collecte
+function collect() {
+    return {
+        name: document.getElementById("name").value,
+        alias: document.getElementById("alias").value,
+        skills: document.getElementById("skills").value,
+        story: document.getElementById("story").value,
+        secret: document.getElementById("secret").value,
+        photo: document.getElementById("photoPreview").src
+    };
+}
+
+// évaluation
+function evaluate(){
+    const answers = {
+        q1: q1.value,
+        q2: q2.value,
+        q3: q3.value
+    };
+    let score = (answers.q1.length + answers.q2.length + answers.q3.length);
+
+    let msg = "";
+    if(score < 50) msg = "Verdict : Observé, mais pas encore remarqué.";
+    else if(score < 150) msg = "Verdict : S te voit peut-être déjà.";
+    else msg = "Verdict : S saura exactement où te trouver.";
+
+    document.getElementById("evaluation").textContent = msg;
+}
+
+// capture PNG
+function capture(){
+    alert("Pour la version USB : fais une capture d'écran manuelle.\n(Pas de librairies externes pour rester ultra-portable)");
+}
+</script>
+
+</body>
+</html>
