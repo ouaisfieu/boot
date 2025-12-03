@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Silent Protocol · Dossier Joueur</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: #0ea5e9;
+      --accent-2: #a3ff78;
+      --border: #111827;
+      --danger: #f97373;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #020617;
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--accent-soft);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* HEADER */
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(circle at 0 0,#0f172a,#020617 60%);
+      padding: 10px 10px 8px;
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-title {
+      font-family: "Cinzel", "Georgia", serif;
+      font-size: 18px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    .brand-title span {
+      color: var(--accent-2);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--soft);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 11px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      background: rgba(15,23,42,0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: default;
+    }
+
+    .pill-cta {
+      cursor: pointer;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 6px rgba(34,197,94,0.8);
+    }
+
+    /* MAIN */
+
+    main {
+      flex: 1;
+      padding: 10px;
+    }
+
+    .layout {
+      max-width: 960px;
+      margin: 0 auto 20px;
+      display: grid;
+      grid-template-columns: minmax(0,3fr) minmax(0,2fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    /* PANNEAU INTRO */
+
+    .panel {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 0 0,#0f172a,#020617 60%);
+      padding: 10px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .panel-sub {
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--soft);
+      white-space: nowrap;
+    }
+
+    .badge-primary {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .intro-text {
+      font-size: 13px;
+      color: var(--fg);
+      line-height: 1.5;
+    }
+
+    .intro-text p {
+      margin: 6px 0;
+    }
+
+    .intro-highlight {
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: rgba(15,23,42,0.8);
+      padding: 8px;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .intro-highlight strong {
+      color: var(--accent-2);
+    }
+
+    /* TL;DR & MODES DE JEU */
+
+    .panel-light {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .panel-light h2 {
+      margin: 0 0 4px;
+      font-size: 14px;
+    }
+
+    .panel-light p {
+      margin: 4px 0;
+      color: var(--soft);
+    }
+
+    .mode-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: .13em;
+    }
+
+    /* ACCORDÉON SECTIONS */
+
+    .sections {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #020617;
+      overflow: hidden;
+    }
+
+    .section-item {
+      border-top: 1px solid #020617;
+    }
+
+    .section-header {
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 13px;
+      background: #020617;
+    }
+
+    .section-header span.title {
+      font-weight: 500;
+    }
+
+    .section-header span.label {
+      font-size: 10px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+
+    .section-header:hover {
+      background: #020617;
+      filter: brightness(1.08);
+    }
+
+    .section-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease-out;
+      background: #020617;
+      border-top: 1px solid #020617;
+      font-size: 13px;
+      color: var(--soft);
+      padding: 0 10px;
+    }
+
+    .section-body-inner {
+      padding: 6px 0 8px;
+    }
+
+    .section-body p {
+      margin: 4px 0;
+    }
+
+    .section-body ul {
+      margin: 4px 0 4px 18px;
+      padding: 0;
+    }
+
+    .section-body li {
+      margin: 2px 0;
+    }
+
+    .section-item.open .section-body {
+      padding-bottom: 8px;
+    }
+
+    /* FICHE PERSONNAGE LITE */
+
+    .sheet {
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .sheet h2 {
+      margin: 0 0 6px;
+      font-size: 14px;
+    }
+
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .sheet-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sheet-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sheet-label {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .sheet-input,
+    .sheet-textarea,
+    .sheet-select {
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--fg);
+      padding: 5px 6px;
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .sheet-textarea {
+      min-height: 52px;
+      resize: vertical;
+    }
+
+    .sheet-footer {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--fg);
+      padding: 4px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-primary {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .sheet-hint {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    /* SAFETY SECTION */
+
+    .safety {
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 100% 0,#111827,#020617 60%);
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .safety h2 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .safety h2 span.icon {
+      font-size: 14px;
+    }
+
+    .safety p {
+      margin: 3px 0;
+      color: var(--soft);
+    }
+
+    .safety-list {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 10px;
+    }
+
+    @media (max-width: 600px) {
+      .safety-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .safety-item {
+      font-size: 12px;
+    }
+
+    .safety-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--accent-2);
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: #020617;
+      padding: 8px 10px 12px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 10px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-title">SILENT<span>·</span>PROTOCOL</div>
+      <div class="brand-sub">DOSSIER JOUEUR</div>
+    </div>
+    <div class="header-actions">
+      <div class="pill">
+        <span class="status-dot"></span>
+        <span>Profil joueur chargé</span>
+      </div>
+      <div class="pill pill-cta" id="btnBackIntro">
+        Retour à l’intro
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+    <!-- COLONNE GAUCHE -->
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Bienvenue dans le protocole.</div>
+          <div class="panel-sub">Ce document t’explique comment jouer sans (trop) te perdre.</div>
+        </div>
+        <span class="badge badge-primary">briefing joueur</span>
+      </div>
+
+      <div class="intro-text">
+        <p>
+          <strong>Silent Protocol</strong> est un jeu de rôle politico-dystopique.
+          Tu n’y joues pas un héros, mais une personne ordinaire qui essaie de
+          rester lucide dans un monde saturé d’alertes, de crises et de récits contradictoires.
+        </p>
+        <p>
+          L’<strong>option A</strong> t’a montré un écran noir, de la fumée, un logo silencieux.
+          Ici, on pose les bases <em>sans casser la magie</em> :
+          tu sauras suffisamment pour jouer, pas assez pour tout contrôler.
+        </p>
+
+        <div class="intro-highlight">
+          <strong>En une phrase :</strong><br>
+          tu vas apprendre à naviguer dans des écrans, des infos et des choix, comme si tu passais
+          d’un couloir à l’autre dans un vaisseau en huis clos. Le monstre, ce sont les flux.
+        </div>
+      </div>
+
+      <!-- Sections détaillées (accordéon) -->
+      <div class="sections" id="sections">
+        <!-- Section 1 -->
+        <article class="section-item open">
+          <div class="section-header">
+            <div>
+              <span class="title">1. Qui es-tu dans ce jeu ?</span>
+            </div>
+            <span class="label">profil</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Tu joues un <strong>citoyen/citoyenne lambda</strong> :
+                ni génie, ni agent secret officiel. Tu as un téléphone, un navigateur,
+                un peu de temps (trop ou pas assez), et des doutes raisonnables.
+              </p>
+              <p>
+                Selon ta façon de naviguer, tu pourras te rapprocher de plusieurs “familles” :
+              </p>
+              <ul>
+                <li><strong>Les Mainteneurs</strong> – tu répares, tu apaises, tu tries les dégâts.</li>
+                <li><strong>Les Exploitants</strong> – tu vois dans l’info une ressource à exploiter.</li>
+                <li><strong>Les Veilleurs</strong> – tu cherches à comprendre les rapports de force.</li>
+              </ul>
+              <p>
+                Tu peux <strong>choisir un angle</strong> ou laisser le jeu le faire pour toi
+                selon ta manière de cliquer, de lire, d’ignorer.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 2 -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">2. Comment on joue concrètement ?</span>
+            </div>
+            <span class="label">mécanique</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Le jeu se joue avec de simples <strong>pages web statiques</strong> :
+              </p>
+              <ul>
+                <li>tu lis ce qui s’affiche (textes, dossiers, journaux, logs) ;</li>
+                <li>tu cliques sur des liens, des boutons, des cartes, des menus ;</li>
+                <li>tu prends des notes (papier, bloc-notes, document) pour garder le fil ;</li>
+                <li>tu peux parfois remplir des champs (fiche personnage, journal, choix).</li>
+              </ul>
+              <p>
+                Chaque clic, chaque écran, chaque “je reviens plus tard” est traité comme
+                un <strong>indice de ton profil</strong>. Le but n’est pas de te piéger,
+                mais de t’offrir un miroir jouable de ta façon de gérer l’info.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 3 -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">3. Modes de jeu : solo, duo, équipe</span>
+            </div>
+            <span class="label">modes</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                <strong>Solo</strong> – tu explores les pages à ton rythme.
+                Tu peux décider d’y revenir comme on feuillette un journal intime.
+              </p>
+              <p>
+                <strong>Duo / petit groupe</strong> – vous jouez la même “personne”
+                ou plusieurs profils confrontés aux mêmes écrans :
+              </p>
+              <ul>
+                <li>vous commentez vos réflexes (“moi j’aurais cliqué là, toi pas”),</li>
+                <li>vous comparez vos notes et vos interprétations,</li>
+                <li>vous pouvez nommer un <em>facilitateur</em> (ou MJ) qui prépare la séance.</li>
+              </ul>
+              <p>
+                <strong>En ligne / à distance</strong> – rien n’empêche d’ouvrir le jeu en partage d’écran
+                pendant qu’un groupe discute des choix à faire.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 4 -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">4. Ton objectif (et ce n’est pas “gagner”)</span>
+            </div>
+            <span class="label">objectif</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Il n’y a pas de “score” classique ni de boss final spectaculaire.
+              </p>
+              <p>
+                Tes objectifs sont plus simples et plus difficiles à la fois :
+              </p>
+              <ul>
+                <li>ne pas te laisser écraser par la masse de choses à lire ;</li>
+                <li>choisir <strong>où</strong> tu mets ton attention et <strong>où</strong> tu dis “stop” ;</li>
+                <li>comprendre comment les récits influencent ton sentiment d’impuissance ou d’action ;</li>
+                <li>ressortir avec quelques <strong>repères concrets</strong> pour le monde réel.</li>
+              </ul>
+              <p>
+                Si à la fin tu te dis :
+                <em>« Je vois un peu mieux comment tout ça joue sur mes nerfs »</em>,
+                la partie est réussie.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 5 -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">5. Ce que tu peux modifier toi-même</span>
+            </div>
+            <span class="label">custom</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Silent Protocol est pensé comme un <strong>jeu modifiable</strong> :
+              </p>
+              <ul>
+                <li>tu peux dupliquer les pages HTML et les adapter à ton contexte (ville, groupe, asso) ;</li>
+                <li>tu peux réécrire les textes d’ambiance en gardant la structure ;</li>
+                <li>tu peux ajouter des liens vers <em>tes</em> ressources, docs, dossiers d’enquête.</li>
+              </ul>
+              <p>
+                Tant que tu :
+              </p>
+              <ul>
+                <li>ne fais pas passer ça pour une “vraie” procédure officielle ;</li>
+                <li>respectes les personnes réelles (pas de fichage réel) ;</li>
+                <li>gardes un cadre ludique et non marchand,</li>
+              </ul>
+              <p>
+                tu peux transformer ce jeu en <strong>outil d’atelier</strong>, de sensibilisation,
+                ou de fiction interactive pour un public plus large.
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- COLONNE DROITE -->
+    <aside>
+      <!-- TL;DR & Modes -->
+      <section class="panel-light">
+        <h2>TL;DR · Résumé pour commencer vite</h2>
+        <p>
+          Tu vas naviguer dans une série de pages web comme dans un vaisseau :
+          certaines pièces sont éclairées, d’autres non. Il n’y a pas de bon chemin,
+          juste des conséquences différentes.
+        </p>
+        <p><strong>En pratique :</strong></p>
+        <ul>
+          <li>Prévois <strong>30 à 60 min</strong> pour une première session.</li>
+          <li>Note ce qui te frappe, ce qui te met mal à l’aise, ce qui t’ennuie.</li>
+          <li>À la fin, prends 5 min pour écrire un mini bilan : “qu’est-ce que j’ai vu ?”.</li>
+        </ul>
+        <div class="mode-tags">
+          <span class="tag">solo</span>
+          <span class="tag">duo</span>
+          <span class="tag">groupe</span>
+          <span class="tag">atelier</span>
+        </div>
+      </section>
+
+      <!-- Fiche personnage light -->
+      <section class="sheet">
+        <h2>Fiche personnage minimaliste</h2>
+        <p style="color:var(--soft);margin-bottom:4px;">
+          Tu peux la remplir à l’écran (pour toi) ou la recopier sur papier.
+          Rien n’est envoyé nulle part.
+        </p>
+        <div class="sheet-grid">
+          <div class="sheet-field">
+            <label class="sheet-label" for="fp-nom">Nom (ou alias)</label>
+            <input id="fp-nom" class="sheet-input" type="text" placeholder="Ce que tu veux afficher" />
+          </div>
+          <div class="sheet-field">
+            <label class="sheet-label" for="fp-role">Rôle ressenti dans la société</label>
+            <input id="fp-role" class="sheet-input" type="text" placeholder="Passager, veilleur, exécutant, autre…" />
+          </div>
+          <div class="sheet-field">
+            <label class="sheet-label" for="fp-rapport">Ton rapport aux infos</label>
+            <select id="fp-rapport" class="sheet-select">
+              <option value="">Choisis une tendance…</option>
+              <option>Toujours connecté·e, jamais rassuré·e</option>
+              <option>Je filtre beaucoup, je regarde peu</option>
+              <option>Je regarde surtout les titres</option>
+              <option>Je fouille en profondeur sur quelques sujets</option>
+              <option>Je fuis l’actualité dès que possible</option>
+            </select>
+          </div>
+          <div class="sheet-field">
+            <label class="sheet-label" for="fp-ressource">Ta ressource principale</label>
+            <input id="fp-ressource" class="sheet-input" type="text" placeholder="Humour, colère, lucidité, fatigue…" />
+          </div>
+          <div class="sheet-field">
+            <label class="sheet-label" for="fp-limites">Limites à respecter pendant le jeu</label>
+            <textarea id="fp-limites" class="sheet-textarea" placeholder="Sujets à éviter, états à surveiller, signaux d’alerte personnels…"></textarea>
+          </div>
+          <div class="sheet-field">
+            <label class="sheet-label" for="fp-intentions">Ce que tu espères tirer du jeu</label>
+            <textarea id="fp-intentions" class="sheet-textarea" placeholder="Comprendre, prendre du recul, tester un rôle, juste explorer…"></textarea>
+          </div>
+        </div>
+        <div class="sheet-footer">
+          <div>
+            <button class="btn btn-primary" id="btnExport">
+              Exporter en texte
+            </button>
+          </div>
+          <div class="sheet-hint" id="exportHint">
+            Le bouton crée un petit résumé textuel que tu peux copier dans ton carnet.
+          </div>
+        </div>
+        <textarea id="fp-export" class="sheet-textarea" style="margin-top:6px;display:none;"></textarea>
+      </section>
+
+      <!-- Sécurité & confort -->
+      <section class="safety">
+        <h2><span class="icon">☢</span> Sécurité & confort mental</h2>
+        <p>
+          Silent Protocol parle de crises, de saturation d’infos, de manipulation possible.
+          L’objectif est <strong>de prendre du recul</strong>, pas de t’enfoncer.
+        </p>
+        <div class="safety-list">
+          <div class="safety-item">
+            <div class="safety-tag">pause</div>
+            <p>Tu peux arrêter n’importe quand, sans justification, sans “rater” la partie.</p>
+          </div>
+          <div class="safety-item">
+            <div class="safety-tag">dialogue</div>
+            <p>Si tu joues à plusieurs, prenez 5 min de débrief si un passage accroche ou pèse trop.</p>
+          </div>
+          <div class="safety-item">
+            <div class="safety-tag">filtre</div>
+            <p>Tu peux décider d’ignorer certains contenus ou de les survoler très vite.</p>
+          </div>
+          <div class="safety-item">
+            <div class="safety-tag">retour</div>
+            <p>Une fois la session finie, fais quelque chose de simple et réel (marcher, café, musique).</p>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      Silent Protocol · Dossier Joueur · Version 0.1  
+      <span class="mono">[LOCAL-ONLY • Aucune donnée transmise]</span>
+    </div>
+    <div class="footer-links">
+      <span class="mono">ESC = retour</span>
+      <span><a href="intro-rpg.html">Revenir à l’intro A</a></span>
+      <span><a href="intro-rpg-option-b.html">Lire l’option B (debrief)</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Accordéon
+  const sectionItems = document.querySelectorAll('.section-item');
+  sectionItems.forEach(item => {
+    const header = item.querySelector('.section-header');
+    const body = item.querySelector('.section-body');
+
+    function setMaxHeight(open) {
+      if (open) {
+        body.style.maxHeight = body.scrollHeight + 'px';
+      } else {
+        body.style.maxHeight = '0px';
+      }
+    }
+
+    // init
+    if (item.classList.contains('open')) {
+      setMaxHeight(true);
+    }
+
+    header.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      if (isOpen) {
+        item.classList.remove('open');
+        setMaxHeight(false);
+      } else {
+        // on peut laisser plusieurs ouverts, ou tous fermer d’abord si tu préfères
+        item.classList.add('open');
+        setMaxHeight(true);
+      }
+    });
+  });
+
+  // Export fiche personnage en texte brut
+  const fpNom = document.getElementById('fp-nom');
+  const fpRole = document.getElementById('fp-role');
+  const fpRapport = document.getElementById('fp-rapport');
+  const fpRessource = document.getElementById('fp-ressource');
+  const fpLimites = document.getElementById('fp-limites');
+  const fpIntentions = document.getElementById('fp-intentions');
+  const fpExport = document.getElementById('fp-export');
+  const btnExport = document.getElementById('btnExport');
+  const exportHint = document.getElementById('exportHint');
+
+  btnExport.addEventListener('click', () => {
+    const lines = [];
+    lines.push('=== SILENT PROTOCOL · FICHE JOUEUR ===');
+    lines.push('');
+    lines.push('Nom / alias : ' + (fpNom.value || '(non renseigné)'));
+    lines.push('Rôle ressenti : ' + (fpRole.value || '(non renseigné)'));
+    lines.push('Rapport aux infos : ' + (fpRapport.value || '(non renseigné)'));
+    lines.push('Ressource principale : ' + (fpRessource.value || '(non renseigné)'));
+    lines.push('');
+    lines.push('Limites à respecter :');
+    lines.push(fpLimites.value || '(non renseigné)');
+    lines.push('');
+    lines.push('Intentions pour ce jeu :');
+    lines.push(fpIntentions.value || '(non renseigné)');
+    lines.push('');
+    lines.push('— Tu peux copier-coller ce texte dans ton carnet ou un fichier.');
+
+    fpExport.value = lines.join('\n');
+    fpExport.style.display = 'block';
+    fpExport.focus();
+    fpExport.select();
+
+    exportHint.textContent = 'Texte généré ci-dessous. Tu peux le copier-coller dans ton carnet ou un document.';
+  });
+
+  // Retour à l’intro via bouton header
+  const btnBackIntro = document.getElementById('btnBackIntro');
+  btnBackIntro.addEventListener('click', () => {
+    window.location.href = 'intro-rpg.html';
+  });
+
+  // ESC = retour
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      window.location.href = 'intro-rpg.html';
+    }
+  });
+</script>
+</body>
+</html>
