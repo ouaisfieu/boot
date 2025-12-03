@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jeu de l'Oie de la Vie · Parcours existentiel ludique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #0b1220;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #f97316;
+      --accent-2: #22c55e;
+      --accent-3: #38bdf8;
+      --border: #1f2937;
+      --shadow: 0 24px 60px rgba(0,0,0,0.9);
+
+      --phase-enfance: #22c55e;
+      --phase-ado: #a855f7;
+      --phase-etudes: #eab308;
+      --phase-travail: #f97316;
+      --phase-transition: #ec4899;
+      --phase-maturite: #38bdf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.25), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(244,63,94,0.25), transparent 60%),
+        linear-gradient(to bottom, #020617, #000 55%, #020617 100%);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 10px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    header.site-header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      color: var(--soft);
+    }
+
+    h1 {
+      margin: 4px 0;
+      font-size: clamp(20px, 5vw, 26px);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--soft);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* Layout principal */
+
+    .layout {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .panel {
+      border-radius: 18px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 10px 11px 12px;
+    }
+
+    .panel h2 {
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 0 0 6px;
+    }
+
+    .panel p {
+      font-size: 13px;
+      margin: 3px 0;
+    }
+
+    /* Board */
+
+    .board-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0,1fr));
+      gap: 4px;
+      background: radial-gradient(circle at 0 0, rgba(148,163,184,0.15), transparent 55%);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid #111827;
+    }
+
+    .cell {
+      position: relative;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: radial-gradient(circle at 0 0, rgba(15,23,42,0.9), #020617);
+      color: var(--fg);
+      padding: 4px 4px 6px;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 54px;
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.1s ease-out, background 0.1s ease-out;
+    }
+
+    .cell:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.8);
+      border-color: #4b5563;
+    }
+
+    .cell-number {
+      font-size: 11px;
+      font-weight: 700;
+      opacity: 0.8;
+    }
+
+    .cell-title {
+      font-size: 11px;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+
+    .cell-phase-dot {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.9);
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.9);
+    }
+
+    .phase-enfance .cell-phase-dot { background: var(--phase-enfance); }
+    .phase-ado .cell-phase-dot { background: var(--phase-ado); }
+    .phase-etudes .cell-phase-dot { background: var(--phase-etudes); }
+    .phase-travail .cell-phase-dot { background: var(--phase-travail); }
+    .phase-transition .cell-phase-dot { background: var(--phase-transition); }
+    .phase-maturite .cell-phase-dot { background: var(--phase-maturite); }
+
+    .cell-effect {
+      margin-top: 3px;
+      font-size: 10px;
+      color: #a5b4fc;
+      opacity: 0.9;
+    }
+
+    .cell.current {
+      border-color: #f97316;
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 0 0 2px rgba(249,115,22,0.6),
+        0 18px 30px rgba(0,0,0,0.95);
+      background:
+        radial-gradient(circle at 0 0, rgba(249,115,22,0.5), transparent 60%),
+        #020617;
+    }
+
+    .cell.current::after {
+      content: "●";
+      position: absolute;
+      bottom: 4px;
+      right: 6px;
+      font-size: 13px;
+      color: #f97316;
+      text-shadow: 0 0 8px rgba(249,115,22,0.9);
+    }
+
+    .board-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.9);
+    }
+
+    .legend-dot.enfance { background: var(--phase-enfance); }
+    .legend-dot.ado { background: var(--phase-ado); }
+    .legend-dot.etudes { background: var(--phase-etudes); }
+    .legend-dot.travail { background: var(--phase-travail); }
+    .legend-dot.transition { background: var(--phase-transition); }
+    .legend-dot.maturite { background: var(--phase-maturite); }
+
+    /* Panneau droit : contrôle / journal */
+
+    .status-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 6px;
+      align-items: center;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .status-row {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .status-block {
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: radial-gradient(circle at 0 0, rgba(30,64,175,0.3), transparent 60%);
+      padding: 6px 7px;
+    }
+
+    .status-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--soft);
+    }
+
+    .status-value {
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .controls-block {
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      padding: 6px 7px;
+      background: radial-gradient(circle at 0 0, rgba(249,115,22,0.25), transparent 60%);
+    }
+
+    .controls-block button {
+      border-radius: 999px;
+      border: 1px solid rgba(249,115,22,0.9);
+      background: radial-gradient(circle at 20% 0, #fed7aa, #f97316);
+      color: #0b1120;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 7px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        0 10px 20px rgba(0,0,0,0.9);
+    }
+
+    .controls-block button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .controls-block small {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    /* Journal */
+
+    .journal-block {
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: rgba(15,23,42,0.9);
+      padding: 6px 7px;
+      font-size: 12px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .journal-block h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin: 0 0 4px;
+      color: var(--soft);
+    }
+
+    .journal-entry {
+      margin: 2px 0;
+      line-height: 1.35;
+    }
+
+    .journal-entry span.time {
+      color: #4ade80;
+      font-size: 10px;
+      margin-right: 4px;
+    }
+
+    /* Export / import */
+
+    .io-block {
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: rgba(15,23,42,0.9);
+      padding: 6px 7px;
+      font-size: 11px;
+    }
+
+    .io-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .io-actions button {
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .io-actions button:hover {
+      border-color: #e5e7eb;
+    }
+
+    .io-block textarea {
+      width: 100%;
+      min-height: 70px;
+      resize: vertical;
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      font-size: 11px;
+      padding: 4px 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .io-hint {
+      margin-top: 2px;
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    /* Modale fiche de case */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.visible {
+      display: flex;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+    }
+
+    .modal-content {
+      position: relative;
+      z-index: 10;
+      width: 92%;
+      max-width: 520px;
+      border-radius: 18px;
+      padding: 12px 13px 12px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.25), transparent 60%),
+        rgba(15,23,42,0.98);
+      border: 1px solid #38bdf8;
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        0 20px 40px rgba(0,0,0,1);
+      animation: scaleIn 0.2s ease-out;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 6px;
+      right: 9px;
+      border: none;
+      background: transparent;
+      color: var(--fg);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .modal-phase-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      border: 1px solid #4b5563;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .modal-phase-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.9);
+    }
+
+    .modal h3 {
+      font-size: 15px;
+      margin: 4px 0;
+    }
+
+    .modal small {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .modal section {
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .modal section h4 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--soft);
+      margin: 0 0 3px;
+    }
+
+    .modal section p {
+      margin: 2px 0;
+      line-height: 1.4;
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="site-header">
+    <div class="eyebrow">parcours de vie (version jeu de l'oie)</div>
+    <h1>Jeu de l'Oie de la Vie</h1>
+    <p class="subtitle">
+      On commence à la case 1, on avance au dé, on tombe sur des coups de chance, des galères,
+      des détours, des pauses obligatoires.  
+      Chaque case est une étape de vie : tu peux la lire, y réfléchir, ou juste jouer.
+    </p>
+  </header>
+
+  <section class="layout">
+    <!-- Plateau -->
+    <article class="panel">
+      <h2>Plateau · 36 cases pour raconter une vie</h2>
+      <p style="font-size:12px;">
+        Clique sur une case pour voir la fiche complète de l’étape.  
+        Lancer le dé depuis le panneau de droite pour faire avancer ton pion.
+      </p>
+      <div class="board-wrapper">
+        <div id="board" class="board">
+          <!-- Cases générées en JavaScript -->
+        </div>
+        <div class="board-legend">
+          <span class="legend-item"><span class="legend-dot enfance"></span> Enfance</span>
+          <span class="legend-item"><span class="legend-dot ado"></span> Adolescence</span>
+          <span class="legend-item"><span class="legend-dot etudes"></span> Études / formation</span>
+          <span class="legend-item"><span class="legend-dot travail"></span> Travail & projets</span>
+          <span class="legend-item"><span class="legend-dot transition"></span> Transitions & crises</span>
+          <span class="legend-item"><span class="legend-dot maturite"></span> Maturité & transmission</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Contrôle & journal -->
+    <aside class="panel">
+      <h2>Partie en cours</h2>
+
+      <div class="status-row">
+        <div class="status-block">
+          <div class="status-label">position actuelle</div>
+          <div class="status-value" id="statusPosition">
+            Case 0 · Pas encore né·e
+          </div>
+        </div>
+        <div class="controls-block">
+          <button id="rollBtn">
+            <span>🎲</span><span>Lancer le dé</span>
+          </button>
+          <small id="rollInfo">Le pion partira de la case 0 vers la case 1 au premier lancer.</small>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="status-block">
+          <div class="status-label">dernière action</div>
+          <div class="status-value" id="statusLastAction">
+            En attente de ton premier lancer.
+          </div>
+        </div>
+        <div class="status-block">
+          <div class="status-label">règle spéciale</div>
+          <div class="status-value" style="font-size:12px;">
+            Si tu dépasses la dernière case (36), tu rebondis en arrière.  
+            Certaines cases t’avancent, te font reculer, ou te donnent un tour bonus.
+          </div>
+        </div>
+      </div>
+
+      <div class="journal-block" id="journal">
+        <h3>Journal de parcours</h3>
+        <!-- Entrées via JS -->
+      </div>
+
+      <div class="io-block">
+        <div class="io-actions">
+          <button id="exportBtn">Exporter la partie</button>
+          <button id="importBtn">Importer la partie</button>
+          <button id="resetBtn">Réinitialiser</button>
+        </div>
+        <textarea id="ioTextarea" placeholder='Ici apparaîtra un JSON simple pour garder une trace de ta partie.'></textarea>
+        <div class="io-hint">
+          Tu peux copier-coller ce JSON dans un fichier texte, puis le recoller ici et cliquer sur “Importer”
+          pour reprendre la partie plus tard.
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Modale fiche de case -->
+  <div id="spaceModal" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="modalCloseBtn">✕</button>
+      <div id="modalPhasePill" class="modal-phase-pill">
+        <span id="modalPhaseDot" class="modal-phase-dot"></span>
+        <span id="modalPhaseLabel">Phase</span>
+      </div>
+      <h3 id="modalTitle"></h3>
+      <small id="modalSubtitle"></small>
+
+      <section>
+        <h4>Description</h4>
+        <p id="modalDescription"></p>
+      </section>
+
+      <section>
+        <h4>Effet de jeu</h4>
+        <p id="modalEffectText"></p>
+      </section>
+
+      <section>
+        <h4>Pistes de réflexion</h4>
+        <p id="modalReflection"></p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+  // --- Données du plateau : 36 cases, phases de vie, effets de jeu --- //
+
+  const lifeSpaces = [
+    {
+      id: 1,
+      short: "Naissance",
+      phase: "enfance",
+      subtitle: "Arrivée dans le monde",
+      description: "Tu apparais dans une histoire qui a commencé sans toi : une famille, un contexte, un quartier, une époque. Tu n’as rien choisi, mais tout commence ici.",
+      effect: { type: "start" },
+      effectText: "Case de départ. Pas d’effet particulier, mais tout le reste en dépend.",
+      reflection: "Quelles sont les choses qui t’ont été données au départ, sans que tu aies ton mot à dire ?"
+    },
+    {
+      id: 2,
+      short: "Premiers pas",
+      phase: "enfance",
+      subtitle: "Découvertes & chutes",
+      description: "On apprend en tombant, en recommençant, en essayant. Les adultes autour de toi définissent ce qui est \"normal\" ou pas.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet spécial : tu avances une case, comme dans la vie quand tu apprends sans t’en rendre compte.",
+      reflection: "Qui t’a encouragé·e à essayer ? Qui t’a plutôt freiné·e ?"
+    },
+    {
+      id: 3,
+      short: "Jeux & imagination",
+      phase: "enfance",
+      subtitle: "Monde intérieur en expansion",
+      description: "Les jeux, les histoires, les jouets, les univers imaginaires construisent ta manière de comprendre le monde.",
+      effect: { type: "bonus", move: 1 },
+      effectText: "Tu avances d’1 case : l’imagination t’aide à franchir des étapes plus vite.",
+      reflection: "Quels jeux ou histoires t’ont marqué·e dans ton enfance ?"
+    },
+    {
+      id: 4,
+      short: "Entrée à l’école",
+      phase: "enfance",
+      subtitle: "Première grande institution",
+      description: "Tu découvres les règles collectives, la comparaison aux autres, les notes, les horaires.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet de jeu, mais potentielle secousse intérieure.",
+      reflection: "Comment as-tu vécu les premières évaluations et les premières règles communes ?"
+    },
+    {
+      id: 5,
+      short: "Amitiés d’enfance",
+      phase: "enfance",
+      subtitle: "Alliances & secrets",
+      description: "Les premières amitiés structurent ton sentiment d’appartenance et de sécurité.",
+      effect: { type: "extraTurn" },
+      effectText: "Tu rejoues immédiatement : une amitié solide te donne de l’élan.",
+      reflection: "De quoi te souviens-tu quand tu penses à tes premières vraies amitiés ?"
+    },
+    {
+      id: 6,
+      short: "Conflits familiaux",
+      phase: "enfance",
+      subtitle: "Tensions à la maison",
+      description: "Tout n’est pas simple. Cris, silences, stress : tu comprends que les adultes ne maîtrisent pas tout.",
+      effect: { type: "move", move: -2 },
+      effectText: "Tu recules de 2 cases : certains conflits te ramènent en arrière, au moins provisoirement.",
+      reflection: "Comment les conflits ont-ils été gérés autour de toi ?"
+    },
+    {
+      id: 7,
+      short: "Découverte d’une passion",
+      phase: "enfance",
+      subtitle: "Quelque chose qui te fait vibrer",
+      description: "Musique, sport, dessin, lecture… quelque chose te donne l’impression que le temps disparaît.",
+      effect: { type: "move", move: 2 },
+      effectText: "Tu avances de 2 cases : une passion donne de l’élan et un sens.",
+      reflection: "As-tu déjà ressenti cette sensation de \"je pourrais faire ça toute la journée\" ?"
+    },
+    {
+      id: 8,
+      short: "Changement d’école",
+      phase: "enfance",
+      subtitle: "Perdre des repères pour en trouver d’autres",
+      description: "Nouveaux camarades, nouveaux codes. Tu découvres la possibilité d’un autre décor.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet de jeu, mais mise à jour forcée de ta carte du monde.",
+      reflection: "Comment as-tu vécu les changements de cadre (école, quartier, ville) ?"
+    },
+    {
+      id: 9,
+      short: "Collège / début de l’ado",
+      phase: "ado",
+      subtitle: "Tout change, parfois trop vite",
+      description: "Ton corps, ton image, les groupes, les hiérarchies : tout semble se reconfigurer.",
+      effect: { type: "none" },
+      effectText: "Pas de bonus ni de malus : c’est juste une zone de turbulences prolongée.",
+      reflection: "Quelles règles implicites gouvernaient ton collège / ton adolescence ?"
+    },
+    {
+      id: 10,
+      short: "Premiers émois",
+      phase: "ado",
+      subtitle: "Amours, crush, confusion",
+      description: "Les sentiments débarquent, parfois très fort, parfois de travers.",
+      effect: { type: "extraTurn" },
+      effectText: "Tu rejoues : parfois une rencontre relance toute la partie… pour le meilleur ou pour le pire.",
+      reflection: "Quels récits d’amour ont façonné tes attentes (films, séries, exemples autour de toi) ?"
+    },
+    {
+      id: 11,
+      short: "Humiliation publique",
+      phase: "ado",
+      subtitle: "Moment gênant enregistré en HD",
+      description: "Un ridicule, un échec, un faux pas que tu revis dix fois dans ta tête.",
+      effect: { type: "move", move: -1 },
+      effectText: "Tu recules d’1 case : la honte colle un peu aux semelles, mais ne définit pas tout.",
+      reflection: "Comment fais-tu pour relativiser un moment gênant avec le recul ?"
+    },
+    {
+      id: 12,
+      short: "Choix d’orientation",
+      phase: "etudes",
+      subtitle: "Comme si tout se jouait maintenant",
+      description: "On te demande de choisir une voie comme si ta vie entière en dépendait, alors que tu as peu de recul.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet immédiat : l’orientation est plus un processus qu’un moment unique.",
+      reflection: "Qui a le plus influencé tes choix (toi, la famille, les profs, le hasard) ?"
+    },
+    {
+      id: 13,
+      short: "Examens importants",
+      phase: "etudes",
+      subtitle: "Stress & enjeux",
+      description: "Tu découvres la mise en concurrence formalisée et la peur de l’échec officiel.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet spécial, si ce n’est le suspense du dé.",
+      reflection: "Qu’est-ce qui t’a le plus aidé·e à traverser des périodes d’examen ou de pression ?"
+    },
+    {
+      id: 14,
+      short: "Réorientation",
+      phase: "etudes",
+      subtitle: "Changer de voie quand ça ne colle pas",
+      description: "Tu réalises que ce que tu fais ne te convient pas (ou plus) et tu changes de trajectoire.",
+      effect: { type: "goTo", target: 12 },
+      effectText: "Retour à la case 12 : tu revis un nouveau choix d’orientation, mais avec plus d’expérience.",
+      reflection: "Quel regard portes-tu sur les bifurcations dans un parcours ?"
+    },
+    {
+      id: 15,
+      short: "Premier job étudiant",
+      phase: "etudes",
+      subtitle: "Découverte du travail payé",
+      description: "Temps partiel, job d’été, extra : tu échanges du temps contre de l’argent, parfois contre un peu de dignité.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet spécial : juste une première immersion dans le monde du travail.",
+      reflection: "Quel premier rapport à l’argent et à la valeur de ton temps as-tu expérimenté ?"
+    },
+    {
+      id: 16,
+      short: "Engagement / militantisme",
+      phase: "etudes",
+      subtitle: "Quand le monde extérieur te rattrape",
+      description: "Tu découvres qu’on peut se regrouper pour protester, lutter, proposer autre chose.",
+      effect: { type: "move", move: 2 },
+      effectText: "Tu avances de 2 cases : le collectif donne de la puissance.",
+      reflection: "Y a-t-il des causes pour lesquelles tu t’es déjà engagé·e, même modestement ?"
+    },
+    {
+      id: 17,
+      short: "Déménagement",
+      phase: "transition",
+      subtitle: "Nouveau décor, nouveaux repères",
+      description: "Tu changes de lieu de vie. Les routines s’éteignent, d’autres apparaissent.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet particulier : c’est déjà assez bouleversant.",
+      reflection: "Qu’est-ce que tu emportes toujours avec toi quand tu bouges ?"
+    },
+    {
+      id: 18,
+      short: "Études supérieures",
+      phase: "etudes",
+      subtitle: "Autonomie relative",
+      description: "Tu découvres un autre rythme, plus de liberté, parfois plus de solitude aussi.",
+      effect: { type: "none" },
+      effectText: "Pas de bonus ni de malus, juste une grande zone à explorer.",
+      reflection: "Qu’est-ce que cette période t’a appris sur toi-même ?"
+    },
+    {
+      id: 19,
+      short: "Année sabbatique",
+      phase: "transition",
+      subtitle: "Pause ou fuite ?",
+      description: "Tu mets sur pause, par choix ou par lassitude. Tu cherches ce que tu veux faire (ou éviter).",
+      effect: { type: "move", move: 2 },
+      effectText: "Tu avances de 2 cases : une pause assumée peut faire gagner du temps à long terme.",
+      reflection: "Quand as-tu pris du recul pour de vrai pour la dernière fois ?"
+    },
+    {
+      id: 20,
+      short: "Premier vrai job",
+      phase: "travail",
+      subtitle: "Entrée officielle dans le monde du travail",
+      description: "Contrat, fiches de salaire, réunions. Tu fais semblant de tout comprendre.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet spécial : tu t’accroches au dé.",
+      reflection: "Comment as-tu appris les codes implicites de ton (premier) milieu professionnel ?"
+    },
+    {
+      id: 21,
+      short: "Gestion de l’argent",
+      phase: "travail",
+      subtitle: "Fins de mois, budgets, arbitrages",
+      description: "Tu te rends compte que le coût de la vie n’était pas une légende urbaine.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet de plateau, mais beaucoup de calculs mentaux en coulisses.",
+      reflection: "Quel lien entre ton budget et ce que tu considères comme \"une vie correcte\" ?"
+    },
+    {
+      id: 22,
+      short: "Grosse erreur",
+      phase: "transition",
+      subtitle: "On se plante, parfois fort",
+      description: "Une bourde professionnelle, une décision impulsive, une confiance mal placée.",
+      effect: { type: "move", move: -2 },
+      effectText: "Tu recules de 2 cases : le temps de comprendre ce qui s’est passé.",
+      reflection: "Comment différencier une erreur réparable d’un vrai danger ?"
+    },
+    {
+      id: 23,
+      short: "Burnout léger",
+      phase: "transition",
+      subtitle: "Le corps dit stop avant la tête",
+      description: "Fatigue, saturation, perte de sens. Tout fonctionne encore, mais en mode alerte.",
+      effect: { type: "move", move: -3 },
+      effectText: "Tu recules de 3 cases : forced reset.",
+      reflection: "Quels signaux d’alerte as-tu tendance à ignorer trop longtemps ?"
+    },
+    {
+      id: 24,
+      short: "Thérapie / accompagnement",
+      phase: "transition",
+      subtitle: "Demander de l’aide",
+      description: "Tu n’essaies plus de tout régler seul·e. Tu explores d’autres manières de voir ton histoire.",
+      effect: { type: "move", move: 2 },
+      effectText: "Tu avances de 2 cases : demander de l’aide est un mouvement vers l’avant.",
+      reflection: "Qu’est-ce qui t’empêche ou t’encourage à demander de l’aide ?"
+    },
+    {
+      id: 25,
+      short: "Reconversion possible",
+      phase: "travail",
+      subtitle: "Remettre les cartes sur la table",
+      description: "Tu envisages de changer de métier, de secteur, de rythme, de pays.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet immédiat : beaucoup se joue en coulisses.",
+      reflection: "Comment distinguer un fantasme de reconversion d’un besoin réel ?"
+    },
+    {
+      id: 26,
+      short: "Projet improbable",
+      phase: "travail",
+      subtitle: "Faire quelque chose qui n’existe pas (encore)",
+      description: "Tu lances un projet bancal mais vivant. Certains y croient, d’autres non.",
+      effect: { type: "extraTurn" },
+      effectText: "Tu rejoues : la prise de risque créative te donne un tour bonus.",
+      reflection: "Quel projet aurait l’air \"improbable\" mais te ferait envie ?"
+    },
+    {
+      id: 27,
+      short: "Relation longue",
+      phase: "transition",
+      subtitle: "Construire avec quelqu’un",
+      description: "Co-habitation, compromis, soutien, épuisement parfois, apprentissages en série.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet spécial : beaucoup de micro-événements invisibles.",
+      reflection: "Qu’est-ce que tu attends vraiment d’une relation longue ?"
+    },
+    {
+      id: 28,
+      short: "Séparation",
+      phase: "transition",
+      subtitle: "Fin de chapitre",
+      description: "Une histoire se termine, parfois brutalement, parfois en glissant.",
+      effect: { type: "move", move: -1 },
+      effectText: "Tu recules d’1 case : le temps de reprendre ton souffle.",
+      reflection: "Comment prends-tu soin de toi dans les moments de rupture ?"
+    },
+    {
+      id: 29,
+      short: "Nouveau départ",
+      phase: "transition",
+      subtitle: "Recomposer autrement",
+      description: "Tu redécouvres qui tu es sans certaines attaches, avec des possibilités différentes.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet de plateau : l’élan dépend beaucoup de toi.",
+      reflection: "Qu’est-ce que tu as déjà réussi à reconstruire après une période difficile ?"
+    },
+    {
+      id: 30,
+      short: "Engagement collectif",
+      phase: "travail",
+      subtitle: "Faire avec d’autres",
+      description: "Tu t’impliques dans un collectif, une asso, un projet commun qui dépasse ton cas personnel.",
+      effect: { type: "extraTurn" },
+      effectText: "Tu rejoues : le collectif donne une énergie supplémentaire.",
+      reflection: "Quelle place le \"nous\" a-t-il dans ta vie aujourd’hui ?"
+    },
+    {
+      id: 31,
+      short: "Transmettre",
+      phase: "maturite",
+      subtitle: "Partager ce que tu as appris",
+      description: "Tu te surprends à conseiller, accompagner, enseigner, même informellement.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet spécial : la transmission s’installe souvent progressivement.",
+      reflection: "Que pourrais-tu transmettre, même sans être \"expert·e\" ?"
+    },
+    {
+      id: 32,
+      short: "Vieillir autrement",
+      phase: "maturite",
+      subtitle: "Inventer d’autres manières de vieillir",
+      description: "Tu expérimentes de nouveaux rythmes, d’autres priorités, d’autres formes de lien.",
+      effect: { type: "none" },
+      effectText: "Pas de bonus/malus : beaucoup se joue dans tes choix quotidiens.",
+      reflection: "Quelle vision de la vieillesse t’a été transmise ? Souhaites-tu la modifier ?"
+    },
+    {
+      id: 33,
+      short: "Fragilités & santé",
+      phase: "maturite",
+      subtitle: "Corps & limites",
+      description: "Tu prends conscience des limites physiques, des vulnérabilités nouvelles ou anciennes.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet de plateau, mais potentiels changements profonds de perspective.",
+      reflection: "Comment prends-tu soin de ta santé aujourd’hui (ou comment aimerais-tu le faire) ?"
+    },
+    {
+      id: 34,
+      short: "Sagesse relative",
+      phase: "maturite",
+      subtitle: "Savoir qu’on ne sait pas tout",
+      description: "Tu acceptes d’avoir changé d’avis, d’avoir eu tort, de ne pas tout contrôler.",
+      effect: { type: "move", move: 1 },
+      effectText: "Tu avances d’1 case : un peu de sagesse te permet d’aller plus loin, plus calmement.",
+      reflection: "Sur quoi as-tu déjà changé d’avis de façon importante dans ta vie ?"
+    },
+    {
+      id: 35,
+      short: "Bilan provisoire",
+      phase: "maturite",
+      subtitle: "Regarder en arrière sans conclure trop vite",
+      description: "Tu fais le point, sans forcément trancher. Tu regardes ce qui a compté, où tu t’es senti·e vivant·e.",
+      effect: { type: "none" },
+      effectText: "Pas d’effet spécial : juste un temps de récapitulatif.",
+      reflection: "Si tu devais nommer trois moments qui ont vraiment compté pour toi, lesquels seraient-ils ?"
+    },
+    {
+      id: 36,
+      short: "Fin de plateau",
+      phase: "maturite",
+      subtitle: "Et maintenant ?",
+      description: "La partie arrive au bout du plateau, mais pas forcément de ta vie. C’est juste la fin de ce jeu.",
+      effect: { type: "end" },
+      effectText: "Case d’arrivée : la partie est terminée. Tu peux recommencer, rejouer autrement, ou juste relire le parcours.",
+      reflection: "Que retiens-tu de ton cheminement sur ce plateau ?"
+    }
+  ];
+
+  const maxSpace = lifeSpaces.length;
+
+  // --- Références DOM --- //
+  const boardEl = document.getElementById("board");
+  const rollBtn = document.getElementById("rollBtn");
+  const rollInfoEl = document.getElementById("rollInfo");
+  const statusPositionEl = document.getElementById("statusPosition");
+  const statusLastActionEl = document.getElementById("statusLastAction");
+  const journalEl = document.getElementById("journal");
+  const exportBtn = document.getElementById("exportBtn");
+  const importBtn = document.getElementById("importBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const ioTextarea = document.getElementById("ioTextarea");
+
+  const modalEl = document.getElementById("spaceModal");
+  const modalCloseBtn = document.getElementById("modalCloseBtn");
+  const modalPhasePill = document.getElementById("modalPhasePill");
+  const modalPhaseDot = document.getElementById("modalPhaseDot");
+  const modalPhaseLabel = document.getElementById("modalPhaseLabel");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalSubtitle = document.getElementById("modalSubtitle");
+  const modalDescription = document.getElementById("modalDescription");
+  const modalEffectText = document.getElementById("modalEffectText");
+  const modalReflection = document.getElementById("modalReflection");
+
+  // --- État de la partie --- //
+  let currentPos = 0; // 0 = pas encore entré sur le plateau
+  let turnCount = 0;
+  let extraTurn = false;
+  let gameOver = false;
+
+  // --- Construction du plateau --- //
+  function buildBoard() {
+    boardEl.innerHTML = "";
+    lifeSpaces.forEach(space => {
+      const cell = document.createElement("button");
+      cell.className = "cell phase-" + space.phase;
+      cell.dataset.id = String(space.id);
+
+      const effectLabel = effectToShortLabel(space.effect);
+
+      cell.innerHTML = `
+        <span class="cell-number">#${space.id}</span>
+        <span class="cell-title">${space.short}</span>
+        <span class="cell-phase-dot"></span>
+        ${effectLabel ? `<span class="cell-effect">${effectLabel}</span>` : ""}
+      `;
+
+      boardEl.appendChild(cell);
+    });
+
+    updateCurrentCellHighlight();
+  }
+
+  function effectToShortLabel(effect) {
+    if (!effect || effect.type === "none" || effect.type === "start") return "";
+    if (effect.type === "bonus") {
+      return `Bonus : +${effect.move}`;
+    }
+    if (effect.type === "move") {
+      return effect.move > 0 ? `Avance : +${effect.move}` : `Recule : ${effect.move}`;
+    }
+    if (effect.type === "extraTurn") {
+      return "Rejoue";
+    }
+    if (effect.type === "goTo") {
+      return `Va à ${effect.target}`;
+    }
+    if (effect.type === "end") {
+      return "Arrivée";
+    }
+    return "";
+  }
+
+  // --- Mise à jour du pion --- //
+  function updateCurrentCellHighlight() {
+    const cells = boardEl.querySelectorAll(".cell");
+    cells.forEach(c => c.classList.remove("current"));
+    if (currentPos > 0) {
+      const cell = boardEl.querySelector(`.cell[data-id="${currentPos}"]`);
+      if (cell) cell.classList.add("current");
+    }
+  }
+
+  function updateStatus() {
+    if (currentPos === 0) {
+      statusPositionEl.textContent = "Case 0 · Pas encore né·e";
+    } else {
+      const space = getSpace(currentPos);
+      statusPositionEl.textContent = `Case ${space.id} · ${space.short}`;
+    }
+  }
+
+  function addJournalEntry(text) {
+    const div = document.createElement("div");
+    div.className = "journal-entry";
+    const t = new Date();
+    const time = t.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+    div.innerHTML = `<span class="time">[${time}]</span>${text}`;
+    journalEl.appendChild(div);
+    journalEl.scrollTop = journalEl.scrollHeight;
+  }
+
+  function getSpace(id) {
+    return lifeSpaces.find(s => s.id === id);
+  }
+
+  // --- Lancer de dé & déplacement --- //
+  rollBtn.addEventListener("click", () => {
+    if (gameOver) {
+      // Si partie terminée, proposer de reset
+      addJournalEntry("La partie est terminée (case 36). Clique sur \"Réinitialiser\" pour recommencer.");
+      return;
+    }
+
+    const dice = Math.floor(Math.random() * 6) + 1;
+    turnCount++;
+
+    let startPos = currentPos;
+    let target = currentPos + dice;
+    let bounced = false;
+
+    if (startPos === 0) {
+      // Première entrée sur le plateau
+      target = dice;
+      if (target > maxSpace) target = maxSpace;
+    } else if (target > maxSpace) {
+      // Règle classique : rebond en arrière
+      const extra = target - maxSpace;
+      target = maxSpace - extra;
+      bounced = true;
+    }
+
+    currentPos = target;
+    updateCurrentCellHighlight();
+    updateStatus();
+
+    const space = getSpace(currentPos);
+    let baseMsg = `Tour ${turnCount} · Dé = ${dice} · déplacement vers la case ${currentPos} (${space.short}).`;
+    if (bounced) {
+      baseMsg += " Tu as dépassé la fin du plateau, donc tu rebondis en arrière.";
+    }
+    statusLastActionEl.textContent = baseMsg;
+    addJournalEntry(baseMsg);
+
+    // Appliquer l'effet de la case
+    applySpaceEffect(space);
+  });
+
+  function applySpaceEffect(space) {
+    extraTurn = false;
+    if (!space.effect || space.effect.type === "none" || space.effect.type === "start") {
+      return;
+    }
+
+    let msg = "";
+    const eff = space.effect;
+
+    if (eff.type === "move" || eff.type === "bonus") {
+      const move = eff.move || 0;
+      msg = move > 0
+        ? `Effet de la case : tu avances de ${move} case(s).`
+        : `Effet de la case : tu recules de ${Math.abs(move)} case(s).`;
+      currentPos += move;
+      if (currentPos < 1) currentPos = 1;
+      if (currentPos > maxSpace) currentPos = maxSpace;
+      const newSpace = getSpace(currentPos);
+      msg += ` Tu te retrouves en case ${currentPos} (${newSpace.short}).`;
+      addJournalEntry(msg);
+      statusLastActionEl.textContent = msg;
+      updateCurrentCellHighlight();
+      updateStatus();
+    } else if (eff.type === "goTo") {
+      currentPos = eff.target;
+      const newSpace = getSpace(currentPos);
+      msg = `Effet de la case : tu es renvoyé·e directement en case ${currentPos} (${newSpace.short}).`;
+      addJournalEntry(msg);
+      statusLastActionEl.textContent = msg;
+      updateCurrentCellHighlight();
+      updateStatus();
+    } else if (eff.type === "extraTurn") {
+      msg = "Effet de la case : tu rejoues immédiatement (tour bonus).";
+      addJournalEntry(msg);
+      statusLastActionEl.textContent = msg;
+      extraTurn = true;
+    } else if (eff.type === "end") {
+      msg = "Tu as atteint la fin du plateau. Partie terminée (mais pas forcément ta vie).";
+      addJournalEntry(msg);
+      statusLastActionEl.textContent = msg;
+      gameOver = true;
+      rollBtn.disabled = true;
+      rollInfoEl.textContent = "Fin de partie. Clique sur \"Réinitialiser\" pour recommencer.";
+    }
+
+    // Si tour bonus, on laisse le joueur relancer sans rien faire de plus ici
+  }
+
+  // --- Modale fiche de case --- //
+  function openSpaceModal(space) {
+    modalTitle.textContent = `Case ${space.id} · ${space.short}`;
+    modalSubtitle.textContent = space.subtitle || "";
+    modalDescription.textContent = space.description || "";
+    modalEffectText.textContent = space.effectText || "Pas d’effet particulier.";
+    modalReflection.textContent = space.reflection || "Tu peux utiliser cette case comme prétexte pour réfléchir à ton parcours.";
+
+    // Phase
+    modalPhaseLabel.textContent = phaseLabel(space.phase);
+    modalPhaseDot.style.background = phaseColor(space.phase);
+    modalPhasePill.style.borderColor = phaseColor(space.phase);
+
+    modalEl.classList.add("visible");
+  }
+
+  function closeSpaceModal() {
+    modalEl.classList.remove("visible");
+  }
+
+  function phaseLabel(phase) {
+    switch (phase) {
+      case "enfance": return "Phase : Enfance";
+      case "ado": return "Phase : Adolescence";
+      case "etudes": return "Phase : Études / formation";
+      case "travail": return "Phase : Travail & projets";
+      case "transition": return "Phase : Transitions & crises";
+      case "maturite": return "Phase : Maturité & transmission";
+      default: return "Phase : Inconnue";
+    }
+  }
+
+  function phaseColor(phase) {
+    switch (phase) {
+      case "enfance": return getComputedStyle(document.documentElement).getPropertyValue("--phase-enfance");
+      case "ado": return getComputedStyle(document.documentElement).getPropertyValue("--phase-ado");
+      case "etudes": return getComputedStyle(document.documentElement).getPropertyValue("--phase-etudes");
+      case "travail": return getComputedStyle(document.documentElement).getPropertyValue("--phase-travail");
+      case "transition": return getComputedStyle(document.documentElement).getPropertyValue("--phase-transition");
+      case "maturite": return getComputedStyle(document.documentElement).getPropertyValue("--phase-maturite");
+      default: return "#9ca3af";
+    }
+  }
+
+  boardEl.addEventListener("click", (e) => {
+    const cell = e.target.closest(".cell");
+    if (!cell) return;
+    const id = Number(cell.dataset.id);
+    const space = getSpace(id);
+    if (!space) return;
+    openSpaceModal(space);
+  });
+
+  modalCloseBtn.addEventListener("click", closeSpaceModal);
+  modalEl.addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-backdrop")) {
+      closeSpaceModal();
+    }
+  });
+
+  // --- Export / import / reset --- //
+  exportBtn.addEventListener("click", () => {
+    const state = {
+      currentPos,
+      turnCount,
+      extraTurn,
+      gameOver
+    };
+    ioTextarea.value = JSON.stringify(state, null, 2);
+  });
+
+  importBtn.addEventListener("click", () => {
+    const text = ioTextarea.value.trim();
+    if (!text) {
+      alert("Colle d’abord un JSON de partie dans la zone de texte.");
+      return;
+    }
+    try {
+      const state = JSON.parse(text);
+      currentPos = Number(state.currentPos) || 0;
+      turnCount = Number(state.turnCount) || 0;
+      extraTurn = !!state.extraTurn;
+      gameOver = !!state.gameOver;
+
+      updateCurrentCellHighlight();
+      updateStatus();
+      rollBtn.disabled = gameOver;
+      rollInfoEl.textContent = gameOver
+        ? "Fin de partie importée. Clique sur \"Réinitialiser\" pour recommencer."
+        : "Partie reprise à partir de l’état importé.";
+      addJournalEntry("Partie importée depuis JSON. Position actuelle : " + currentPos + ".");
+    } catch (err) {
+      alert("Impossible de lire ce JSON. Vérifie qu’il est bien formé.");
+    }
+  });
+
+  resetBtn.addEventListener("click", () => {
+    currentPos = 0;
+    turnCount = 0;
+    extraTurn = false;
+    gameOver = false;
+    rollBtn.disabled = false;
+    rollInfoEl.textContent = "Le pion partira de la case 0 vers la case 1 au premier lancer.";
+    journalEl.innerHTML = "<h3>Journal de parcours</h3>";
+    statusLastActionEl.textContent = "En attente de ton premier lancer.";
+    ioTextarea.value = "";
+    updateCurrentCellHighlight();
+    updateStatus();
+    addJournalEntry("Nouvelle partie : tout est réinitialisé.");
+  });
+
+  // --- Initialisation --- //
+  buildBoard();
+  updateStatus();
+  addJournalEntry("Bienvenue sur le Jeu de l’Oie de la Vie. Lance le dé pour commencer.");
+</script>
+</body>
+</html>
