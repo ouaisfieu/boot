@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>INSTANCE-1 // Jeu le plus culte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg-main: #050816;
+      --bg-card: rgba(10, 18, 40, 0.92);
+      --accent: #48ffd0;
+      --accent-soft: rgba(72, 255, 208, 0.15);
+      --accent-2: #ff4f9a;
+      --text-main: #f5f7ff;
+      --text-muted: #99a2c7;
+      --danger: #ff4b5c;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
+      --radius-xl: 22px;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --border-subtle: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+      "Segoe UI", sans-serif;
+      min-height: 100vh;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(72, 255, 208, 0.12), transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(255, 79, 154, 0.16), transparent 55%),
+        radial-gradient(circle at 0% 100%, rgba(56, 189, 248, 0.14), transparent 55%),
+        linear-gradient(145deg, #020617, #020617 40%, #020617 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .scan-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.04) 1px,
+        transparent 1px
+      );
+      background-size: 100% 2px;
+      mix-blend-mode: soft-light;
+      opacity: 0.22;
+      animation: scan 7s linear infinite;
+    }
+
+    @keyframes scan {
+      from { background-position-y: 0; }
+      to   { background-position-y: 100%; }
+    }
+
+    .shell {
+      max-width: 960px;
+      width: 100%;
+      background: radial-gradient(circle at 0 0, rgba(72, 255, 208, 0.1), transparent 55%)
+                  ,var(--bg-card);
+      border-radius: 28px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      padding: 22px 22px 20px;
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -120px;
+      opacity: 0.25;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(72, 255, 208, 0.2), transparent 55%),
+        radial-gradient(circle at 80% 0%, rgba(248, 250, 252, 0.12), transparent 55%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .shell-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .badge-game {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.17em;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .badge-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, var(--accent), #047857);
+      box-shadow: 0 0 16px rgba(72, 255, 208, 0.85);
+    }
+
+    .badge-game span {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .instance-id {
+      text-align: right;
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .instance-id strong {
+      color: var(--accent-2);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 780px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background-color: rgba(15, 23, 42, 0.95);
+      border-radius: var(--radius-xl);
+      padding: 16px 16px 14px;
+      border: var(--border-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.13), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      border-radius: var(--radius-pill);
+      padding: 4px 9px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--accent);
+      background: rgba(15, 23, 42, 0.92);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(72, 255, 208, 0.85);
+    }
+
+    h1 {
+      font-size: clamp(24px, 3.1vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 420px;
+    }
+
+    .rules {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.95),
+        rgba(15, 23, 42, 0.98)
+      );
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rules::before {
+      content: "✶ confidentiel ✶";
+      position: absolute;
+      right: 14px;
+      top: 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: rgba(148, 163, 184, 0.55);
+    }
+
+    .rules ul {
+      list-style: none;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .rules li {
+      margin-bottom: 3px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .rules code {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      padding: 2px 5px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--accent);
+    }
+
+    .rules s {
+      opacity: 0.7;
+    }
+
+    .rules em {
+      color: var(--accent-2);
+      font-style: normal;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .status-row strong {
+      color: var(--accent);
+    }
+
+    .buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+      font-family: inherit;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at 0 0, #22c55e, #0f766e);
+      color: #e5fdf7;
+      box-shadow: 0 14px 30px rgba(45, 212, 191, 0.35);
+      border: 1px solid rgba(16, 185, 129, 0.7);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 40px rgba(45, 212, 191, 0.45);
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      border-color: rgba(148, 163, 184, 1);
+      transform: translateY(-1px);
+    }
+
+    .btn-icon {
+      font-size: 14px;
+    }
+
+    .mission-tag {
+      font-family: "SF Mono", ui-monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+
+    .mission-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .mission-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .mission-body strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .steps {
+      list-style: none;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      padding-left: 0;
+    }
+
+    .steps li {
+      display: flex;
+      gap: 8px;
+      padding: 4px 0;
+    }
+
+    .step-index {
+      font-family: "SF Mono", ui-monospace;
+      font-size: 11px;
+      color: var(--accent-2);
+      opacity: 0.9;
+      min-width: 28px;
+    }
+
+    .mission-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .mission-footer span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .difficulty {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(72, 255, 208, 0.08);
+      border: 1px solid rgba(72, 255, 208, 0.45);
+      font-size: 11px;
+      color: var(--accent);
+    }
+
+    .log-card {
+      margin-top: 10px;
+      background: rgba(15, 23, 42, 0.98);
+      border-radius: var(--radius-lg);
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      padding: 10px 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .log-card textarea {
+      margin-top: 6px;
+      width: 100%;
+      min-height: 70px;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.12), transparent 55%);
+      color: var(--text-main);
+      font-size: 12px;
+      padding: 8px 9px;
+      resize: vertical;
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      outline: none;
+    }
+
+    .log-card textarea::placeholder {
+      color: rgba(148, 163, 184, 0.75);
+    }
+
+    .footer {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(72, 255, 208, 0.55);
+    }
+
+    .footer a:hover {
+      color: var(--accent-2);
+      border-bottom-color: rgba(248, 113, 113, 0.9);
+    }
+
+    .gold-hint {
+      color: var(--accent-2);
+      font-family: "SF Mono", ui-monospace;
+    }
+
+    .discreet-mode-active body,
+    body.discreet {
+      background: #0b1120;
+    }
+
+    body.discreet .scan-overlay {
+      display: none;
+    }
+
+    body.discreet .shell {
+      border-color: rgba(51, 65, 85, 0.9);
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0.9);
+      background: #020617;
+    }
+
+    body.discreet .shell::before {
+      opacity: 0.05;
+    }
+
+    body.discreet .card::before {
+      opacity: 0.22;
+    }
+
+    body.discreet .btn-primary {
+      background: #0f766e;
+      box-shadow: none;
+    }
+
+    body.discreet .badge-game {
+      background: #020617;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+<div class="scan-overlay"></div>
+<div class="shell">
+  <div class="shell-inner">
+    <header>
+      <div class="badge-game">
+        <div class="badge-dot"></div>
+        <span>jeu culte</span>
+        <span>// instance locale</span>
+      </div>
+      <div class="instance-id">
+        INSTANCE : <strong>1</strong> · STATUS : <strong>EN LIGNE</strong>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Carte de gauche : identité de l'instance -->
+      <section class="card">
+        <div class="card-inner">
+          <div class="card-title-row">
+            <div class="card-title">profil joueur·euse</div>
+            <div class="pill">
+              <span class="pill-dot"></span>
+              synchronisé
+            </div>
+          </div>
+
+          <h1>Bienvenue dans ton instance du Jeu.</h1>
+          <p class="subtitle">
+            Tu fais déjà partie du Jeu le plus culte du monde. Ton seul objectif officiel :
+            <strong>retrouver S</strong> (la personne qui a mis ce bordel en route) et devenir
+            suffisamment <em>copain-copain</em> pour la recruter.
+          </p>
+
+          <div class="rules">
+            <ul>
+              <li><code>R1</code><span><s>On ne parle jamais des règles.</s> On parle seulement des <em>missions</em>.</span></li>
+              <li><code>R2</code><span><s>Il n’y a pas de règle.</s> Il y a des conséquences.</span></li>
+              <li><code>R3</code><span><s>On s’en fout pas mal.</s> Tu continues à jouer quand même.</span></li>
+              <li><code>★</code><span class="gold-hint">Règle d’or&nbsp;: tu n’as rien compris. C’est bon signe.</span></li>
+            </ul>
+          </div>
+
+          <div class="status-row">
+            <div>ÉTAT COGNITIF : <strong>CONFUS MAIS OPÉRATIONNEL</strong></div>
+          </div>
+
+          <div class="buttons-row">
+            <button class="btn btn-primary" id="btn-new-mission">
+              <span class="btn-icon">▶</span>
+              <span>tirer une mission</span>
+            </button>
+            <button class="btn btn-ghost" id="btn-discreet">
+              <span class="btn-icon">☰</span>
+              <span>mode discret</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Carte de droite : mission active -->
+      <section class="card">
+        <div class="card-inner">
+          <div class="card-title-row">
+            <div class="card-title">mission active</div>
+            <div class="pill" id="mission-code-pill">
+              <span class="pill-dot"></span>
+              code : #000
+            </div>
+          </div>
+
+          <div class="mission-tag" id="mission-tag">MISSION // —</div>
+          <div class="mission-title" id="mission-title">Clique sur « tirer une mission ».</div>
+          <p class="mission-body" id="mission-body">
+            Ce panneau s'actualisera dès que tu accepteras de jouer. Tu n’as rien à comprendre, juste à exécuter et documenter.
+          </p>
+
+          <ul class="steps" id="mission-steps">
+            <li>
+              <span class="step-index">01.</span>
+              <span>Appuie sur <strong>tirer une mission</strong>.</span>
+            </li>
+            <li>
+              <span class="step-index">02.</span>
+              <span>Lis. Souris. Soupire. Fais-le quand même.</span>
+            </li>
+            <li>
+              <span class="step-index">03.</span>
+              <span>Garde une trace quelque part sur Internet que tu contrôles (même minuscule).</span>
+            </li>
+          </ul>
+
+          <div class="mission-footer">
+            <span>
+              ⏱ <span id="mission-duration">durée estimée : —</span>
+            </span>
+            <span>
+              ⚙ <span class="difficulty" id="mission-difficulty">niveau : —</span>
+            </span>
+          </div>
+
+          <div class="log-card">
+            <div>Journal de mission local (reste sur ta machine / ta clé USB) :</div>
+            <textarea id="log-textarea"
+                      placeholder="Note ici ce que tu as fait, où tu l’as posté, ou tout détail que S pourrait trouver amusant."></textarea>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      <div>
+        <span style="opacity:0.9;">Astuce :</span> copie ce fichier sur une clé USB &gt; donne-le à quelqu’un de confiance &gt; tu viens de
+        créer une nouvelle instance du Jeu.
+      </div>
+      <div>
+        Mention discrète : <span style="opacity:0.85;">S finira par tomber sur l’une de vos traces. C’est le plan.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const missions = [
+      {
+        code: "#101",
+        tag: "MISSION // TRACE PUBLIQUE MINIMALE",
+        title: "Le murmure dans le bruit",
+        body: "Laisse une trace publique du Jeu dans un coin d’Internet que tu contrôles (ou que tu peux utiliser) sans expliquer que c’est un jeu.",
+        steps: [
+          "Choisis un endroit : un commentaire anodin, un micro-blog, un paste, un dépôt de code, un forum, une description de vidéo, etc.",
+          "Poste une phrase courte qui pourrait intriguer quelqu’un qui « sait » sans alerter ceux qui ne savent pas. Ex. : « S nous lit. Toujours. » ou équivalent dans ton style.",
+          "Garde l’URL exacte dans ton journal local ci-dessus. Ne la partage qu’avec des gens à qui tu veux vraiment donner une instance du Jeu."
+        ],
+        duration: "10–20 minutes",
+        difficulty: "niveau : facile"
+      },
+      {
+        code: "#204",
+        tag: "MISSION // CARTOGRAPHIE DU RÉEL",
+        title: "Capteurs partout",
+        body: "Observe la dystopie qui t’entoure sans te faire remarquer. Le décor du Jeu, c’est le monde réel.",
+        steps: [
+          "Fais une courte marche (ou un trajet habituel) en mode « radar » : repère toutes les caméras, panneaux de contrôle, messages d’alerte ou pictogrammes étranges.",
+          "Choisis UN élément qui te marque le plus (caméra, affiche, panneau lumineux...) et décris-le le plus précisément possible dans ton journal.",
+          "Optionnel : prends une photo et archive-la chez toi. Si tu la postes en ligne, ne mentionne pas le Jeu – laisse seulement un titre ambigu."
+        ],
+        duration: "20–30 minutes",
+        difficulty: "niveau : normal"
+      },
+      {
+        code: "#303",
+        tag: "MISSION // PROPAGATION DOUCE",
+        title: "Instance fantôme",
+        body: "Prépare le terrain pour une nouvelle instance du Jeu, sans dire que c’en est une.",
+        steps: [
+          "Copie ce fichier instance-1.html et renomme-le en instance-2.html (ou autre), en gardant la structure.",
+          "Modifie UNE phrase quelque part pour y glisser ta propre « signature » (un mot, un emoji, une référence discrète).",
+          "Transmets ce fichier modifié à une personne de confiance (clé USB, mail, partage direct). Dis seulement : « Ouvre ça dans un navigateur. »"
+        ],
+        duration: "30–40 minutes",
+        difficulty: "niveau : normal+"
+      },
+      {
+        code: "#404",
+        tag: "MISSION // GLITCH NARRATIF",
+        title: "La phrase qui ne colle pas",
+        body: "Introduis volontairement un mini-bug dans la narration de ton quotidien, juste pour voir qui le remarque.",
+        steps: [
+          "Choisis un endroit où tu écris quelque chose en public ou semi-public (statut, bio, pseudo, description, message dans un chat de groupe).",
+          "Ajoute une phrase ou un symbole qui ne colle pas complètement au reste, mais qui n’est pas choquant ni insultant. Exemple : « Mise à jour : instance synchronisée. »",
+          "Observe pendant 48h si quelqu’un te pose une question à ce sujet. Note la réaction dans ton journal."
+        ],
+        duration: "15–30 minutes (+ observation)",
+        difficulty: "niveau : facile+"
+      },
+      {
+        code: "#505",
+        tag: "MISSION // JEU DE MIROIR",
+        title: "Qui surveille qui ?",
+        body: "Transforme un moment passif de surveillance en moment actif de conscience.",
+        steps: [
+          "La prochaine fois que tu es face à un écran de contrôle social doux (publicité ciblée, recommandation automatique, fil infini…), arrête-toi 30 secondes.",
+          "Note mentalement qui essaie d’influencer quoi chez toi (envie d’acheter, de cliquer, de rester).",
+          "Écris dans ton journal ce que tu as identifié : le message réel, la cible implicite, et ce que tu décides de faire (continuer, bloquer, ignorer)."
+        ],
+        duration: "5–15 minutes",
+        difficulty: "niveau : très facile"
+      }
+    ];
+
+    const btnNewMission = document.getElementById("btn-new-mission");
+    const btnDiscreet = document.getElementById("btn-discreet");
+
+    const missionCodePill = document.getElementById("mission-code-pill");
+    const missionTag = document.getElementById("mission-tag");
+    const missionTitle = document.getElementById("mission-title");
+    const missionBody = document.getElementById("mission-body");
+    const missionSteps = document.getElementById("mission-steps");
+    const missionDuration = document.getElementById("mission-duration");
+    const missionDifficulty = document.getElementById("mission-difficulty");
+
+    let lastMissionIndex = null;
+
+    function pickMission() {
+      let index;
+      do {
+        index = Math.floor(Math.random() * missions.length);
+      } while (index === lastMissionIndex && missions.length > 1);
+      lastMissionIndex = index;
+      return missions[index];
+    }
+
+    function renderMission(mission) {
+      missionCodePill.innerHTML =
+        '<span class="pill-dot"></span> code : ' + mission.code;
+      missionTag.textContent = mission.tag;
+      missionTitle.textContent = mission.title;
+      missionBody.textContent = mission.body;
+      missionDuration.textContent = "durée estimée : " + mission.duration;
+      missionDifficulty.textContent = mission.difficulty;
+
+      missionSteps.innerHTML = "";
+      mission.steps.forEach(function (step, idx) {
+        const li = document.createElement("li");
+        const indexSpan = document.createElement("span");
+        indexSpan.className = "step-index";
+        indexSpan.textContent = String(idx + 1).padStart(2, "0") + ".";
+        const textSpan = document.createElement("span");
+        textSpan.textContent = step;
+        li.appendChild(indexSpan);
+        li.appendChild(textSpan);
+        missionSteps.appendChild(li);
+      });
+    }
+
+    btnNewMission.addEventListener("click", function () {
+      const mission = pickMission();
+      renderMission(mission);
+    });
+
+    btnDiscreet.addEventListener("click", function () {
+      document.body.classList.toggle("discreet");
+    });
+
+    // Optionnel : tirer une mission automatique au premier chargement
+    renderMission(pickMission());
+  })();
+</script>
+</body>
+</html>
