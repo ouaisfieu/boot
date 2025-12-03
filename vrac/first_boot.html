@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Boot • Ordi Neuf</title>
+<style>
+  :root {
+    --bg: #020617;
+    --bg-soft: #020617;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --accent: #38bdf8;
+    --accent2: #22c55e;
+    --accent-soft: rgba(56,189,248,0.12);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: #000;
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  }
+
+  /* ======================
+     SPLASH (pause + logo + loading)
+     ======================= */
+
+  #splash {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at top, #0b1120 0, #020617 35%, #000 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 18px;
+    opacity: 1;
+    transition: opacity 0.7s ease;
+    z-index: 10;
+  }
+
+  #splash-inner {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+  }
+
+  .logo-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+
+  .logo-halo {
+    position: absolute;
+    inset: -18px;
+    background: radial-gradient(circle, rgba(56,189,248,0.22), transparent 70%);
+    filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .logo {
+    width: 112px;
+    height: 112px;
+    border-radius: 32px;
+    border: 1px solid rgba(148,163,184,0.5);
+    background:
+      radial-gradient(circle at 15% 0%, rgba(148,163,184,0.25), transparent 60%),
+      radial-gradient(circle at 80% 120%, rgba(34,197,94,0.25), transparent 70%),
+      #020617;
+    box-shadow:
+      0 18px 40px rgba(0,0,0,0.75),
+      0 0 0 1px rgba(15,23,42,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transform: scale(0.8);
+    opacity: 0;
+    transition:
+      opacity 0.85s ease,
+      transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #splash.show-logo .logo {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  #splash.show-logo .logo-halo {
+    opacity: 1;
+  }
+
+  .logo span {
+    display: block;
+  }
+  .logo span.sub {
+    font-size: 0.65em;
+    color: var(--muted);
+    letter-spacing: 0.22em;
+  }
+
+  .loading-bar {
+    width: 100%;
+    max-width: 260px;
+    height: 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.55);
+    background: rgba(15,23,42,0.95);
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .loading-inner {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 18px rgba(56,189,248,0.7);
+  }
+
+  #splash.show-logo .loading-inner {
+    animation: loadBar 4.5s ease-out forwards;
+  }
+
+  @keyframes loadBar {
+    0%   { width: 0; }
+    10%  { width: 7%; }
+    25%  { width: 22%; }
+    45%  { width: 45%; }
+    65%  { width: 63%; }
+    85%  { width: 82%; }
+    100% { width: 100%; }
+  }
+
+  .loading-text {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .loading-sub {
+    margin-top: 4px;
+    color: rgba(148,163,184,0.75);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* léger blink sur les trois points */
+  .dots::after {
+    content: "...";
+    animation: dots 1.4s steps(4, end) infinite;
+  }
+  @keyframes dots {
+    0%, 20%   { content: "."; }
+    40%       { content: ".."; }
+    60%,100%  { content: "..."; }
+  }
+
+  /* ======================
+     CONTENU PRINCIPAL (texte de boot)
+     ======================= */
+
+  .container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+    background:
+      radial-gradient(circle at top, #020617 0, #020617 38%, #020617 58%, #000 100%);
+  }
+
+  @media (min-width: 768px) {
+    .container-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+  }
+
+  h1 {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  h1 span.icon {
+    font-size: 1.2rem;
+  }
+
+  h2 {
+    margin: 18px 0 6px;
+    font-size: 0.98rem;
+  }
+
+  p {
+    margin: 6px 0;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  .boot-block {
+    margin: 18px 0;
+    padding-left: 18px;
+    border-left: 1px solid rgba(75,85,99,0.9);
+  }
+
+  .line {
+    margin: 7px 0;
+    opacity: 0;
+    transform: translateY(3px);
+  }
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* petit "curseur" terminal à la fin de la dernière ligne */
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 1.05em;
+    margin-left: 3px;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    animation: blinkCursor 1s steps(2, start) infinite;
+  }
+  @keyframes blinkCursor {
+    0%, 49%   { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  /* pour éviter un flash du contenu avant anim */
+  #main {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div id="splash-inner">
+    <div class="logo-wrapper">
+      <div class="logo-halo"></div>
+      <div class="logo">
+        <span>BOOT</span>
+        <span class="sub">instance-01</span>
+      </div>
+    </div>
+    <div class="loading-bar">
+      <div class="loading-inner" id="loadingBarFill"></div>
+    </div>
+    <div class="loading-text">
+      Initialisation du système<span class="dots"></span>
+    </div>
+    <div class="loading-sub">
+      secure local bootstrap
+    </div>
+  </div>
+</div>
+
+<!-- CONTENU PRINCIPAL -->
+<div id="main" class="container">
+  <div class="container-inner">
+
+    <h1><span class="icon">🖥️</span> Initialisation détaillée</h1>
+
+    <div class="boot-block">
+      <p class="line" data-delay="0.8s">&gt; Vérification du matériel physique... <span class="muted">OK</span></p>
+      <p class="line" data-delay="1.4s">&gt; Connexion capteurs internes... <span class="muted">OK</span></p>
+      <p class="line" data-delay="2.0s">&gt; Premier souffle numérique détecté... <span class="muted">stable</span></p>
+      <p class="line" data-delay="2.8s">&gt; Chargement du module conscience minimale... <span class="muted">OK</span></p>
+      <p class="line" data-delay="3.4s">&gt; Configuration utilisateur inexistante — <span class="muted">création recommandée</span></p>
+    </div>
+
+    <h2 class="line" data-delay="4.2s">Bienvenue dans votre nouvel ordinateur.</h2>
+    <p class="line" data-delay="4.8s">
+      Ce système n’a encore <strong>aucune histoire</strong>, <strong>aucun logiciel</strong>, <strong>aucune préférence</strong>.
+      Il attend vos choix, vos erreurs, vos expérimentations.
+    </p>
+    <p class="line" data-delay="5.6s">
+      Il n’a pas encore compris qu’il vit dans un monde où les machines observent,
+      où chaque octet raconte déjà quelque chose de vous.
+    </p>
+
+    <div class="boot-block">
+      <p class="line" data-delay="6.4s">Pour débuter :</p>
+      <p class="line" data-delay="7.0s">1. Lui donner un nom</p>
+      <p class="line" data-delay="7.6s">2. Lui donner une fonction</p>
+      <p class="line" data-delay="8.2s">3. Lui donner une personnalité</p>
+    </div>
+
+    <p class="line" data-delay="9.0s">
+      Quand vous serez prêt, l’instance de recrutement pourra prendre le relais (<code><a href="orientation.html" >instance.html</a></code>) —
+      avec les règles cachées et la fiche complète de votre personnage.<span class="cursor"></span>
+    </p>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const splash = document.getElementById('splash');
+    const main   = document.getElementById('main');
+    const loadingBarFill = document.getElementById('loadingBarFill');
+
+    // 1) Pause de 2s écran noir avant que le logo bouge
+    setTimeout(() => {
+      splash.classList.add('show-logo');
+    }, 2000);
+
+    // 2) Quand la barre finit son animation (~4.5s), on fade-out le splash
+    loadingBarFill.addEventListener('animationend', () => {
+      splash.style.opacity = '0';
+      setTimeout(() => {
+        splash.style.display = 'none';
+        main.style.display = 'block';
+        startBootAnimation();
+      }, 700); // petit délai pour finir la transition en douceur
+    });
+
+    function startBootAnimation() {
+      const lines = document.querySelectorAll('.line');
+      lines.forEach(line => {
+        const delay = line.getAttribute('data-delay') || '0s';
+        line.style.animation = 'appear 0.75s ease-out forwards';
+        line.style.animationDelay = delay;
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
