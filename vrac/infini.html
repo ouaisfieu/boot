@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cosmic Acid Playground – infini</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --fg: #fdfcff;
+      --muted: #b0b3d9;
+      --accent1: #ffdd55;
+      --accent2: #5af3ff;
+      --accent3: #ff4fd8;
+      --accent4: #7dffb3;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      --radius-pill: 999px;
+      --radius-lg: 18px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      background: #000;
+      color: var(--fg);
+      font-family: var(--font-main);
+      overscroll-behavior: none;
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    /* ----------- CANVAS EN FOND ----------- */
+
+    #cosmicCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: radial-gradient(circle at top, #12041e 0, #02000a 45%, #000 100%);
+    }
+
+    /* ----------- HUD / UI ----------- */
+
+    .ui-root {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 100vh;
+      pointer-events: none;
+    }
+
+    .ui-shell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ui-header {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 10px;
+      border-radius: var(--radius-lg);
+      background: rgba(2, 3, 20, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(22px);
+      box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+      font-size: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-orb {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 20%, #fff 0, #ffe6c5 18%, transparent 55%),
+        conic-gradient(from 130deg, #ff4fd8, #ffdd55, #5af3ff, #7dffb3, #ff4fd8);
+      box-shadow:
+        0 0 14px rgba(0, 0, 0, 1),
+        0 0 24px rgba(255, 79, 216, 0.9);
+    }
+
+    .header-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-title-main {
+      font-size: 0.84rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .header-title-sub {
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(0, 0, 0, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent2);
+      box-shadow: 0 0 14px rgba(90, 243, 255, 1);
+    }
+
+    .pill span strong {
+      color: var(--accent2);
+    }
+
+    .ui-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 10px;
+      min-height: 0;
+      pointer-events: none;
+    }
+
+    .scale-strip {
+      pointer-events: auto;
+      border-radius: var(--radius-lg);
+      background: rgba(0, 0, 0, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 8px 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      backdrop-filter: blur(18px);
+      box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+    }
+
+    .scale-strip span {
+      color: var(--accent1);
+    }
+
+    .controls-panel {
+      pointer-events: auto;
+      border-radius: var(--radius-lg);
+      background: rgba(6, 2, 18, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      backdrop-filter: blur(20px);
+      box-shadow:
+        0 14px 45px rgba(0, 0, 0, 0.98),
+        0 0 0 1px rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      transition: transform 0.25s ease-out, background 0.25s ease-out;
+    }
+
+    .controls-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .controls-header strong {
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      color: var(--accent3);
+    }
+
+    .panel-toggle-btn {
+      border: 0;
+      outline: 0;
+      border-radius: var(--radius-pill);
+      padding: 3px 8px;
+      background: rgba(0, 0, 0, 0.7);
+      color: var(--muted);
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .panel-toggle-btn span.icon {
+      font-size: 0.8rem;
+    }
+
+    .panel-toggle-btn span.label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .controls-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 1000px;
+      opacity: 1;
+      transform: translateY(0);
+      transition:
+        max-height 0.28s ease-out,
+        opacity 0.22s ease-out,
+        transform 0.25s ease-out;
+    }
+
+    .controls-panel.collapsed .controls-body {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+    }
+
+    .controls-panel.collapsed {
+      background: rgba(6, 2, 18, 0.9);
+    }
+
+    .controls-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .control-btn {
+      border: 0;
+      outline: 0;
+      padding: 7px 11px;
+      border-radius: var(--radius-pill);
+      background: radial-gradient(circle at top, #2d1b5a 0, #08021a 55%, #000 100%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: var(--fg);
+      font-size: 0.73rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      box-shadow:
+        0 6px 0 rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.06);
+      transition:
+        transform 0.12s ease-out,
+        box-shadow 0.12s ease-out,
+        border-color 0.12s ease-out,
+        background 0.18s ease-out;
+    }
+
+    .control-btn span.icon {
+      font-size: 0.9rem;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+    }
+
+    .control-btn span.label {
+      opacity: 0.9;
+    }
+
+    .control-btn:active {
+      transform: translateY(2px) scale(0.97);
+      box-shadow:
+        0 3px 0 rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .control-btn.primary {
+      background: radial-gradient(circle at top, #ff4fd8 0, #3c1746 50%, #02000c 100%);
+      border-color: rgba(255, 221, 85, 0.9);
+      box-shadow:
+        0 10px 24px rgba(255, 79, 216, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .control-btn.danger {
+      border-color: rgba(255, 72, 72, 0.95);
+      color: #ff8b8b;
+    }
+
+    .controls-footer {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .controls-footer span {
+      color: var(--accent2);
+    }
+
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .slider-row label {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .slider-row input[type="range"] {
+      width: 100%;
+    }
+
+    .keys-strip {
+      border-radius: var(--radius-lg);
+      background: rgba(0, 0, 0, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: var(--muted);
+      backdrop-filter: blur(18px);
+    }
+
+    .keys-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 640px) {
+      .keys-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .key-btn {
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: radial-gradient(circle at top, #262a46 0, #05030f 65%, #000 100%);
+      padding: 4px 2px 5px;
+      text-align: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      color: var(--fg);
+      box-shadow:
+        0 4px 0 rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+      transition:
+        transform 0.1s ease-out,
+        box-shadow 0.1s ease-out,
+        border-color 0.1s ease-out,
+        background 0.15s ease-out;
+    }
+
+    .key-btn span.main {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 1px;
+    }
+
+    .key-btn span.sub {
+      display: block;
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+
+    .key-btn:active {
+      transform: translateY(1px) scale(0.97);
+      box-shadow:
+        0 2px 0 rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .key-btn.active {
+      border-color: var(--accent2);
+      box-shadow:
+        0 6px 16px rgba(90, 243, 255, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      background: radial-gradient(circle at center, #0b223a 0, #05030f 60%, #000 100%);
+    }
+
+    @media (min-width: 820px) {
+      .ui-root {
+        padding: 18px 18px 20px;
+      }
+      .ui-main {
+        flex-direction: row;
+        align-items: flex-end;
+      }
+      .controls-panel {
+        flex: 1.8;
+      }
+      .scale-strip,
+      .keys-strip {
+        flex: 1.2;
+      }
+    }
+
+    /* ----------- INTRO ----------- */
+
+    .intro-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .intro-layer.hidden {
+      display: none;
+    }
+
+    .intro-noise {
+      position: absolute;
+      inset: -20%;
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0, transparent 60%);
+      opacity: 0.22;
+      mix-blend-mode: screen;
+      animation: noiseMove 18s linear infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes noiseMove {
+      from {
+        transform: translate3d(0, 0, 0) scale(1.1);
+      }
+      to {
+        transform: translate3d(-110px, -60px, 0) scale(1.25);
+      }
+    }
+
+    .intro-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 24px;
+      max-width: 90vw;
+    }
+
+    .intro-word {
+      font-size: clamp(2.4rem, 8vw, 4.4rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      text-indent: 0.35em;
+      color: #ffffff;
+      opacity: 0;
+      animation: wordGlow 2.4s ease-in-out forwards;
+    }
+
+    @keyframes wordGlow {
+      0% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: scale(1.1);
+      }
+      40% {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1);
+      }
+      100% {
+        opacity: 1;
+        text-shadow:
+          0 0 6px rgba(255, 255, 255, 0.9),
+          0 0 18px rgba(90, 243, 255, 0.9),
+          0 0 40px rgba(255, 79, 216, 0.9);
+      }
+    }
+
+    .intro-sentence {
+      font-size: clamp(1.1rem, 3.1vw, 1.7rem);
+      max-width: 32ch;
+      margin: 0 auto;
+      line-height: 1.6;
+      color: var(--muted);
+      opacity: 0;
+      animation: sentenceFade 2.6s ease-out forwards;
+    }
+
+    @keyframes sentenceFade {
+      0% {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      40% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .intro-logo-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: logoFade 2.6s ease-out forwards;
+    }
+
+    @keyframes logoFade {
+      0% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.9);
+      }
+      40% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .intro-orb {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 20%, #ffffff 0, #ffe6c5 20%, transparent 55%),
+        conic-gradient(from 130deg, #ff4fd8, #ffdd55, #5af3ff, #7dffb3, #ff4fd8);
+      box-shadow:
+        0 0 40px rgba(0, 0, 0, 1),
+        0 0 90px rgba(255, 79, 216, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-orb::before {
+      content: "";
+      position: absolute;
+      inset: 22%;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow:
+        0 0 26px rgba(255, 255, 255, 0.9),
+        0 0 56px rgba(90, 243, 255, 0.9);
+      mix-blend-mode: screen;
+      animation: orbPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes orbPulse {
+      0%,
+      100% {
+        transform: scale(0.92);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.07);
+        opacity: 1;
+      }
+    }
+
+    .intro-label-main {
+      font-size: 0.9rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .intro-label-sub {
+      font-size: 0.8rem;
+      color: var(--accent2);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .intro-skip {
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      z-index: 8;
+    }
+
+    .intro-skip button {
+      border: 0;
+      outline: 0;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 0, 0, 0.75);
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+    }
+
+    .intro-skip button:hover {
+      color: var(--accent2);
+      border-color: var(--accent2);
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas psychédélique -->
+  <canvas id="cosmicCanvas"></canvas>
+
+  <!-- INTRO 1 : NOIR -->
+  <div id="intro_black" class="intro-layer">
+    <div class="intro-noise"></div>
+  </div>
+
+  <!-- INTRO 2 : MOT -->
+  <div id="intro_word" class="intro-layer hidden">
+    <div class="intro-noise"></div>
+    <div class="intro-content">
+      <div class="intro-word">SINGULARITÉ</div>
+    </div>
+  </div>
+
+  <!-- INTRO 3 : PHRASE -->
+  <div id="intro_sentence" class="intro-layer hidden">
+    <div class="intro-noise"></div>
+    <div class="intro-content">
+      <p class="intro-sentence">
+        Entre l’infiniment grand et l’infiniment petit,<br>
+        le cosmos n’est qu’un lightshow que tu tournes toi-même.
+      </p>
+    </div>
+  </div>
+
+  <!-- INTRO 4 : LOGO -->
+  <div id="intro_logo" class="intro-layer hidden">
+    <div class="intro-noise"></div>
+    <div class="intro-content">
+      <div class="intro-logo-block">
+        <div class="intro-orb"></div>
+        <div class="intro-label-main">cosmic acid playground</div>
+        <div class="intro-label-sub">tapote, déclenche des big bangs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOUTON SKIP -->
+  <div class="intro-skip">
+    <button id="skipIntroButton">SKIP INTRO</button>
+  </div>
+
+  <!-- HUD -->
+  <div class="ui-root">
+    <div class="ui-shell">
+      <header class="ui-header">
+        <div class="header-left">
+          <div class="logo-orb"></div>
+          <div class="header-title-block">
+            <div class="header-title-main">cosmic acid playground</div>
+            <div class="header-title-sub">
+              infiniment grand ↔ infiniment petit, en technicolor.
+            </div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="pill">
+            <div class="pill-dot"></div>
+            <span>Échelle : <strong id="scaleLabel">cosmique</strong></span>
+          </div>
+        </div>
+      </header>
+
+      <main class="ui-main">
+        <section class="scale-strip">
+          <div>
+            De <span>l’amas de galaxies</span> aux <span>quarks</span> :
+            même trip, autre zoom.
+          </div>
+          <div>
+            ZOOM VECTOR : <span id="zoomLabel">big bang → quanta</span>
+          </div>
+        </section>
+
+        <section class="controls-panel" id="controlsPanel">
+          <div class="controls-header">
+            <div>
+              <strong>événements cosmiques</strong>
+              <div>change le mode, joue sur la physique.</div>
+            </div>
+            <button class="panel-toggle-btn" id="panelToggleBtn">
+              <span class="icon">▾</span>
+              <span class="label">menu</span>
+            </button>
+          </div>
+
+          <div class="controls-body" id="controlsBody">
+            <div class="controls-grid">
+              <button class="control-btn primary" data-mode="bigbang">
+                <span class="icon">💥</span>
+                <span class="label">big bang</span>
+              </button>
+              <button class="control-btn" data-mode="supercluster">
+                <span class="icon">⭑</span>
+                <span class="label">superamas</span>
+              </button>
+              <button class="control-btn" data-mode="galaxy">
+                <span class="icon">✺</span>
+                <span class="label">galaxie</span>
+              </button>
+              <button class="control-btn" data-mode="nebula">
+                <span class="icon">☁︎</span>
+                <span class="label">nébuleuse</span>
+              </button>
+              <button class="control-btn" data-mode="starstorm">
+                <span class="icon">✵</span>
+                <span class="label">pluie d’étoiles</span>
+              </button>
+              <button class="control-btn" data-mode="comets">
+                <span class="icon">☄︎</span>
+                <span class="label">comètes</span>
+              </button>
+              <button class="control-btn" data-mode="microverse">
+                <span class="icon">⚛︎</span>
+                <span class="label">microvers</span>
+              </button>
+              <button class="control-btn danger" data-action="clear">
+                <span class="icon">⨂</span>
+                <span class="label">reset</span>
+              </button>
+            </div>
+
+            <!-- sliders de réglage -->
+            <div class="slider-row">
+              <label>
+                Vitesse du trip
+                <span id="speedValue">1.0x</span>
+              </label>
+              <input id="speedSlider" type="range" min="0.2" max="3" step="0.1" value="1" />
+            </div>
+            <div class="slider-row">
+              <label>
+                Intensité (densité particules)
+                <span id="intensityValue">1.0</span>
+              </label>
+              <input id="intensitySlider" type="range" min="0.4" max="2" step="0.1" value="1" />
+            </div>
+
+            <div class="keys-strip">
+              <div>
+                Clavier cosmique : A → I · change l’échelle, parfois le mode.
+              </div>
+              <div class="keys-grid">
+                <div class="key-btn" data-keyindex="0">
+                  <span class="main">A</span>
+                  <span class="sub">Vide</span>
+                </div>
+                <div class="key-btn" data-keyindex="1">
+                  <span class="main">Z</span>
+                  <span class="sub">Superamas</span>
+                </div>
+                <div class="key-btn" data-keyindex="2">
+                  <span class="main">E</span>
+                  <span class="sub">Galaxie</span>
+                </div>
+                <div class="key-btn" data-keyindex="3">
+                  <span class="main">R</span>
+                  <span class="sub">Système</span>
+                </div>
+                <div class="key-btn" data-keyindex="4">
+                  <span class="main">T</span>
+                  <span class="sub">Planète</span>
+                </div>
+                <div class="key-btn" data-keyindex="5">
+                  <span class="main">Y</span>
+                  <span class="sub">Ville</span>
+                </div>
+                <div class="key-btn" data-keyindex="6">
+                  <span class="main">U</span>
+                  <span class="sub">Cellule</span>
+                </div>
+                <div class="key-btn" data-keyindex="7">
+                  <span class="main">I</span>
+                  <span class="sub">Quarks</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="controls-footer">
+              <div>Tapote le fond noir (hors panneaux) : tu sèmes des particules chaotiques.</div>
+              <div>Un seul fichier, prêt pour clé USB ou CodePen.</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- INTRO : noir -> mot -> phrase -> logo ---------- */
+
+    const INTRO_STEP = 2000;
+    const introBlack = document.getElementById("intro_black");
+    const introWord = document.getElementById("intro_word");
+    const introSentence = document.getElementById("intro_sentence");
+    const introLogo = document.getElementById("intro_logo");
+    const skipBtn = document.getElementById("skipIntroButton");
+    let introTimeouts = [];
+    let introDone = false;
+
+    function hideIntroLayers() {
+      introBlack.classList.add("hidden");
+      introWord.classList.add("hidden");
+      introSentence.classList.add("hidden");
+      introLogo.classList.add("hidden");
+    }
+
+    function finishIntro() {
+      if (introDone) return;
+      introDone = true;
+      introTimeouts.forEach(clearTimeout);
+      hideIntroLayers();
+      skipBtn.parentElement.style.display = "none";
+    }
+
+    function scheduleIntro() {
+      introTimeouts.push(
+        setTimeout(function () {
+          introBlack.classList.add("hidden");
+          introWord.classList.remove("hidden");
+        }, INTRO_STEP)
+      );
+      introTimeouts.push(
+        setTimeout(function () {
+          introWord.classList.add("hidden");
+          introSentence.classList.remove("hidden");
+        }, INTRO_STEP * 2)
+      );
+      introTimeouts.push(
+        setTimeout(function () {
+          introSentence.classList.add("hidden");
+          introLogo.classList.remove("hidden");
+        }, INTRO_STEP * 3)
+      );
+      introTimeouts.push(
+        setTimeout(function () {
+          finishIntro();
+        }, INTRO_STEP * 4)
+      );
+    }
+
+    skipBtn.addEventListener("click", finishIntro);
+    scheduleIntro();
+
+    /* ---------- CANVAS + PHYSIQUE / CHAOS ---------- */
+
+    var canvas = document.getElementById("cosmicCanvas");
+    var ctx = canvas.getContext("2d");
+    var width = 0;
+    var height = 0;
+    var dpr = window.devicePixelRatio || 1;
+
+    function resizeCanvas() {
+      dpr = window.devicePixelRatio || 1;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    var scaleLabel = document.getElementById("scaleLabel");
+    var zoomLabel = document.getElementById("zoomLabel");
+
+    var MODES = {
+      bigbang: {
+        name: "cosmique",
+        zoom: "origine → expansion",
+        palette: ["#ffffff", "#ffdd55", "#ff4fd8", "#5af3ff"],
+        gravity: 40,
+        swirl: 22,
+        noise: 16
+      },
+      supercluster: {
+        name: "superamas",
+        zoom: "toile de galaxies",
+        palette: ["#ffe082", "#ffb74d", "#7e57c2", "#5af3ff"],
+        gravity: 28,
+        swirl: 18,
+        noise: 18
+      },
+      galaxy: {
+        name: "galactique",
+        zoom: "bras spiraux",
+        palette: ["#ff4fd8", "#ffdd55", "#7dffb3", "#5af3ff"],
+        gravity: 28,
+        swirl: 32,
+        noise: 20
+      },
+      nebula: {
+        name: "nébuleuse",
+        zoom: "nuages colorés",
+        palette: ["#ff8a80", "#ff4fd8", "#7c4dff", "#5af3ff"],
+        gravity: 18,
+        swirl: 18,
+        noise: 32
+      },
+      starstorm: {
+        name: "stellaire",
+        zoom: "pluie d’étoiles",
+        palette: ["#ffffff", "#ffdd55", "#b388ff", "#80deea"],
+        gravity: 20,
+        swirl: 12,
+        noise: 14
+      },
+      comets: {
+        name: "systèmes",
+        zoom: "orbits & comètes",
+        palette: ["#5af3ff", "#ffdd55", "#7dffb3", "#ff4fd8"],
+        gravity: 24,
+        swirl: 40,
+        noise: 18
+      },
+      microverse: {
+        name: "quanta",
+        zoom: "cellules → quarks",
+        palette: ["#ffdd55", "#5af3ff", "#ff4fd8", "#7dffb3"],
+        gravity: 52,
+        swirl: 48,
+        noise: 40
+      }
+    };
+
+    var currentModeKey = "bigbang";
+    var particles = [];
+    var attractors = [];
+    var baseParticleCount = 350;
+    var speedFactor = 1.0;
+    var intensityFactor = 1.0;
+    var lastTime = 0;
+
+    function rand(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function choice(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function createParticles(count) {
+      particles = [];
+      for (var i = 0; i < count; i++) {
+        var mode = MODES[currentModeKey];
+        particles.push({
+          x: rand(0, width),
+          y: rand(0, height),
+          vx: rand(-10, 10),
+          vy: rand(-10, 10),
+          depth: Math.random(),
+          seed: Math.random() * 1000,
+          color: choice(mode.palette)
+        });
+      }
+    }
+
+    function updateHUD() {
+      var m = MODES[currentModeKey];
+      scaleLabel.textContent = m.name;
+      zoomLabel.textContent = m.zoom;
+      document.getElementById("speedValue").textContent = speedFactor.toFixed(1) + "x";
+      document.getElementById("intensityValue").textContent = intensityFactor.toFixed(1);
+    }
+
+    function setMode(key) {
+      if (!MODES[key]) return;
+      currentModeKey = key;
+      var count = Math.round(baseParticleCount * intensityFactor);
+      createParticles(count);
+      updateHUD();
+    }
+
+    function addAttractorAndBurst(clientX, clientY) {
+      var rect = canvas.getBoundingClientRect();
+      var ax = clientX - rect.left;
+      var ay = clientY - rect.top;
+      attractors.push({
+        x: ax,
+        y: ay,
+        mass: rand(-220, 220),
+        life: 5 + Math.random() * 4
+      });
+
+      var mode = MODES[currentModeKey];
+      for (var i = 0; i < 40; i++) {
+        particles.push({
+          x: ax + rand(-20, 20),
+          y: ay + rand(-20, 20),
+          vx: rand(-40, 40),
+          vy: rand(-40, 40),
+          depth: Math.random(),
+          seed: Math.random() * 1000,
+          color: choice(mode.palette)
+        });
+      }
+    }
+
+    function updatePhysics(dt) {
+      var m = MODES[currentModeKey];
+      var cx = width / 2;
+      var cy = height / 2;
+
+      // vie des attracteurs
+      for (var a = attractors.length - 1; a >= 0; a--) {
+        attractors[a].life -= dt;
+        if (attractors[a].life <= 0) attractors.splice(a, 1);
+      }
+
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+
+        var dx = cx - p.x;
+        var dy = cy - p.y;
+        var dist = Math.sqrt(dx * dx + dy * dy) + 0.001;
+        var ndx = dx / dist;
+        var ndy = dy / dist;
+
+        var grav = m.gravity / (1 + dist * 0.002);
+        var ax = ndx * grav;
+        var ay = ndy * grav;
+
+        var swirl = m.swirl * 0.03;
+        var sdx = -ndy;
+        var sdy = ndx;
+        ax += sdx * swirl * (0.2 + p.depth);
+        ay += sdy * swirl * (0.2 + p.depth);
+
+        for (var j = 0; j < attractors.length; j++) {
+          var at = attractors[j];
+          var adx = at.x - p.x;
+          var ady = at.y - p.y;
+          var adist2 = adx * adx + ady * ady + 100;
+          var adist = Math.sqrt(adist2);
+          var andx = adx / adist;
+          var andy = ady / adist;
+          var force = (at.mass * 4) / adist2;
+          ax += andx * force;
+          ay += andy * force;
+        }
+
+        var noiseAmp = m.noise * 0.4;
+        var nPhase = p.seed + p.depth * 10;
+        ax += Math.sin(nPhase + lastTime * 1.7) * noiseAmp * 0.01;
+        ay += Math.cos(nPhase + lastTime * 1.3) * noiseAmp * 0.01;
+
+        p.vx += ax * dt * speedFactor;
+        p.vy += ay * dt * speedFactor;
+        p.vx *= 0.995;
+        p.vy *= 0.995;
+
+        p.x += p.vx * dt * speedFactor;
+        p.y += p.vy * dt * speedFactor;
+
+        if (p.x < -50) p.x = width + 50;
+        if (p.x > width + 50) p.x = -50;
+        if (p.y < -50) p.y = height + 50;
+        if (p.y > height + 50) p.y = -50;
+      }
+    }
+
+    function drawFrame(timestamp) {
+      var t = timestamp / 1000;
+      var dt = lastTime ? t - lastTime : 0.016;
+      if (dt > 0.05) dt = 0.05;
+      lastTime = t;
+
+      var cx = width / 2;
+      var cy = height / 2;
+      var maxR = Math.max(width, height);
+
+      ctx.save();
+      ctx.globalAlpha = 0.6;
+      var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+      g.addColorStop(0, "rgba(5,0,20,0.85)");
+      g.addColorStop(0.4, "rgba(2,0,10,0.9)");
+      g.addColorStop(1, "rgba(0,0,0,1)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, width, height);
+      ctx.restore();
+
+      updatePhysics(dt);
+
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        var depthFactor = 1 - p.depth;
+        var size = (1.5 + 3.5 * depthFactor) * (0.6 + intensityFactor * 0.4);
+
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = (12 + 26 * depthFactor) * (0.6 + intensityFactor * 0.4);
+        ctx.globalAlpha = 0.25 + 0.6 * depthFactor;
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      for (var j = 0; j < attractors.length; j++) {
+        var at = attractors[j];
+        var lifeT = at.life / 9;
+        if (lifeT < 0) lifeT = 0;
+        ctx.save();
+        ctx.globalCompositeOperation = "lighter";
+        ctx.translate(at.x, at.y);
+        var r = 40 + 60 * Math.abs(at.mass) / 220;
+        var halo = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+        var col = at.mass > 0 ? "#5af3ff" : "#ff4fd8";
+        halo.addColorStop(0, "rgba(255,255,255,0.6)");
+        halo.addColorStop(0.4, col + "aa");
+        halo.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.globalAlpha = 0.4 * lifeT;
+        ctx.fillStyle = halo;
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      requestAnimationFrame(drawFrame);
+    }
+
+    createParticles(baseParticleCount);
+    setMode("bigbang");
+    requestAnimationFrame(drawFrame);
+
+    // tapote le fond noir : attracteur + burst
+    document.addEventListener("pointerdown", function (e) {
+      var target = e.target;
+      if (
+        target.closest(".controls-panel") ||
+        target.closest(".ui-header") ||
+        target.closest(".keys-strip") ||
+        target.closest(".intro-layer") ||
+        target.closest(".intro-skip")
+      ) {
+        return;
+      }
+      addAttractorAndBurst(e.clientX, e.clientY);
+    });
+
+    // boutons de mode
+    var controlButtons = document.querySelectorAll(".control-btn");
+    for (var i = 0; i < controlButtons.length; i++) {
+      controlButtons[i].addEventListener("click", function () {
+        var mode = this.getAttribute("data-mode");
+        var action = this.getAttribute("data-action");
+        if (action === "clear") {
+          var count = Math.round(baseParticleCount * intensityFactor);
+          createParticles(count);
+          attractors = [];
+          return;
+        }
+        if (mode) {
+          setMode(mode);
+        }
+      });
+    }
+
+    // sliders
+    var speedSlider = document.getElementById("speedSlider");
+    var intensitySlider = document.getElementById("intensitySlider");
+
+    speedSlider.addEventListener("input", function () {
+      speedFactor = parseFloat(this.value);
+      updateHUD();
+    });
+
+    intensitySlider.addEventListener("input", function () {
+      intensityFactor = parseFloat(this.value);
+      var count = Math.round(baseParticleCount * intensityFactor);
+      createParticles(count);
+      updateHUD();
+    });
+
+    // clavier cosmique A → I
+    var keyButtons = document.querySelectorAll(".key-btn");
+    var scalePresets = [
+      "vide cosmique",
+      "superamas",
+      "galaxie",
+      "système",
+      "planète",
+      "ville",
+      "cellule",
+      "quarks"
+    ];
+    var modesByIndex = [
+      "bigbang",
+      "supercluster",
+      "galaxy",
+      "starstorm",
+      "comets",
+      "nebula",
+      "microverse",
+      "microverse"
+    ];
+
+    function activateKey(index) {
+      for (var i = 0; i < keyButtons.length; i++) {
+        if (i === index) keyButtons[i].classList.add("active");
+        else keyButtons[i].classList.remove("active");
+      }
+      var scale = scalePresets[index] || "cosmique";
+      scaleLabel.textContent = scale;
+      if (index < 3) {
+        zoomLabel.textContent = "infiniment grand";
+      } else if (index < 5) {
+        zoomLabel.textContent = "échelle humaine";
+      } else {
+        zoomLabel.textContent = "infiniment petit";
+      }
+
+      var mk = modesByIndex[index];
+      if (mk) setMode(mk);
+    }
+
+    for (var k = 0; k < keyButtons.length; k++) {
+      (function (idx) {
+        keyButtons[idx].addEventListener("click", function () {
+          activateKey(idx);
+        });
+      })(k);
+    }
+
+    var keyboardMap = {
+      a: 0,
+      z: 1,
+      e: 2,
+      r: 3,
+      t: 4,
+      y: 5,
+      u: 6,
+      i: 7
+    };
+
+    document.addEventListener("keydown", function (e) {
+      var key = e.key.toLowerCase();
+      if (keyboardMap.hasOwnProperty(key)) {
+        activateKey(keyboardMap[key]);
+      }
+    });
+
+    // menu repliable
+    var panel = document.getElementById("controlsPanel");
+    var toggleBtn = document.getElementById("panelToggleBtn");
+    toggleBtn.addEventListener("click", function () {
+      var collapsed = panel.classList.toggle("collapsed");
+      this.querySelector(".icon").textContent = collapsed ? "▴" : "▾";
+    });
+  </script>
+</body>
+</html>
