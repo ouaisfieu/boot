@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Silent Protocol · Dossier Meneur</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #a3ff78;
+      --accent-soft: #4ade80;
+      --accent-2: #38bdf8;
+      --border: #111827;
+      --danger: #f97373;
+      --warn: #fbbf24;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #020617;
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--accent-2);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* HEADER */
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(circle at 0 0,#0b1120,#020617 60%);
+      padding: 10px 10px 8px;
+    }
+
+    .header-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-title {
+      font-family: "Cinzel", "Georgia", serif;
+      font-size: 18px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    .brand-title span {
+      color: var(--accent);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--soft);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 11px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      background: rgba(15,23,42,0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: default;
+    }
+
+    .pill-cta {
+      cursor: pointer;
+      border-color: var(--accent-soft);
+      color: var(--accent-soft);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #ef4444;
+      box-shadow: 0 0 6px rgba(248,113,113,0.8);
+    }
+
+    /* MAIN */
+
+    main {
+      flex: 1;
+      padding: 10px;
+    }
+
+    .layout {
+      max-width: 1000px;
+      margin: 0 auto 20px;
+      display: grid;
+      grid-template-columns: minmax(0,3fr) minmax(0,2fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .panel {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 0 0,#020617,#020617 60%);
+      padding: 10px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .panel-sub {
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--soft);
+      white-space: nowrap;
+    }
+
+    .badge-primary {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .intro-text {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .intro-text p {
+      margin: 6px 0;
+    }
+
+    .intro-highlight {
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: rgba(15,23,42,0.9);
+      padding: 8px;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .intro-highlight strong {
+      color: var(--accent);
+    }
+
+    /* Sections (accordéon) */
+
+    .sections {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #020617;
+      overflow: hidden;
+    }
+
+    .section-item {
+      border-top: 1px solid #020617;
+    }
+
+    .section-header {
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 13px;
+      background: #020617;
+    }
+
+    .section-header span.title {
+      font-weight: 500;
+    }
+
+    .section-header span.label {
+      font-size: 10px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+
+    .section-header:hover {
+      background: #020617;
+      filter: brightness(1.08);
+    }
+
+    .section-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease-out;
+      background: #020617;
+      border-top: 1px solid #020617;
+      font-size: 13px;
+      color: var(--soft);
+      padding: 0 10px;
+    }
+
+    .section-body-inner {
+      padding: 6px 0 8px;
+    }
+
+    .section-body p {
+      margin: 4px 0;
+    }
+
+    .section-body ul {
+      margin: 4px 0 4px 18px;
+      padding: 0;
+    }
+
+    .section-body li {
+      margin: 2px 0;
+    }
+
+    .section-item.open .section-body {
+      padding-bottom: 8px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+    }
+
+    /* Panels droite : outils meneur */
+
+    .panel-light {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .panel-light h2 {
+      margin: 0 0 4px;
+      font-size: 14px;
+    }
+
+    .panel-light p {
+      margin: 4px 0;
+      color: var(--soft);
+    }
+
+    .chips {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .chip {
+      font-size: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: .13em;
+    }
+
+    .chip-strong {
+      border-color: var(--accent-soft);
+      color: var(--accent-soft);
+    }
+
+    /* Journal de campagne */
+
+    .campaign {
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 100% 0,#020617,#020617 60%);
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .campaign h2 {
+      margin: 0 0 4px;
+      font-size: 14px;
+    }
+
+    .campaign-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .field-input,
+    .field-textarea,
+    .field-select {
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--fg);
+      padding: 5px 6px;
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .field-textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    .campaign-footer {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--fg);
+      padding: 4px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-primary {
+      border-color: var(--accent-soft);
+      color: var(--accent-soft);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .export-box {
+      margin-top: 6px;
+      display: none;
+    }
+
+    .export-textarea {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--fg);
+      padding: 6px;
+      font-size: 11px;
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .export-hint {
+      font-size: 11px;
+      color: var(--soft);
+      margin-top: 2px;
+    }
+
+    /* Safety & calibration */
+
+    .safety {
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 100% 0,#111827,#020617 60%);
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .safety h2 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .safety h2 span.icon {
+      font-size: 14px;
+    }
+
+    .safety p {
+      margin: 3px 0;
+      color: var(--soft);
+    }
+
+    .safety-grid {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 12px;
+    }
+
+    @media (max-width: 600px) {
+      .safety-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .safety-item {
+      font-size: 12px;
+    }
+
+    .safety-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--warn);
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: #020617;
+      padding: 8px 10px 12px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .footer-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-title">SILENT<span>·</span>PROTOCOL</div>
+      <div class="brand-sub">DOSSIER MENEUR</div>
+    </div>
+    <div class="header-actions">
+      <div class="pill">
+        <span class="status-dot"></span>
+        <span>Mode Meneur actif</span>
+      </div>
+      <div class="pill pill-cta" id="btnBackIntro">
+        Retour à l’intro
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+    <!-- COLONNE GAUCHE : MÉTA & STRUCTURE -->
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Mode Meneur : ce que tu contrôles (et ce que tu laisses vivre).</div>
+          <div class="panel-sub">Guide pour piloter l’ambiance Alien / Silent sans écraser les joueurs.</div>
+        </div>
+        <span class="badge badge-primary">briefing meneur</span>
+      </div>
+
+      <div class="intro-text">
+        <p>
+          Ce <strong>dossier meneur</strong> te sert de tableau de bord pour Silent Protocol.
+          Il ne décrit pas chaque scène dans le détail, mais t’indique :
+        </p>
+        <ul>
+          <li>comment utiliser l’<strong>intro A</strong> et l’<strong>option B</strong> comme portes d’entrée ;</li>
+          <li>comment doser le silence, la tension et la densité d’info ;</li>
+          <li>comment adapter la campagne à un groupe réel (temps, fatigue, humeur).</li>
+        </ul>
+
+        <div class="intro-highlight">
+          <strong>Idée centrale :</strong><br>
+          ton rôle n’est pas de “piéger” les joueurs, mais de <strong>tenir le cadre</strong> :
+          rythme, charge émotionnelle, type de scènes, portes de sortie.
+          Le jeu parle de saturation, pas de performance.
+        </div>
+      </div>
+
+      <div class="sections" id="sections">
+        <!-- Section 1 : Structure globale -->
+        <article class="section-item open">
+          <div class="section-header">
+            <div>
+              <span class="title">1. Structure globale de campagne</span>
+            </div>
+            <span class="label">architecture</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Tu peux découper Silent Protocol en <strong>3 actes</strong>,
+                chacun pouvant tenir en 1 à plusieurs séances :
+              </p>
+              <ul>
+                <li>
+                  <strong>Acte I · L’Écran Noir</strong><br>
+                  Découverte de l’interface, de l’ambiance, des premières pages.
+                  On teste les réflexes des joueurs face au silence, à la lenteur, aux infos incomplètes.
+                </li>
+                <li>
+                  <strong>Acte II · Les Couloirs</strong><br>
+                  Exploration des “anciens” sites, intranets, mini-jeux, fausses pubs, dossiers.
+                  Les joueurs commencent à cartographier les forces en présence et les zones d’ombre.
+                </li>
+                <li>
+                  <strong>Acte III · La Salle des Machines</strong><br>
+                  Mise en lien des découvertes : qui profite de quoi ? qui voit quoi ?
+                  On glisse vers une forme de prise de position (ou de retrait assumé).
+                </li>
+              </ul>
+              <p class="mono">
+                Pro tip : garde le découpage flou pour les joueurs, mais solide pour toi.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 2 : Factions / forces -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">2. Factions, forces et points de vue</span>
+            </div>
+            <span class="label">cartographie</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Trois grandes forces servent de grille de lecture (même si tu ne prononces jamais leurs noms à haute voix) :
+              </p>
+              <ul>
+                <li>
+                  <strong>Les Mainteneurs</strong> – services, institutions, techniciens, médiateurs.
+                  Ils tiennent le vaisseau en état de marche, parfois en bricolant.
+                </li>
+                <li>
+                  <strong>Les Exploitants</strong> – boîtes, plateformes, experts très bien payés.
+                  Ils voient l’info comme un capital.
+                </li>
+                <li>
+                  <strong>Les Veilleurs</strong> – citoyens, collectifs, journalistes, pédagogues.
+                  Ils essaient de relier les signaux sans se faire broyer.
+                </li>
+              </ul>
+              <p>
+                <strong>Conseil :</strong> choisis pour chaque page ou module que tu utilises
+                <em>à quel regard il correspond</em>.
+                Cela t’aidera à garder un ton cohérent et à varier les scènes.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 3 : Types de scènes -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">3. Types de scènes et rythme</span>
+            </div>
+            <span class="label">rythme</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Tu peux alterner les scènes comme dans un film d’horreur / SF lent :
+              </p>
+              <ul>
+                <li>
+                  <strong>Scènes de couloir</strong> – navigation silencieuse dans les pages,
+                  menus, dossiers, annonces, écrans noirs. Peu de parole, beaucoup de sensation.
+                </li>
+                <li>
+                  <strong>Scènes de salle des machines</strong> – moments où tu zoomes out :
+                  cartes, organigrammes, tableaux de bord, mini-jeux de modélisation.
+                </li>
+                <li>
+                  <strong>Scènes de réveil</strong> – retour explicite à la vie réelle :
+                  “Ok, si quelqu’un vivait ça pour de vrai, qu’est-ce que ça changerait ?”.
+                </li>
+              </ul>
+              <p>
+                L’horreur ici est <strong>psychologique et sociale</strong> : surcharge, impuissance,
+                tentation de tout fermer. Tu joues sur la durée, pas sur le jumpscare.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 4 : Intégrer les pages existantes -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">4. Intégrer les pages et mini-sites existants</span>
+            </div>
+            <span class="label">modules html</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Tu peux considérer chaque <strong>page HTML</strong> comme :
+              </p>
+              <ul>
+                <li>soit une “pièce” du vaisseau (terminal, hub, intranet, faux OS…) ;</li>
+                <li>soit un “artefact” (site parodique, boutique, faux test, smartphone, etc.).</li>
+              </ul>
+              <p>
+                Les liens entre ces pages deviennent les <strong>tuyaux</strong> :
+                parcours logiques, fausses impasses, easter eggs.
+              </p>
+              <p>
+                Tu peux :
+              </p>
+              <ul>
+                <li>lier l’<strong>intro A</strong> & l’<strong>option B</strong> comme portes d’entrée officielles ;</li>
+                <li>brancher les différents sites “fous” en chaines de missions (ex. minitel → boutique → smartphone → intranet) ;</li>
+                <li>utiliser certains fichiers comme <strong>bonus</strong> pour des joueurs très curieux.</li>
+              </ul>
+              <p class="mono">
+                Astuce : garde une petite carte mentale perso avec “nom de fichier → type de scène → faction dominante”.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 5 : Variantes soft / hardcore -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">5. Variantes : soft, normal, hardcore</span>
+            </div>
+            <span class="label">dosage</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                <strong>Mode soft</strong> – tu limites la densité :
+              </p>
+              <ul>
+                <li>moins de pages par séance ;</li>
+                <li>plus de temps pour discuter et expliquer ;</li>
+                <li>pas de thématiques trop anxiogènes (crises, violences, etc.).</li>
+              </ul>
+              <p>
+                <strong>Mode normal</strong> – mélange des trois types de scènes,
+                un peu de pression, mais toujours des pauses et des sorties de secours.
+              </p>
+              <p>
+                <strong>Mode hardcore</strong> – à n’utiliser qu’avec des gens partants et en confiance :
+              </p>
+              <ul>
+                <li>sessions plus longues ;</li>
+                <li>enchaînements de scènes de couloir + salles des machines ;</li>
+                <li>situations volontairement ambiguës d’un point de vue moral ou politique.</li>
+              </ul>
+              <p>
+                Dans tous les cas, annonce le <strong>niveau de difficulté émotionnelle</strong> avant de commencer.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Section 6 : Debrief et retours -->
+        <article class="section-item">
+          <div class="section-header">
+            <div>
+              <span class="title">6. Debrief, traces et réutilisations</span>
+            </div>
+            <span class="label">sortie</span>
+          </div>
+          <div class="section-body">
+            <div class="section-body-inner">
+              <p>
+                Le plus important dans Silent Protocol, ce n’est pas “la fin de l’histoire”,
+                c’est <strong>ce que les joueurs en font</strong> :
+              </p>
+              <ul>
+                <li>prévois toujours un petit temps de débrief (5–20 min) ;</li>
+                <li>laisse chacun dire ce qui l’a marqué ou fatigué ;</li>
+                <li>demande ce qu’ils voudraient voir dans une éventuelle suite (ou pas).</li>
+              </ul>
+              <p>
+                Tu peux conserver :
+              </p>
+              <ul>
+                <li>des cartes mentales anonymisées ;</li>
+                <li>des listes de “signaux faibles” repérés par les joueurs ;</li>
+                <li>des idées de variantes pour d’autres groupes.</li>
+              </ul>
+              <p class="mono">
+                Règle d’or : aucune donnée sensible réelle ne doit être archivée sans consentement clair.
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- COLONNE DROITE : OUTILS & SÉCURITÉ -->
+    <aside>
+      <!-- Modes de partie -->
+      <section class="panel-light">
+        <h2>Préparer une partie en 3 minutes</h2>
+        <p><strong>1.</strong> Choisis le format :</p>
+        <div class="chips">
+          <span class="chip chip-strong">one-shot 1h</span>
+          <span class="chip">atelier 2–3h</span>
+          <span class="chip">mini-campagne</span>
+          <span class="chip">solo guidé</span>
+        </div>
+        <p><strong>2.</strong> Sélectionne 3 à 7 pages/module HTML adaptés au public.</p>
+        <p><strong>3.</strong> Décide de ton ton :</p>
+        <div class="chips">
+          <span class="chip">plutôt pédagogique</span>
+          <span class="chip">plutôt thriller</span>
+          <span class="chip">plutôt satirique</span>
+        </div>
+        <p><strong>4.</strong> Prépare 2 questions de débrief max.</p>
+      </section>
+
+      <!-- Journal de campagne / scène -->
+      <section class="campaign">
+        <h2>Bloc-notes campagne / séance</h2>
+        <div class="campaign-grid">
+          <div>
+            <div class="field-label" for="camp-nom">Nom de la campagne / séance</div>
+            <input id="camp-nom" class="field-input" type="text" placeholder="Ex. Protocole Poelaert – Session 1" />
+          </div>
+          <div>
+            <div class="field-label" for="camp-format">Format & niveau</div>
+            <select id="camp-format" class="field-select">
+              <option value="">Choisir…</option>
+              <option>One-shot 1h · Soft</option>
+              <option>Atelier 2–3h · Normal</option>
+              <option>Mini-campagne · Normal/Hard</option>
+              <option>Solo guidé · Soft</option>
+              <option>Autre (personnalisé)</option>
+            </select>
+          </div>
+          <div>
+            <div class="field-label" for="camp-objectif">Objectif principal</div>
+            <textarea id="camp-objectif" class="field-textarea" placeholder="Ex. Faire sentir la saturation info + repérer ce que les joueurs font pour s’en protéger."></textarea>
+          </div>
+          <div>
+            <div class="field-label" for="camp-modules">Modules / pages utilisés</div>
+            <textarea id="camp-modules" class="field-textarea" placeholder="Ex. intro-rpg, option B, smartphone Samsong, faux OS, site d’annonces, minitel, etc."></textarea>
+          </div>
+          <div>
+            <div class="field-label" for="camp-notes">Notes sur le groupe / ambiance</div>
+            <textarea id="camp-notes" class="field-textarea" placeholder="Ex. Groupe fatigué, beaucoup d’humour noir, besoin de pauses régulières…"></textarea>
+          </div>
+          <div>
+            <div class="field-label" for="camp-retour">Retours & pistes pour la suite</div>
+            <textarea id="camp-retour" class="field-textarea" placeholder="Ex. Ce qui a bien marché / moins bien, idées à creuser, niveaux à ajuster."></textarea>
+          </div>
+        </div>
+        <div class="campaign-footer">
+          <div>
+            <button class="btn btn-primary" id="btnCampExport">Exporter en texte</button>
+          </div>
+          <div class="mono" style="color:var(--soft);">
+            Rien n’est envoyé. Tu peux tout garder local / papier.
+          </div>
+        </div>
+
+        <div class="export-box" id="campExportBox">
+          <textarea id="campExportText" class="export-textarea"></textarea>
+          <div class="export-hint" id="campExportHint">
+            Texte généré. Copie-colle dans ton carnet, un doc ou un mail (si tu veux garder trace).
+          </div>
+        </div>
+      </section>
+
+      <!-- Sécurité & calibration -->
+      <section class="safety">
+        <h2><span class="icon">⚠</span> Cadre de sécurité & calibration</h2>
+        <p>
+          Ce jeu manipule des thèmes liés aux crises, à la manipulation, au sentiment d’impuissance.
+          Tu es responsable du cadre.
+        </p>
+        <div class="safety-grid">
+          <div class="safety-item">
+            <div class="safety-tag">briefing</div>
+            <p>Annonce clairement que c’est une fiction, inspirée du réel, mais avec droit de recul à tout moment.</p>
+          </div>
+          <div class="safety-item">
+            <div class="safety-tag">limites</div>
+            <p>Invite chaque joueur à nommer des sujets / angles à éviter ou à traiter très doucement.</p>
+          </div>
+          <div class="safety-item">
+            <div class="safety-tag">pause</div>
+            <p>Installe la règle “pause à la demande” sans justification. Personne n’a à se justifier pour souffler.</p>
+          </div>
+          <div class="safety-item">
+            <div class="safety-tag">sorties</div>
+            <p>Prévois une fin “légère” : retour à une page neutre, image apaisante, changement complet de sujet.</p>
+          </div>
+        </div>
+        <p style="margin-top:6px;">
+          <strong>Si tu sens que ça pèse trop</strong> :
+          ralentis, change de mode (soft), ou propose un autre jeu. C’est aussi ça être meneur.
+        </p>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      Silent Protocol · Dossier Meneur · Version 0.1  
+      <span class="mono">[LOCAL-ONLY · Pas de collecte de données]</span>
+    </div>
+    <div class="footer-links">
+      <span class="mono">ESC = retour</span>
+      <span><a href="intro-rpg.html">Intro A</a></span>
+      <span><a href="intro-rpg-option-b.html">Option B / Debrief</a></span>
+      <span><a href="dossier-joueur.html">Dossier Joueur</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Accordéon
+  const sectionItems = document.querySelectorAll('.section-item');
+  sectionItems.forEach(item => {
+    const header = item.querySelector('.section-header');
+    const body = item.querySelector('.section-body');
+
+    function setMaxHeight(open) {
+      if (open) {
+        body.style.maxHeight = body.scrollHeight + 'px';
+      } else {
+        body.style.maxHeight = '0px';
+      }
+    }
+
+    // init
+    if (item.classList.contains('open')) {
+      setMaxHeight(true);
+    }
+
+    header.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      if (isOpen) {
+        item.classList.remove('open');
+        setMaxHeight(false);
+      } else {
+        item.classList.add('open');
+        setMaxHeight(true);
+      }
+    });
+  });
+
+  // Export journal campagne
+  const campNom = document.getElementById('camp-nom');
+  const campFormat = document.getElementById('camp-format');
+  const campObjectif = document.getElementById('camp-objectif');
+  const campModules = document.getElementById('camp-modules');
+  const campNotes = document.getElementById('camp-notes');
+  const campRetour = document.getElementById('camp-retour');
+  const btnCampExport = document.getElementById('btnCampExport');
+  const campExportBox = document.getElementById('campExportBox');
+  const campExportText = document.getElementById('campExportText');
+  const campExportHint = document.getElementById('campExportHint');
+
+  btnCampExport.addEventListener('click', () => {
+    const lines = [];
+    lines.push('=== SILENT PROTOCOL · JOURNAL MENEUR ===');
+    lines.push('');
+    lines.push('Campagne / Séance : ' + (campNom.value || '(non renseigné)'));
+    lines.push('Format & niveau : ' + (campFormat.value || '(non renseigné)'));
+    lines.push('');
+    lines.push('Objectif principal :');
+    lines.push(campObjectif.value || '(non renseigné)');
+    lines.push('');
+    lines.push('Modules / pages utilisés :');
+    lines.push(campModules.value || '(non renseigné)');
+    lines.push('');
+    lines.push('Notes sur le groupe / ambiance :');
+    lines.push(campNotes.value || '(non renseigné)');
+    lines.push('');
+    lines.push('Retours & pistes pour la suite :');
+    lines.push(campRetour.value || '(non renseigné)');
+    lines.push('');
+    lines.push('— Tu peux copier-coller ce texte dans ton journal de campagne ou un document.');
+
+    campExportText.value = lines.join('\n');
+    campExportBox.style.display = 'block';
+    campExportText.focus();
+    campExportText.select();
+    campExportHint.textContent = 'Texte généré. Copie-colle-le où tu veux garder trace de cette session.';
+  });
+
+  // Retour à l’intro via bouton header
+  const btnBackIntro = document.getElementById('btnBackIntro');
+  btnBackIntro.addEventListener('click', () => {
+    window.location.href = 'intro-rpg.html';
+  });
+
+  // ESC = retour
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      window.location.href = 'intro-rpg.html';
+    }
+  });
+</script>
+</body>
+</html>
