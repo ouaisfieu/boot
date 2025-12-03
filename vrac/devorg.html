@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Studio Élan – Développement personnel & Boutique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #0b1120;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.16);
+      --accent-strong: #4ade80;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148,163,184,0.45);
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ARRIÈRE-PLAN ORBS */
+    .orb {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(40px);
+      opacity: 0.35;
+      z-index: -1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .orb-1 {
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(34,197,94,0.9), transparent);
+      top: -60px; left: -60px;
+      animation: floatOrb1 20s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(59,130,246,0.9), transparent);
+      bottom: -80px; right: -40px;
+      animation: floatOrb2 22s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(244,114,182,0.85), transparent);
+      top: 40%; left: 62%;
+      animation: floatOrb3 28s linear infinite alternate;
+    }
+
+    @keyframes floatOrb1 {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(40px,70px); }
+    }
+    @keyframes floatOrb2 {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(-60px,-30px); }
+    }
+    @keyframes floatOrb3 {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(10px,-40px); }
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(2,6,23,0.94), rgba(2,6,23,0.75));
+      border-bottom: 1px solid rgba(148,163,184,0.35);
+      padding: .6rem 1.4rem;
+    }
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .9rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+    }
+    .brand-logo {
+      width: 32px; height: 32px;
+      border-radius: 999px;
+      border: 2px solid rgba(15,23,42,0.95);
+      background:
+        radial-gradient(circle at 30% 30%, #22c55e 0, #bbf7d0 40%, transparent 50%),
+        radial-gradient(circle at 70% 80%, #16a34a 0, #022c22 70%);
+      box-shadow: 0 0 20px rgba(34,197,94,0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .brand-logo::after {
+      content: "É";
+      position: absolute;
+      bottom: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      color: #022c22;
+      border-radius: 999px;
+      padding: 0 .3rem;
+      background: rgba(240,253,250,0.95);
+    }
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-title span:first-child {
+      font-size: .9rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .brand-title span:last-child {
+      font-size: .68rem;
+      color: var(--muted);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--muted);
+    }
+    nav a {
+      color: inherit;
+      padding-bottom: .1rem;
+      border-bottom: 1px solid transparent;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    nav a:hover {
+      border-bottom-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .cart-button {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: .3rem .7rem;
+      font-size: .72rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      cursor: pointer;
+      background: rgba(15,23,42,0.98);
+      color: var(--muted);
+    }
+    .cart-dot {
+      width: 12px; height: 12px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .6rem;
+      color: #022c22;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.5rem 1.4rem 2rem;
+    }
+
+    /* HERO */
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0,2.1fr) minmax(0,1.5fr);
+      gap: 1.6rem;
+      padding: 1.6rem 0 1rem;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .17em;
+      color: var(--muted);
+    }
+    .hero-kicker span {
+      display: inline-block;
+      width: 30px;
+      height: 1px;
+      background: rgba(148,163,184,0.7);
+    }
+    .hero-title {
+      font-size: clamp(2.3rem, 4.2vw, 3.2rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      line-height: 1.05;
+    }
+    .hero-title strong {
+      color: var(--accent-strong);
+      text-shadow: 0 0 26px rgba(34,197,94,0.8);
+    }
+    .hero-sub {
+      max-width: 620px;
+      font-size: .97rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .hero-sub mark {
+      background: rgba(34,197,94,0.08);
+      border-radius: .35rem;
+      padding: 0 .2rem;
+      color: var(--text);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: .7rem;
+    }
+    .btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: .6rem 1.2rem;
+      font-size: .8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+    }
+    .btn-primary {
+      background: radial-gradient(circle at top left, #bbf7d0, var(--accent));
+      color: #022c22;
+      border-color: transparent;
+      box-shadow: 0 14px 40px rgba(34,197,94,0.6);
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .btn-ghost {
+      background: rgba(15,23,42,0.95);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: .6rem;
+    }
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      padding: .16rem .65rem;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      color: var(--muted);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .hero-right {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .hero-card {
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.97));
+      padding: 1.2rem 1.25rem 1rem;
+      box-shadow: 0 16px 44px rgba(15,23,42,1);
+      max-width: 360px;
+      width: 100%;
+      font-size: .86rem;
+    }
+    .hero-card-title {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: .18rem .5rem;
+      font-size: .72rem;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .hero-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: .5rem;
+      margin-bottom: .7rem;
+    }
+    .hero-metric {
+      border-radius: .9rem;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.95);
+      padding: .4rem .45rem;
+      text-align: center;
+    }
+    .hero-metric strong {
+      display: block;
+      font-size: .9rem;
+    }
+    .hero-metric span {
+      font-size: .68rem;
+      color: var(--muted);
+    }
+    .hero-card-text {
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.6;
+    }
+
+    /* GENERIC SECTION */
+
+    section {
+      margin-top: 2.3rem;
+    }
+    .section-label {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--muted);
+      margin-bottom: .35rem;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: .7rem;
+    }
+    .card {
+      border-radius: 1.3rem;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.94);
+      padding: 1rem 1.1rem;
+      font-size: .88rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0,1.6fr) minmax(0,1.4fr);
+      gap: 1.4rem;
+    }
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .list-clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .list-item {
+      display: flex;
+      gap: .45rem;
+      margin-bottom: .5rem;
+      color: var(--muted);
+    }
+    .list-dot {
+      flex-shrink: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      margin-top: .38rem;
+    }
+    .list-item strong { color: var(--text); }
+
+    /* OFFRES */
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: .18rem .65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      background: rgba(15,23,42,0.96);
+      margin-bottom: .4rem;
+    }
+
+    .offers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+      gap: 1rem;
+    }
+    .offer {
+      border-radius: 1.2rem;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.98));
+      padding: .9rem .95rem;
+      font-size: .86rem;
+    }
+    .offer-name {
+      font-weight: 600;
+      margin-bottom: .2rem;
+    }
+    .offer-meta {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+
+    /* SHOP */
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: minmax(0,1.8fr) minmax(0,1.2fr);
+      gap: 1.4rem;
+    }
+    @media (max-width: 880px) {
+      .shop-grid { grid-template-columns: 1fr; }
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 1rem;
+    }
+    .product-card {
+      border-radius: 1.1rem;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: .85rem .9rem;
+      font-size: .86rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+    .product-badge {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+    }
+    .product-title {
+      font-weight: 600;
+      font-size: .92rem;
+    }
+    .product-desc {
+      color: var(--muted);
+      font-size: .8rem;
+      line-height: 1.5;
+    }
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: .8rem;
+      margin-top: .2rem;
+    }
+    .product-price {
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+    .product-cta {
+      margin-top: .5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .4rem;
+    }
+    .product-cta button {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: .3rem .7rem;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      cursor: pointer;
+      background: rgba(15,23,42,0.98);
+      color: var(--text);
+    }
+    .product-cta button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .cart-card {
+      border-radius: 1.2rem;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: .9rem 1rem;
+      font-size: .84rem;
+    }
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: .5rem;
+    }
+    .cart-items {
+      max-height: 260px;
+      overflow-y: auto;
+      margin-bottom: .5rem;
+    }
+    .cart-empty {
+      color: var(--muted);
+      font-size: .8rem;
+      margin: .4rem 0;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .4rem;
+    }
+    .cart-item-title {
+      font-size: .8rem;
+    }
+    .cart-item-meta {
+      font-size: .74rem;
+      color: var(--muted);
+    }
+    .cart-remove {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: .8rem;
+    }
+    .cart-remove:hover {
+      color: var(--danger);
+    }
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: .84rem;
+      margin-top: .4rem;
+    }
+    .cart-total strong {
+      font-size: .9rem;
+    }
+    .cart-note {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: .45rem;
+    }
+    .cart-actions {
+      margin-top: .6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .cart-actions button {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: .35rem .8rem;
+      font-size: .76rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      cursor: pointer;
+      background: rgba(15,23,42,0.98);
+      color: var(--text);
+    }
+    .cart-actions button.primary {
+      background: var(--accent);
+      color: #022c22;
+      border-color: transparent;
+    }
+    .cart-actions button.danger {
+      border-color: rgba(248,113,113,0.8);
+      color: #fecaca;
+    }
+    .cart-actions button:hover {
+      border-color: var(--accent);
+    }
+
+    /* FAQ & CONTACT */
+
+    .faq-item {
+      margin-bottom: .7rem;
+      font-size: .84rem;
+    }
+    .faq-item strong {
+      display: block;
+      margin-bottom: .1rem;
+    }
+    .faq-item span {
+      color: var(--muted);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 1.4rem 2.2rem;
+      font-size: .76rem;
+      color: var(--muted);
+    }
+    .tiny {
+      font-size: .7rem;
+      color: #6b7280;
+    }
+
+    a {
+      color: var(--accent-strong);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      header { padding: .55rem 1rem; }
+      main { padding: 1.2rem 1rem 2rem; }
+      .header-inner { flex-wrap: wrap; justify-content: center; }
+      nav { display: none; } /* pour rester simple sur mobile */
+    }
+  </style>
+</head>
+<body>
+  <!-- Orbs de fond -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <div class="brand-title">
+          <span>STUDIO ÉLAN</span>
+          <span>développement personnel & coaching</span>
+        </div>
+      </div>
+      <nav>
+        <a data-scroll="#hero">Accueil</a>
+        <a data-scroll="#approche">Approche</a>
+        <a data-scroll="#offres">Parcours</a>
+        <a data-scroll="#shop">Boutique</a>
+        <a data-scroll="#contact">Contact</a>
+      </nav>
+      <button class="cart-button" id="openCart">
+        <div class="cart-dot" id="cartCount">0</div>
+        <span>Panier</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-left">
+        <div class="hero-kicker">
+          <span></span>
+          <div>agence de développement personnel & web shop</div>
+        </div>
+        <h1 class="hero-title">
+          Faites passer votre vie<br/>
+          de <strong>mode automatique</strong><br/>
+          à <strong>mode intentionnel</strong>.
+        </h1>
+        <p class="hero-sub">
+          Studio Élan accompagne les personnes et les équipes qui en ont marre des injonctions floues
+          du «&nbsp;développement personnel&nbsp;» et veulent des <mark>outils concrets, respectueux et actionnables</mark>
+          pour clarifier leurs priorités, poser leurs limites et avancer à leur rythme.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="btnDecouvrir">
+            Découvrir nos parcours
+          </button>
+          <button class="btn btn-ghost" id="btnShop">
+            Accéder à la boutique
+          </button>
+        </div>
+        <div class="hero-badges">
+          <div class="badge">Coaching 1:1 & programmes en ligne</div>
+          <div class="badge">Orientation non-ésotérique</div>
+          <div class="badge">Respect des limites & de la santé mentale</div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <aside class="hero-card">
+          <div class="hero-card-title">Notre promesse réaliste</div>
+          <div class="hero-pill">Pas de miracle. Du travail, avec du soutien.</div>
+          <div class="hero-metric-grid">
+            <div class="hero-metric">
+              <strong>3</strong>
+              <span>axes : clarté, limites, énergie</span>
+            </div>
+            <div class="hero-metric">
+              <strong>0</strong>
+              <span>pseudo-science / gourou</span>
+            </div>
+            <div class="hero-metric">
+              <strong>100%</strong>
+              <span>autonomie visée</span>
+            </div>
+          </div>
+          <p class="hero-card-text">
+            Nous ne promettons ni illumination instantanée ni «&nbsp;nouvelle vie en 7 jours&nbsp;».  
+            Seulement des programmes structurés, des questions qui piquent un peu, et un cadre
+            pour expérimenter dans votre quotidien, sans vous faire violence.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- APPROCHE -->
+    <section id="approche">
+      <div class="section-label">notre approche</div>
+      <div class="section-title">Sérieuse sur le fond, légère sur la forme</div>
+      <div class="grid-2">
+        <article class="card">
+          <p>
+            Le développement personnel n’est pas une compétition ni une to-do list infinie.
+            Pour nous, c’est une façon de <strong>habiter sa vie plus consciemment</strong>, pas de devenir une version
+            parfaite de soi-même.
+          </p>
+          <ul class="list-clean" style="margin-top:.6rem;">
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Base : psychologie & pédagogie</strong><br/>
+                Nous nous inspirons de travaux sérieux (psychologie, sciences cognitives, pédagogie) et
+                nous évitons les promesses magiques, surtout sur la santé mentale.
+              </div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Pas de diagnostic sauvage</strong><br/>
+                Nous ne remplaçons ni un suivi thérapeutique ni un avis médical.
+                Si un besoin clinique apparaît, nous vous invitons à consulter un·e professionnel·le de santé.
+              </div>
+            </li>
+          </ul>
+        </article>
+        <article class="card">
+          <ul class="list-clean">
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Format expérimental</strong><br/>
+                Chaque module propose de petites expériences à mener dans votre vie réelle,
+                plutôt que des grandes théories abstraites.
+              </div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Respect du rythme</strong><br/>
+                Vous pouvez avancer en autonomie, revenir en arrière, faire des pauses, et adapter
+                les outils à votre contexte.
+              </div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Dimension ludique</strong><br/>
+                Quand c’est possible, on introduit du jeu, de l’auto-dérision et un peu de légèreté :
+                on travaille mieux quand on respire.
+              </div>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- OFFRES / PARCOURS -->
+    <section id="offres">
+      <div class="section-label">parcours & accompagnements</div>
+      <div class="section-title">Des formats adaptés à votre manière d’apprendre</div>
+      <div class="card" style="margin-bottom:1rem;">
+        <div class="pill">3 portes d’entrée</div>
+        <div class="offers-grid">
+          <article class="offer">
+            <div class="offer-name">Coaching individuel « Clarté »</div>
+            <div class="offer-meta">3 séances · en visio</div>
+            <p>
+              Un accompagnement court pour faire le point, clarifier un choix ou une transition, et
+              repartir avec un plan simple, réaliste et respectueux de vos contraintes.
+            </p>
+          </article>
+          <article class="offer">
+            <div class="offer-name">Programme en ligne « Limites & frontières »</div>
+            <div class="offer-meta">Parcours autonome · 6 modules</div>
+            <p>
+              Pour les personnes qui disent « oui » trop souvent. Exercices, scripts de phrases,
+              mises en situation, pour apprendre à dire « non » sans vous perdre.
+            </p>
+          </article>
+          <article class="offer">
+            <div class="offer-name">Atelier équipe « Énergie & charge mentale »</div>
+            <div class="offer-meta">Atelier collectif · 1/2 journée</div>
+            <p>
+              Pour les équipes qui veulent ouvrir le sujet de la charge mentale
+              au travail, poser des règles de jeu plus claires et expérimenter des ajustements concrets.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP -->
+    <section id="shop">
+      <div class="section-label">boutique en ligne</div>
+      <div class="section-title">Ressources & sessions à la carte</div>
+
+      <div class="shop-grid">
+        <div class="card">
+          <p style="font-size:.86rem; color:var(--muted); margin-bottom:.6rem;">
+            Tous nos produits sont pensés pour être <strong>concrets et modulaires</strong> :
+            vous pouvez commencer petit (un support, une séance) et compléter au fur et à mesure.
+          </p>
+          <div class="products-grid" id="productsContainer">
+            <!-- Produits injectés par JS -->
+          </div>
+        </div>
+
+        <aside class="cart-card" id="cartPanel">
+          <div class="cart-header">
+            <h3 style="margin:0;font-size:.95rem;">Votre panier</h3>
+            <span style="font-size:.75rem;color:var(--muted);" id="cartStatus">0 article</span>
+          </div>
+          <div class="cart-items" id="cartItems">
+            <div class="cart-empty">Votre panier est vide pour l’instant.</div>
+          </div>
+          <div class="cart-total">
+            <span>Total estimatif</span>
+            <strong id="cartTotal">0,00 €</strong>
+          </div>
+          <div class="cart-note">
+            Aucun paiement n’est traité via ce fichier.  
+            Utilisez le bouton «&nbsp;Envoyer mon panier&nbsp;» pour générer un <strong>résumé par email</strong>
+            ou à transmettre à l’agence.
+          </div>
+          <div class="cart-actions">
+            <button class="primary" id="btnCheckout">Envoyer mon panier (brouillon)</button>
+            <button class="danger" id="btnClear">Vider le panier</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- FAQ + CONTACT -->
+    <section id="contact">
+      <div class="section-label">faq & contact</div>
+      <div class="section-title">Questions fréquentes & prendre contact</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="faq-item">
+            <strong>Est-ce que vos programmes remplacent une thérapie ?</strong>
+            <span>
+              Non. Nos offres sont de l’accompagnement et de la pédagogie en développement personnel.
+              Pour toute difficulté de santé mentale (dépression, troubles anxieux, trauma…), il est important
+              de consulter un·e professionnel·le de santé qualifié·e.
+            </span>
+          </div>
+          <div class="faq-item">
+            <strong>Comment se déroulent les séances individuelles ?</strong>
+            <span>
+              En visio, avec une phase de cadrage, un temps d’exploration guidée et la co-construction
+              d’expériences à tester entre les séances. Vous restez libre de tout arrêter à tout moment.
+            </span>
+          </div>
+          <div class="faq-item">
+            <strong>Proposez-vous des accompagnements en entreprise ?</strong>
+            <span>
+              Oui, sous forme d’ateliers et de cycles sur mesure. Utilisez le formulaire ci-contre
+              pour décrire votre contexte, et nous revenons vers vous avec une proposition.
+            </span>
+          </div>
+        </div>
+        <div class="card">
+          <p style="font-size:.86rem;color:var(--muted);margin-bottom:.6rem;">
+            Pour une demande de coaching, de devis entreprise ou toute question, vous pouvez utiliser
+            ce canevas et l’envoyer par email.
+          </p>
+          <p style="font-size:.82rem;">
+            <strong>Email :</strong> <a href="mailto:contact@studio-elan.example">contact@studio-elan.example</a><br/>
+            <strong>Sujet suggéré :</strong> « Demande d’information – Studio Élan »
+          </p>
+          <p style="font-size:.82rem;margin-top:.5rem;">
+            <strong>Informations utiles à préciser :</strong>
+          </p>
+          <ul class="list-clean">
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>Ce que vous cherchez (coaching individuel, programme en ligne, atelier équipe…)</div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>Votre situation actuelle en quelques lignes</div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>Votre budget ou fourchette, si vous en avez une</div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>Votre fuseau horaire / disponibilités approximatives</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Studio Élan – Site vitrine & web shop statique · Aucun cookie, aucun tracking, juste du HTML/CSS/JS.
+    </p>
+    <p class="tiny">
+      Ce site ne remplace pas un avis médical ou psychologique.  
+      Prenez soin de vous, et demandez de l’aide professionnelle si vous traversez une période difficile.
+    </p>
+  </footer>
+
+  <script>
+    // --- Données produits ---
+    const products = [
+      {
+        id: "pack-clarte",
+        type: "coaching",
+        title: "Pack Clarté – 3 séances individuelles",
+        desc: "Pour clarifier un choix ou une transition (pro/perso), poser les enjeux, explorer des options réalistes et repartir avec un plan simple.",
+        price: 240,
+        meta: "3 × 60 min · visio",
+      },
+      {
+        id: "programme-limites",
+        type: "programme",
+        title: "Programme « Limites & frontières »",
+        desc: "Parcours en autonomie, vidéos + fiches pratiques + scripts de phrases pour apprendre à dire non et à ajuster vos engagements.",
+        price: 89,
+        meta: "6 modules · accès 12 mois",
+      },
+      {
+        id: "session-unique",
+        type: "coaching",
+        title: "Session unique « Bilan express »",
+        desc: "Une séance de 75 min pour faire un point global, identifier vos grands axes de travail et choisir une prochaine petite étape concrète.",
+        price: 90,
+        meta: "1 × 75 min · visio",
+      },
+      {
+        id: "kit-journal",
+        type: "ressource",
+        title: "Kit Journal de bord intentionnel",
+        desc: "PDF interactif + audio d’introduction pour installer une routine simple de revue hebdomadaire, sans culpabilité ni injonctions.",
+        price: 29,
+        meta: "Ressource téléchargeable",
+      },
+      {
+        id: "atelier-equipe",
+        type: "entreprise",
+        title: "Atelier équipe « Charge mentale & coopération »",
+        desc: "Atelier pour 6–12 personnes sur la charge mentale au travail, les signaux d’alerte et des ajustements collectifs à tester.",
+        price: 780,
+        meta: "1/2 journée · entreprise",
+      }
+    ];
+
+    // --- DOM ---
+    const productsContainer = document.getElementById("productsContainer");
+    const cartItemsEl = document.getElementById("cartItems");
+    const cartStatusEl = document.getElementById("cartStatus");
+    const cartTotalEl = document.getElementById("cartTotal");
+    const cartCountEl = document.getElementById("cartCount");
+    const openCartBtn = document.getElementById("openCart");
+    const btnCheckout = document.getElementById("btnCheckout");
+    const btnClear = document.getElementById("btnClear");
+
+    const CART_KEY = "studioElan_cart_v1";
+
+    function loadCart() {
+      try {
+        return JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    }
+
+    let cart = loadCart();
+
+    // --- Rendu produits ---
+    function renderProducts() {
+      productsContainer.innerHTML = "";
+      products.forEach(p => {
+        const card = document.createElement("article");
+        card.className = "product-card";
+        card.innerHTML = `
+          <div class="product-badge">${p.type.toUpperCase()}</div>
+          <div class="product-title">${p.title}</div>
+          <div class="product-desc">${p.desc}</div>
+          <div class="product-meta">
+            <span>${p.meta}</span>
+            <span class="product-price">${p.price.toFixed(2).replace(".", ",")} €</span>
+          </div>
+          <div class="product-cta">
+            <button data-id="${p.id}">Ajouter au panier</button>
+            <span style="font-size:.72rem;color:var(--muted);">Sans engagement tant que vous ne confirmez pas par email.</span>
+          </div>
+        `;
+        const btn = card.querySelector("button");
+        btn.addEventListener("click", () => addToCart(p.id));
+        productsContainer.appendChild(card);
+      });
+    }
+
+    // --- Cart logic ---
+    function addToCart(productId) {
+      const item = cart.find(i => i.id === productId);
+      if (item) {
+        item.qty += 1;
+      } else {
+        cart.push({ id: productId, qty: 1 });
+      }
+      saveCart(cart);
+      renderCart();
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(i => i.id !== productId);
+      saveCart(cart);
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      saveCart(cart);
+      renderCart();
+    }
+
+    function renderCart() {
+      if (!cartItemsEl) return;
+      cartItemsEl.innerHTML = "";
+      if (cart.length === 0) {
+        cartItemsEl.innerHTML = '<div class="cart-empty">Votre panier est vide pour l’instant.</div>';
+      } else {
+        cart.forEach(entry => {
+          const p = products.find(pr => pr.id === entry.id);
+          if (!p) return;
+          const line = document.createElement("div");
+          line.className = "cart-item";
+          line.innerHTML = `
+            <div>
+              <div class="cart-item-title">${p.title}</div>
+              <div class="cart-item-meta">${entry.qty} × ${p.price.toFixed(2).replace(".", ",")} €</div>
+            </div>
+            <button class="cart-remove" title="Retirer" data-id="${p.id}">×</button>
+          `;
+          const btn = line.querySelector("button");
+          btn.addEventListener("click", () => removeFromCart(p.id));
+          cartItemsEl.appendChild(line);
+        });
+      }
+      const total = cart.reduce((sum, entry) => {
+        const p = products.find(pr => pr.id === entry.id);
+        return p ? sum + p.price * entry.qty : sum;
+      }, 0);
+      cartTotalEl.textContent = total.toFixed(2).replace(".", ",") + " €";
+
+      const count = cart.reduce((sum, entry) => sum + entry.qty, 0);
+      cartStatusEl.textContent = count === 0 ? "0 article" : count + (count > 1 ? " articles" : " article");
+      cartCountEl.textContent = count;
+    }
+
+    // --- Scroll smooth ---
+    document.querySelectorAll("nav a[data-scroll]").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const id = link.getAttribute("data-scroll");
+        const el = document.querySelector(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      });
+    });
+
+    document.getElementById("btnDecouvrir")?.addEventListener("click", () => {
+      document.querySelector("#offres")?.scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("btnShop")?.addEventListener("click", () => {
+      document.querySelector("#shop")?.scrollIntoView({ behavior: "smooth" });
+    });
+
+    // --- Open cart (scroll to shop) ---
+    openCartBtn?.addEventListener("click", () => {
+      document.querySelector("#shop")?.scrollIntoView({ behavior: "smooth" });
+    });
+
+    // --- Checkout : générer un brouillon d'email ---
+    btnCheckout?.addEventListener("click", () => {
+      if (cart.length === 0) {
+        alert("Votre panier est vide.");
+        return;
+      }
+      let body = "Bonjour,%0D%0A%0D%0AJe souhaite avoir plus d'informations / réserver les éléments suivants :%0D%0A%0D%0A";
+      cart.forEach(entry => {
+        const p = products.find(pr => pr.id === entry.id);
+        if (!p) return;
+        body += `- ${entry.qty} × ${p.title} (${p.price.toFixed(2)} €)%0D%0A`;
+      });
+      const total = cart.reduce((sum, entry) => {
+        const p = products.find(pr => pr.id === entry.id);
+        return p ? sum + p.price * entry.qty : sum;
+      }, 0);
+      body += `%0D%0ATotal estimatif : ${total.toFixed(2)} €%0D%0A%0D%0AContexte / message : %0D%0A[Ajoutez quelques lignes sur votre situation ici.]%0D%0A%0D%0AMerci !`;
+      const mailto = `mailto:contact@studio-elan.example?subject=Demande%20d'information%20depuis%20la%20boutique%20Studio%20Élan&body=${body}`;
+      window.location.href = mailto;
+    });
+
+    btnClear?.addEventListener("click", () => {
+      if (cart.length === 0) return;
+      if (confirm("Vider le panier ?")) {
+        clearCart();
+      }
+    });
+
+    // Init
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
