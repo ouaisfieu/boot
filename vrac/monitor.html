@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minitel · Annuaire & Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --screen-bg: #000000;
+      --screen-border: #4b5563;
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --minitel-green: #22c55e;
+      --minitel-cyan: #22d3ee;
+      --minitel-magenta: #e879f9;
+      --minitel-yellow: #fde047;
+      --btn-bg: #020617;
+      --border: #4b5563;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 18px 35px rgba(15,23,42,0.9);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 10px;
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    header {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.25), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.18), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 40%, #020819 100%);
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 260px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 20% 0, #bbf7d0, #22c55e 45%, #0ea5e9 90%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      color: #022c22;
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 18px rgba(34,197,94,0.75);
+    }
+
+    .header-title {
+      font-size: 17px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-right {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .chip {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+    }
+
+    @media (max-width: 720px) {
+      .header-right {
+        align-items: flex-start;
+      }
+    }
+
+    /* LAYOUT PRINCIPAL */
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 8px 9px 7px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .panel-title span.icon {
+      font-size: 14px;
+    }
+
+    /* TERMINAL MINITEL */
+
+    .terminal-frame {
+      border-radius: 12px;
+      border: 2px solid var(--screen-border);
+      background: #111827;
+      padding: 8px;
+      max-width: 100%;
+    }
+
+    .terminal-screen {
+      background: var(--screen-bg);
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      padding: 8px 8px 6px;
+      min-height: 260px;
+      max-height: 360px;
+      overflow-y: auto;
+
+      font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.2;
+      color: var(--minitel-green);
+      white-space: pre;
+    }
+
+    .screen-line {
+      display: block;
+    }
+
+    .c-green   { color: var(--minitel-green); }
+    .c-cyan    { color: var(--minitel-cyan); }
+    .c-magenta { color: var(--minitel-magenta); }
+    .c-yellow  { color: var(--minitel-yellow); }
+    .c-soft    { color: var(--text-soft); }
+
+    .line-clickable {
+      cursor: pointer;
+    }
+    .line-clickable:hover {
+      background: rgba(34,197,94,0.25);
+    }
+
+    .terminal-bottom {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .input-zone {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 220px;
+    }
+
+    .input-label {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    #minitelInput {
+      flex: 1 1 auto;
+      max-width: 140px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--text-main);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      outline: none;
+    }
+
+    #minitelInput:focus {
+      box-shadow: 0 0 0 1px var(--minitel-green);
+      border-color: var(--minitel-green);
+    }
+
+    .fn-keys {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+      flex: 1 1 auto;
+    }
+
+    .fn-btn {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #4b5563;
+      background: var(--btn-bg);
+      color: var(--text-soft);
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      cursor: pointer;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    .fn-btn.primary {
+      border-color: var(--minitel-green);
+      color: var(--minitel-green);
+    }
+
+    .fn-btn.danger {
+      border-color: var(--danger);
+      color: #fecaca;
+    }
+
+    .fn-btn:active {
+      transform: translateY(1px);
+    }
+
+    .legend {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    /* MONITORING PANEL */
+
+    .monitor-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .monitor-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .monitor-field {
+      flex: 1 1 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 12px;
+    }
+
+    .monitor-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .monitor-input,
+    .monitor-select,
+    .monitor-textarea {
+      border-radius: 5px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--text-main);
+      font-size: 13px;
+      padding: 5px 7px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .monitor-input:focus,
+    .monitor-select:focus,
+    .monitor-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .monitor-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .mini-browser-card {
+      border-radius: 10px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mini-browser-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .mini-browser-iframe {
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      width: 100%;
+      height: 200px;
+    }
+
+    .monitor-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--text-soft);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      color: #bbf7d0;
+      box-shadow: 0 0 8px rgba(34,197,94,0.6);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .monitor-meta {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    footer {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+
+    /* MODALE MONITORING */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      padding: 10px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-card {
+      max-width: 1100px;
+      width: 100%;
+      max-height: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #020617;
+      box-shadow: var(--shadow);
+      padding: 8px 9px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .modal-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .modal-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .modal-iframe {
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      width: 100%;
+      height: 320px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="header-left">
+        <div class="logo">M</div>
+        <div>
+          <div class="header-title">Minitel · Annuaire & Monitoring</div>
+          <div class="header-sub">
+            Annuaire style Minitel + mini-navigateur + outil de suivi complet, mobile first.
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="chip">minitel-monitor.html</div>
+        <div>Maquette locale · toutes les URL sont à configurer par l’utilisateur</div>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <!-- COLONNE GAUCHE : MINITEL -->
+      <section class="panel">
+        <div class="panel-title">
+          <span class="icon">📟</span>
+          <span>Annuaire style Minitel</span>
+        </div>
+        <div class="terminal-frame">
+          <div class="terminal-screen" id="screen"></div>
+
+          <div class="terminal-bottom">
+            <div class="input-zone">
+              <span class="input-label">N° :</span>
+              <input id="minitelInput" type="text" maxlength="4" autocomplete="off" />
+            </div>
+            <div class="fn-keys">
+              <button class="fn-btn danger" id="btnAnnuler">ANNULER</button>
+              <button class="fn-btn" id="btnRetour">RETOUR</button>
+              <button class="fn-btn" id="btnSuite">SUITE</button>
+              <button class="fn-btn primary" id="btnEnvoi">ENVOI</button>
+            </div>
+          </div>
+        </div>
+        <div class="legend">
+          <div>
+            Tape <strong>N°</strong> puis <strong>ENVOI</strong> (rubrique) ou <strong>code</strong> (service),
+            ou clique directement sur les lignes.
+          </div>
+        </div>
+      </section>
+
+      <!-- COLONNE DROITE : MONITORING -->
+      <section class="panel">
+        <div class="panel-title">
+          <span class="icon">📊</span>
+          <span>Mini navigateur & monitoring</span>
+        </div>
+
+        <div class="monitor-section">
+          <div class="monitor-row">
+            <div class="monitor-field">
+              <div class="monitor-label">Service</div>
+              <input id="monitorTitle" class="monitor-input" type="text" readonly />
+            </div>
+            <div class="monitor-field">
+              <div class="monitor-label">Code</div>
+              <input id="monitorCode" class="monitor-input" type="text" readonly />
+            </div>
+          </div>
+
+          <div class="monitor-row">
+            <div class="monitor-field">
+              <div class="monitor-label">URL / chemin de la page</div>
+              <input id="monitorUrl" class="monitor-input" type="text" placeholder="ex: pac.html ou https://ton-site..." />
+            </div>
+          </div>
+
+          <div class="monitor-row">
+            <div class="monitor-field">
+              <div class="monitor-label">Statut</div>
+              <select id="monitorStatus" class="monitor-select">
+                <option value="">(non défini)</option>
+                <option value="ok">OK / en service</option>
+                <option value="a_verifier">À vérifier</option>
+                <option value="en_travaux">En travaux</option>
+                <option value="idee">Idée / brouillon</option>
+              </select>
+            </div>
+            <div class="monitor-field">
+              <div class="monitor-label">Importance</div>
+              <select id="monitorImportance" class="monitor-select">
+                <option value="">(non défini)</option>
+                <option value="1">⭐ Essentiel</option>
+                <option value="2">⚙️ Important</option>
+                <option value="3">📝 Secondaire</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="monitor-row">
+            <div class="monitor-field">
+              <div class="monitor-label">Tags</div>
+              <input id="monitorTags" class="monitor-input" type="text" placeholder="ex: casino, jeu, recrutement, intranet..." />
+            </div>
+          </div>
+
+          <div class="monitor-row">
+            <div class="monitor-field" style="flex: 1 1 100%;">
+              <div class="monitor-label">Notes</div>
+              <textarea id="monitorNotes" class="monitor-textarea" placeholder="Objectif de la page, points à améliorer, bugs repérés, idées..."></textarea>
+            </div>
+          </div>
+
+          <div class="mini-browser-card">
+            <div class="mini-browser-header">
+              <span>Mini-navigateur (aperçu de la page)</span>
+              <span class="monitor-meta">
+                Dernière vérification :
+                <span id="monitorLastChecked">–</span>
+              </span>
+            </div>
+            <iframe id="miniFrame" class="mini-browser-iframe" src="about:blank"></iframe>
+          </div>
+
+          <div class="monitor-row" style="justify-content: space-between; align-items: center;">
+            <div class="monitor-meta">
+              Les réglages sont stockés dans ton navigateur (localStorage) par code de service.
+            </div>
+            <div class="monitor-buttons">
+              <button class="btn" id="btnSave">💾 Enregistrer</button>
+              <button class="btn primary" id="btnPreview">🔍 Prévisualiser</button>
+              <button class="btn" id="btnModal">🖥️ Ouvrir en mode monitoring</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      Maquette locale. Pour un usage réel, remplace les URL par tes vrais fichiers / sites,  
+      et adapte les rubriques de l’annuaire à ton écosystème.
+    </footer>
+  </div>
+
+  <!-- MODALE MONITORING -->
+  <div class="modal-backdrop" id="monitorModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Monitoring</div>
+        <div class="monitor-meta" id="modalInfo"></div>
+      </div>
+      <div class="modal-grid">
+        <div>
+          <iframe id="modalFrame" class="modal-iframe" src="about:blank"></iframe>
+        </div>
+        <div>
+          <div class="monitor-field">
+            <div class="monitor-label">URL</div>
+            <input id="modalUrl" class="monitor-input" type="text" readonly />
+          </div>
+          <div class="monitor-field">
+            <div class="monitor-label">Statut / importance</div>
+            <input id="modalStatus" class="monitor-input" type="text" readonly />
+          </div>
+          <div class="monitor-field">
+            <div class="monitor-label">Tags</div>
+            <input id="modalTags" class="monitor-input" type="text" readonly />
+          </div>
+          <div class="monitor-field">
+            <div class="monitor-label">Dernière vérification</div>
+            <input id="modalLast" class="monitor-input" type="text" readonly />
+          </div>
+          <div class="monitor-field">
+            <div class="monitor-label">Notes</div>
+            <textarea id="modalNotes" class="monitor-textarea" readonly></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnModalClose">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================
+       ANNULAIRE STYLE MINITEL
+       ========================= */
+
+    // Représente les grandes familles de tout ce qu'on a déjà bricolé :
+    const annuaire = {
+      "1": {
+        label: "OS & INTRANETS FICTIFS",
+        description: "NYXO, ONYX, faux OS, intranet de renseignement, faux disque, etc.",
+        entries: [
+          {
+            code: "101",
+            name: "NYXO · Faux OS narratif",
+            desc: "Interface d'OS fictif avec fenêtres, modules et faux disque.",
+            url: "nyxo.html"
+          },
+          {
+            code: "102",
+            name: "ONYX · Faux Obsidian portable",
+            desc: "Graph view, fichiers markdown, mini-intranet de renseignement.",
+            url: "onyx.html"
+          },
+          {
+            code: "103",
+            name: "Intranet Organisation",
+            desc: "Site d'agence de renseignement sociale avec tests de recrutement.",
+            url: "organisation.html"
+          }
+        ]
+      },
+      "2": {
+        label: "JEUX & CASINOS PÉDAGOGIQUES",
+        description: "Jeux 12,50, Casino 642, spam.html, morpions & mini-arcades.",
+        entries: [
+          {
+            code: "201",
+            name: "Jeu concours 12,50",
+            desc: "Site concours matrixé pour créer le site statique le plus wow.",
+            url: "12-50.html"
+          },
+          {
+            code: "202",
+            name: "Casino 642 · Looze ultime",
+            desc: "Machine à sous 642 avec ambiance néon & messages de prévention.",
+            url: "642.html"
+          },
+          {
+            code: "203",
+            name: "Spam.html · Jeu de sensibilisation",
+            desc: "Page de spam détournée en mini-jeu pédagogique.",
+            url: "spam.html"
+          }
+        ]
+      },
+      "3": {
+        label: "PORTAILS & MÉTA-MOTEURS",
+        description: "Meta-moteur de recherche, dark web fantasmé, outils de veille.",
+        entries: [
+          {
+            code: "301",
+            name: "Meta-moteur de veille",
+            desc: "Portail de recherche multi-sources avec tags et réinitialisation.",
+            url: "metamoteur.html"
+          },
+          {
+            code: "302",
+            name: "Explorateur dark web fantasmé",
+            desc: "Faux explorateur de sites & documents avec métadonnées.",
+            url: "dark-explorer.html"
+          },
+          {
+            code: "303",
+            name: "GOO portail hardcore",
+            desc: "Portail vers tous les outils d'éducation populaire & veille citoyenne.",
+            url: "goo.html"
+          }
+        ]
+      },
+      "4": {
+        label: "SITES PÉDAGOGIQUES & PORTFOLIOS",
+        description: "CCPLC, pac.html, bilans, sites de présentation & formation.",
+        entries: [
+          {
+            code: "401",
+            name: "CCPLC · Site d'ensemble",
+            desc: "Site vitrine/explicatif de l'écosystème citoyen.",
+            url: "ccplc.html"
+          },
+          {
+            code: "402",
+            name: "pac.html · Fan club PAC",
+            desc: "Site de fan club non officiel, preuve de concept.",
+            url: "pac.html"
+          },
+          {
+            code: "403",
+            name: "bilan.html · Site bilan perso",
+            desc: "Site de bilan de parcours, CV élargi, réorientation.",
+            url: "bilan.html"
+          }
+        ]
+      },
+      "5": {
+        label: "JEUX DE RÔLE & TESTS",
+        description: "Jeux politico-dystopiques, tests d'entrée, fiches de personnages.",
+        entries: [
+          {
+            code: "501",
+            name: "Jeu politico-dystopique",
+            desc: "Intro narrative + choix de parcours pour tirer son épingle du jeu.",
+            url: "jeu-politique.html"
+          },
+          {
+            code: "502",
+            name: "Test recrutement · Organisation",
+            desc: "Test de compatibilité avec les rôles d'enquête, veille, animation.",
+            url: "test-orga.html"
+          },
+          {
+            code: "503",
+            name: "Jeu polar 1980 / IA noire",
+            desc: "Jeu narratif polar noir ancré dans le réel.",
+            url: "polar-ia.html"
+          }
+        ]
+      },
+      "6": {
+        label: "OUTILS NUMÉRIQUES & GUIDES",
+        description: "Guides logiciels, faux navigateurs, tutoriels grand public.",
+        entries: [
+          {
+            code: "601",
+            name: "Guide logiciels & alternatives",
+            desc: "Site qui explique les logiciels incontournables et leurs équivalents libres.",
+            url: "logiciels.html"
+          },
+          {
+            code: "602",
+            name: "Faux Chrome / Firefox",
+            desc: "Navigateur HTML/CSS/JS pour explorer le web dans un environnement contrôlé.",
+            url: "navigateur.html"
+          },
+          {
+            code: "603",
+            name: "Tutoriel « faire son site »",
+            desc: "Site qui explique pas à pas comment créer un site statique clé sur porte.",
+            url: "tutoriel-site.html"
+          }
+        ]
+      },
+      "7": {
+        label: "DIVERS & EXPÉRIMENTATIONS",
+        description: "Prototypes divers, expériences, pages en cours.",
+        entries: [
+          {
+            code: "701",
+            name: "Terminal diagnostic",
+            desc: "Simulateur de terminal sérieux pour parler de pratiques numériques.",
+            url: "terminal-diagnostic.html"
+          },
+          {
+            code: "702",
+            name: "Frapad-terminal",
+            desc: "Terminal autocritique narratif (version contrôlée).",
+            url: "frapad-terminal.html"
+          },
+          {
+            code: "703",
+            name: "Prototype divers",
+            desc: "Placeholder pour toute nouvelle page expérimentale.",
+            url: "prototype.html"
+          }
+        ]
+      }
+    };
+
+    /* ===== ÉTAT MINITEL ===== */
+
+    let state = {
+      view: "home",      // "home" | "category" | "entry"
+      categoryId: null,
+      selectedEntry: null
+    };
+
+    const screenEl = document.getElementById("screen");
+    const inputEl = document.getElementById("minitelInput");
+
+    function clearScreen() {
+      screenEl.innerHTML = "";
+    }
+
+    function addLine(text = "", className = "") {
+      const span = document.createElement("span");
+      span.className = "screen-line " + className;
+      span.textContent = text;
+      screenEl.appendChild(span);
+      screenEl.appendChild(document.createTextNode("\n"));
+      screenEl.scrollTop = screenEl.scrollHeight;
+      return span;
+    }
+
+    function pad(text, length) {
+      const t = String(text);
+      if (t.length >= length) return t.slice(0, length);
+      return t + " ".repeat(length - t.length);
+    }
+
+    function renderHome() {
+      state.view = "home";
+      state.categoryId = null;
+      state.selectedEntry = null;
+      clearScreen();
+
+      addLine("  M I N I T E L   A N N U A I R E", "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  Sélectionnez une rubrique :", "c-cyan");
+      addLine("", "");
+
+      Object.keys(annuaire).forEach(id => {
+        const cat = annuaire[id];
+        const label = `${id}. ${cat.label}`;
+        const line = addLine("  " + label, "c-green line-clickable");
+        line.dataset.categoryId = id;
+      });
+
+      addLine("", "");
+      addLine("  Tapez le N° de rubrique et ENVOI", "c-soft");
+      addLine("  ou cliquez directement sur une ligne.", "c-soft");
+
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function renderCategory(catId) {
+      const cat = annuaire[catId];
+      if (!cat) {
+        renderHome();
+        return;
+      }
+      state.view = "category";
+      state.categoryId = catId;
+      state.selectedEntry = null;
+      clearScreen();
+
+      addLine("  " + pad(cat.label, 34), "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  " + cat.description, "c-cyan");
+      addLine("", "");
+
+      cat.entries.forEach(e => {
+        const text = `  ${e.code}  ${e.name}`;
+        const line = addLine(text, "c-green line-clickable");
+        line.dataset.entryCode = e.code;
+      });
+
+      addLine("", "");
+      addLine("  Tapez le code (3 chiffres) et ENVOI", "c-soft");
+      addLine("  ou cliquez sur un service pour afficher la fiche.", "c-soft");
+      addLine("  RETOUR : revenir à l'annuaire général.", "c-soft");
+
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function renderEntry(catId, code) {
+      const cat = annuaire[catId];
+      if (!cat) {
+        renderHome();
+        return;
+      }
+      const entry = cat.entries.find(e => e.code === code);
+      if (!entry) {
+        renderCategory(catId);
+        return;
+      }
+      state.view = "entry";
+      state.selectedEntry = entry;
+      clearScreen();
+
+      addLine("  " + pad(entry.name, 34), "c-green");
+      addLine("----------------------------------------", "c-soft");
+      addLine("", "");
+      addLine("  Code : " + entry.code, "c-yellow");
+      addLine("  Rubrique : " + cat.label, "c-cyan");
+      addLine("", "");
+
+      // description en blocs
+      const wrapLen = 38;
+      const words = entry.desc.split(" ");
+      let line = "  ";
+      words.forEach(w => {
+        if ((line + w).length > wrapLen) {
+          addLine(line, "c-soft");
+          line = "  " + w + " ";
+        } else {
+          line += w + " ";
+        }
+      });
+      if (line.trim().length > 0) {
+        addLine(line, "c-soft");
+      }
+
+      addLine("", "");
+      addLine("  Adresse par défaut (modifiable côté monitoring) :", "c-soft");
+      addLine("  " + (entry.url || "–"), "c-magenta");
+      addLine("", "");
+      addLine("  Cette fiche est synchronisée avec le panneau de monitoring.", "c-soft");
+      addLine("  Utilisez ENVOI pour basculer vers ce service.", "c-soft");
+
+      inputEl.value = "";
+      inputEl.focus();
+
+      // Met à jour le panneau de monitoring
+      setActiveService(entry);
+    }
+
+    function handleEnvoi() {
+      const value = inputEl.value.trim();
+
+      if (state.view === "home") {
+        if (annuaire[value]) {
+          renderCategory(value);
+        } else if (value !== "") {
+          addLine("", "");
+          addLine("  N° inconnu. Utilisez 1 à 7.", "c-soft");
+          inputEl.value = "";
+        }
+        return;
+      }
+
+      if (state.view === "category") {
+        if (/^\d{3}$/.test(value)) {
+          renderEntry(state.categoryId, value);
+        } else if (value !== "") {
+          addLine("", "");
+          addLine("  Code service invalide. Ex: 101, 203, etc.", "c-soft");
+          inputEl.value = "";
+        }
+        return;
+      }
+
+      if (state.view === "entry") {
+        // ENVOI sur une fiche : on synchronise quand même le monitoring
+        if (state.selectedEntry) {
+          setActiveService(state.selectedEntry);
+        }
+      }
+    }
+
+    function handleRetour() {
+      if (state.view === "entry") {
+        renderCategory(state.categoryId);
+      } else if (state.view === "category") {
+        renderHome();
+      } else {
+        renderHome();
+      }
+    }
+
+    function handleAnnuler() {
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function handleSuite() {
+      addLine("", "");
+      addLine("  SUITE : fin de page. Pas d'autres éléments.", "c-soft");
+    }
+
+    // Événements Minitel
+    document.getElementById("btnEnvoi").addEventListener("click", handleEnvoi);
+    document.getElementById("btnRetour").addEventListener("click", handleRetour);
+    document.getElementById("btnAnnuler").addEventListener("click", handleAnnuler);
+    document.getElementById("btnSuite").addEventListener("click", handleSuite);
+
+    screenEl.addEventListener("click", (e) => {
+      const line = e.target.closest(".line-clickable");
+      if (!line) return;
+
+      if (line.dataset.categoryId) {
+        renderCategory(line.dataset.categoryId);
+        return;
+      }
+      if (line.dataset.entryCode && state.view === "category") {
+        renderEntry(state.categoryId, line.dataset.entryCode);
+      }
+    });
+
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleEnvoi();
+      }
+    });
+
+    /* ============================
+       MONITORING & LOCALSTORAGE
+       ============================ */
+
+    const STORAGE_KEY = "minitelMonitorSites";
+
+    function loadAllConfigs() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return {};
+        return JSON.parse(raw);
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveAllConfigs(configs) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(configs));
+    }
+
+    function loadConfigFor(code) {
+      const configs = loadAllConfigs();
+      return configs[code] || {};
+    }
+
+    function saveConfigFor(code, data) {
+      const configs = loadAllConfigs();
+      configs[code] = data;
+      saveAllConfigs(configs);
+    }
+
+    const monitorTitle = document.getElementById("monitorTitle");
+    const monitorCode = document.getElementById("monitorCode");
+    const monitorUrl = document.getElementById("monitorUrl");
+    const monitorStatus = document.getElementById("monitorStatus");
+    const monitorImportance = document.getElementById("monitorImportance");
+    const monitorTags = document.getElementById("monitorTags");
+    const monitorNotes = document.getElementById("monitorNotes");
+    const monitorLastChecked = document.getElementById("monitorLast");
+    const miniFrame = document.getElementById("miniFrame");
+
+    const btnSave = document.getElementById("btnSave");
+    const btnPreview = document.getElementById("btnPreview");
+    const btnModal = document.getElementById("btnModal");
+
+    let currentService = null; // entrée annuaire courante
+
+    function setActiveService(entry) {
+      currentService = entry;
+      monitorTitle.value = entry.name || "";
+      monitorCode.value = entry.code || "";
+
+      const cfg = loadConfigFor(entry.code);
+      monitorUrl.value = cfg.url || entry.url || "";
+      monitorStatus.value = cfg.status || "";
+      monitorImportance.value = cfg.importance || "";
+      monitorTags.value = cfg.tags || "";
+      monitorNotes.value = cfg.notes || "";
+      monitorLastChecked.textContent = cfg.lastChecked || "–";
+
+      // On ne change pas automatiquement l'iframe pour ne pas charger sans consentement
+    }
+
+    function getCurrentConfig() {
+      if (!currentService) return null;
+      return {
+        code: currentService.code,
+        name: currentService.name,
+        url: monitorUrl.value.trim(),
+        status: monitorStatus.value,
+        importance: monitorImportance.value,
+        tags: monitorTags.value.trim(),
+        notes: monitorNotes.value.trim(),
+        lastChecked: monitorLastChecked.textContent || "–"
+      };
+    }
+
+    function saveCurrentConfig() {
+      const data = getCurrentConfig();
+      if (!data) return;
+      saveConfigFor(data.code, data);
+    }
+
+    function previewCurrent() {
+      const data = getCurrentConfig();
+      if (!data) return;
+
+      if (!data.url) {
+        alert("Définis d'abord l'URL ou le chemin de la page.");
+        return;
+      }
+
+      try {
+        miniFrame.src = data.url;
+      } catch (e) {
+        // au pire, on ne change pas le src, pas de crash
+      }
+
+      const now = new Date();
+      const stamp = now.toLocaleString();
+      monitorLastChecked.textContent = stamp;
+
+      data.lastChecked = stamp;
+      saveConfigFor(data.code, data);
+    }
+
+    btnSave.addEventListener("click", () => {
+      saveCurrentConfig();
+      alert("Configuration enregistrée pour ce service.");
+    });
+
+    btnPreview.addEventListener("click", () => {
+      previewCurrent();
+    });
+
+    btnModal.addEventListener("click", () => {
+      openMonitorModal();
+    });
+
+    /* ============================
+       MODALE MONITORING
+       ============================ */
+
+    const modal = document.getElementById("monitorModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalInfo = document.getElementById("modalInfo");
+    const modalUrl = document.getElementById("modalUrl");
+    const modalStatus = document.getElementById("modalStatus");
+    const modalTags = document.getElementById("modalTags");
+    const modalLast = document.getElementById("modalLast");
+    const modalNotes = document.getElementById("modalNotes");
+    const modalFrame = document.getElementById("modalFrame");
+    const btnModalClose = document.getElementById("btnModalClose");
+
+    function openMonitorModal() {
+      const data = getCurrentConfig();
+      if (!data) {
+        alert("Sélectionne d'abord un service dans l'annuaire.");
+        return;
+      }
+
+      modalTitle.textContent = data.name || "Monitoring";
+      modalInfo.textContent = "Code " + data.code + " · Importance : " + (data.importance || "non définie");
+      modalUrl.value = data.url || "";
+      modalStatus.value = (data.status || "") + (data.importance ? " · importance " + data.importance : "");
+      modalTags.value = data.tags || "";
+      modalLast.value = data.lastChecked || "–";
+      modalNotes.value = data.notes || "";
+
+      if (data.url) {
+        try {
+          modalFrame.src = data.url;
+        } catch (e) {
+          modalFrame.src = "about:blank";
+        }
+      } else {
+        modalFrame.src = "about:blank";
+      }
+
+      modal.classList.add("active");
+    }
+
+    btnModalClose.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+
+    // INIT
+    renderHome();
+  </script>
+</body>
+</html>
