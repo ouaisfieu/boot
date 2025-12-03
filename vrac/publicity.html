@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Article lambda - Mais alors VRAIMENT bourré de pub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --ad-bg: #fef3c7;
+      --ad-border: #facc15;
+      --popup-bg: #111827;
+      --popup-text: #f9fafb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-badge {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.8);
+    }
+
+    nav {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .top-banner-ad {
+      background: linear-gradient(90deg, #f97316, #facc15);
+      color: #111827;
+      padding: 0.5rem 1.5rem;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .top-banner-ad strong {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    .top-banner-ad button {
+      border: none;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 1rem auto 4rem;
+      padding: 0 1.2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+      .sidebar { order: -1; }
+    }
+
+    .article {
+      background: #ffffff;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.3rem;
+    }
+
+    .article h1 {
+      font-size: 1.5rem;
+      margin: 0 0 0.5rem;
+    }
+
+    .article-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .article p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0 0 0.9rem;
+    }
+
+    .article h2 {
+      font-size: 1.2rem;
+      margin: 1.2rem 0 0.6rem;
+    }
+
+    .inline-ad {
+      background: var(--ad-bg);
+      border: 1px solid var(--ad-border);
+      border-radius: 0.75rem;
+      padding: 0.7rem 0.8rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+
+    .inline-ad-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 0.5rem;
+      background: #facc15;
+      flex-shrink: 0;
+    }
+
+    .inline-ad strong {
+      font-size: 0.9rem;
+    }
+
+    .btn-ad {
+      display: inline-block;
+      margin-top: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8rem;
+      border-radius: 999px;
+      border: 1px solid #f59e0b;
+      background: #fef9c3;
+      cursor: pointer;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .side-ad {
+      background: #ffffff;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .side-ad h3 {
+      margin: 0 0 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .side-ad small {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .side-ad-cta {
+      margin-top: 0.5rem;
+      display: inline-block;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.78rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      cursor: pointer;
+      background: var(--accent-soft);
+    }
+
+    .newsletter {
+      background: #ffffff;
+      border-radius: 0.75rem;
+      border: 1px dashed var(--border);
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .newsletter input {
+      width: 100%;
+      margin-top: 0.4rem;
+      padding: 0.35rem 0.5rem;
+      border-radius: 0.35rem;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .newsletter button {
+      margin-top: 0.5rem;
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border-radius: 0.35rem;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .sticky-ad {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 15;
+      background: #111827;
+      color: #f9fafb;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.7rem;
+      font-size: 0.85rem;
+    }
+
+    .sticky-ad button {
+      border-radius: 999px;
+      border: none;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .sticky-ad-cta {
+      background: #22c55e;
+      color: #022c22;
+    }
+
+    .sticky-ad-close {
+      background: #374151;
+      color: #e5e7eb;
+    }
+
+    /* POPUPS / MODALS */
+
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+
+    .popup {
+      background: var(--popup-bg);
+      color: var(--popup-text);
+      border-radius: 0.75rem;
+      max-width: 420px;
+      width: 90%;
+      padding: 1rem 1.1rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      position: relative;
+      font-size: 0.9rem;
+    }
+
+    .popup h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .popup p {
+      margin: 0 0 0.6rem;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .popup button {
+      margin-top: 0.3rem;
+      border-radius: 999px;
+      border: none;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .popup-primary {
+      background: #facc15;
+      color: #111827;
+    }
+
+    .popup-secondary {
+      background: #374151;
+      color: #e5e7eb;
+      margin-left: 0.4rem;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 0.3rem;
+      right: 0.5rem;
+      background: transparent;
+      color: #9ca3af;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-badge"></div>
+      <span>SiteLambda.fr</span>
+    </div>
+    <nav>
+      <span>Accueil</span>
+      <span>Actu</span>
+      <span>Tests</span>
+      <span>Astuce du jour</span>
+    </nav>
+  </header>
+
+  <div class="top-banner-ad" id="topBannerAd">
+    <div>
+      <strong>PUBLICITÉ</strong> – Gagnez un smartphone en répondant à un quiz improbable en 7 secondes.
+    </div>
+    <button id="closeTopBanner">Je préfère rester pauvre</button>
+  </div>
+
+  <main>
+    <article class="article">
+      <h1>Un article lambda sur un sujet complètement banal</h1>
+      <div class="article-meta">
+        Publié aujourd'hui · Temps de lecture : 4 min · Niveau de pub : élevé
+      </div>
+
+      <p>
+        Bienvenue sur ce site entièrement banal, où vous essayez simplement de lire un article tranquille
+        pendant qu'une quantité invraisemblable de publicités tente de vous distraire toutes les dix secondes.
+      </p>
+
+      <div class="inline-ad">
+        <div class="inline-ad-icon"></div>
+        <div>
+          <strong>Offre spéciale : devenez riche avant d'avoir compris le business model.</strong><br/>
+          Profitez d'un guide gratuit qui vous explique comment « automatiser vos revenus » en 3 étapes floues.
+          <br/>
+          <button class="btn-ad">Télécharger (pseudo) gratuitement</button>
+        </div>
+      </div>
+
+      <p>
+        Le contenu que vous lisez actuellement est volontairement quelconque. L'objectif est surtout de voir
+        à quel point il est possible de saturer une page de bannières, popups, overlays et messages « engageants »
+        sans que le texte principal disparaisse complètement.
+      </p>
+
+      <h2>Un sous-titre que vous ne verrez peut-être jamais</h2>
+
+      <p>
+        À ce stade, vous avez probablement déjà été interrompu par au moins une fenêtre modale vous demandant
+        votre email, votre avis, votre âme, ou tout à la fois. C’est normal : dans ce site, les popups font
+        partie de l’architecture, pas de l’exception.
+      </p>
+
+      <div class="inline-ad">
+        <div class="inline-ad-icon"></div>
+        <div>
+          <strong>Encore une pub, parce qu'il n'y en avait pas assez.</strong><br/>
+          « Ce truc va changer votre vie » – une phrase prononcée par absolument tous les sites, tout le temps.
+          <br/>
+          <button class="btn-ad">Je clique sans lire</button>
+        </div>
+      </div>
+
+      <p>
+        L'ironie, c'est que plus une page est chargée de ce genre de distractions, moins vous retenez ce qu'elle
+        est censée dire. Pourtant, elles restent partout, parce que certaines personnes cliquent quand même.
+      </p>
+
+      <p>
+        Si vous arrivez jusqu'ici, félicitations : vous faites partie des rares visiteurs capables de tenir
+        plus de quelques paragraphes sans se laisser happer par le bandeau clignotant du bas.
+      </p>
+    </article>
+
+    <aside class="sidebar">
+      <div class="side-ad">
+        <h3>📣 Mega Super Offre</h3>
+        <small>Publicité parfaitement générique</small>
+        <p>
+          -90% sur quelque chose que vous n'aviez pas prévu d'acheter aujourd'hui.  
+          Valable jusqu'à ce que quelqu'un change l'image.
+        </p>
+        <button class="side-ad-cta">J'en profite vaguement</button>
+      </div>
+
+      <div class="side-ad">
+        <h3>Vous ne devinerez jamais…</h3>
+        <small>Article sponsorisé</small>
+        <p>
+          Cette personne a cliqué sur une pub. Ce qui s'est passé ensuite va vous décevoir.
+        </p>
+        <button class="side-ad-cta">Lire l'arnaque</button>
+      </div>
+
+      <div class="newsletter">
+        <strong>Inscrivez-vous à notre newsletter intrusive</strong>
+        <p style="margin:0.4rem 0 0.3rem;font-size:0.8rem;color:var(--muted);">
+          Une fois par jour, un email que vous oublierez d'ouvrir, mais que nous serons ravis d'avoir envoyé.
+        </p>
+        <input type="email" placeholder="Votre adresse email" />
+        <button>Je donne mon email quand même</button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Sticky bottom ad -->
+  <div class="sticky-ad" id="stickyAd">
+    <div>
+      🔔 Ce site utilise des cookies, des bannières, des popups, et tout ce qui peut attirer vaguement l'attention.
+    </div>
+    <div style="display:flex;gap:0.4rem;">
+      <button class="sticky-ad-cta">Tout accepter (sans lire)</button>
+      <button class="sticky-ad-close" id="closeStickyAd">Fermer</button>
+    </div>
+  </div>
+
+  <!-- Popup 1 : abonnement -->
+  <div class="popup-backdrop" id="popup1">
+    <div class="popup">
+      <button class="popup-close" data-close="popup1">×</button>
+      <h2>Attendez ! Ne partez pas sans vous abonner</h2>
+      <p>
+        Avant même de finir votre première lecture, laissez-nous déjà vous proposer de vous
+        abonner à quelque chose dont vous ne savez rien.
+      </p>
+      <button class="popup-primary" data-close="popup1">Je m'abonne à tout</button>
+      <button class="popup-secondary" data-close="popup1">Plus tard (peut-être)</button>
+    </div>
+  </div>
+
+  <!-- Popup 2 : réduction -->
+  <div class="popup-backdrop" id="popup2">
+    <div class="popup">
+      <button class="popup-close" data-close="popup2">×</button>
+      <h2>-10% si vous cliquez dans les 7 prochaines secondes</h2>
+      <p>
+        Ce compte à rebours n'existe pas vraiment, mais il est important de vous donner l'impression
+        de rater quelque chose.
+      </p>
+      <button class="popup-primary" data-close="popup2">Je cède à la pression</button>
+      <button class="popup-secondary" data-close="popup2">Je résiste héroïquement</button>
+    </div>
+  </div>
+
+  <!-- Popup 3 : exit intent -->
+  <div class="popup-backdrop" id="popup3">
+    <div class="popup">
+      <button class="popup-close" data-close="popup3">×</button>
+      <h2>Êtes-vous sûr de vouloir partir ?</h2>
+      <p>
+        Vous n'avez vu que 3 ou 4 pubs, ce serait dommage de vous arrêter là.
+      </p>
+      <button class="popup-primary" data-close="popup3">Je reste encore un peu</button>
+      <button class="popup-secondary" data-close="popup3">Je pars, vraiment</button>
+    </div>
+  </div>
+
+  <script>
+    // Fermer le bandeau du haut
+    document.getElementById("closeTopBanner")?.addEventListener("click", () => {
+      document.getElementById("topBannerAd").style.display = "none";
+    });
+
+    // Fermer le sticky ad
+    document.getElementById("closeStickyAd")?.addEventListener("click", () => {
+      document.getElementById("stickyAd").style.display = "none";
+    });
+
+    // Gestion des popups
+    function openPopup(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "flex";
+    }
+
+    function closePopup(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "none";
+    }
+
+    // Boutons de fermeture (X, boutons secondaires, etc.)
+    document.querySelectorAll("[data-close]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-close");
+        closePopup(id);
+      });
+    });
+
+    // Popup 1 : quelques secondes après l'arrivée
+    setTimeout(() => {
+      openPopup("popup1");
+    }, 5000);
+
+    // Popup 2 : quand on a un peu scrollé
+    let popup2Shown = false;
+    window.addEventListener("scroll", () => {
+      const scrolled = window.scrollY || document.documentElement.scrollTop;
+      if (!popup2Shown && scrolled > 400) {
+        openPopup("popup2");
+        popup2Shown = true;
+      }
+    });
+
+    // Popup 3 : pseudo exit intent (mouvement vers le haut de la page)
+    let popup3Shown = false;
+    document.addEventListener("mousemove", (e) => {
+      if (!popup3Shown && e.clientY < 40) {
+        openPopup("popup3");
+        popup3Shown = true;
+      }
+    });
+  </script>
+</body>
+</html>
