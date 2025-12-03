@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manual de Survie · Terminal infecté</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #02081b;
+      --card: #020817;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.25);
+      --accent-2: #f97316;
+      --border: rgba(148,163,184,0.45);
+      --danger: #ef4444;
+      --shadow: 0 22px 48px rgba(15,23,42,0.98);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body {
+      position: relative;
+      padding: 10px 10px 18px;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* ÉCRAN NORMAL */
+
+    #normalScreen {
+      opacity: 1;
+      transition: opacity 0.7s ease-out, filter 0.7s ease-out, transform 0.4s ease-out;
+    }
+
+    header.normal-header {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 0 0, rgba(34,197,94,0.22), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(248,250,252,0.08), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 40%, #020817 100%);
+      box-shadow: var(--shadow);
+      padding: 10px 12px 9px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .nh-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1 1 220px;
+    }
+
+    .nh-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 30% 15%, #bbf7d0, #22c55e 50%, #14532d 90%);
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 26px rgba(34,197,94,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: #022c22;
+    }
+
+    .nh-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nh-title {
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .nh-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .nh-sub strong {
+      color: var(--accent);
+    }
+
+    .nh-right {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-soft);
+      align-items: flex-end;
+    }
+
+    .nh-right span.code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(2,6,23,0.96);
+    }
+
+    .nh-right small {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 720px) {
+      .nh-right {
+        align-items: flex-start;
+      }
+    }
+
+    .normal-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .normal-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), #020617);
+      box-shadow: var(--shadow);
+      padding: 9px 9px 7px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+
+    .pill {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      white-space: nowrap;
+    }
+
+    .feed {
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .feed-item {
+      padding: 5px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(55,65,81,0.8);
+      background: rgba(2,6,23,0.96);
+      margin-bottom: 4px;
+    }
+
+    .feed-item-title {
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 1px;
+    }
+
+    .feed-item-meta {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .mini-widgets {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 6px;
+    }
+
+    @media (max-width: 700px) {
+      .mini-widgets {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .widget {
+      border-radius: 12px;
+      border: 1px solid rgba(55,65,81,0.8);
+      background: rgba(2,6,23,0.96);
+      padding: 6px 7px;
+      font-size: 12px;
+    }
+
+    .widget-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 3px;
+    }
+
+    /* GLITCH ANIMATIONS */
+
+    @keyframes glitchSkew {
+      0% { transform: skew(0deg); }
+      20% { transform: skew(1deg); }
+      40% { transform: skew(-1deg); }
+      60% { transform: skew(0.5deg); }
+      80% { transform: skew(-0.5deg); }
+      100% { transform: skew(0deg); }
+    }
+
+    @keyframes glitchShift {
+      0%   { clip-path: inset(0 0 0 0); }
+      15%  { clip-path: inset(5% 0 40% 0); }
+      30%  { clip-path: inset(60% 0 10% 0); }
+      45%  { clip-path: inset(20% 0 60% 0); }
+      60%  { clip-path: inset(40% 0 30% 0); }
+      75%  { clip-path: inset(10% 0 70% 0); }
+      100% { clip-path: inset(0 0 0 0); }
+    }
+
+    .glitch-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+      z-index: 5;
+    }
+
+    .glitch-overlay .g-layer {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(34,197,94,0.12),
+        rgba(34,197,94,0.12) 1px,
+        transparent 2px,
+        transparent 3px
+      );
+      opacity: 0.75;
+      animation: glitchShift 1s infinite linear alternate-reverse;
+    }
+
+    .glitch-overlay .g-layer:nth-child(2) {
+      mix-blend-mode: lighten;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(59,130,246,0.2),
+        rgba(59,130,246,0.2) 1px,
+        transparent 2px,
+        transparent 3px
+      );
+      animation-duration: 1.4s;
+    }
+
+    .glitching #normalScreen {
+      animation: glitchSkew 0.6s infinite steps(2, end);
+      filter: contrast(1.15) saturate(1.1);
+    }
+
+    .glitching .glitch-overlay {
+      opacity: 1;
+    }
+
+    .glitch-hard #normalScreen {
+      filter: blur(3px) contrast(1.4);
+      transform: scale(1.02);
+      opacity: 0.12;
+    }
+
+    /* TERMINAL INFECTÉ */
+
+    #infectedTerminal {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+    }
+
+    #infectedTerminal.visible {
+      display: block;
+      opacity: 1;
+    }
+
+    .terminal-frame {
+      border-radius: 18px;
+      border: 1px solid rgba(34,197,94,0.5);
+      background: radial-gradient(circle at top left, #020617, #000);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 22px 50px rgba(0,0,0,0.95);
+      padding: 10px 10px 8px;
+      max-width: 980px;
+      margin: 10px auto 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      color: #bbf7d0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .t-buttons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .t-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,1);
+    }
+
+    .t-dot.red { background: #ef4444; }
+    .t-dot.yellow { background: #eab308; }
+    .t-dot.green { background: #22c55e; }
+
+    .t-title {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .t-status {
+      font-size: 11px;
+      color: var(--accent-2);
+    }
+
+    .terminal-body {
+      border-radius: 14px;
+      border: 1px solid rgba(34,197,94,0.5);
+      background: radial-gradient(circle at top left, rgba(4,25,15,0.98), #020617);
+      padding: 8px 9px 8px;
+      font-size: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .terminal-output-line {
+      margin-bottom: 2px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .terminal-output-line span.prompt {
+      color: var(--accent);
+    }
+
+    .terminal-output-line.system {
+      color: #4ade80;
+    }
+
+    .terminal-output-line.warn {
+      color: #facc15;
+    }
+
+    .terminal-output-line.error {
+      color: #fca5a5;
+    }
+
+    .terminal-output-line.kiddie {
+      color: #a5b4fc;
+    }
+
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      border-top: 1px solid rgba(34,197,94,0.4);
+      padding-top: 4px;
+    }
+
+    #terminalInput {
+      flex: 1;
+      background: #020617;
+      border-radius: 4px;
+      border: 1px solid rgba(34,197,94,0.6);
+      color: #bbf7d0;
+      font-family: inherit;
+      font-size: 12px;
+      padding: 3px 5px;
+      outline: none;
+    }
+
+    #terminalInput:focus {
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.5);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 6px;
+      height: 12px;
+      background: #bbf7d0;
+      margin-left: 2px;
+      animation: blinkCursor 1s infinite;
+    }
+
+    @keyframes blinkCursor {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+
+    .terminal-options {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+      border-radius: 12px;
+      border: 1px solid rgba(34,197,94,0.4);
+      background: rgba(2,6,23,0.96);
+      padding: 6px 7px;
+    }
+
+    .terminal-options-title {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 4px;
+    }
+
+    .opt-list {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 4px;
+    }
+
+    @media (max-width: 700px) {
+      .opt-list {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .opt-btn {
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,197,94,0.6);
+      background: rgba(2,6,23,0.96);
+      color: #bbf7d0;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .opt-btn span.num {
+      color: var(--accent);
+      margin-right: 4px;
+    }
+
+    .terminal-footer {
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+      opacity: 0.85;
+    }
+
+    .terminal-footer small {
+      opacity: 0.85;
+    }
+
+    .link-btn {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="glitch-overlay" id="glitchOverlay">
+    <div class="g-layer"></div>
+    <div class="g-layer"></div>
+  </div>
+
+  <div class="shell">
+    <!-- ÉCRAN NORMAL (TABLEAU DE BORD) -->
+    <div id="normalScreen">
+      <header class="normal-header">
+        <div class="nh-left">
+          <div class="nh-icon">MS</div>
+          <div class="nh-text">
+            <div class="nh-title">Manual de Survie · Dashboard</div>
+            <div class="nh-sub">
+              Vue d’ensemble de ta journée, <strong>tout à fait normale</strong>.
+              Indicateurs, mini flux d’actualités, météo sociale.
+            </div>
+          </div>
+        </div>
+        <div class="nh-right">
+          <span class="code">/dash/matin</span>
+          <small>Statut système : <span id="sysStatus">OK</span></small>
+        </div>
+      </header>
+
+      <main class="normal-grid">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="dot"></span>
+              <span>Flux de la journée</span>
+            </div>
+            <span class="pill">Actus soigneusement choisies (par personne)</span>
+          </div>
+          <div class="feed" id="fakeFeed">
+            <div class="feed-item">
+              <div class="feed-item-title">Plan d’austérité 2.0 : « Effort partagé », prime aux algorithmes</div>
+              <div class="feed-item-meta">Politique · Il y a 7 min · Source : fil général</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-item-title">Un nouveau réseau social promet de « réparer le débat public »</div>
+              <div class="feed-item-meta">Tech & com · Il y a 18 min · Source : flux personnalisé</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-item-title">L’institution X publie un rapport sur la participation citoyenne… sans citoyens</div>
+              <div class="feed-item-meta">Société · Il y a 32 min · Source : monitoring silencieux</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-item-title">Promotion : -70% sur ta capacité d’attention (offre limitée)</div>
+              <div class="feed-item-meta">Pub déguisée · Il y a 42 min · Source : algorithme</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="dot"></span>
+              <span>Indicateurs perso (résumé)</span>
+            </div>
+            <span class="pill">Pseudo bien-être en un coup d’œil</span>
+          </div>
+          <div class="mini-widgets">
+            <div class="widget">
+              <div class="widget-title">Énergie mentale</div>
+              <div id="wEnergy">↘ 37% · Mode : café obligatoire</div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Niveau de saturation</div>
+              <div id="wLoad">↗ 71% · Notifications en embuscade</div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Confiance globale</div>
+              <div id="wTrust">≈ 46% · Variable selon l’heure</div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Cynisme</div>
+              <div id="wCynic">↑ 63% · Humour noir recommandé</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- TERMINAL INFECTÉ -->
+    <div id="infectedTerminal">
+      <div class="terminal-frame">
+        <div class="terminal-header">
+          <div class="t-buttons">
+            <div class="t-dot red"></div>
+            <div class="t-dot yellow"></div>
+            <div class="t-dot green"></div>
+          </div>
+          <div class="t-title">/dev/ttyMSDA · session_001</div>
+          <div class="t-status" id="tStatus">INTRUSION EN COURS…</div>
+        </div>
+
+        <div class="terminal-body" id="terminalOutput">
+          <!-- lignes générées en JS -->
+        </div>
+
+        <div class="terminal-input-row">
+          <span class="terminal-output-line"><span class="prompt">></span></span>
+          <input id="terminalInput" type="text" autocomplete="off" spellcheck="false" />
+          <span class="cursor"></span>
+        </div>
+
+        <div class="terminal-options">
+          <div class="terminal-options-title">Options disponibles (tape le numéro ou clique) :</div>
+          <div class="opt-list">
+            <button class="opt-btn" data-choice="1">
+              <span class="num">[1]</span> Observer le chaos et prendre des notes
+            </button>
+            <button class="opt-btn" data-choice="2">
+              <span class="num">[2]</span> Tenter de reprendre un minimum le contrôle
+            </button>
+            <button class="opt-btn" data-choice="3">
+              <span class="num">[3]</span> Laisser les script kiddies jouer (mode sandbox)
+            </button>
+            <button class="opt-btn" data-choice="4">
+              <span class="num">[4]</span> Sauvegarder des preuves et quitter proprement
+            </button>
+          </div>
+        </div>
+
+        <div class="terminal-footer">
+          <small>Rappel : ceci est une simulation pédagogique. Si tu te reconnais, c’est un bug du système, pas de toi.</small>
+          <small>Pour revenir au jeu normal : <a href="menu.html" class="link-btn">menu du Manual de Survie</a>.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const body = document.body;
+    const normalScreen = document.getElementById("normalScreen");
+    const glitchOverlay = document.getElementById("glitchOverlay");
+    const infectedTerminal = document.getElementById("infectedTerminal");
+    const sysStatus = document.getElementById("sysStatus");
+
+    const terminalOutput = document.getElementById("terminalOutput");
+    const terminalInput = document.getElementById("terminalInput");
+    const tStatus = document.getElementById("tStatus");
+    const optButtons = document.querySelectorAll(".opt-btn");
+
+    let terminalInitialized = false;
+
+    function addLine(text, type = "system") {
+      const div = document.createElement("div");
+      div.className = "terminal-output-line " + type;
+      div.textContent = text;
+      terminalOutput.appendChild(div);
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+
+    function typeLines(lines, delayBetween = 200) {
+      let i = 0;
+      function next() {
+        if (i >= lines.length) return;
+        const { text, type } = lines[i];
+        addLine(text, type);
+        i++;
+        setTimeout(next, delayBetween);
+      }
+      next();
+    }
+
+    function initTerminal() {
+      if (terminalInitialized) return;
+      terminalInitialized = true;
+
+      const introLines = [
+        { text: "[!] Anomalie réseau détectée…", type: "warn" },
+        { text: "[!] Paquet suspect reçu depuis : 127.0.0.1 (ça sent le bricolage maison)", type: "warn" },
+        { text: "[+] Connexion établie avec : SCRIPT_KIDDIES_01", type: "system" },
+        { text: "[+] Message entrant :", type: "system" },
+        { text: "    \"hehe salut on teste des trucs désolé si ça clignote\"", type: "kiddie" },
+        { text: "    \"tkt on va rien casser (enfin on croit)\"", type: "kiddie" },
+        { text: "", type: "system" },
+        { text: "[*] Tu as encore la main sur quelques paramètres du système.", type: "system" },
+        { text: "[*] Choisis ton style de réaction :", type: "system" },
+        { text: "    1 = Observer · 2 = Reprendre un peu le contrôle · 3 = Mode bac à sable · 4 = Sauvegarder & quitter", type: "system" }
+      ];
+
+      typeLines(introLines, 260);
+      tStatus.textContent = "SESSION INFECTÉE (MAIS OBSERVABLE)";
+      terminalInput.focus();
+    }
+
+    function transitionToTerminal() {
+      // durcissement du glitch
+      body.classList.add("glitch-hard");
+      sysStatus.textContent = "???";
+      sysStatus.style.color = "#f97316";
+
+      setTimeout(() => {
+        normalScreen.style.display = "none";
+        infectedTerminal.classList.add("visible");
+        body.classList.remove("glitch-hard");
+        initTerminal();
+      }, 900);
+    }
+
+    function startGlitchSequence() {
+      // léger glitch
+      body.classList.add("glitching");
+      sysStatus.textContent = "BRUIT ANORMAL";
+      sysStatus.style.color = "#facc15";
+
+      // aggravation puis bascule
+      setTimeout(transitionToTerminal, 2600);
+    }
+
+    // Lancement auto après quelques secondes
+    setTimeout(startGlitchSequence, 3200);
+
+    // Terminal : gestion des commandes
+    function handleChoice(choice) {
+      const c = String(choice).trim();
+      if (!c) return;
+      addLine("> " + c, "system");
+
+      if (c === "1") {
+        addLine("[MODE 1] Observation active : tu laisses les script kiddies faire leurs bêtises, mais tu logues tout.", "system");
+        addLine("          Tu notes leurs réflexes, leurs limites, et surtout comment ton propre système réagit.", "system");
+        addLine("          IRL, c’est l’équivalent de : « Je ne peux pas tout empêcher, mais je vais comprendre ce qui se passe. »", "system");
+      } else if (c === "2") {
+        addLine("[MODE 2] Reprise minimale de contrôle : tu limites les dégâts sans tout dramatiser.", "system");
+        addLine("          Tu coupes ce qui est toxique, tu laisses tourner ce qui est juste bruyant.", "system");
+        addLine("          IRL, ça ressemble à : choisir où tu mets ton énergie au lieu de tout subir en vrac.", "system");
+      } else if (c === "3") {
+        addLine("[MODE 3] Bac à sable : tu enfermes les script kiddies dans un coin isolé du système.", "system");
+        addLine("          Tu les laisses expérimenter, mais sur une copie, pas sur ta vie réelle.", "system");
+        addLine("          IRL, c’est : tester, faire des brouillons, te planter en milieu sécurisé avant d’engager du vrai.", "system");
+      } else if (c === "4") {
+        addLine("[MODE 4] Sauvegarde & sortie propre : tu exportes les logs et tu fermes la session infectée.", "system");
+        addLine("          Tu gardes une trace, parce que la mémoire est une forme de protection à long terme.", "system");
+        addLine("          IRL : ça peut être écrire, archiver, en parler à quelqu’un avant de passer à autre chose.", "system");
+        addLine("", "system");
+        addLine("[*] Tu peux maintenant revenir au menu du Manual de Survie, ou rejouer un autre choix si ça t’amuse.", "system");
+      } else {
+        addLine("[?] Option inconnue. Utilise 1, 2, 3 ou 4.", "error");
+      }
+
+      terminalInput.value = "";
+    }
+
+    terminalInput.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter") {
+        handleChoice(terminalInput.value);
+      }
+    });
+
+    optButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const choice = btn.dataset.choice;
+        handleChoice(choice);
+      });
+    });
+
+    // Focus sur clic dans le terminal
+    terminalOutput.addEventListener("click", () => {
+      terminalInput.focus();
+    });
+  </script>
+</body>
+</html>
