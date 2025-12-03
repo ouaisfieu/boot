@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Neon Cosmic Casino</title>
+
+<style>
+:root {
+  --bg-main: #050017;
+  --bg-panel: #140837;
+  --accent-1: #ff6ad5;
+  --accent-2: #00f5ff;
+  --accent-3: #ffe45e;
+  --text-main: #ffffff;
+}
+
+/* RESET SIMPLE */
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #1a0250 0, #050017 45%, #000 100%);
+  color: var(--text-main);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* Canvas fond étoiles */
+#starsBg {
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:-1;
+}
+
+/* WRAPPER MOBILE FIRST */
+.app {
+  max-width:480px;
+  margin:0 auto;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  padding:10px 10px 80px;
+}
+
+/* HEADER */
+header {
+  text-align:center;
+  padding:10px 10px 6px;
+}
+header h1 {
+  font-size:1.5rem;
+  line-height:1.2;
+  margin-bottom:4px;
+}
+.badge {
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:0.7rem;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  box-shadow:0 0 8px rgba(0,245,255,0.6);
+}
+
+/* NEON CARTOON TEXT */
+.neon {
+  color:var(--accent-2);
+  text-shadow:
+    0 0 4px var(--accent-2),
+    0 0 10px var(--accent-2),
+    0 0 20px var(--accent-2);
+}
+
+/* PANNEAU PRINCIPAL */
+.panel {
+  background:rgba(10,0,40,0.85);
+  border-radius:20px;
+  padding:14px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.7),
+    0 0 12px rgba(0,245,255,0.3);
+  border:1px solid rgba(0,245,255,0.25);
+  backdrop-filter: blur(12px);
+}
+
+/* MENU BOUTONS – BOTTOM BAR MOBILE FIRST */
+#menuBar {
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:8px 8px 10px;
+  background:linear-gradient(180deg,rgba(5,0,30,0.2),rgba(5,0,24,0.95));
+  backdrop-filter: blur(14px);
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  z-index:10;
+}
+
+.menu-btn {
+  flex:0 0 auto;
+  border:none;
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:0.7rem;
+  color:#fff;
+  background:rgba(10,10,40,0.9);
+  display:flex;
+  align-items:center;
+  gap:4px;
+  white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,0.7);
+}
+.menu-btn span.emoji {
+  font-size:1rem;
+}
+.menu-btn.active {
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  box-shadow:0 0 12px rgba(0,245,255,0.7);
+}
+.menu-btn:active {
+  transform:scale(0.95);
+}
+
+/* ÉCRANS */
+.screen {
+  display:none;
+  margin-top:8px;
+}
+.screen.active {
+  display:block;
+  animation:fadeIn 0.25s ease-out;
+}
+
+.screen h2 {
+  font-size:1.1rem;
+  margin-bottom:4px;
+}
+.screen p.sub {
+  font-size:0.75rem;
+  opacity:0.8;
+  margin-bottom:10px;
+}
+
+/* BOUTONS JEU */
+.btn-main {
+  width:100%;
+  border:none;
+  border-radius:16px;
+  padding:10px 14px;
+  margin-top:12px;
+  font-size:0.95rem;
+  font-weight:600;
+  color:#120021;
+  background:linear-gradient(135deg,var(--accent-3),var(--accent-1));
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.8),
+    0 0 10px rgba(255,228,94,0.7);
+}
+.btn-main:active {
+  transform:translateY(2px) scale(0.98);
+  box-shadow:0 2px 6px rgba(0,0,0,0.7);
+}
+
+/* COMPOSANTS DE JEU */
+.slot-display {
+  font-size:2.4rem;
+  text-align:center;
+  margin:14px 0 2px;
+  font-weight:700;
+  letter-spacing:4px;
+}
+.slot-result {
+  text-align:center;
+  font-size:0.85rem;
+  min-height:1.8rem;
+}
+
+/* Effet spin slot */
+.slot-spin {
+  animation:slotSpin 0.5s ease-in-out;
+}
+@keyframes slotSpin {
+  0% { transform:translateY(0) scale(1); filter:blur(0); }
+  50% { transform:translateY(-6px) scale(1.1); filter:blur(1px); }
+  100% { transform:translateY(0) scale(1); filter:blur(0); }
+}
+
+.tag-warning {
+  display:inline-block;
+  padding:2px 8px;
+  font-size:0.7rem;
+  border-radius:999px;
+  background:rgba(255,80,80,0.15);
+  border:1px solid rgba(255,80,80,0.8);
+  color:#ffb3b3;
+  margin-top:4px;
+}
+
+/* ROULETTE */
+.roulette-num {
+  font-size:2.4rem;
+  text-align:center;
+  margin:14px 0;
+  font-weight:700;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 14px var(--accent-3);
+}
+.flash {
+  animation:flashy 0.4s ease-out;
+}
+@keyframes flashy {
+  0% { transform:scale(1); filter:brightness(1); }
+  50% { transform:scale(1.1); filter:brightness(2); }
+  100% { transform:scale(1); filter:brightness(1); }
+}
+
+/* BLACKJACK */
+.cards-line {
+  margin-top:8px;
+  font-size:0.85rem;
+}
+.card {
+  display:inline-block;
+  padding:6px 8px;
+  margin:4px 2px;
+  border-radius:10px;
+  background:#260b4a;
+  border:2px solid var(--accent-2);
+  box-shadow:0 2px 6px rgba(0,0,0,0.8);
+  font-weight:600;
+}
+#bjMsg {
+  margin-top:6px;
+  font-size:0.8rem;
+}
+
+/* PILE OU FACE */
+.pf-display {
+  font-size:2rem;
+  text-align:center;
+  margin:16px 0 4px;
+  text-shadow:0 0 10px var(--accent-1);
+}
+
+/* COSMIC DROP */
+.drop-display {
+  text-align:center;
+  font-size:1.6rem;
+  margin:16px 0 4px;
+  text-shadow:0 0 12px var(--accent-1);
+}
+
+/* DÉFIS */
+.challenge {
+  background:#1a0b3b;
+  border-radius:12px;
+  padding:8px;
+  margin:6px 0;
+  border:1px solid rgba(0,245,255,0.25);
+  font-size:0.8rem;
+  box-shadow:0 3px 8px rgba(0,0,0,0.7);
+}
+.challenge span {
+  font-size:0.8rem;
+}
+
+/* ANIMATIONS GLOBALES */
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(4px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.floating {
+  animation:floating 3.5s ease-in-out infinite;
+}
+@keyframes floating {
+  0% { transform:translateY(0); }
+  50% { transform:translateY(-4px); }
+  100% { transform:translateY(0); }
+}
+
+/* PETIT MESSAGE EN HAUT */
+.top-tip {
+  font-size:0.7rem;
+  opacity:0.8;
+  margin-top:2px;
+}
+
+/* SCROLLBAR MENU DISCRET */
+#menuBar::-webkit-scrollbar {
+  height:4px;
+}
+#menuBar::-webkit-scrollbar-thumb {
+  background:rgba(255,255,255,0.3);
+  border-radius:999px;
+}
+
+/* LÉGER RESPONSIVE TABLET/DESKTOP */
+@media (min-width:768px){
+  .app {
+    max-width:640px;
+    padding-bottom:100px;
+  }
+  header h1 {
+    font-size:1.8rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<canvas id="starsBg"></canvas>
+
+<div class="app">
+  <header class="floating">
+    <h1 class="neon">🎰 Neon Cosmic Casino</h1>
+    <div class="badge">Mode cartoon · Mobile first · Poussière d’étoiles</div>
+    <div class="top-tip">Tape sur les boutons du bas pour changer de mini-jeu.</div>
+    <div style="margin-top:6px; display:flex; justify-content:center; gap:14px; font-size:0.8rem;">
+  <div>💰 <span id="credits">1000</span> crédits</div>
+  <div>⚡ Combo : <span id="combo">1×</span></div>
+</div>
+<div id="cosmicEvent" style="
+    text-align:center;
+    margin-top:4px;
+    font-size:0.75rem;
+    color:#ffe45e;
+    text-shadow:0 0 8px #ffe45e;">
+</div>
+
+  </header>
+
+  <main class="panel">
+    <!-- SLOT 642 -->
+    <section id="screen-slot" class="screen active">
+      <h2 class="neon">Machine à Sous « Le 642 »</h2>
+      <p class="sub">Si tu tombes sur <strong>642</strong> → <em>LA LOOZE ULTIME</em> 💀</p>
+      <div id="slotArea" class="slot-display">- - -</div>
+      <div id="slotResult" class="slot-result"></div>
+      <div class="tag-warning">⚠️ Ne jamais souhaiter 6-4-2.</div>
+      <button class="btn-main" onclick="slotPlay()">🎲 Lancer les rouleaux</button>
+    </section>
+
+    <!-- ROULETTE -->
+    <section id="screen-roulette" class="screen">
+      <h2 class="neon">Hypernova Roulette</h2>
+      <p class="sub">Un numéro entre <strong>0</strong> et <strong>36</strong>. Rouge, Noir… ou Singularité.</p>
+      <div id="rouletteNumber" class="roulette-num">?</div>
+      <button class="btn-main" onclick="roulettePlay()">🎡 Tourner la roue</button>
+    </section>
+
+    <!-- BLACKJACK -->
+    <section id="screen-blackjack" class="screen">
+      <h2 class="neon">Blackjack Flash</h2>
+      <p class="sub">Atteins 21 sans exploser. La maison t’observe 👀</p>
+      <div id="bjArea" class="cards-line"></div>
+      <div id="bjMsg"></div>
+      <button class="btn-main" onclick="bjStart()">🃏 Nouvelle main</button>
+      <button class="btn-main" style="margin-top:6px;background:linear-gradient(135deg,var(--accent-2),var(--accent-1));" onclick="bjHit()">➕ Carte</button>
+      <button class="btn-main" style="margin-top:6px;background:linear-gradient(135deg,#9effa5,var(--accent-2));" onclick="bjStay()">✋ Rester</button>
+    </section>
+
+    <!-- PILE OU FACE -->
+    <section id="screen-pileface" class="screen">
+      <h2 class="neon">Pile ou Face x1000</h2>
+      <p class="sub">Pur hasard, pure foi. Pile ? Face ? Autre chose ?</p>
+      <div id="pfResult" class="pf-display">?</div>
+      <button class="btn-main" onclick="pfPlay()">🪙 Lancer la pièce</button>
+    </section>
+
+    <!-- COSMIC DROP -->
+    <section id="screen-drop" class="screen">
+      <h2 class="neon">Cosmic Drop</h2>
+      <p class="sub">Récupère du loot cosmique venu de dimensions douteuses.</p>
+      <div id="dropLoot" class="drop-display">Aucun loot… encore.</div>
+      <button class="btn-main" onclick="dropPlay()">🌌 Lancer un Drop</button>
+    </section>
+
+    <!-- DÉFIS -->
+    <section id="screen-defis" class="screen">
+      <h2 class="neon">Défis du Jour</h2>
+      <p class="sub">À cocher mentalement, ou sur ton carnet de la Looze.</p>
+      <div id="challengeList"></div>
+      <button class="btn-main" onclick="generateChallenges()">🔥 Nouveau tirage de défis</button>
+    </section>
+  </main>
+</div>
+
+<!-- BARRE DE NAVIGATION DES MINI-JEUX -->
+<nav id="menuBar">
+  <button class="menu-btn active" data-target="slot" onclick="showScreen('slot', this)">
+    <span class="emoji">🎰</span><span>Slot 642</span>
+  </button>
+  <button class="menu-btn" data-target="roulette" onclick="showScreen('roulette', this)">
+    <span class="emoji">🎡</span><span>Roulette</span>
+  </button>
+  <button class="menu-btn" data-target="blackjack" onclick="showScreen('blackjack', this)">
+    <span class="emoji">🃏</span><span>Blackjack</span>
+  </button>
+  <button class="menu-btn" data-target="pileface" onclick="showScreen('pileface', this)">
+    <span class="emoji">🪙</span><span>Pile/Face</span>
+  </button>
+  <button class="menu-btn" data-target="drop" onclick="showScreen('drop', this)">
+    <span class="emoji">💎</span><span>Cosmic Drop</span>
+  </button>
+  <button class="menu-btn" data-target="defis" onclick="showScreen('defis', this)">
+    <span class="emoji">📋</span><span>Défis</span>
+  </button>
+</nav>
+
+<script>
+
+
+/* ============================================================
+    SYSTÈME DE CRÉDITS + COMBO
+   ============================================================ */
+
+let credits = 1000;
+let combo = 1;
+
+function addCredits(amount){
+  credits += amount * combo;
+  if(credits < 0) credits = 0;
+  updateHUD();
+
+  // petit effet visuel
+  const el = document.getElementById("credits");
+  el.style.transition = "0.25s";
+  el.style.transform = "scale(1.2)";
+  setTimeout(()=> el.style.transform = "scale(1)", 250);
+}
+
+function increaseCombo(){
+  combo++;
+  updateHUD();
+}
+
+function resetCombo(){
+  combo = 1;
+  updateHUD();
+}
+
+function updateHUD(){
+  document.getElementById("credits").textContent = credits;
+  document.getElementById("combo").textContent = combo + "×";
+}
+
+/* ============================================================
+    INTÉGRATION SIMPLE DANS LES MINI-JEUX
+   ============================================================ */
+
+// SLOT 642 — récompenses/pénalités
+const oldSlotPlay = slotPlay;
+slotPlay = function(){
+  oldSlotPlay();
+
+  const text = document.getElementById("slotResult").textContent;
+
+  if(text.includes("JACKPOT")){
+    addCredits(150);
+    increaseCombo();
+  }
+  else if(text.includes("Looze")){
+    addCredits(-200);
+    resetCombo();
+  }
+  else if(text.includes("Presque")){
+    addCredits(20);
+  }
+  else {
+    addCredits(-10);
+    resetCombo();
+  }
+};
+
+// ROULETTE
+const oldRoulette = roulettePlay;
+roulettePlay = function(){
+  oldRoulette();
+  const n = parseInt(document.getElementById("rouletteNumber").textContent);
+
+  if(n === 0){
+    addCredits(200);
+    increaseCombo();
+  }
+  else if(n % 2 === 0){
+    addCredits(50);
+  } else {
+    addCredits(-15);
+    resetCombo();
+  }
+};
+
+// BLACKJACK
+const oldBjStay = bjStay;
+bjStay = function(){
+  oldBjStay();
+  const msg = document.getElementById("bjMsg").textContent;
+  if(msg.includes("Gagné")){
+    addCredits(100);
+    increaseCombo();
+  } else if(msg.includes("Égalité")) {
+    addCredits(0);
+  } else {
+    addCredits(-50);
+    resetCombo();
+  }
+};
+
+// PILE / FACE
+const oldPf = pfPlay;
+pfPlay = function(){
+  oldPf();
+
+  const val = document.getElementById("pfResult").textContent;
+  if(Math.random() < 0.5){
+    addCredits(15);
+    increaseCombo();
+  } else {
+    addCredits(-10);
+    resetCombo();
+  }
+};
+
+// COSMIC DROP
+const oldDrop = dropPlay;
+dropPlay = function(){
+  oldDrop();
+  addCredits( Math.floor(Math.random()*80) );
+  increaseCombo();
+};
+
+
+/* ============================================================
+    ÉVÉNEMENTS COSMIQUES (random every 40–90 seconds)
+   ============================================================ */
+
+const cosmicEvents = [
+  {
+    name: "🌠 Pluie de Jackpots !",
+    effect:()=> combo += 2,
+    duration:8000,
+    message:"Tous les gains doublent pendant quelques secondes !"
+  },
+  {
+    name:"⚡ Orage Stellaire !",
+    effect:()=> credits += 300,
+    duration:5000,
+    message:"Un éclair cosmique t'offre +300 crédits !"
+  },
+  {
+    name:"🌀 Glitch Quantique !",
+    effect:()=> { combo += 1; credits += 150; },
+    duration:7000,
+    message:"Les lois de la physique clignotent : boost + crédits !"
+  },
+  {
+    name:"💥 Big Boost Galactique !",
+    effect:()=> { credits += 500; combo = combo + 3; },
+    duration:9000,
+    message:"Explosion de chance !"
+  }
+];
+
+function launchRandomCosmicEvent(){
+  const ev = cosmicEvents[Math.floor(Math.random()*cosmicEvents.length)];
+
+  const display = document.getElementById("cosmicEvent");
+  display.textContent = ev.name + " — " + ev.message;
+
+  ev.effect();
+  updateHUD();
+
+  // petit effet visuel
+  display.style.opacity = 1;
+  display.style.filter = "blur(0px)";
+  display.style.transition = "1s";
+
+  setTimeout(()=>{
+    display.style.opacity = 0;
+    display.style.filter = "blur(4px)";
+  }, ev.duration);
+
+  // re-lance un event dans 40–90 sec
+  const next = Math.floor(40000 + Math.random()*50000);
+  setTimeout(launchRandomCosmicEvent, next);
+}
+
+// Lancement initial
+setTimeout(launchRandomCosmicEvent, 5000);
+
+
+
+/* ========= FOND COSMIQUE : POUSSIÈRE D'ÉTOILES ========= */
+(function initStars(){
+  const canvas = document.getElementById('starsBg');
+  const ctx = canvas.getContext('2d');
+  let w, h, stars;
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    createStars();
+  }
+
+  function createStars(){
+    const count = Math.floor((w*h)/7000); // densité douce
+    stars = [];
+    for(let i=0;i<count;i++){
+      stars.push({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        r: Math.random()*1.6 + 0.4,
+        s: Math.random()*0.6 + 0.15,
+        o: Math.random()*0.5 + 0.3
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      const grad = ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r);
+      grad.addColorStop(0,`rgba(255,255,255,${s.o})`);
+      grad.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      s.y += s.s;
+      if(s.y > h+10) {
+        s.y = -10;
+        s.x = Math.random()*w;
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+})();
+
+/* ========= NAVIGATION MINI-JEUX ========= */
+function showScreen(key, btn){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+key).classList.add('active');
+
+  if(btn){
+    document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+}
+
+/* ========= SLOT 642 ========= */
+function slotPlay(){
+  const slotArea = document.getElementById("slotArea");
+  const slotResult = document.getElementById("slotResult");
+
+  // animation spin
+  slotArea.classList.remove('slot-spin');
+  void slotArea.offsetWidth; // reset trick
+  slotArea.classList.add('slot-spin');
+
+  const a = Math.floor(Math.random()*10);
+  const b = Math.floor(Math.random()*10);
+  const c = Math.floor(Math.random()*10);
+  const combo = `${a}${b}${c}`;
+  slotArea.textContent = `${a} ${b} ${c}`;
+
+  if(combo === "642"){
+    slotResult.innerHTML = "💀 LA LOOZE ULTIME 💀<br><span style='font-size:0.75rem;opacity:0.8;'>Tu as déclenché le bug cosmique officiel.</span>";
+  } else if(a===b && b===c){
+    slotResult.textContent = "✨ JACKPOT ! Triple "+a+" !";
+  } else if(a===b || b===c || a===c){
+    slotResult.textContent = "⭐ Presque ! Deux chiffres identiques…";
+  } else {
+    slotResult.textContent = "Rien du tout, retente ta chance.";
+  }
+}
+
+/* ========= ROULETTE ========= */
+function roulettePlay(){
+  const box = document.getElementById("rouletteNumber");
+  const n = Math.floor(Math.random()*37);
+  box.textContent = n;
+  box.classList.remove('flash');
+  void box.offsetWidth;
+  box.classList.add('flash');
+}
+
+/* ========= BLACKJACK ========= */
+let bjHand = [];
+let bjDealer = [];
+
+function bjStart(){
+  bjHand = [card(), card()];
+  bjDealer = [card()];
+  renderBJ("Nouvelle main. Tu joues contre la Galaxie.");
+}
+
+function bjHit(){
+  if(!bjHand.length) bjStart();
+  bjHand.push(card());
+  const score = bjScore(bjHand);
+  if(score > 21){
+    renderBJ("💥 Tu as explosé à "+score+" !");
+  } else {
+    renderBJ("Tu peux encore tenter un coup… ("+score+")");
+  }
+}
+
+function bjStay(){
+  if(!bjHand.length) bjStart();
+  while(bjScore(bjDealer) < 16){
+    bjDealer.push(card());
+  }
+  const p = bjScore(bjHand);
+  const d = bjScore(bjDealer);
+  if(d>21 || p>d) renderBJ("🎉 Gagné ! ("+p+" vs "+d+")");
+  else if(p===d) renderBJ("🤝 Égalité cosmique. ("+p+")");
+  else renderBJ("👾 Perdu… ("+p+" vs "+d+")");
+}
+
+function card(){
+  return Math.floor(Math.random()*10)+1;
+}
+function bjScore(h){
+  return h.reduce((a,b)=>a+b,0);
+}
+function renderBJ(msg){
+  const area = document.getElementById("bjArea");
+  area.innerHTML =
+    "<div><strong>Toi :</strong> " +
+    bjHand.map(v=>`<span class="card">${v}</span>`).join("") +
+    " = <strong>"+bjScore(bjHand)+"</strong></div>" +
+    "<div style='margin-top:4px;'><strong>Dealer :</strong> " +
+    bjDealer.map(v=>`<span class="card">${v}</span>`).join("") +
+    " = <strong>"+bjScore(bjDealer)+"</strong></div>";
+  document.getElementById("bjMsg").textContent = msg;
+}
+
+/* ========= PILE / FACE ========= */
+function pfPlay(){
+  const r = Math.random();
+  let txt = r < 0.5 ? "PILE" : "FACE";
+  if(Math.random() < 0.03) txt = "LA PIÈCE RESTE DEBOUT ?!";
+  const pf = document.getElementById("pfResult");
+  pf.textContent = txt;
+  pf.classList.remove('flash');
+  void pf.offsetWidth;
+  pf.classList.add('flash');
+}
+
+/* ========= COSMIC DROP ========= */
+function dropPlay(){
+  const loots = [
+    "✨ Supernova rare",
+    "🌌 Mini trou noir portatif",
+    "💫 Comète en solde",
+    "🪐 Fragment de planète disparue",
+    "🤖 Casino-bot légèrement louche",
+    "📡 Antenne à complots cosmiques",
+    "🧬 Gène de chance temporaire"
+  ];
+  const loot = loots[Math.floor(Math.random()*loots.length)];
+  const box = document.getElementById("dropLoot");
+  box.textContent = loot;
+  box.classList.remove('flash');
+  void box.offsetWidth;
+  box.classList.add('flash');
+}
+
+/* ========= DÉFIS ========= */
+function generateChallenges(){
+  const challenges = [
+    "Gagner 2 fois d’affilée au Blackjack.",
+    "Éviter 642 pendant 5 tours de suite.",
+    "Sortir un nombre pair à la roulette 3 fois.",
+    "Obtenir un loot avec un trou noir.",
+    "Faire 3 PILE ou 3 FACE d’affilée.",
+    "Gagner un jackpot (triple chiffre) au slot.",
+    "Perdre avec élégance 3 fois de suite.",
+    "Inventer une règle maison et la respecter."
+  ];
+  let out = "";
+  for(let i=0;i<3;i++){
+    const c = challenges[Math.floor(Math.random()*challenges.length)];
+    out += `<div class="challenge">🔥 <span>${c}</span></div>`;
+  }
+  document.getElementById("challengeList").innerHTML = out;
+}
+generateChallenges();
+</script>
+
+</body>
+</html>
