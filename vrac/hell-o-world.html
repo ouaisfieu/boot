@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>HELL O' WORLD · ORGA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050608;
+      --panel: rgba(6, 10, 20, 0.92);
+      --accent: #ff3366;
+      --accent-soft: rgba(255, 51, 102, 0.18);
+      --accent-2: #36e3ff;
+      --text: #f5f5f7;
+      --muted: #8b8ea0;
+      --code: #00ff9c;
+      --danger: #ffcc00;
+      --radius: 18px;
+      --shadow-soft: 0 0 30px rgba(0, 0, 0, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #151a30 0, #050608 55%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .frame {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+      border-radius: 28px;
+      padding: 2px;
+      background:
+        conic-gradient(from 120deg,
+          rgba(255, 51, 102, 0.15),
+          rgba(54, 227, 255, 0.5),
+          rgba(255, 204, 0, 0.45),
+          rgba(255, 51, 102, 0.9),
+          rgba(54, 227, 255, 0.2));
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      backdrop-filter: blur(40px);
+    }
+
+    .frame-inner {
+      background: radial-gradient(circle at top left, #151727 0, #050608 55%);
+      padding: 22px 20px 18px;
+      border-radius: 25px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scanlines::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.02) 0,
+        rgba(255, 255, 255, 0.02) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+      opacity: 0.6;
+      z-index: -1;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .logo-chip {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      border-radius: 22px;
+      background: radial-gradient(circle at 10% 0%, #30395a 0, #050608 55%);
+      box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-chip::before {
+      content: "ORGA";
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      font-size: 9px;
+      color: var(--accent-2);
+      text-shadow:
+        0 0 10px rgba(54, 227, 255, 0.9),
+        0 0 18px rgba(255, 255, 255, 0.6);
+      transform: translateY(-9px);
+    }
+
+    .logo-chip::after {
+      content: "";
+      position: absolute;
+      inset: auto 12px 18px;
+      height: 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7);
+      background-image:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent),
+        repeating-linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.7) 0,
+          rgba(0, 0, 0, 0.7) 6px,
+          rgba(255, 255, 255, 0.02) 6px,
+          rgba(255, 255, 255, 0.02) 8px
+        );
+      opacity: 0.9;
+    }
+
+    .title-block {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    h1 {
+      font-size: clamp(1.7rem, 2.3vw, 2.2rem);
+      line-height: 1.1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow:
+        0 0 12px rgba(255, 51, 102, 0.7),
+        0 0 24px rgba(255, 51, 102, 0.4);
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    h1 span {
+      display: inline-block;
+      transform-origin: center;
+      animation: glitch 2.8s infinite ease-in-out alternate-reverse;
+    }
+
+    @keyframes glitch {
+      0%   { transform: translate(0, 0) skewX(0deg); opacity: 1; }
+      7%   { transform: translate(-1px, 0.5px) skewX(-4deg); }
+      9%   { transform: translate(1px, -0.5px) skewX(4deg); }
+      11%  { transform: translate(0, 0) skewX(0deg); }
+      100% { transform: translate(0, 0) skewX(0deg); opacity: 1; }
+    }
+
+    .subtitle {
+      font-size: 0.86rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+    }
+
+    .tagline {
+      margin-top: 6px;
+      font-size: 0.86rem;
+      color: var(--text);
+      opacity: 0.95;
+    }
+
+    .usb-pill {
+      margin-left: auto;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.04), transparent);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .usb-pill span {
+      color: var(--danger);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 820px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .usb-pill {
+        margin-left: 0;
+      }
+    }
+
+    .panel {
+      border-radius: var(--radius);
+      padding: 16px 16px 14px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+        radial-gradient(circle at top left, rgba(255, 51, 102, 0.06), transparent 60%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+      position: relative;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), transparent 58%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease-out;
+    }
+
+    .panel:hover::before {
+      opacity: 0.08;
+    }
+
+    .panel-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .panel-label-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(255, 51, 102, 0.9);
+      animation: pulse 1.6s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%   { transform: scale(0.9); opacity: 0.8; }
+      50%  { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+
+    .story {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .story code {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.8rem;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: var(--code);
+    }
+
+    .highlight {
+      color: var(--accent-2);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .missions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .mission {
+      position: relative;
+      border-radius: 12px;
+      padding: 8px 10px 8px;
+      background: radial-gradient(circle at top left, rgba(54, 227, 255, 0.12), rgba(10, 10, 16, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 140ms ease-out, box-shadow 140ms ease-out, border-color 140ms ease-out;
+    }
+
+    .mission.locked {
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.03), rgba(10, 10, 16, 0.95));
+    }
+
+    .mission:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .mission-id {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .mission-title {
+      margin-top: 2px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--danger);
+    }
+
+    .mission-body {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .mission-note {
+      margin-top: 3px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .mission-tag {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(0, 0, 0, 0.6);
+      color: var(--muted);
+    }
+
+    .mission.locked .mission-body,
+    .mission.locked .mission-note {
+      filter: blur(3px);
+    }
+
+    .mission.locked .mission-tag {
+      color: #ff7a7a;
+      border-color: rgba(255, 122, 122, 0.5);
+    }
+
+    .mission.locked .mission-title {
+      color: #ff7a7a;
+    }
+
+    .password-hint {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .password-input {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .password-input input {
+      flex: 1;
+      min-width: 0;
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.7);
+      color: var(--text);
+      font-size: 0.8rem;
+    }
+
+    .password-input button {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: radial-gradient(circle at top, rgba(255, 51, 102, 0.9), rgba(255, 51, 102, 0.4));
+      color: #fff;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: transform 80ms ease-out, box-shadow 80ms ease-out, filter 80ms ease-out;
+      box-shadow: 0 0 16px rgba(255, 51, 102, 0.4);
+    }
+
+    .password-input button:hover {
+      transform: translateY(-0.5px);
+      filter: brightness(1.1);
+      box-shadow: 0 0 20px rgba(255, 51, 102, 0.7);
+    }
+
+    .password-input button:active {
+      transform: translateY(0.5px) scale(0.99);
+      filter: brightness(0.9);
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      justify-content: space-between;
+    }
+
+    .footer strong {
+      color: var(--accent-2);
+      font-weight: 500;
+    }
+
+    .footer small {
+      opacity: 0.7;
+    }
+
+    .rules {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .rules span {
+      display: block;
+    }
+
+    .rules span:nth-child(1) { color: rgba(255, 255, 255, 0.8); }
+    .rules span:nth-child(2) { color: rgba(255, 255, 255, 0.64); }
+    .rules span:nth-child(3) { color: rgba(255, 255, 255, 0.48); }
+
+    .terminal {
+      margin-top: 6px;
+      padding: 10px 10px 9px;
+      border-radius: 11px;
+      background: rgba(0, 0, 0, 0.82);
+      border: 1px solid rgba(0, 0, 0, 0.9);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.82rem;
+      color: var(--code);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      position: absolute;
+      inset: 0 auto auto 0;
+      height: 18px;
+      border-radius: 11px 11px 0 0;
+      background: linear-gradient(90deg, #14141c, #08080b);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 8px;
+      color: var(--muted);
+      font-size: 0.68rem;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #ff5f57;
+      box-shadow: 0 0 6px rgba(255, 95, 87, 0.8);
+    }
+
+    .dot:nth-child(2) {
+      background: #febc2e;
+      box-shadow: 0 0 6px rgba(254, 188, 46, 0.8);
+    }
+
+    .dot:nth-child(3) {
+      background: #28c840;
+      box-shadow: 0 0 6px rgba(40, 200, 64, 0.8);
+    }
+
+    .terminal-body {
+      margin-top: 18px;
+      white-space: pre-line;
+      line-height: 1.4;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: var(--code);
+      margin-left: 4px;
+      animation: cursorBlink 0.9s infinite steps(1);
+      vertical-align: text-bottom;
+    }
+
+    @keyframes cursorBlink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .hint-inline {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .hint-inline code {
+      color: var(--danger);
+    }
+
+    .secret-revealed {
+      color: var(--danger);
+    }
+
+    /* Little floating label */
+    .floating-label {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(255, 255, 255, 0.5);
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: radial-gradient(circle at top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+      backdrop-filter: blur(12px);
+      pointer-events: none;
+    }
+
+    .floating-label span {
+      color: var(--accent-2);
+    }
+
+    /* Small screen tweaks */
+    @media (max-width: 520px) {
+      .frame-inner {
+        padding: 18px 14px 14px;
+      }
+      .panel {
+        padding: 13px 12px 11px;
+      }
+      .terminal {
+        font-size: 0.76rem;
+      }
+      .usb-pill {
+        width: 100%;
+        justify-content: space-between;
+      }
+      h1 {
+        letter-spacing: 0.12em;
+      }
+    }
+  </style>
+</head>
+<body class="scanlines">
+  <div class="frame">
+    <div class="frame-inner">
+      <div class="floating-label">
+        <span>ORGA</span> · instance locale
+      </div>
+
+      <header>
+        <div class="logo-chip" aria-hidden="true"></div>
+        <div class="title-block">
+          <h1><span>HELL O' WORLD</span></h1>
+          <div class="subtitle">jeu de rôle statique · clé usb inside</div>
+          <p class="tagline">
+            Tu as trouvé la clé ORGA. Tu viens de démarrer une instance du jeu que tout le monde joue
+            sans le savoir.
+          </p>
+        </div>
+        <div class="usb-pill">
+          <span>●</span> clé&nbsp;: <strong>ORGA</strong>&nbsp;&nbsp;·&nbsp;&nbsp;<span>online / offline</span>
+        </div>
+      </header>
+
+      <div class="grid">
+        <!-- STORY / CONTEXTE -->
+        <section class="panel">
+          <div class="panel-label">
+            <span class="panel-label-dot"></span>
+            journal de bord · origine
+          </div>
+
+          <div class="story">
+            <p>
+              Auderghem. Une boîte à livres. Une clé USB grise, estampillée
+              <span class="highlight">«&nbsp;ORGA&nbsp;»</span>.
+            </p>
+            <p style="margin-top: 6px;">
+              À l’intérieur&nbsp;:
+            </p>
+            <ul style="list-style:none; margin-top: 5px; margin-bottom: 4px;">
+              <li>▸ <code>README.md</code> : <span class="muted">«&nbsp;Ne pas ouvrir avant Hell o' World&nbsp;»</span></li>
+              <li>▸ <code>EATME.md</code> : <span class="muted">&lt;vide&gt;vide&lt;/vide&gt;</span></li>
+              <li>▸ <code>SMOKEME.md</code> : un lien GitHub + «&nbsp;S. saura&nbsp;»</li>
+            </ul>
+
+            <p style="margin-top: 6px;">
+              Sur le dépôt GitHub, des fichiers HTML étranges, un mot de passe
+              <code>batman1234</code>, et un message final&nbsp;:
+            </p>
+            <p style="margin-top: 4px;">
+              <span class="muted">«&nbsp;Quand tu as trouvé le lien&nbsp;: poste
+              &lt;ipsum&gt;ipsum&lt;/ipsum&gt; et S. saura.&nbsp;»</span>
+            </p>
+
+            <p style="margin-top: 9px;">
+              Si tu lis ceci, c’est que quelqu’un t’a passé le rôle de
+              <em>maître·sse de ta propre instance</em> du jeu&nbsp;:
+              personne ne connaît les règles, la seule chose certaine, c’est que
+              <strong>le but est de retrouver la personne qui a lancé tout ça</strong>, faire
+              <code>&lt;copain-copain&gt;</code> avec ellui et continuer la chaîne.
+            </p>
+
+            <div class="rules" aria-label="pseudo règles du jeu">
+              <span>#1 on ne parle jamais des règles</span>
+              <span>#2 il n’y a pas de règle</span>
+              <span>#3 on s’en fout pas mal</span>
+            </div>
+
+            <div class="terminal" aria-label="terminal de démarrage du jeu">
+              <div class="terminal-header">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                <span>orga@usb:/hell-o-world</span>
+              </div>
+              <div class="terminal-body" id="terminal-body">
+                booting HELL O' WORLD…  
+                scanning filesystem… [OK]  
+                found: README.md · EATME.md · SMOKEME.md  
+                found: /html/??? (instructions incomplètes)  
+
+                > conseil_orga:
+                &nbsp;&nbsp;tu ne comprendras vraiment qu’en
+                &nbsp;&nbsp;<strong>créant ton propre site</strong>.  
+                > prochaine étape:
+                &nbsp;&nbsp;<span class="secret-revealed">forke cette page, déforme-la, 
+                et fais-en ton propre niveau.</span><span class="cursor"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MISSIONS -->
+        <section class="panel">
+          <div class="panel-label">
+            <span class="panel-label-dot"></span>
+            missions pour S. et les autres instances
+          </div>
+
+          <p class="hint-inline">
+            Chaque personne est une instance du jeu. Ta seule mission obligatoire&nbsp;:
+            <strong>laisser des traces</strong>.
+          </p>
+
+          <div class="missions">
+            <article class="mission" data-mission="1">
+              <div class="mission-id">mission_01 · HELL-O-SITE</div>
+              <div class="mission-title">Crée ton propre site minimal</div>
+              <div class="mission-body">
+                Crée une page HTML <em>à toi</em> (même moche, même en copiant-collant celle-ci) et
+                fais en sorte qu’elle tienne sur une clé USB ou un simple dossier.
+                Ajoute quelque part le motif&nbsp;:
+                <code>&lt;ipsum&gt;ipsum&lt;/ipsum&gt;</code>.
+              </div>
+              <div class="mission-note">
+                Poste ensuite un lien vers ton site quelque part sur le net
+                (forum, paste, réseau social, commentaire de vidéo…). Signale-le
+                sans expliquer, juste avec <code>#helloworld-orga</code>.
+              </div>
+              <div class="mission-tag">niveau · 01</div>
+            </article>
+
+            <article class="mission" data-mission="2">
+              <div class="mission-id">mission_02 · EATME</div>
+              <div class="mission-title">Remplir le &lt;vide&gt;</div>
+              <div class="mission-body">
+                Dans ton site, crée une section appelée <code>EATME</code> et remplis-la
+                avec quelque chose que tu trouves «&nbsp;insignifiant&nbsp;» (un ticket de
+                caisse, une phrase entendue dans le bus, un bug d’admin, une
+                absurdité bureaucratique…).
+              </div>
+              <div class="mission-note">
+                L’idée n’est pas de tout expliquer, mais de montrer un fragment de
+                ta réalité. S. ne sait pas qui tu es, mais il·elle reconnaîtra le ton.
+              </div>
+              <div class="mission-tag">niveau · 02</div>
+            </article>
+
+            <article class="mission" data-mission="3">
+              <div class="mission-id">mission_03 · SMOKEME</div>
+              <div class="mission-title">Détourner un mode d'emploi</div>
+              <div class="mission-body">
+                Sur ton site, invente un faux mode d’emploi pour
+                «&nbsp;utiliser le monde&nbsp;» (ou ton boulot, ou ta ville)
+                comme si c’était un vieux logiciel mal conçu.
+                Trois lignes suffisent.
+              </div>
+              <div class="mission-note">
+                Bonus&nbsp;: glisse une référence cachée à la surveillance, à la
+                paperasse ou à une absurdité organisationnelle qui t’agace.
+              </div>
+              <div class="mission-tag">niveau · 03</div>
+            </article>
+
+            <article class="mission locked" data-mission="4" id="secret-mission">
+              <div class="mission-id">mission_04 · S.SAURA</div>
+              <div class="mission-title">[mission verrouillée]</div>
+              <div class="mission-body">
+                Pour déverrouiller cette mission, il faut avoir compris ce qui
+                relie la clé ORGA, ton site et toutes les autres instances du jeu.
+              </div>
+              <div class="mission-note">
+                Indice&nbsp;: ce n’est pas un jeu de piste centralisé. C’est une
+                propagation de petites pages, de petits gestes, de petits
+                signaux dans la brume. Tu n’es pas seul·e.
+              </div>
+              <div class="mission-tag">mot de passe requis</div>
+            </article>
+          </div>
+
+          <div class="password-hint">
+            <div>
+              Déverrouiller la mission secrète&nbsp;?
+              <br />
+              <span class="muted">Si tu as exploré le dépôt, tu as déjà vu passer quelque chose…</span>
+            </div>
+          </div>
+
+          <div class="password-input" aria-label="champ pour mot de passe secret">
+            <input type="password" id="pw" placeholder="entre ici ce que tu crois être le mot de passe…" />
+            <button type="button" id="unlock-btn">unlock</button>
+          </div>
+
+          <p class="hint-inline" id="pw-msg" aria-live="polite"></p>
+        </section>
+      </div>
+
+      <footer class="footer">
+        <div>
+          <strong>Mode d’emploi minimal&nbsp;:</strong>
+          <span>enregistre ce fichier en <code>index.html</code>, ouvre-le dans ton navigateur, puis modifie-le jusqu’à ce qu’il ne ressemble plus qu’à toi.</span>
+        </div>
+        <div>
+          <small>prochaine instance&nbsp;: copie cette page sur une autre clé, laisse-la quelque part, et vois ce qu’il arrive.</small>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // Déverrouillage de la mission secrète
+    (function () {
+      var btn = document.getElementById("unlock-btn");
+      var pwInput = document.getElementById("pw");
+      var msg = document.getElementById("pw-msg");
+      var secretMission = document.getElementById("secret-mission");
+
+      function unlock() {
+        var value = (pwInput.value || "").trim();
+        if (!value) {
+          msg.textContent = "→ il faut taper quelque chose avant d’essayer de tricher :)";
+          msg.style.color = "#8b8ea0";
+          return;
+        }
+
+        // Ici, tu peux changer le mot de passe pour ta propre version.
+        if (value === "batman1234") {
+          secretMission.classList.remove("locked");
+          secretMission.querySelector(".mission-title").textContent =
+            "Mission 04 · Passe le relais";
+          secretMission.querySelector(".mission-body").innerHTML =
+            "Trouve une manière de transmettre le jeu à quelqu’un d’autre : " +
+            "en laissant cette clé dans une boîte à livres, en glissant un lien vers ton site " +
+            "dans un coin obscur d’internet, ou en donnant une copie de ton site sur une clé USB.<br>" +
+            "Ajoute quelque part sur ton site la phrase : <code>&lt;ipsum&gt;ipsum&lt;/ipsum&gt;</code> " +
+            "et une marque discrète pour dire «&nbsp;S. saura&nbsp;».";
+
+          secretMission.querySelector(".mission-note").textContent =
+            "L’important n’est pas d’être trouvé immédiatement, mais de laisser une trace " +
+            "que quelqu’un pourra comprendre plus tard. Le créateur ou la créatrice du jeu " +
+            "est peut-être déjà tombé·e sur ton instance sans le dire.";
+
+          secretMission.querySelector(".mission-tag").textContent = "mission · débloquée";
+
+          msg.textContent = "mission_04 déverrouillée. Ne laisse pas ce mot de passe traîner tel quel dans ta propre version ; change-le, brouille les pistes.";
+          msg.style.color = "#36e3ff";
+          pwInput.value = "";
+        } else {
+          msg.textContent = "mot de passe incorrect. indice : il se cache déjà dans l’histoire de la clé.";
+          msg.style.color = "#ff7a7a";
+        }
+      }
+
+      btn.addEventListener("click", unlock);
+      pwInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          unlock();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
