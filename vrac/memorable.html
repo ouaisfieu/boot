@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>INSTANCE_Ø – Galaxie de Galaxies</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020014;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #38bdf8;
+      --accent2: #a855f7;
+      --accent3: #f97316;
+      --danger: #f97373;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #020617 0, #020617 45%, #000 100%);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      touch-action: manipulation;
+    }
+
+    body {
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+    }
+
+    /* -------- ÉCRAN DE CHARGEMENT -------- */
+
+    #loader-overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.25), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(236,72,153,0.25), transparent 60%),
+        rgba(3,7,18,0.98);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: opacity 0.5s ease;
+    }
+
+    #loader-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #loader-panel {
+      width: min(420px, 90vw);
+      border-radius: 1.5rem;
+      padding: 1.2rem 1.1rem 1rem;
+      background:
+        radial-gradient(circle at 0 0, rgba(248,250,252,0.08), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(248,250,252,0.06), transparent 55%),
+        rgba(15,23,42,0.98);
+      border: 1px solid rgba(148,163,184,0.7);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,0.98),
+        0 0 40px rgba(15,23,42,0.9);
+    }
+
+    #loader-title {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #bfdbfe;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    #loader-title span.sub {
+      font-size: 0.64rem;
+      color: var(--soft);
+      letter-spacing: 0.12em;
+    }
+
+    #loader-log {
+      font-family: ui-monospace, Menlo, Monaco, Consolas, "SF Mono", monospace;
+      font-size: 0.72rem;
+      color: var(--soft);
+      background: rgba(15,23,42,0.85);
+      border-radius: 0.9rem;
+      padding: 0.6rem 0.7rem;
+      max-height: 140px;
+      overflow: hidden;
+      margin-bottom: 0.7rem;
+      border: 1px solid rgba(51,65,85,0.8);
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.1));
+    }
+
+    #loader-log-line {
+      white-space: pre-wrap;
+    }
+
+    #loader-bar {
+      position: relative;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(30,64,175,0.7);
+      overflow: hidden;
+      margin-bottom: 0.4rem;
+    }
+
+    #loader-bar-inner {
+      position: absolute;
+      inset: 0;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        rgba(56,189,248,1),
+        rgba(168,85,247,1),
+        rgba(248,113,113,1)
+      );
+      box-shadow:
+        0 0 18px rgba(56,189,248,0.9),
+        0 0 26px rgba(236,72,153,0.8);
+      transition: width 0.18s ease;
+    }
+
+    #loader-percent {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #loader-percent span.flag {
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    /* -------- HUD / UI PRINCIPALE -------- */
+
+    #hud-instance {
+      position: fixed;
+      top: 0.7rem;
+      left: 0.75rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background:
+        radial-gradient(circle at 0 0, rgba(248,250,252,0.14), transparent 60%),
+        rgba(15,23,42,0.9);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      z-index: 40;
+      box-shadow:
+        0 16px 50px rgba(0,0,0,0.9),
+        0 0 24px rgba(56,189,248,0.26);
+    }
+
+    #hud-instance span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+      animation: pulse 1.8s infinite;
+    }
+
+    #hud-instance span.sub {
+      text-transform: none;
+      letter-spacing: 0.08em;
+      color: var(--soft);
+      font-size: 0.63rem;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.3; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    #orb-toggle {
+      position: fixed;
+      bottom: 1.15rem;
+      right: 1.15rem;
+      width: 3.6rem;
+      height: 3.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      background:
+        radial-gradient(circle at 30% 20%, rgba(248,250,252,0.25), transparent 65%),
+        radial-gradient(circle at 60% 70%, rgba(56,189,248,0.3), transparent 70%),
+        rgba(15,23,42,0.92);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,0.8),
+        0 18px 40px rgba(15,23,42,0.9),
+        0 0 34px rgba(56,189,248,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--fg);
+      cursor: pointer;
+      z-index: 25;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.25s ease;
+    }
+
+    #orb-toggle-inner {
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      text-shadow: 0 0 12px rgba(248,250,252,0.9);
+      box-shadow:
+        0 0 22px rgba(129,140,248,0.7),
+        inset 0 0 16px rgba(15,23,42,0.9);
+    }
+
+    #orb-toggle:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow:
+        0 0 0 1px rgba(56,189,248,0.8),
+        0 26px 50px rgba(8,47,73,0.9);
+    }
+
+    #orb-toggle.open {
+      transform: translateY(0) scale(0.98);
+      box-shadow:
+        0 0 0 1px rgba(244,114,182,0.9),
+        0 20px 45px rgba(76,29,149,0.9);
+      background:
+        radial-gradient(circle at 20% 15%, rgba(248,250,252,0.18), transparent 65%),
+        radial-gradient(circle at 70% 80%, rgba(236,72,153,0.35), transparent 65%),
+        rgba(15,23,42,0.95);
+    }
+
+    #control-dock {
+      position: fixed;
+      left: 0.6rem;
+      right: 0.6rem;
+      bottom: 0.9rem;
+      max-width: 620px;
+      margin-inline: auto;
+      border-radius: 1.6rem;
+      padding: 0.9rem 1rem 1rem;
+      background:
+        radial-gradient(circle at 0 0, rgba(248,250,252,0.14), transparent 65%),
+        radial-gradient(circle at 100% 100%, rgba(248,250,252,0.08), transparent 65%),
+        rgba(2,6,23,0.96);
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow:
+        0 28px 90px rgba(0,0,0,0.96),
+        0 0 40px rgba(15,23,42,0.9);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      z-index: 24;
+      transform: translateY(120%);
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        transform 0.3s cubic-bezier(0.2, 0.7, 0.25, 1),
+        opacity 0.3s ease;
+    }
+
+    #control-dock.open {
+      transform: translateY(0%);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #dock-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+
+    #dock-title {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    #dock-title h1 {
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    #dock-title span.sub {
+      font-size: 0.66rem;
+      color: var(--soft);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #seed-badge {
+      font-family: ui-monospace, Menlo, Monaco, Consolas, "SF Mono", monospace;
+      font-size: 0.62rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.8);
+      color: #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.4rem;
+    }
+
+    #seed-badge span.label {
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.58rem;
+    }
+
+    #dock-actions {
+      display: flex;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .dock-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.6);
+      background: rgba(15,23,42,0.85);
+      color: #e0f2fe;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
+    }
+
+    .dock-btn.secondary {
+      border-color: rgba(148,163,184,0.7);
+      color: var(--soft);
+    }
+
+    .dock-btn span.icon {
+      font-size: 0.85rem;
+    }
+
+    #dock-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem 0.9rem;
+      margin-top: 0.4rem;
+    }
+
+    @media (min-width: 640px) {
+      #dock-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .group-label {
+      grid-column: span 2;
+    }
+
+    @media (min-width: 640px) {
+      .group-label {
+        grid-column: span 3;
+      }
+    }
+
+    .group-label span {
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 0.18rem;
+    }
+
+    .control-head {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.2rem;
+    }
+
+    .control-value {
+      font-variant-numeric: tabular-nums;
+      color: #e0f2fe;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        rgba(56,189,248,0.8),
+        rgba(168,85,247,0.8),
+        rgba(248,113,113,0.9)
+      );
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #020617;
+      border: 2px solid #e0f2fe;
+      box-shadow: 0 0 14px rgba(59,130,246,0.9);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #020617;
+      border: 2px solid #e0f2fe;
+      box-shadow: 0 0 14px rgba(59,130,246,0.9);
+      cursor: pointer;
+    }
+
+    .switch {
+      position: relative;
+      width: 36px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: rgba(30,64,175,0.7);
+      box-shadow: inset 0 0 0 1px rgba(129,140,248,0.5);
+      transition: background 0.2s ease;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      box-shadow: 0 0 12px rgba(59,130,246,0.9);
+      left: 2px;
+      top: 2px;
+      transition: transform 0.2s ease;
+    }
+
+    .switch input:checked + .slider {
+      background: rgba(22,163,74,0.9);
+      box-shadow: inset 0 0 0 1px rgba(34,197,94,0.7);
+    }
+
+    .switch input:checked + .slider::before {
+      transform: translateX(16px);
+    }
+
+    .toggle-row {
+      grid-column: span 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.1rem;
+      font-size: 0.66rem;
+      color: var(--soft);
+    }
+
+    @media (min-width: 640px) {
+      .toggle-row {
+        grid-column: span 3;
+      }
+    }
+
+    .toggle-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+
+    .toggle-row small {
+      font-size: 0.6rem;
+      text-align: right;
+    }
+
+    #pause-banner {
+      position: fixed;
+      top: env(safe-area-inset-top, 0.55rem);
+      right: 0.75rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 0 0, rgba(248,250,252,0.2), transparent 60%),
+        rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      z-index: 40;
+      box-shadow:
+        0 18px 60px rgba(0,0,0,0.95),
+        0 0 20px rgba(15,23,42,0.9);
+    }
+
+    #pause-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(22,163,74,0.95);
+    }
+
+    #pause-banner span.secondary {
+      letter-spacing: 0.08em;
+      text-transform: none;
+      color: var(--soft);
+      font-size: 0.64rem;
+    }
+
+    /* -------- MENU SECRET -------- */
+
+    #secret-overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0 0, rgba(59,130,246,0.35), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(236,72,153,0.35), transparent 60%),
+        rgba(2,6,23,0.98);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    #secret-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #secret-panel {
+      position: relative;
+      max-width: 720px;
+      width: calc(100% - 2.4rem);
+      border-radius: 1.8rem;
+      padding: 1.4rem 1.2rem 1.2rem;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(248,250,252,0.08), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(248,250,252,0.07), transparent 60%),
+        rgba(15,23,42,0.96);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,0.98),
+        0 0 0 1px rgba(148,163,184,0.32);
+      overflow: hidden;
+    }
+
+    #secret-panel::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.1), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(168,85,247,0.1), transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(244,63,94,0.1), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    #secret-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    #secret-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    #secret-title {
+      font-size: 0.85rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #bfdbfe;
+    }
+
+    #secret-title span {
+      display: block;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--soft);
+    }
+
+    #secret-close {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: var(--soft);
+      padding: 0.25rem 0.7rem;
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    #secret-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.3fr);
+      gap: 1.05rem;
+      margin-top: 0.3rem;
+    }
+
+    @media (max-width: 640px) {
+      #secret-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    #secret-glyphs {
+      font-family: ui-monospace, Menlo, Monaco, Consolas, "SF Mono", monospace;
+      font-size: 0.7rem;
+      line-height: 1.3;
+      color: #e5e7eb;
+      white-space: pre-wrap;
+      max-height: 210px;
+      overflow: hidden;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.1));
+    }
+
+    #secret-whispers {
+      font-size: 0.75rem;
+      color: var(--soft);
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    #secret-whispers p strong {
+      color: #fee2e2;
+      font-weight: 500;
+    }
+
+    .secret-control {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      margin-top: 0.15rem;
+    }
+
+    .secret-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.3rem;
+    }
+
+    .secret-label span.state {
+      color: #e0f2fe;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #secret-hint {
+      margin-top: 0.7rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+
+    #secret-hint span.key {
+      display: inline-block;
+      padding: 0.08rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      margin-inline: 0.11rem;
+      font-size: 0.58rem;
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+    }
+
+    /* Debug secret badge */
+    #secret-debug {
+      position: fixed;
+      left: 0.7rem;
+      bottom: 0.7rem;
+      border-radius: 999px;
+      padding: 0.25rem 0.55rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(15,23,42,0.9);
+      border: 1px dashed rgba(148,163,184,0.7);
+      color: var(--soft);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 26;
+    }
+
+    #secret-debug span.dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #4ade80;
+      box-shadow: 0 0 12px rgba(74,222,128,0.9);
+      margin-right: 0.25rem;
+    }
+
+    #secret-debug.hidden {
+      opacity: 0.15;
+    }
+  </style>
+</head>
+<body>
+  <!-- LOADER -->
+  <div id="loader-overlay">
+    <div id="loader-panel">
+      <div id="loader-title">
+        <span>INSTANCE_Ø // BOOT</span>
+        <span class="sub">simulateur d’univers portable</span>
+      </div>
+      <div id="loader-log">
+        <div id="loader-log-line"></div>
+      </div>
+      <div id="loader-bar">
+        <div id="loader-bar-inner"></div>
+      </div>
+      <div id="loader-percent">
+        <span id="loader-percent-text">00%</span>
+        <span class="flag">hors-ligne</span>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="universe"></canvas>
+
+  <div id="hud-instance">
+    <span class="dot"></span>
+    <span>INSTANCE_Ø – GALAXIE DE GALAXIES</span>
+    <span class="sub">mobile / clé usb / hors-ligne</span>
+  </div>
+
+  <div id="pause-banner">
+    <div id="pause-dot"></div>
+    <span>PAUSE COSMIQUE</span>
+    <span class="secondary">tap / clic = figer / relancer</span>
+  </div>
+
+  <button id="orb-toggle" aria-label="Ouvrir le panneau de contrôle">
+    <div id="orb-toggle-inner">✹</div>
+  </button>
+
+  <div id="control-dock" aria-label="Panneau de contrôle galactique">
+    <div id="dock-header">
+      <div id="dock-title">
+        <h1>GALAXIE DE GALAXIES</h1>
+        <span class="sub">mode : sieste psychédélique contrôlée</span>
+      </div>
+      <div id="dock-actions">
+        <button class="dock-btn secondary" id="btn-reset">
+          <span class="icon">↺</span> reset
+        </button>
+        <button class="dock-btn" id="btn-random">
+          <span class="icon">⚄</span> chaos
+        </button>
+      </div>
+    </div>
+
+    <div id="seed-badge">
+      <span class="label">seed</span>
+      <span id="seed-value">0000</span>
+    </div>
+
+    <div id="dock-grid">
+      <div class="group-label"><span>structure de l'univers</span></div>
+
+      <div class="control">
+        <div class="control-head">
+          CLUSTERS
+          <span class="control-value" id="cluster-value"></span>
+        </div>
+        <input type="range" id="cluster" min="1" max="8" value="4" />
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          GALAXIES / CLUSTER
+          <span class="control-value" id="galaxies-value"></span>
+        </div>
+        <input type="range" id="galaxies" min="3" max="24" value="12" />
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          ÉTOILES
+          <span class="control-value" id="stars-value"></span>
+        </div>
+        <input type="range" id="stars" min="200" max="2200" value="1000" />
+      </div>
+
+      <div class="group-label"><span>mouvements & dérives</span></div>
+
+      <div class="control">
+        <div class="control-head">
+          DRIFT
+          <span class="control-value" id="drift-value"></span>
+        </div>
+        <input type="range" id="drift" min="0" max="100" value="45" />
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          ROTATION
+          <span class="control-value" id="spin-value"></span>
+        </div>
+        <input type="range" id="spin" min="3" max="90" value="35" />
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          PROFONDEUR
+          <span class="control-value" id="depth-value"></span>
+        </div>
+        <input type="range" id="depth" min="3" max="12" value="7" />
+      </div>
+
+      <div class="group-label"><span>psychédélie contrôlée</span></div>
+
+      <div class="control">
+        <div class="control-head">
+          TRIP LEVEL
+          <span class="control-value" id="trip-value"></span>
+        </div>
+        <input type="range" id="trip" min="0" max="100" value="70" />
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          SATURATION
+          <span class="control-value" id="sat-value"></span>
+        </div>
+        <input type="range" id="sat" min="30" max="100" value="85" />
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          TRAÎNÉE
+          <span class="control-value" id="trail-value"></span>
+        </div>
+        <input type="range" id="trail" min="30" max="98" value="80" />
+      </div>
+
+      <div class="toggle-row">
+        <label>
+          <div class="switch">
+            <input type="checkbox" id="warp" checked />
+            <span class="slider"></span>
+          </div>
+          <span>mode warp (NASA sous LSD)</span>
+        </label>
+        <small>indice : secoue ton tél. ou ↑↑↓↓←→←→BA + dessine à la souris</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- menu secret -->
+  <div id="secret-overlay">
+    <div id="secret-panel">
+      <div id="secret-inner">
+        <div id="secret-head">
+          <div id="secret-title">
+            SALLE 13 :<span>PROTOCOLE PAUSE DYSTOPIQUE</span>
+          </div>
+          <button id="secret-close">fermer</button>
+        </div>
+
+        <div id="secret-body">
+          <div id="secret-glyphs"></div>
+
+          <div id="secret-whispers">
+            <p>
+              <strong>Tu viens de forcer un débordement de réalité.</strong><br/>
+              Soit tu as secoué ton téléphone, soit tu te souviens du Konami code.
+            </p>
+            <p>
+              Cet espace n’est pas un « menu ». C’est une<br/>
+              <em>console de maintenance de la simulation.</em>
+            </p>
+
+            <div class="secret-control">
+              <div class="secret-label">
+                BRUIT DE FOND GLOBAL
+                <span class="state" id="noise-state"></span>
+              </div>
+              <input type="range" id="noise" min="0" max="100" value="35" />
+            </div>
+
+            <div class="secret-control">
+              <div class="secret-label">
+                MAILLAGE DE SURVEILLANCE
+                <span class="state" id="mesh-state"></span>
+              </div>
+              <input type="range" id="mesh" min="0" max="100" value="20" />
+            </div>
+
+            <div class="secret-control">
+              <div class="secret-label">
+                FRACTURE DU RÉEL
+                <span class="state" id="glitch-state"></span>
+              </div>
+              <input type="range" id="glitch" min="0" max="100" value="25" />
+            </div>
+
+            <p id="secret-hint">
+              indice : <span class="key">PAUSE</span> reste l’outil le plus
+              sous-estimé contre <span class="key">LA MACHINE</span>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="secret-debug" class="hidden">
+    <span class="dot"></span> triggers : <span id="secret-source">idle</span>
+  </div>
+
+  <script>
+    (function() {
+      const canvas = document.getElementById("universe");
+      const ctx = canvas.getContext("2d");
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      let dpr = window.devicePixelRatio || 1;
+
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      // ----- RNG avec seed (mulberry32) -----
+      function createRng(seed) {
+        let t = seed >>> 0;
+        return function() {
+          t += 0x6D2B79F5;
+          let r = t;
+          r = Math.imul(r ^ (r >>> 15), r | 1);
+          r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+          return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function randRange(rng, min, max) {
+        return min + (max - min) * rng();
+      }
+
+      // Paramètres de l'univers
+      const universeParams = {
+        seed: Math.floor(Math.random() * 9999),
+        clusters: 4,
+        galaxiesPerCluster: 12,
+        starsPerGalaxy: 1000,
+        drift: 0.45,
+        spin: 35,
+        depthLayers: 7,
+        trip: 0.7,
+        saturation: 85,
+        trail: 0.8,
+        warp: true,
+        noise: 0.35,
+        mesh: 0.2,
+        glitch: 0.25,
+      };
+
+      // Structures
+      let backgroundStars = [];
+      let galaxyClusters = [];
+      let userParticles = [];
+
+      function createBackgroundStars(rng) {
+        backgroundStars = [];
+        const count = 180;
+        for (let i = 0; i < count; i++) {
+          backgroundStars.push({
+            x: rng() * width,
+            y: rng() * height,
+            size: randRange(rng, 0.3, 1.4),
+            alpha: randRange(rng, 0.15, 0.6),
+            twinkleSpeed: randRange(rng, 0.5, 2.5),
+            baseAlpha: randRange(rng, 0.1, 0.5),
+          });
+        }
+      }
+
+      function createGalaxyClusters() {
+        const rng = createRng(universeParams.seed);
+        const clusters = [];
+        const cx = width / 2;
+        const cy = height / 2;
+
+        for (let c = 0; c < universeParams.clusters; c++) {
+          const angle = (c / universeParams.clusters) * Math.PI * 2 + rng() * 0.7;
+          const radius = Math.min(width, height) * (0.15 + rng() * 0.35);
+          const jitter = Math.min(width, height) * 0.08;
+          const centerX = cx + Math.cos(angle) * radius + randRange(rng, -jitter, jitter);
+          const centerY = cy + Math.sin(angle) * radius * 0.7 + randRange(rng, -jitter, jitter);
+
+          const cluster = {
+            x: centerX,
+            y: centerY,
+            orbitRadius: radius,
+            orbitSpeed: randRange(rng, -0.001, 0.001),
+            orbitPhase: rng() * Math.PI * 2,
+            galaxies: [],
+          };
+
+          const galaxyCount = universeParams.galaxiesPerCluster;
+          const baseHue = randRange(rng, 180, 320);
+
+          for (let g = 0; g < galaxyCount; g++) {
+            const ang = (g / galaxyCount) * Math.PI * 2 + rng() * 0.6;
+            const dist = randRange(rng, 20, Math.min(width, height) * 0.18);
+            const galaxyX = centerX + Math.cos(ang) * dist;
+            const galaxyY = centerY + Math.sin(ang) * dist * randRange(rng, 0.5, 1.2);
+
+            const arms = 2 + Math.floor(rng() * 4);
+            const depth = 3 + Math.floor(rng() * universeParams.depthLayers);
+            const radiusFactor = randRange(rng, 0.35, 1.1);
+
+            const galaxy = {
+              x: galaxyX,
+              y: galaxyY,
+              arms,
+              depth,
+              radiusFactor,
+              rotationSpeed: (universeParams.spin * 0.0002) * (rng() > 0.5 ? 1 : -1),
+              rotationPhase: rng() * Math.PI * 2,
+              hue: (baseHue + randRange(rng, -40, 60)) % 360,
+              stars: [],
+            };
+
+            const starCount = Math.floor(
+              (universeParams.starsPerGalaxy / universeParams.clusters) *
+              randRange(rng, 0.4, 1.2)
+            );
+
+            for (let s = 0; s < starCount; s++) {
+              const armIndex = s % arms;
+              const armAngleOffset = (armIndex / arms) * Math.PI * 2;
+              const spiralT = rng();
+              const spiralRadius = spiralT * Math.min(width, height) * 0.24 * radiusFactor;
+              const angleNoise = (rng() - 0.5) * 0.4;
+              const starAngle = armAngleOffset + spiralT * 1.8 + angleNoise;
+
+              const depthLayer = 1 + Math.floor(rng() * depth);
+              const depthScale = (depthLayer / depth);
+
+              const hueShift = randRange(rng, -20, 20);
+
+              galaxy.stars.push({
+                baseRadius: spiralRadius,
+                baseAngle: starAngle,
+                depthLayer,
+                depthScale,
+                size: randRange(rng, 0.8, 1.8) * (0.5 + depthScale),
+                hueOffset: hueShift,
+                alpha: randRange(rng, 0.25, 0.85) * depthScale,
+              });
+            }
+
+            cluster.galaxies.push(galaxy);
+          }
+
+          clusters.push(cluster);
+        }
+
+        galaxyClusters = clusters;
+        createBackgroundStars(rng);
+      }
+
+      createGalaxyClusters();
+
+      // ----- PHYSIQUE : particules utilisateur -----
+      function spawnParticle(x, y, hueBase) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 0.5 + Math.random() * 1.8;
+        userParticles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1,
+          hue: (hueBase + (Math.random() * 80 - 40) + 360) % 360,
+          size: 2 + Math.random() * 3
+        });
+      }
+
+      function updateAndDrawParticles() {
+        const gravityCx = width / 2;
+        const gravityCy = height / 2;
+        const gravity = 0.0004;
+        const friction = 0.985;
+
+        for (let i = userParticles.length - 1; i >= 0; i--) {
+          const p = userParticles[i];
+          const dx = gravityCx - p.x;
+          const dy = gravityCy - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy) + 0.001;
+          const g = gravity;
+
+          p.vx += (dx / dist) * g * 60;
+          p.vy += (dy / dist) * g * 60;
+
+          p.vx *= friction;
+          p.vy *= friction;
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          p.life -= 0.008;
+
+          if (p.life <= 0 || p.x < -50 || p.x > width + 50 || p.y < -50 || p.y > height + 50) {
+            userParticles.splice(i, 1);
+            continue;
+          }
+
+          const alpha = Math.max(0, p.life) * 0.9;
+          const radius = p.size * (0.5 + universeParams.trip);
+          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius * 2);
+          grad.addColorStop(0, `hsla(${p.hue}, 100%, 75%, ${alpha})`);
+          grad.addColorStop(1, `hsla(${p.hue}, 90%, 45%, 0)`);
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, radius * 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // ----- POINTER : interaction / dessin -----
+      const pointer = {
+        x: width / 2,
+        y: height / 2,
+        down: false,
+        active: false,
+        lastActive: 0
+      };
+
+      function setPointerFromEvent(e) {
+        let clientX, clientY;
+        if (e.touches && e.touches[0]) {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        } else {
+          clientX = e.clientX;
+          clientY = e.clientY;
+        }
+        pointer.x = clientX;
+        pointer.y = clientY;
+        pointer.active = true;
+        pointer.lastActive = performance.now();
+      }
+
+      function pointerDown(e) {
+        e.preventDefault();
+        setPointerFromEvent(e);
+        pointer.down = true;
+        for (let i = 0; i < 6; i++) {
+          spawnParticle(pointer.x, pointer.y, 250);
+        }
+      }
+
+      function pointerMove(e) {
+        if (!pointer.down && !(e.touches && e.touches.length)) return;
+        e.preventDefault();
+        setPointerFromEvent(e);
+        const hueBase = 200 + universeParams.trip * 150;
+        for (let i = 0; i < 3; i++) {
+          spawnParticle(pointer.x, pointer.y, hueBase);
+        }
+      }
+
+      function pointerUp(e) {
+        if (e) e.preventDefault();
+        pointer.down = false;
+      }
+
+      canvas.addEventListener("mousedown", pointerDown);
+      canvas.addEventListener("mousemove", pointerMove);
+      window.addEventListener("mouseup", pointerUp);
+
+      canvas.addEventListener("touchstart", pointerDown, { passive: false });
+      canvas.addEventListener("touchmove", pointerMove, { passive: false });
+      window.addEventListener("touchend", pointerUp, { passive: false });
+
+      // ----- Animation -----
+      let paused = false;
+      let lastTime = 0;
+      const pauseDot = document.getElementById("pause-dot");
+
+      canvas.addEventListener("click", () => {
+        paused = !paused;
+        pauseDot.style.background = paused ? "#f97316" : "#22c55e";
+        pauseDot.style.boxShadow = paused
+          ? "0 0 12px rgba(248,113,113,0.95)"
+          : "0 0 12px rgba(22,163,74,0.95)";
+      });
+
+      function clearWithTrail() {
+        const fade = 1 - (universeParams.trail);
+        ctx.fillStyle = `rgba(1,3,10,${fade})`;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      function drawBackground(time) {
+        for (const s of backgroundStars) {
+          const tw = Math.sin(time * 0.001 * s.twinkleSpeed);
+          const a = s.baseAlpha + tw * 0.2;
+          ctx.fillStyle = `rgba(148,163,184,${a})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function drawGalaxyClusters(time) {
+        const t = time * 0.001;
+        const cx = width / 2;
+        const cy = height / 2;
+
+        const tripLevel = universeParams.trip;
+        const sat = universeParams.saturation;
+
+        const pointerEffectRadius = Math.min(width, height) * 0.35;
+        const pointerForce = pointer.down ? 1.3 : 0.7;
+
+        if (performance.now() - pointer.lastActive > 2500) {
+          pointer.active = false;
+        }
+
+        for (const cluster of galaxyClusters) {
+          const orbitPhase = cluster.orbitPhase + cluster.orbitSpeed * time * universeParams.drift * 0.5;
+          const orbitAmp = universeParams.drift * 60;
+          const ox = Math.cos(orbitPhase) * orbitAmp;
+          const oy = Math.sin(orbitPhase * 0.7) * orbitAmp * 0.6;
+
+          const clusterX = cluster.x + ox;
+          const clusterY = cluster.y + oy;
+
+          for (const galaxy of cluster.galaxies) {
+            const rot = galaxy.rotationPhase + galaxy.rotationSpeed * time;
+            const warpFactor = universeParams.warp ? 1.0 + 0.4 * universeParams.trip : 1.0;
+
+            const galaxyX = clusterX;
+            const galaxyY = clusterY;
+
+            for (const star of galaxy.stars) {
+              const r =
+                star.baseRadius * (0.3 + universeParams.drift * 0.7) * star.depthScale;
+              const angle =
+                star.baseAngle +
+                rot * (0.4 + star.depthScale) *
+                (universeParams.warp ? 1.3 : 0.7);
+
+              let x = galaxyX + Math.cos(angle) * r * warpFactor;
+              let y = galaxyY + Math.sin(angle) * r * warpFactor * 0.8;
+
+              // Interaction pointeur : effet lentille / vortex
+              if (pointer.active) {
+                const dxp = x - pointer.x;
+                const dyp = y - pointer.y;
+                const dist = Math.sqrt(dxp * dxp + dyp * dyp);
+                if (dist < pointerEffectRadius) {
+                  const f = (pointerEffectRadius - dist) / pointerEffectRadius;
+                  const dir = pointer.down ? 1 : -1;
+                  x += dxp * f * pointerForce * 0.5 * dir;
+                  y += dyp * f * pointerForce * 0.5 * dir;
+                }
+              }
+
+              const psin = Math.sin((t * 3 + r * 0.003) * (2 + tripLevel * 2));
+              const tripOffset = tripLevel * 40 * star.depthScale * psin;
+
+              x += Math.sin(r * 0.003 + t * 1.2) * tripOffset * 0.02;
+              y += Math.cos(r * 0.0034 + t * 1.4) * tripOffset * 0.022;
+
+              const timeHueShift = (tripLevel * 480 * Math.sin(t * 0.4 + star.baseRadius * 0.001)) % 360;
+              const hue = (galaxy.hue + star.hueOffset + timeHueShift) % 360;
+              const light = 45 + star.depthScale * 30;
+              const alpha = star.alpha * (0.35 + universeParams.trip * 0.5);
+
+              const radius = star.size * (1 + universeParams.trip * 0.5);
+
+              const grad = ctx.createRadialGradient(x, y, 0, x, y, radius * 2.4);
+              grad.addColorStop(
+                0,
+                `hsla(${hue}, ${sat}%, ${Math.min(light + 15, 85)}%, ${alpha})`
+              );
+              grad.addColorStop(
+                1,
+                `hsla(${hue}, ${sat}%, 40%, 0)`
+              );
+              ctx.fillStyle = grad;
+              ctx.beginPath();
+              ctx.arc(x, y, radius * 2.4, 0, Math.PI * 2);
+              ctx.fill();
+
+              if (universeParams.mesh > 0.03 && star.depthLayer === galaxy.depth && star.baseRadius > 160) {
+                if ((Math.floor(x / 32) + Math.floor(y / 32)) % 5 === 0) {
+                  const alphaGrid = universeParams.mesh * 0.35;
+                  ctx.strokeStyle = `rgba(148,163,184,${alphaGrid})`;
+                  ctx.lineWidth = 0.35;
+                  ctx.beginPath();
+                  const gx = Math.round(x / 28) * 28;
+                  ctx.moveTo(gx, 0);
+                  ctx.lineTo(gx, height);
+                  ctx.stroke();
+                }
+              }
+            }
+          }
+        }
+      }
+
+      function addNoiseLayer() {
+        if (universeParams.noise <= 0.02) return;
+        const intensity = universeParams.noise * 0.25;
+        const step = 5;
+        for (let x = 0; x < width; x += step) {
+          for (let y = 0; y < height; y += step) {
+            const v = (Math.random() - 0.5) * intensity * 255;
+            ctx.fillStyle = `rgba(${v},${v},${v},0.08)`;
+            ctx.fillRect(x, y, step, step);
+          }
+        }
+      }
+
+      function addGlitch(time) {
+        if (universeParams.glitch <= 0.02) return;
+        if (Math.random() > universeParams.glitch * 0.7) return;
+
+        const sliceHeight = height * (0.02 + Math.random() * 0.08);
+        const y = Math.random() * (height - sliceHeight);
+        const shift =
+          (Math.sin(time * 0.003) * universeParams.glitch * width * 0.2) *
+          (Math.random() > 0.5 ? 1 : -1);
+
+        const img = ctx.getImageData(0, y, width, sliceHeight);
+        ctx.putImageData(img, shift, y);
+
+        ctx.globalCompositeOperation = "screen";
+        ctx.fillStyle = `rgba(56,189,248,${0.12 * universeParams.glitch})`;
+        ctx.fillRect(0, y, width, sliceHeight);
+        ctx.globalCompositeOperation = "source-over";
+      }
+
+      function loop(timestamp) {
+        requestAnimationFrame(loop);
+        if (paused) return;
+        const delta = timestamp - lastTime;
+        if (delta < 16) return;
+        lastTime = timestamp;
+
+        clearWithTrail();
+        drawBackground(timestamp);
+        drawGalaxyClusters(timestamp);
+        updateAndDrawParticles();
+        addNoiseLayer();
+        addGlitch(timestamp);
+      }
+
+      requestAnimationFrame(loop);
+
+      // ----- UI BINDINGS -----
+      const seedValueEl = document.getElementById("seed-value");
+      function updateSeedLabel() {
+        seedValueEl.textContent = universeParams.seed.toString().padStart(4, "0");
+      }
+      updateSeedLabel();
+
+      function bindRange(id, key, labelId, transform, display) {
+        const el = document.getElementById(id);
+        const label = document.getElementById(labelId);
+        const apply = () => {
+          const raw = Number(el.value);
+          const val = transform ? transform(raw) : raw;
+          universeParams[key] = val;
+          label.textContent = display ? display(raw, val) : raw;
+          if (
+            key === "clusters" ||
+            key === "galaxiesPerCluster" ||
+            key === "starsPerGalaxy" ||
+            key === "depthLayers"
+          ) {
+            createGalaxyClusters();
+          }
+        };
+        el.addEventListener("input", apply);
+        apply();
+      }
+
+      bindRange("cluster", "clusters", "cluster-value", null, (raw) => raw.toString());
+      bindRange("galaxies", "galaxiesPerCluster", "galaxies-value", null, (r) => r.toString());
+      bindRange("stars", "starsPerGalaxy", "stars-value", null, (r) => r.toString());
+
+      bindRange("drift", "drift", "drift-value", (r) => r / 100, (r, v) => `${Math.round(v * 100)}%`);
+      bindRange("spin", "spin", "spin-value", (r) => r, (r) => r.toString());
+      bindRange("depth", "depthLayers", "depth-value", null, (r) => r.toString());
+
+      bindRange("trip", "trip", "trip-value", (r) => r / 100, (r, v) => `${Math.round(v * 100)}%`);
+      bindRange("sat", "saturation", "sat-value", (r) => r, (r) => `${r}%`);
+      bindRange("trail", "trail", "trail-value", (r) => r / 100, (r) => `${r}%`);
+
+      const warpCheckbox = document.getElementById("warp");
+      warpCheckbox.addEventListener("change", () => {
+        universeParams.warp = warpCheckbox.checked;
+      });
+
+      const orbToggle = document.getElementById("orb-toggle");
+      const controlDock = document.getElementById("control-dock");
+      orbToggle.addEventListener("click", () => {
+        const open = controlDock.classList.toggle("open");
+        orbToggle.classList.toggle("open", open);
+      });
+
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        universeParams.clusters = 4;
+        universeParams.galaxiesPerCluster = 12;
+        universeParams.starsPerGalaxy = 1000;
+        universeParams.drift = 0.45;
+        universeParams.spin = 35;
+        universeParams.depthLayers = 7;
+        universeParams.trip = 0.7;
+        universeParams.saturation = 85;
+        universeParams.trail = 0.8;
+        universeParams.warp = true;
+
+        document.getElementById("cluster").value = 4;
+        document.getElementById("galaxies").value = 12;
+        document.getElementById("stars").value = 1000;
+        document.getElementById("drift").value = 45;
+        document.getElementById("spin").value = 35;
+        document.getElementById("depth").value = 7;
+        document.getElementById("trip").value = 70;
+        document.getElementById("sat").value = 85;
+        document.getElementById("trail").value = 80;
+        warpCheckbox.checked = true;
+
+        ["cluster","galaxies","stars","drift","spin","depth","trip","sat","trail"].forEach(id => {
+          document.getElementById(id).dispatchEvent(new Event("input"));
+        });
+      });
+
+      document.getElementById("btn-random").addEventListener("click", () => {
+        const randInt = (min, max) => Math.floor(min + Math.random() * (max - min + 1));
+        document.getElementById("cluster").value = randInt(1, 8);
+        document.getElementById("galaxies").value = randInt(3, 24);
+        document.getElementById("stars").value = randInt(400, 2200);
+        document.getElementById("drift").value = randInt(10, 95);
+        document.getElementById("spin").value = randInt(5, 90);
+        document.getElementById("depth").value = randInt(3, 12);
+        document.getElementById("trip").value = randInt(20, 100);
+        document.getElementById("sat").value = randInt(40, 100);
+        document.getElementById("trail").value = randInt(40, 98);
+        warpCheckbox.checked = Math.random() > 0.2;
+        universeParams.seed = randInt(0, 9999);
+        updateSeedLabel();
+
+        ["cluster","galaxies","stars","drift","spin","depth","trip","sat","trail"].forEach(id => {
+          document.getElementById(id).dispatchEvent(new Event("input"));
+        });
+        universeParams.warp = warpCheckbox.checked;
+        createGalaxyClusters();
+      });
+
+      // ----- SECRET ROOM -----
+      const secretOverlay = document.getElementById("secret-overlay");
+      const secretClose = document.getElementById("secret-close");
+      const secretSourceEl = document.getElementById("secret-source");
+      const secretDebug = document.getElementById("secret-debug");
+
+      function openSecret(source) {
+        secretOverlay.classList.add("open");
+        secretSourceEl.textContent = source;
+        secretDebug.classList.remove("hidden");
+        if (!paused) {
+          paused = true;
+          pauseDot.style.background = "#f97316";
+          pauseDot.style.boxShadow = "0 0 12px rgba(248,113,113,0.95)";
+        }
+      }
+
+      function closeSecret() {
+        secretOverlay.classList.remove("open");
+      }
+
+      secretOverlay.addEventListener("click", (e) => {
+        if (e.target === secretOverlay) {
+          closeSecret();
+        }
+      });
+      secretClose.addEventListener("click", closeSecret);
+
+      const glyphs = [
+        "0100 0001  0101 0011  0100 0011  01001001",
+        "▌ audit(réalité) → anomalies détectées",
+        "▌   - excès de tableaux Excel      [███████░░░] 72%",
+        "▌   - décisions absurdes          [██████████] 99%",
+        "▌   - moments de vraie présence   [█░░░░░░░░░] 04%",
+        "",
+        "log › une galaxie portable a été initialisée.",
+        "      support : clé usb / téléphone / vieux laptop",
+        "      dépendances : aucune.",
+        "",
+        "if (tu_lis_ceci) {",
+        "   // tu fais partie du petit pourcentage",
+        "   // qui cherche encore des issues de secours.",
+        "}",
+        "",
+        "protocol() {",
+        "   partage_avec_cercle_de_confiance();",
+        "   déploie_toi_même();",
+        "   n_attends_pas_l'autorisation();",
+        "}",
+        "",
+        "hint : la dystopie adore quand tu restes scotché aux slides.",
+        "       elle déteste quand tu crées tes propres galaxies."
+      ];
+      document.getElementById("secret-glyphs").textContent = glyphs.join("\n");
+
+      function levelLabel(v) {
+        if (v < 10) return "dormant";
+        if (v < 30) return "latent";
+        if (v < 55) return "actif";
+        if (v < 80) return "invasif";
+        return "débordant";
+      }
+
+      function bindSecret(id, key, stateId) {
+        const slider = document.getElementById(id);
+        const stateEl = document.getElementById(stateId);
+        const apply = () => {
+          const raw = Number(slider.value);
+          const val = raw / 100;
+          universeParams[key] = val;
+          stateEl.textContent = levelLabel(raw);
+        };
+        slider.addEventListener("input", apply);
+        apply();
+      }
+
+      bindSecret("noise", "noise", "noise-state");
+      bindSecret("mesh", "mesh", "mesh-state");
+      bindSecret("glitch", "glitch", "glitch-state");
+
+      // Konami
+      const konami = [
+        "ArrowUp","ArrowUp","ArrowDown","ArrowDown",
+        "ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"
+      ];
+      let konamiIndex = 0;
+      window.addEventListener("keydown", (e) => {
+        const key = e.key;
+        if (key === konami[konamiIndex]) {
+          konamiIndex++;
+          if (konamiIndex === konami.length) {
+            konamiIndex = 0;
+            openSecret("konami");
+          }
+        } else {
+          konamiIndex = 0;
+        }
+      });
+
+      // Shake
+      let lastShakeTime = 0;
+      let lastAccel = { x: null, y: null, z: null };
+      if ("DeviceMotionEvent" in window) {
+        window.addEventListener("devicemotion", (event) => {
+          const cur = event.accelerationIncludingGravity;
+          if (!cur) return;
+          if (lastAccel.x !== null) {
+            const dx = Math.abs(cur.x - lastAccel.x);
+            const dy = Math.abs(cur.y - lastAccel.y);
+            const dz = Math.abs(cur.z - lastAccel.z);
+            const delta = dx + dy + dz;
+            const threshold = 18;
+            const now = Date.now();
+            if (delta > threshold && now - lastShakeTime > 1200) {
+              lastShakeTime = now;
+              openSecret("shake");
+            }
+          }
+          lastAccel = { x: cur.x, y: cur.y, z: cur.z };
+        }, true);
+      }
+
+      // ----- LOADER LOGIC -----
+      const loaderOverlay = document.getElementById("loader-overlay");
+      const loaderBarInner = document.getElementById("loader-bar-inner");
+      const loaderPercentText = document.getElementById("loader-percent-text");
+      const loaderLogLine = document.getElementById("loader-log-line");
+
+      const loaderMessages = [
+        "boot › initialisation de l'instance_Ø...",
+        "scan › aucune dépendance externe détectée.",
+        "init › génération des amas de galaxies...",
+        "init › activation du moteur psychédélique...",
+        "check › gravité douce + glitch contrôlé : ok.",
+        "tip  › tu pourras dessiner directement dans l'univers.",
+        "ready › en attente d'un·e humain·e curieux·se."
+      ];
+
+      let loaderIndex = 0;
+      let loaderProgress = 0;
+
+      function stepLoader() {
+        loaderProgress += 7 + Math.random() * 9;
+        if (loaderProgress > 100) loaderProgress = 100;
+        loaderBarInner.style.width = loaderProgress + "%";
+        loaderPercentText.textContent = loaderProgress.toFixed(0).padStart(2, "0") + "%";
+
+        if (loaderIndex < loaderMessages.length) {
+          loaderLogLine.textContent += (loaderIndex === 0 ? "" : "\n") + loaderMessages[loaderIndex];
+          loaderIndex++;
+        }
+
+        if (loaderProgress >= 100) {
+          setTimeout(() => {
+            loaderOverlay.classList.add("hidden");
+          }, 400);
+        } else {
+          setTimeout(stepLoader, 180 + Math.random() * 140);
+        }
+      }
+
+      // on lance le loader après avoir préparé la scène
+      setTimeout(stepLoader, 200);
+    })();
+  </script>
+</body>
+</html>
