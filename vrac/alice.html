@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Journal d’une personne fatiguée (mais encore là)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Police douce -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #020617;
+      --card: #020617;
+      --card-alt: #020617;
+      --fg: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.12);
+      --accent-2: #22c55e;
+      --danger: #fb7185;
+      --border: #1e293b;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%),
+        radial-gradient(circle at bottom, #020617 0, #000 65%);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    main {
+      max-width: 960px;
+      width: 100%;
+      margin: auto;
+    }
+
+    .shell {
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,0.14), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(34,197,94,0.12), transparent 65%),
+        var(--panel);
+      border-radius: 26px;
+      border: 1px solid rgba(15,23,42,1);
+      box-shadow:
+        0 24px 80px rgba(15,23,42,0.95),
+        0 0 0 1px rgba(15,23,42,0.9);
+      padding: 1rem 1.1rem 1.1rem;
+    }
+
+    header {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+      margin-bottom: 0.7rem;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 25% 25%, #facc15, transparent 60%),
+        radial-gradient(circle at 75% 80%, #fb7185, transparent 60%),
+        #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow:
+        0 0 0 3px rgba(15,23,42,1),
+        0 0 28px rgba(56,189,248,0.8);
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 2.3vw + 1rem, 2.15rem);
+      line-height: 1.1;
+    }
+
+    h1 span {
+      color: #bef264;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      padding: 0.12rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+    }
+
+    /* Onglets */
+
+    nav.tabs {
+      margin-top: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.9);
+      color: var(--fg);
+      font-size: 0.8rem;
+      padding: 0.32rem 0.8rem;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #e0f2fe;
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 10px 24px rgba(56,189,248,0.5);
+    }
+
+    .tabs-panels {
+      margin-top: 0.8rem;
+    }
+
+    .panel {
+      display: none;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 0.85rem 0.9rem;
+      box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+      font-size: 0.9rem;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel h2 {
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .panel p {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .panel + .panel {
+      margin-top: 0.7rem;
+    }
+
+    /* Formulaires & champs */
+
+    .field-row {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      margin-bottom: 0.3rem;
+    }
+
+    @media (min-width: 720px) {
+      .field-row.cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    label {
+      font-size: 0.8rem;
+      display: block;
+      margin-bottom: 0.1rem;
+    }
+
+    input[type="text"],
+    input[type="time"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--fg);
+      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.6);
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: var(--fg);
+      font-size: 0.8rem;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(56,189,248,0.25), #020617);
+      color: #e0f2fe;
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 12px 28px rgba(56,189,248,0.6);
+    }
+
+    .btn-ghost {
+      border-style: dashed;
+      color: var(--muted);
+    }
+
+    .btn-danger {
+      border-color: rgba(248,113,113,0.9);
+      color: #fecaca;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Listes */
+
+    .list {
+      margin-top: 0.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #020617;
+      max-height: 190px;
+      overflow-y: auto;
+      padding: 0.4rem 0.45rem;
+      font-size: 0.82rem;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+      align-items: flex-start;
+      padding: 0.25rem 0.2rem;
+      border-bottom: 1px dashed rgba(55,65,81,0.9);
+    }
+
+    .list-item:last-child {
+      border-bottom: none;
+    }
+
+    .list-item-main {
+      max-width: 75%;
+    }
+
+    .list-item-title {
+      font-size: 0.86rem;
+    }
+
+    .list-item-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.05rem;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      padding: 0.05rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.9);
+      white-space: nowrap;
+    }
+
+    .pill-soft {
+      border-style: dashed;
+      color: var(--muted);
+    }
+
+    .pill-ok {
+      border-color: rgba(52,211,153,0.9);
+      color: #bbf7d0;
+    }
+
+    .pill-warn {
+      border-color: rgba(250,204,21,0.9);
+      color: #fef9c3;
+    }
+
+    /* Console douceur */
+
+    .console {
+      margin-top: 0.7rem;
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #1e293b;
+      padding: 0.6rem 0.7rem;
+      font-size: 0.8rem;
+      box-shadow: 0 10px 30px rgba(15,23,42,1);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
+      color: #a5b4fc;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .console-lights {
+      display: flex;
+      gap: 0.2rem;
+    }
+
+    .console-light {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .console-light.ok {
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    .console-output {
+      max-height: 110px;
+      overflow-y: auto;
+      border-radius: 9px;
+      border: 1px solid #020617;
+      padding: 0.4rem 0.5rem;
+      background: radial-gradient(circle at top, #020617, #020617);
+    }
+
+    .console-line {
+      margin-bottom: 0.12rem;
+    }
+
+    .console-input-row {
+      display: flex;
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+
+    .console-input-row input {
+      flex: 1;
+      border-radius: 9px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: var(--fg);
+      font-size: 0.78rem;
+      padding: 0.3rem 0.5rem;
+    }
+
+    .console-input-row button {
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.8);
+      background: linear-gradient(135deg, rgba(56,189,248,0.25), #020617);
+      color: #e0f2fe;
+      font-size: 0.78rem;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+    }
+
+    footer {
+      margin-top: 0.7rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Rapport */
+
+    #reportPreview {
+      width: 100%;
+      margin-top: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--fg);
+      font-size: 0.8rem;
+      padding: 0.4rem 0.6rem;
+      min-height: 120px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="shell">
+    <header>
+      <div class="avatar">🧸</div>
+      <div>
+        <h1>Site de la vie d’une personne <span>un peu en vrac</span></h1>
+        <p class="subtitle">
+          Une mini-appli pour quelqu’un qui dort bizarre, achète des livres,
+          voit un psy à 11h, n’a pas envie de sortir, mais existe quand même.
+        </p>
+        <div class="chip-row">
+          <span class="chip">Pas d’identité, juste une histoire</span>
+          <span class="chip">Pas un diagnostic, juste du rangement</span>
+          <span class="chip">On fait ce qu’on peut avec ce qu’on a</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="jour" type="button">Aujourd’hui</button>
+      <button class="tab-btn" data-tab="sommeil" type="button">Sommeil cassé</button>
+      <button class="tab-btn" data-tab="livres" type="button">Livres & regrets</button>
+      <button class="tab-btn" data-tab="psy" type="button">Psy & sorties</button>
+      <button class="tab-btn" data-tab="meteo" type="button">Météo intérieure</button>
+      <button class="tab-btn" data-tab="rapport" type="button">Rapport</button>
+    </nav>
+
+    <div class="tabs-panels">
+      <!-- AUJOURD’HUI -->
+      <section class="panel active" id="panel-jour">
+        <h2>1. Aujourd’hui, juste… maintenant</h2>
+        <p>
+          Pas la peine de refaire toute la vie. On commence par cette journée étrange
+          où on ne sait plus très bien si on est réveillé ou pas.
+        </p>
+
+        <div class="field-row cols-2">
+          <div>
+            <label for="lever">Heure de réveil (à peu près)</label>
+            <input id="lever" type="time">
+            <p class="hint">Ex : 10:00 après t’être couché à 5h du mat.</p>
+          </div>
+          <div>
+            <label for="sieste">Sieste ou blocage</label>
+            <input id="sieste" type="time">
+            <p class="hint">Ex : 13:00 → endormi, puis réveillé à 22:00.</p>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="phraseJour">Phrase de la journée</label>
+            <input id="phraseJour" type="text" placeholder="Ex : 'Depuis je suis réveillé, enfin je crois.'">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="microObjectif">Micro-objectif réaliste (pas 'reprendre le taureau par les cornes')</label>
+            <textarea id="microObjectif" placeholder="Ex : prendre une douche, envoyer un message à quelqu’un, préparer le sac pour demain..."></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="btnSaveDay">Enregistrer ce moment</button>
+          <button class="btn btn-ghost" type="button" id="btnClearDay">Tout effacer pour aujourd’hui</button>
+        </div>
+
+        <div class="list" id="logJour"></div>
+      </section>
+
+      <!-- SOMMEIL -->
+      <section class="panel" id="panel-sommeil">
+        <h2>2. Sommeil bizarre, mais noté</h2>
+        <p>
+          On ne “répare” pas ton sommeil ici, on le regarde juste sans juger.  
+          Comme un scientifique fatigué avec un plaid.
+        </p>
+
+        <div class="field-row cols-2">
+          <div>
+            <label for="coucher">Heure de coucher</label>
+            <input id="coucher" type="time" placeholder="">
+            <p class="hint">Ex : 05:00.</p>
+          </div>
+          <div>
+            <label for="reveil">Heure de premier réveil</label>
+            <input id="reveil" type="time">
+            <p class="hint">Ex : 10:00.</p>
+          </div>
+        </div>
+
+        <div class="field-row cols-2">
+          <div>
+            <label for="secondSommeil">Deuxième dodo / blackout</label>
+            <input id="secondSommeil" type="time">
+          </div>
+          <div>
+            <label for="secondReveil">Réveil suivant</label>
+            <input id="secondReveil" type="time">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="commentSommeil">Comment ça se sent dans le corps ?</label>
+            <textarea id="commentSommeil" placeholder="Ex : tête lourde, yeux qui piquent, cerveau en gelée, pression dans la poitrine..."></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="btnSaveSleep">Enregistrer ce schéma</button>
+          <button class="btn btn-ghost" type="button" id="btnClearSleep">Effacer le suivi sommeil</button>
+        </div>
+
+        <div class="list" id="logSommeil"></div>
+      </section>
+
+      <!-- LIVRES & REGRETS -->
+      <section class="panel" id="panel-livres">
+        <h2>3. Livres, bullet journal & peur de faire des conneries</h2>
+        <p>
+          Tu accumules, puis tu désencombres. OK. Ici on cartographie ça, au lieu de
+          juste culpabiliser.
+        </p>
+
+        <div class="field-row">
+          <div>
+            <label for="titreLivre">Livre ou carnet acheté / repéré</label>
+            <input id="titreLivre" type="text" placeholder="Titre du livre ou 'bullet journal'...">
+          </div>
+        </div>
+
+        <div class="field-row cols-2">
+          <div>
+            <label for="raisonLivre">Pourquoi tu l’as pris / tu le veux ?</label>
+            <textarea id="raisonLivre" placeholder="Ex : espoir d’être plus organisé, curiosité, envie de fuite, joli objet..."></textarea>
+          </div>
+          <div>
+            <label for="destinLivre">Intention (pour l’instant)</label>
+            <select id="destinLivre">
+              <option value="garder">Le garder (ça me parle vraiment)</option>
+              <option value="tester">Le tester puis décider</option>
+              <option value="donner">Le donner un jour (bibli, ami, ressourcerie)</option>
+              <option value="revendre">Le revendre si ça ne va pas</option>
+              <option value="pasAcheter">Ne pas l’acheter finalement</option>
+            </select>
+            <p class="hint">
+              Pas besoin de décider pour toute ta vie. Juste ton intention du moment.
+            </p>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="peurRegret">Sur une échelle de 0 à 10, peur de regretter ?</label>
+            <input id="peurRegret" type="number" min="0" max="10" value="5">
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="btnAddLivre">Ajouter à la pile</button>
+          <button class="btn btn-ghost" type="button" id="btnClearLivres">Vider la liste (pas ta bibliothèque)</button>
+        </div>
+
+        <div class="list" id="listLivres"></div>
+      </section>
+
+      <!-- PSY & SORTIES -->
+      <section class="panel" id="panel-psy">
+        <h2>4. Psy à 11h, froid dehors & phase d’enfermement</h2>
+        <p>
+          Sortir peut sembler énorme. On découpe en micro-étapes, comme un jeu vidéo
+          où chaque mini-quête compte.
+        </p>
+
+        <div class="field-row cols-2">
+          <div>
+            <label for="datePsy">Prochain rendez-vous psy</label>
+            <input id="datePsy" type="date">
+          </div>
+          <div>
+            <label for="heurePsy">Heure du rendez-vous</label>
+            <input id="heurePsy" type="time" value="11:00">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="obstacle">Ce qui bloque le plus aujourd’hui</label>
+            <textarea id="obstacle" placeholder="Ex : sortir de chez moi, froid, fatigue, peur de parler, se sentir jugé·e..."></textarea>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="microQuete">Micro-quête pour y arriver (ridiculement petite)</label>
+            <textarea id="microQuete" placeholder="Ex : poser le réveil, préparer les vêtements, envoyer un SMS pour prévenir si retard, juste mettre les chaussures."></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="btnPlanPsy">Enregistrer le plan de survie psy</button>
+          <button class="btn btn-ghost" type="button" id="btnClearPsy">Effacer ce plan</button>
+        </div>
+
+        <div class="list" id="listPsy"></div>
+
+        <p class="hint" style="margin-top:0.4rem;">
+          Remarque sérieuse : si un jour tu te sens vraiment en danger ou submergé·e,
+          le site ne suffit pas. Parler à ton/ta psy, à un proche, ou aux services d’urgence
+          reste la priorité. Ce truc est juste un petit outil, pas un sauveur magique.
+        </p>
+      </section>
+
+      <!-- MÉTÉO INTÉRIEURE -->
+      <section class="panel" id="panel-meteo">
+        <h2>5. Météo intérieure & console de douceur</h2>
+        <p>
+          Il fait froid dehors, le monde est triste. OK. Ici, on note la météo à
+          l’intérieur, même si elle n’est pas jojo.
+        </p>
+
+        <div class="field-row cols-2">
+          <div>
+            <label for="meteoInterieure">Si ton état était un temps</label>
+            <select id="meteoInterieure">
+              <option value="gris">Ciel gris mais stable</option>
+              <option value="pluie">Pluie fine non-stop</option>
+              <option value="orage">Orage pas loin</option>
+              <option value="neige">Neige silencieuse</option>
+              <option value="brouillard">Brouillard épais</option>
+              <option value="clairiere">Clairière qui se prépare</option>
+            </select>
+          </div>
+          <div>
+            <label for="energie">Énergie (0 = pas la force / 10 = trop d’énergie)</label>
+            <input id="energie" type="number" min="0" max="10" value="3">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="texteMeteo">Quelque chose que tu te dirais avec gentillesse ?</label>
+            <textarea id="texteMeteo" placeholder="Ex : 'Tu fais vraiment ce que tu peux avec un monde bizarre.'"></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="btnSaveMeteo">Enregistrer cette météo</button>
+          <button class="btn btn-ghost" type="button" id="btnClearMeteo">Effacer</button>
+        </div>
+
+        <div class="list" id="listMeteo"></div>
+
+        <div class="console" style="margin-top:0.7rem;">
+          <div class="console-header">
+            <span>console · mode douceur</span>
+            <div class="console-lights">
+              <span class="console-light ok"></span>
+              <span class="console-light"></span>
+              <span class="console-light"></span>
+            </div>
+          </div>
+          <div class="console-output" id="consoleOut"></div>
+          <div class="console-input-row">
+            <input id="consoleIn" type="text" placeholder='Commande (ex : "help", "taureau", "froid", "monde", "journal")'>
+            <button type="button" id="consoleRun">OK</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RAPPORT -->
+      <section class="panel" id="panel-rapport">
+        <h2>6. Rapport exportable</h2>
+        <p>
+          Ici tu peux rassembler tout ce que tu as noté (journées, sommeil, livres, psy,
+          météo intérieure) en un <strong>rapport texte</strong> à télécharger
+          ou à coller dans un mail / un document.
+        </p>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="btnExportReport">Générer & télécharger le rapport</button>
+          <button class="btn btn-ghost" type="button" id="btnClearReport">Effacer l’aperçu</button>
+        </div>
+
+        <p class="hint">
+          Le rapport est généré au format texte simple (avec quelques titres façon Markdown),
+          dans un fichier <code>rapport-vie.txt</code>. Tu peux le rouvrir avec n’importe quel éditeur.
+        </p>
+
+        <textarea id="reportPreview" readonly placeholder="L’aperçu du rapport apparaîtra ici après génération."></textarea>
+      </section>
+    </div>
+
+    <footer>
+      Ceci est juste un petit site statique pour mettre un peu d’ordre dans le chaos.
+      La vraie vie continue dehors, dedans, et chez le psy à 11h.
+    </footer>
+  </div>
+</main>
+
+<script>
+  // --- Onglets ---
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const panels = document.querySelectorAll(".panel");
+
+  function setTab(id) {
+    tabButtons.forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.tab === id);
+    });
+    panels.forEach(p => {
+      p.classList.toggle("active", p.id === "panel-" + id);
+    });
+  }
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => setTab(btn.dataset.tab));
+  });
+
+  // --- Petits outils de log ---
+  function el(id) { return document.getElementById(id); }
+
+  function addListItem(containerId, title, meta, pillText, pillClass = "") {
+    const container = el(containerId);
+    const wrap = document.createElement("div");
+    wrap.className = "list-item";
+    const main = document.createElement("div");
+    main.className = "list-item-main";
+
+    const t = document.createElement("div");
+    t.className = "list-item-title";
+    t.textContent = title || "(rien noté)";
+
+    const m = document.createElement("div");
+    m.className = "list-item-meta";
+    m.textContent = meta || "";
+
+    main.appendChild(t);
+    main.appendChild(m);
+
+    const pill = document.createElement("span");
+    pill.className = "pill " + pillClass;
+    pill.textContent = pillText || "";
+
+    wrap.appendChild(main);
+    wrap.appendChild(pill);
+    container.appendChild(wrap);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // Utilitaire export fichier
+  function downloadFile(filename, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // --- Panel Aujourd’hui ---
+  const btnSaveDay = el("btnSaveDay");
+  const btnClearDay = el("btnClearDay");
+  const logJour = el("logJour");
+
+  btnSaveDay.addEventListener("click", () => {
+    const lever = el("lever").value || "??:??";
+    const sieste = el("sieste").value || "??:??";
+    const phrase = el("phraseJour").value || "Depuis je suis réveillé, enfin je crois.";
+    const micro = el("microObjectif").value || "(micro-objectif encore flou)";
+
+    const title = `Réveil vers ${lever}, sieste/blocage vers ${sieste}`;
+    const meta = `${phrase} — Micro-objectif : ${micro}`;
+    addListItem("logJour", title, meta, "journée notée", "pill-soft");
+  });
+
+  btnClearDay.addEventListener("click", () => {
+    logJour.textContent = "";
+  });
+
+  // --- Panel Sommeil ---
+  const btnSaveSleep = el("btnSaveSleep");
+  const btnClearSleep = el("btnClearSleep");
+  const logSommeil = el("logSommeil");
+
+  btnSaveSleep.addEventListener("click", () => {
+    const coucher = el("coucher").value || "??:??";
+    const reveil = el("reveil").value || "??:??";
+    const second = el("secondSommeil").value || "—";
+    const secondR = el("secondReveil").value || "—";
+    const comment = el("commentSommeil").value || "(sensations non décrites)";
+
+    const title = `Couché ${coucher} → réveil ${reveil} → ${second}-${secondR}`;
+    const meta = comment;
+    addListItem("logSommeil", title, meta, "sommeil observé", "pill-soft");
+  });
+
+  btnClearSleep.addEventListener("click", () => {
+    logSommeil.textContent = "";
+  });
+
+  // --- Panel Livres ---
+  const btnAddLivre = el("btnAddLivre");
+  const btnClearLivres = el("btnClearLivres");
+  const listLivres = el("listLivres");
+
+  btnAddLivre.addEventListener("click", () => {
+    const titre = el("titreLivre").value || "Livre sans nom";
+    const raison = el("raisonLivre").value || "Raison pas encore claire.";
+    const destin = el("destinLivre").value;
+    const peur = el("peurRegret").value || "5";
+
+    let pillText = "";
+    let pillClass = "pill-soft";
+    if (destin === "garder") { pillText = "OK de garder"; pillClass = "pill-ok"; }
+    else if (destin === "tester") { pillText = "Mode test"; }
+    else if (destin === "donner") { pillText = "À donner un jour"; pillClass = "pill-warn"; }
+    else if (destin === "revendre") { pillText = "Potentiel à revendre"; pillClass = "pill-warn"; }
+    else if (destin === "pasAcheter") { pillText = "Non acheté (choix)"; pillClass = "pill-ok"; }
+
+    const meta = `${raison} — Peur de regretter : ${peur}/10.`;
+    addListItem("listLivres", titre, meta, pillText, pillClass);
+  });
+
+  btnClearLivres.addEventListener("click", () => {
+    listLivres.textContent = "";
+  });
+
+  // --- Panel Psy ---
+  const btnPlanPsy = el("btnPlanPsy");
+  const btnClearPsy = el("btnClearPsy");
+  const listPsy = el("listPsy");
+
+  btnPlanPsy.addEventListener("click", () => {
+    const date = el("datePsy").value || "(date ?)";
+    const heure = el("heurePsy").value || "11:00";
+    const obst = el("obstacle").value || "(blocage pas formulé)";
+    const quete = el("microQuete").value || "(micro-quête à inventer)";
+
+    const title = `Psy le ${date} à ${heure}`;
+    const meta = `Blocage : ${obst} — Micro-quête : ${quete}`;
+    addListItem("listPsy", title, meta, "plan psy", "pill-soft");
+  });
+
+  btnClearPsy.addEventListener("click", () => {
+    listPsy.textContent = "";
+  });
+
+  // --- Panel Météo ---
+  const btnSaveMeteo = el("btnSaveMeteo");
+  const btnClearMeteo = el("btnClearMeteo");
+  const listMeteo = el("listMeteo");
+
+  btnSaveMeteo.addEventListener("click", () => {
+    const meteo = el("meteoInterieure").value;
+    const energie = el("energie").value || "0";
+    const texte = el("texteMeteo").value || "(rien à se dire pour l’instant)";
+
+    let label = "";
+    if (meteo === "gris") label = "Ciel gris";
+    else if (meteo === "pluie") label = "Pluie fine";
+    else if (meteo === "orage") label = "Orage proche";
+    else if (meteo === "neige") label = "Neige silencieuse";
+    else if (meteo === "brouillard") label = "Brouillard";
+    else if (meteo === "clairiere") label = "Clairière";
+
+    const title = `${label} – énergie ${energie}/10`;
+    const meta = texte;
+    addListItem("listMeteo", title, meta, "météo enregistrée", "pill-soft");
+  });
+
+  btnClearMeteo.addEventListener("click", () => {
+    listMeteo.textContent = "";
+  });
+
+  // --- Console douceur ---
+  const consoleOut = el("consoleOut");
+  const consoleIn = el("consoleIn");
+  const consoleRun = el("consoleRun");
+
+  function consoleLine(text, type = "info") {
+    const div = document.createElement("div");
+    div.className = "console-line";
+    if (type === "cmd") div.style.color = "#a5b4fc";
+    if (type === "soft") div.style.color = "#bbf7d0";
+    if (type === "world") div.style.color = "#facc15";
+    consoleOut.appendChild(div);
+    div.textContent = text;
+    consoleOut.scrollTop = consoleOut.scrollHeight;
+  }
+
+  function handleConsole(cmdRaw) {
+    const cmd = cmdRaw.trim().toLowerCase();
+    if (!cmd) return;
+    consoleLine("> " + cmdRaw, "cmd");
+
+    if (cmd === "help") {
+      consoleLine("Commandes possibles : help, taureau, froid, monde, journal.", "soft");
+      return;
+    }
+    if (cmd === "taureau") {
+      consoleLine("Tu n’es pas obligé·e de prendre le taureau par les cornes tous les jours.", "soft");
+      consoleLine("Parfois juste le regarder de loin et rester vivant, c’est déjà beaucoup.", "soft");
+      return;
+    }
+    if (cmd === "froid") {
+      consoleLine("Oui, il fait froid dehors. Tu as le droit de choisir tes batailles aujourd’hui.", "soft");
+      return;
+    }
+    if (cmd === "monde") {
+      consoleLine("Le monde peut être très triste, mais tu n’es pas obligé·e de le porter entier sur ton dos.", "world");
+      consoleLine("Tu peux juste porter ta petite journée, c’est déjà assez lourd.", "world");
+      return;
+    }
+    if (cmd === "journal") {
+      consoleLine("Ton bullet journal n’est pas un contrat d’efficacité, c’est un endroit pour écrire comme tu peux.", "soft");
+      return;
+    }
+    consoleLine("Commande pas reconnue. Essaie : help, taureau, froid, monde, journal.", "soft");
+  }
+
+  consoleRun.addEventListener("click", () => {
+    handleConsole(consoleIn.value);
+    consoleIn.value = "";
+    consoleIn.focus();
+  });
+
+  consoleIn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      handleConsole(consoleIn.value);
+      consoleIn.value = "";
+    }
+  });
+
+  consoleLine("Console douceur chargée. Tape 'help' si tu veux voir ce qu’elle sait dire.", "soft");
+
+  // --- Rapport exportable ---
+  const btnExportReport = el("btnExportReport");
+  const btnClearReport = el("btnClearReport");
+  const reportPreview = el("reportPreview");
+
+  function collectSectionReport(containerId, title) {
+    const container = el(containerId);
+    const items = container.querySelectorAll(".list-item");
+    let out = `## ${title}\n\n`;
+    if (!items.length) {
+      out += "  (aucune entrée)\n\n";
+      return out;
+    }
+    items.forEach((item, idx) => {
+      const tEl = item.querySelector(".list-item-title");
+      const mEl = item.querySelector(".list-item-meta");
+      const pEl = item.querySelector(".pill");
+      const t = tEl ? tEl.textContent.trim() : "";
+      const m = mEl ? mEl.textContent.trim() : "";
+      const p = pEl ? pEl.textContent.trim() : "";
+      out += `  - ${t || "(sans titre)"}\n`;
+      if (m) out += `    ${m}\n`;
+      if (p) out += `    [${p}]\n`;
+    });
+    out += "\n";
+    return out;
+  }
+
+  btnExportReport.addEventListener("click", () => {
+    const now = new Date().toLocaleString("fr-BE");
+    let report = "";
+    report += "# Rapport de bord – personne fatiguée\n\n";
+    report += `Généré le : ${now}\n\n`;
+    report += "_Ce document ne remplace pas un suivi médical ou psy. C’est juste un résumé de ce qui a été noté dans le petit site._\n\n";
+
+    report += collectSectionReport("logJour", "1. Journées notées");
+    report += collectSectionReport("logSommeil", "2. Sommeil observé");
+    report += collectSectionReport("listLivres", "3. Livres, carnets & décisions");
+    report += collectSectionReport("listPsy", "4. Plans autour du psy & des sorties");
+    report += collectSectionReport("listMeteo", "5. Météo intérieure & messages à soi-même");
+
+    reportPreview.value = report;
+    downloadFile("rapport-vie.txt", report, "text/plain;charset=utf-8");
+  });
+
+  btnClearReport.addEventListener("click", () => {
+    reportPreview.value = "";
+  });
+</script>
+</body>
+</html>
