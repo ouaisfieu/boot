@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manual de Survie en Démocratie Avancée · Accueil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.18);
+      --accent-2: #f97316;
+      --border: rgba(148,163,184,0.5);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #000;
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.18;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 780px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .line {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(3px);
+      transition:
+        opacity 0.8s ease-out,
+        transform 0.8s ease-out,
+        filter 0.8s ease-out;
+      will-change: opacity, transform, filter;
+    }
+
+    .line.visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .intro-line {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .credits {
+      font-size: 11px;
+      color: var(--text-soft);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .credits span {
+      display: block;
+      opacity: 0.85;
+    }
+
+    .title {
+      font-size: clamp(20px, 4vw, 28px);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+
+    .subtitle strong {
+      color: var(--accent);
+    }
+
+    .divider {
+      width: 80px;
+      height: 1px;
+      margin: 10px auto 14px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      opacity: 0.9;
+    }
+
+    .explain {
+      font-size: 12px;
+      color: var(--text-soft);
+      max-width: 520px;
+      margin: 0 auto 18px;
+    }
+
+    .explain em {
+      color: var(--accent-2);
+      font-style: normal;
+    }
+
+    .logo-wrap {
+      margin-top: 4px;
+    }
+
+    .logo-btn {
+      position: relative;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .logo-pulse {
+      position: absolute;
+      inset: -10px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(34,197,94,0.18), transparent 70%);
+      filter: blur(6px);
+      animation: pulse 1.7s ease-out infinite;
+      opacity: 0.8;
+    }
+
+    .logo-core {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 20%, #bbf7d0, #22c55e 40%, #14532d 90%);
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,0.9),
+        0 0 28px rgba(34,197,94,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #022c22;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .logo-core span {
+      display: block;
+      line-height: 1.1;
+    }
+
+    .logo-core small {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .logo-btn:active .logo-core {
+      transform: scale(0.96);
+      box-shadow:
+        0 0 0 2px rgba(2,6,23,1),
+        0 0 14px rgba(34,197,94,0.6);
+    }
+
+    .cta-hint {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-soft);
+      opacity: 0.85;
+    }
+
+    .cta-hint .kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: rgba(15,23,42,0.9);
+      margin: 0 3px;
+    }
+
+    .legal {
+      position: fixed;
+      left: 50%;
+      bottom: 8px;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: var(--text-soft);
+      opacity: 0.7;
+      text-align: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(2,6,23,0.9);
+      border: 1px solid rgba(15,23,42,0.9);
+    }
+
+    .legal strong {
+      color: var(--accent-soft);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.2; }
+      50% { transform: scale(1.05); opacity: 0.45; }
+      100% { transform: scale(0.9); opacity: 0.2; }
+    }
+
+    @media (max-width: 480px) {
+      .intro-line { font-size: 12px; }
+      .credits { font-size: 10px; }
+      .subtitle { font-size: 11px; }
+      .explain { font-size: 11px; }
+      .logo-core { width: 70px; height: 70px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <div class="shell">
+    <div id="intro1" class="line intro-line">
+      Dans ce pays, tout le monde jure qu’il ne fait que « son travail ».
+    </div>
+
+    <div id="intro2" class="line intro-line">
+      Les décisions se prennent ailleurs, mais les conséquences finissent chez toi.
+    </div>
+
+    <div id="credits" class="line credits">
+      <span>Un jeu de rôle autoguidé amateur</span>
+      <span>Ambiance : politiquement réaliste, moralement discutable</span>
+      <span>Humour : noir, mais pas entièrement résigné</span>
+    </div>
+
+    <div id="titleBlock" class="line">
+      <h1 class="title">Manual de Survie en Démocratie Avancée</h1>
+      <p class="subtitle">
+        Une simulation sociale pour apprendre à <strong>tenir debout</strong>
+        sans avoir besoin de hurler plus fort que les autres.
+      </p>
+      <div class="divider"></div>
+    </div>
+
+    <div id="explain" class="line explain">
+      Tu vas traverser une série de situations politiques, professionnelles et
+      citoyennes qui ressemblent dangereusement au réel. À chaque étape, tu
+      choisis comment réagir&nbsp;: discret·e, joueur·se, ultra-adapté·e.<br/><br/>
+      Le jeu calcule en coulisses ton <em>profil de survie sociale</em> :
+      jusqu’où tu t’exposes, ce que tu sacrifies, ce que tu protèges.
+    </div>
+
+    <div id="logoBlock" class="line logo-wrap">
+      <button
+        class="logo-btn"
+        id="startBtn"
+        aria-label="Commencer le jeu Manual de Survie en Démocratie Avancée"
+      >
+        <div class="logo-pulse"></div>
+        <div class="logo-core">
+          <span>MS<br/>DA</span>
+          <small>start</small>
+        </div>
+      </button>
+      <div class="cta-hint">
+        Clique sur le logo, ou appuie sur
+        <span class="kbd">Entrée</span>
+        pour commencer.
+      </div>
+    </div>
+  </div>
+
+  <div class="legal">
+    Simulation fictionnelle inspirée du réel. <strong>Aucun pouvoir ne sera tenu responsable.</strong>
+  </div>
+
+  <script>
+    // Séquence d’apparition des éléments
+    const steps = [
+      { id: "intro1", delay: 700 },
+      { id: "intro2", delay: 2800 },
+      { id: "credits", delay: 5200 },
+      { id: "titleBlock", delay: 8000 },
+      { id: "explain", delay: 9800 },
+      { id: "logoBlock", delay: 12000 }
+    ];
+
+    function showLine(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.add("visible");
+    }
+
+    function scheduleIntro() {
+      steps.forEach(step => {
+        setTimeout(() => showLine(step.id), step.delay);
+      });
+    }
+
+    function goToGame() {
+      // Charge la page principale du jeu
+      window.location.href = "societe-jeu.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      scheduleIntro();
+
+      const btn = document.getElementById("startBtn");
+      btn.addEventListener("click", goToGame);
+
+      // Entrée / Espace pour lancer le jeu une fois que le logo est visible
+      window.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter" || ev.key === " ") {
+          const logoBlock = document.getElementById("logoBlock");
+          if (logoBlock && logoBlock.classList.contains("visible")) {
+            ev.preventDefault();
+            goToGame();
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
