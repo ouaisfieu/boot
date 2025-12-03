@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ZALAGTIGA · Borne d’arcade · Place Poelaert, 198x</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #f97316;
+      --accent2: #22c55e;
+      --accent3: #22d3ee;
+      --border: #4b5563;
+      --shadow: 0 30px 80px rgba(0,0,0,0.95);
+      --crt: #0b1120;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% -10%, rgba(251,113,133,0.30), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.25), transparent 55%),
+        linear-gradient(to bottom, #020617 0, #000 60%, #020617 100%);
+      color: var(--fg);
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .scene {
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+      position: relative;
+    }
+
+    @media (max-width: 900px) {
+      .scene {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* arrière-plan ville / Poelaert */
+
+    .skyline {
+      position: fixed;
+      inset: auto 0 0 0;
+      height: 150px;
+      background:
+        linear-gradient(to top, rgba(0,0,0,0.95), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .skyline::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(0,0,0,1) 0, transparent 35%),
+        repeating-linear-gradient(
+          to right,
+          rgba(15,23,42,1) 0,
+          rgba(15,23,42,1) 40px,
+          rgba(3,7,18,1) 42px
+        );
+      opacity: 0.9;
+    }
+
+    .skyline::after {
+      content: "";
+      position: absolute;
+      bottom: 50px;
+      left: 10%;
+      width: 40%;
+      height: 60px;
+      background:
+        radial-gradient(circle at 50% 150%, rgba(148,163,184,0.4), transparent 70%);
+      opacity: 0.7;
+      filter: blur(1.5px);
+    }
+
+    /* Borne arcade */
+
+    .cabinet-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .cabinet {
+      width: 100%;
+      max-width: 520px;
+      background:
+        linear-gradient(145deg, #020617 0, #020617 40%, #0b1120 70%, #020617 100%);
+      border-radius: 28px;
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        var(--shadow);
+      border: 1px solid rgba(15,23,42,1);
+      padding: 16px 16px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cabinet::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background-image:
+        radial-gradient(circle at 10% 0, rgba(255,255,255,0.10), transparent 50%),
+        radial-gradient(circle at 90% 20%, rgba(56,189,248,0.20), transparent 60%),
+        radial-gradient(circle at 50% 110%, rgba(251,113,133,0.35), transparent 65%);
+      mix-blend-mode: screen;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .cabinet-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .marquee {
+      border-radius: 20px 20px 12px 12px;
+      background:
+        linear-gradient(135deg, #0f172a, #020617 40%, #0f172a 100%);
+      border: 2px solid #020617;
+      padding: 8px 10px;
+      box-shadow:
+        0 8px 18px rgba(0,0,0,0.9),
+        0 0 25px rgba(59,130,246,0.6);
+      position: relative;
+    }
+
+    .marquee-border {
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      border: 1px solid rgba(59,130,246,0.75);
+      box-shadow:
+        0 0 14px rgba(59,130,246,0.9),
+        0 0 30px rgba(236,72,153,0.8);
+      pointer-events: none;
+    }
+
+    .marquee-title {
+      text-align: center;
+      font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: clamp(18px, 3.2vw, 24px);
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: #f9fafb;
+      text-shadow:
+        0 0 6px rgba(56,189,248,0.9),
+        0 0 18px rgba(59,130,246,1),
+        0 0 32px rgba(236,72,153,0.8);
+    }
+
+    .marquee-sub {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.85);
+      margin-top: 3px;
+    }
+
+    /* écran CRT */
+
+    .screen-shell {
+      margin-top: 12px;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at top, #111827 0, #020617 65%);
+      border: 2px solid #020617;
+      padding: 10px;
+      box-shadow:
+        0 12px 30px rgba(0,0,0,1),
+        0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .screen {
+      border-radius: 12px;
+      background: radial-gradient(circle at 50% 0, #111827 0, #020617 65%);
+      border: 1px solid #1f2937;
+      padding: 10px 12px;
+      min-height: 210px;
+      position: relative;
+      overflow: hidden;
+      color: #e5e7eb;
+    }
+
+    .crt-scanlines {
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(15,23,42,0),
+        rgba(15,23,42,0) 2px,
+        rgba(0,0,0,0.65) 3px
+      );
+      mix-blend-mode: soft-light;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .crt-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 0, rgba(251,191,36,0.18), transparent 60%);
+      mix-blend-mode: screen;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .screen-content {
+      position: relative;
+      z-index: 1;
+      font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .screen-line {
+      white-space: pre-wrap;
+    }
+
+    .screen-line.dim {
+      color: rgba(148,163,184,0.9);
+    }
+
+    .screen-line.highlight {
+      color: #facc15;
+    }
+
+    .screen-line.warn {
+      color: #f97316;
+    }
+
+    .caret {
+      display: inline-block;
+      width: 6px;
+      margin-left: 2px;
+      background: #fcd34d;
+      animation: blinkCaret 1s steps(1, start) infinite;
+    }
+
+    @keyframes blinkCaret {
+      50% { opacity: 0; }
+    }
+
+    /* Insert coin & panneau de contrôle */
+
+    .lower-panel {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 640px) {
+      .lower-panel {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .coin-slot {
+      border-radius: 12px;
+      background: linear-gradient(135deg, #020617, #111827);
+      border: 2px solid #020617;
+      padding: 8px 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.9);
+      cursor: pointer;
+    }
+
+    .coin-main {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .coin-label {
+      font-family: "Courier New", ui-monospace;
+      font-size: 16px;
+      letter-spacing: 0.24em;
+      color: #fef08a;
+      text-shadow: 0 0 10px rgba(250,250,150,0.9);
+      animation: blinkCoin 1.2s steps(1, start) infinite;
+    }
+
+    @keyframes blinkCoin {
+      50% { opacity: 0.2; }
+    }
+
+    .coin-sub {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .coin-light {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #bef264, #f97316);
+      box-shadow:
+        0 0 12px rgba(234,179,8,0.95),
+        0 0 28px rgba(251,146,60,0.9);
+    }
+
+    .coin-slot.started .coin-label {
+      animation: none;
+      color: #bbf7d0;
+      text-shadow: 0 0 8px rgba(34,197,94,0.8);
+    }
+
+    .coin-slot.started .coin-light {
+      background: radial-gradient(circle at 30% 20%, #bbf7d0, #22c55e);
+      box-shadow:
+        0 0 14px rgba(74,222,128,0.95),
+        0 0 28px rgba(34,197,94,0.9);
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      align-items: flex-end;
+    }
+
+    .buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .btn-round {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid #020617;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.9);
+      cursor: pointer;
+    }
+
+    .btn-round.red {
+      background: radial-gradient(circle at 30% 20%, #fecaca, #ef4444);
+    }
+    .btn-round.blue {
+      background: radial-gradient(circle at 30% 20%, #bfdbfe, #3b82f6);
+    }
+    .btn-round.green {
+      background: radial-gradient(circle at 30% 20%, #bbf7d0, #22c55e);
+    }
+
+    /* panneau briefing / étapes */
+
+    .panel {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      box-shadow: var(--shadow);
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 0 0, rgba(251,146,60,0.16), transparent 60%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.14), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      margin-bottom: 4px;
+    }
+
+    .panel-sub {
+      font-size: 12px;
+      color: var(--soft);
+      margin-bottom: 8px;
+    }
+
+    .step-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .step {
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.94);
+      padding: 7px 9px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 12px;
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .step.visible {
+      animation: fadeInUp 0.3s ease forwards;
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 2px solid var(--accent2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent2);
+      box-shadow: 0 0 12px rgba(34,197,94,0.6);
+      background: radial-gradient(circle at 20% 20%, #bbf7d0, #0f172a);
+    }
+
+    .step-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .step-title {
+      font-weight: 600;
+    }
+
+    .step-text {
+      color: var(--fg);
+    }
+
+    .step-meta {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mode-note {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--soft);
+      border-radius: 10px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      padding: 6px 7px;
+    }
+
+    /* Photos / preuves */
+
+    .photos-block {
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      padding: 7px 8px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .photos-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .photos-title {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 10px;
+    }
+
+    .photos-btn {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .photos-btn span.icon {
+      font-size: 12px;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 5px;
+    }
+
+    .photo-thumb {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: #020617;
+      height: 70px;
+    }
+
+    .photo-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0 0 0 1px rgba(15,23,42,0.9);
+      pointer-events: none;
+    }
+
+    .photos-hint {
+      margin-top: 3px;
+      font-size: 10px;
+      color: rgba(148,163,184,0.9);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="skyline"></div>
+
+  <div class="scene">
+    <!-- BORNE ZALAGTIGA -->
+    <div class="cabinet-wrap">
+      <div class="cabinet">
+        <div class="cabinet-inner">
+          <div class="marquee">
+            <div class="marquee-border"></div>
+            <div class="marquee-title">ZALAGTIGA</div>
+            <div class="marquee-sub">PLACE POELAERT · LUNA PARK · GUERRE FROIDE</div>
+          </div>
+
+          <div class="screen-shell">
+            <div class="screen">
+              <div class="crt-scanlines"></div>
+              <div class="crt-glow"></div>
+              <div id="screenContent" class="screen-content"></div>
+            </div>
+          </div>
+
+          <div class="lower-panel">
+            <div id="coinSlot" class="coin-slot">
+              <div class="coin-main">
+                <div class="coin-label">INSERT COIN</div>
+                <div class="coin-sub">
+                  1 crédit = 1 enquête sur ta vie numérique.  
+                  Zalagtiga surveille le ciel, pas les gens (enfin, en théorie).
+                </div>
+              </div>
+              <div class="coin-light"></div>
+            </div>
+
+            <div class="controls">
+              <div>commandes symboliques</div>
+              <div class="buttons-row">
+                <div class="btn-round.red" title="Regarder la propagande"></div>
+                <div class="btn-round.blue" title="Relier les signaux"></div>
+                <div class="btn-round.green" title="Coopérer pour ne pas finir seul·e"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRIEFING + PHOTOS -->
+    <section class="panel">
+      <div class="panel-inner">
+        <h1 class="panel-title">Briefing · Jeu de piste Zalagtiga</h1>
+        <p class="panel-sub">
+          Borne arcade posée quelque part autour de la place Poelaert, dans un luna park
+          un peu glauque des années 80.  
+          Les façades sont sombres, la guerre froide se joue aux infos, et toi tu insères une pièce
+          pour comprendre ce que tu fais, exactement, au milieu de tout ça.
+        </p>
+
+        <ol id="stepList" class="step-list">
+          <li class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Allumer la borne (minitel-boot-map.html)</div>
+              <div class="step-text">
+                Tu ouvres la machine Minitel / terminal. Le faux boot se lance.
+                C’est le moment “télétexte / Galaga” où tu réalises que tu es dans un décor,
+                pas dans un vrai centre de données.
+              </div>
+              <div class="step-meta">
+                Place Poelaert, 198x&nbsp;: la brume remonte du boulevard de Waterloo,
+                tu vois le Palais de justice en ombre chinoise derrière la vitre de la salle de jeux.
+              </div>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Entrer le code secret (Konami)</div>
+              <div class="step-text">
+                Sur l’écran Minitel, tu tapes <code>↑ ↑ ↓ ↓ ← → ← → B A</code>.  
+                La machine tremble un peu&nbsp;: tu viens de passer du simple décor
+                au mode “cartographie d’enquête”.
+              </div>
+              <div class="step-meta">
+                Ici, le cheat code ne donne pas des vies infinies, il t’accorde le droit
+                de te poser des questions avant de cliquer partout.
+              </div>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Ouvrir l’échiquier clandestin</div>
+              <div class="step-text">
+                La MAP s’ouvre en plateau d’échecs 8×8.  
+                Chaque case devient un dossier potentiel&nbsp;: acteur public, organisation,
+                média, lieu symbolique, hypothèse d’enquête.
+              </div>
+              <div class="step-meta">
+                Tu ne fliques personne. Tu apprends juste à voir comment des pièces
+                se déplacent sur un échiquier qui s’appelle “société”.
+              </div>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Remplir les fiches (et afficher des images)</div>
+              <div class="step-text">
+                Tu cliques sur une case, tu ouvres sa fiche, tu peux ajouter&nbsp;:
+                nom, type, niveau de risque, tags, lien, GPS, notes, image…  
+                Et tu peux aussi nourrir la machine avec tes propres photos dans le panneau de droite.
+              </div>
+              <div class="step-meta">
+                Sur l’échiquier, les cases actives s’illuminent et affichent leurs images.
+                Sur cette page, tes photos deviennent un mur de preuves poético-dystopique.
+              </div>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <div class="step-title">Sauvegarder, importer, rejouer</div>
+              <div class="step-text">
+                Tu exportes ton réseau (JSON / CSV / Markdown), tu peux le manipuler ailleurs,
+                puis le réimporter pour reprendre la partie ou la relancer depuis un autre poste.  
+                La borne ne garde rien côté serveur, tout reste entre toi et ton navigateur.
+              </div>
+              <div class="step-meta">
+                En termes de jeu vidéo&nbsp;: tu viens de débloquer les sauvegardes manuelles
+                dans un monde qui ne propose normalement que des “checkpoints”.
+              </div>
+            </div>
+          </li>
+        </ol>
+
+        <div class="mode-note">
+          Mode actuel&nbsp;: <strong>briefing</strong>.  
+          Tu peux lier cette page depuis ta MAP ou ton Minitel comme “Règles du jeu / entrée arcade”
+          et t’en servir de point de départ pour une visite guidée IRL / en ligne.
+        </div>
+
+        <!-- PHOTOS / PREUVES -->
+        <div class="photos-block">
+          <div class="photos-header">
+            <div class="photos-title">photos / preuves / ambiance</div>
+            <button id="btnAddPhotos" class="photos-btn">
+              <span class="icon">📷</span>
+              <span>Ajouter des photos</span>
+            </button>
+            <input id="fileInput" type="file" accept="image/*" multiple />
+          </div>
+          <div id="photosGrid" class="photos-grid"></div>
+          <div class="photos-hint">
+            Tu peux ajouter des images d’ambiance (vieille Bruxelles, néons de salle de jeux,
+            captures de tes autres pages, flyers, schémas…).  
+            Rien n’est envoyé sur un serveur&nbsp;: c’est juste affiché ici, dans ton navigateur.
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Texte d'intro pour l'écran CRT
+    const introLines = [
+      { text: "ZALAGTIGA  ·  SYSTEM-80  (simulation locale)", cls: "dim" },
+      { text: "", cls: "" },
+      { text: "PLACE POELAERT, BRUXELLES – QUELQUE PART DANS LES ANNÉES 80.", cls: "" },
+      { text: "LES JOURNAUX PARLENT DE MISSILES, LES RUES PARLENT DE FIN DE MOIS.", cls: "" },
+      { text: "TOI, TU METS UNE PIÈCE DANS UNE BORNE QUI NE DEVRAIT PAS ÊTRE LÀ.", cls: "" },
+      { text: "", cls: "" },
+      { text: "INSERT COIN POUR TRANSFORMER LE CHAOS EN CARTE D’ENQUÊTE.", cls: "highlight" },
+      { text: "", cls: "" },
+      { text: "…OU LAISSE SIMPLEMENT LA MACHINE CLIGNOTER DANS LE VIDE.", cls: "dim" }
+    ];
+
+    const missionLines = [
+      { text: "CRÉDIT ACCEPTÉ. MODE  ·  JEU DE PISTE CITOYEN (FICTION)", cls: "highlight" },
+      { text: "", cls: "" },
+      { text: "OBJECTIF :", cls: "warn" },
+      { text: "  NE PAS SE LAISSER MANGER PAR LES INFOS.", cls: "" },
+      { text: "  NE PAS SE PRENDRE POUR UN SERVICE SECRET.", cls: "" },
+      { text: "  APPRENDRE À CARTOGRAPHIER CE QUI T’ENTOURE.", cls: "" },
+      { text: "", cls: "" },
+      { text: "ÉTAPES :", cls: "" },
+      { text: "  1. DÉBLOQUER LA MAP AVEC LE KONAMI CODE.", cls: "" },
+      { text: "  2. REMPLIR QUELQUES CASES DE L’ÉCHIQUIER.", cls: "" },
+      { text: "  3. ACCROCHER TES PHOTOS DANS LE MUR DE PREUVES.", cls: "" },
+      { text: "  4. EXPORTER TON RÉSEAU POUR LE TRAVAILLER AILLEURS.", cls: "" },
+      { text: "", cls: "" },
+      { text: "TU N’ES PAS OBSERVÉ·E. TU APPRENDS À OBSERVER.", cls: "dim" }
+    ];
+
+    const screenEl = document.getElementById("screenContent");
+    const coinSlot = document.getElementById("coinSlot");
+
+    let introIndex = 0;
+    let missionShown = false;
+
+    function appendLine(lineObj) {
+      const line = document.createElement("div");
+      line.className = "screen-line" + (lineObj.cls ? " " + lineObj.cls : "");
+      line.textContent = lineObj.text;
+      screenEl.appendChild(line);
+      screenEl.scrollTop = screenEl.scrollHeight;
+    }
+
+    function playIntro() {
+      if (introIndex < introLines.length) {
+        appendLine(introLines[introIndex]);
+        introIndex++;
+        setTimeout(playIntro, 450);
+      } else {
+        const caretLine = document.createElement("div");
+        caretLine.className = "screen-line";
+        const caret = document.createElement("span");
+        caret.className = "caret";
+        caretLine.appendChild(caret);
+        screenEl.appendChild(caretLine);
+        screenEl.scrollTop = screenEl.scrollHeight;
+      }
+    }
+
+    function clearScreen() {
+      screenEl.innerHTML = "";
+    }
+
+    function showMission() {
+      clearScreen();
+      missionLines.forEach((l, i) => {
+        setTimeout(() => appendLine(l), i * 220);
+      });
+      missionShown = true;
+    }
+
+    coinSlot.addEventListener("click", () => {
+      coinSlot.classList.add("started");
+      if (!missionShown) {
+        showMission();
+        // anime la liste des étapes
+        const steps = document.querySelectorAll(".step");
+        steps.forEach((step, index) => {
+          setTimeout(() => {
+            step.classList.add("visible");
+          }, 200 * index);
+        });
+      } else {
+        // rejoue l'anim des étapes
+        const steps = document.querySelectorAll(".step");
+        steps.forEach(step => step.classList.remove("visible"));
+        setTimeout(() => {
+          steps.forEach((step, index) => {
+            setTimeout(() => {
+              step.classList.add("visible");
+            }, 200 * index);
+          });
+        }, 80);
+      }
+    });
+
+    // lancement automatique de l'intro
+    playIntro();
+
+    // gestion photos
+
+    const btnAddPhotos = document.getElementById("btnAddPhotos");
+    const fileInput = document.getElementById("fileInput");
+    const photosGrid = document.getElementById("photosGrid");
+
+    btnAddPhotos.addEventListener("click", () => {
+      fileInput.value = "";
+      fileInput.click();
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+
+      files.forEach(file => {
+        if (!file.type.startsWith("image/")) return;
+        const url = URL.createObjectURL(file);
+        const wrapper = document.createElement("div");
+        wrapper.className = "photo-thumb";
+
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = file.name || "Photo";
+
+        wrapper.appendChild(img);
+        photosGrid.appendChild(wrapper);
+      });
+    });
+  </script>
+</body>
+</html>
