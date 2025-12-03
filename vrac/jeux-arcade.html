@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Arcade · ouaisfi.eu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --bg-card: #030712;
+      --border-subtle: #1f2933;
+      --accent: #22c55e;
+      --accent-2: #a855ff;
+      --accent-soft: rgba(34, 197, 94, 0.16);
+      --accent-soft-2: rgba(168, 85, 255, 0.2);
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --text-softer: #6b7280;
+      --danger: #fb7185;
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
+      --transition-fast: 0.15s ease-out;
+      --transition-med: 0.22s ease-out;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 50%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    @media (min-width: 960px) {
+      .app-shell {
+        flex-direction: row;
+      }
+    }
+
+    /* SIDEBAR / HUD GAUCHE */
+    .sidebar {
+      background: radial-gradient(circle at 0 0, #111827 0, #020617 55%, #000 100%);
+      border-right: 1px solid var(--border-subtle);
+      padding: 14px 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 12px 0 35px rgba(0, 0, 0, 0.8);
+      z-index: 4;
+    }
+
+    @media (min-width: 960px) {
+      .sidebar {
+        width: 260px;
+      }
+    }
+
+    @media (max-width: 959.98px) {
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+    }
+
+    .logo-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 8px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(15, 23, 42, 0.95));
+      box-shadow:
+        0 0 22px rgba(34, 197, 94, 0.3),
+        0 0 32px rgba(168, 85, 255, 0.3);
+    }
+
+    .logo-coin {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #22c55e;
+      background: radial-gradient(circle at 30% 0, #bbf7d0 0, #22c55e 35%, #14532d 80%);
+      box-shadow:
+        0 0 20px rgba(34, 197, 94, 0.7),
+        0 0 35px rgba(34, 197, 94, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #022c22;
+      font-size: 14px;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .logo-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .badge-small {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      padding: 2px 8px;
+      color: var(--accent-2);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-softer);
+      margin-top: 2px;
+      margin-bottom: 6px;
+      padding: 0 1px;
+    }
+
+    .level-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 40vh;
+      overflow-y: auto;
+    }
+
+    .level-item {
+      border-radius: 12px;
+      padding: 6px 8px;
+      border: 1px solid transparent;
+      background: rgba(15, 23, 42, 0.75);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition:
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+      font-size: 12px;
+    }
+
+    .level-item:hover {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: rgba(148, 163, 184, 0.5);
+      transform: translateX(2px);
+    }
+
+    .level-item.active {
+      background: radial-gradient(circle at top left, var(--accent-soft), transparent);
+      border-color: rgba(34, 197, 94, 0.9);
+    }
+
+    .level-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .level-item.completed .level-check {
+      background: #22c55e;
+      border-color: #22c55e;
+      color: #022c22;
+    }
+
+    .level-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .level-title {
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .level-sub {
+      font-size: 10px;
+      color: var(--text-softer);
+    }
+
+    .level-pill {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--text-softer);
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sidebar-footer strong {
+      color: var(--text-soft);
+    }
+
+    .xp-bar {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      margin-top: 2px;
+    }
+
+    .xp-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22c55e, #a855ff);
+      transition: width 0.3s ease-out;
+    }
+
+    .btn-small {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-small:hover {
+      background: rgba(15, 23, 42, 1);
+    }
+
+    /* MAIN / SCÈNE DE JEU */
+    .main {
+      flex: 1;
+      padding: 14px 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 960px) {
+      .main {
+        padding: 18px 24px 24px;
+      }
+    }
+
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .breadcrumbs {
+      font-size: 11px;
+      color: var(--text-softer);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .page-title span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 2px 8px;
+      color: var(--accent-2);
+    }
+
+    .insert-coin {
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #22c55e;
+      animation: blink 1s steps(2, start) infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .pill-btn {
+      font-size: 11px;
+      border-radius: var(--radius-pill);
+      padding: 4px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .pill-btn.red {
+      border-color: rgba(248, 113, 113, 0.9);
+      color: #fecaca;
+    }
+
+    .pill-btn.blue {
+      border-color: rgba(59, 130, 246, 0.9);
+      color: #bfdbfe;
+    }
+
+    .pill-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+    }
+
+    .pill-btn.red:hover {
+      background: rgba(127, 29, 29, 0.8);
+    }
+
+    .pill-btn.blue:hover {
+      background: rgba(30, 64, 175, 0.8);
+    }
+
+    /* CONTENEUR NIVEAU + TERMINAL */
+    .game-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .game-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: radial-gradient(circle at top left, #020617 0, #020617 50%, #000 100%);
+      padding: 10px 12px 12px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .card-header-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .difficulty-badge {
+      font-size: 10px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+      white-space: nowrap;
+    }
+
+    .card-body {
+      font-size: 12px;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      color: var(--text-softer);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn-primary {
+      font-size: 12px;
+      border-radius: 999px;
+      padding: 6px 12px;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, #22c55e, #a855ff);
+      color: #020617;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      box-shadow:
+        0 0 18px rgba(34, 197, 94, 0.6),
+        0 0 26px rgba(168, 85, 255, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 24px rgba(34, 197, 94, 0.8),
+        0 0 32px rgba(168, 85, 255, 0.7);
+    }
+
+    .btn-ghost {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: transparent;
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    /* TERMINAL / IFRAME */
+    .terminal {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 260px;
+    }
+
+    .terminal-screen {
+      position: relative;
+      border-radius: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: radial-gradient(circle at top, #020617 0, #000 60%);
+      overflow: hidden;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .terminal-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-bottom: 1px solid rgba(15, 23, 42, 1);
+      background: linear-gradient(90deg, #020617, #0b1120);
+      font-size: 10px;
+      color: var(--text-softer);
+    }
+
+    .dots {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #4b5563;
+    }
+
+    .dot.red {
+      background: #fb7185;
+    }
+    .dot.yellow {
+      background: #facc15;
+    }
+    .dot.green {
+      background: #22c55e;
+    }
+
+    .terminal-url {
+      flex: 1;
+      margin: 0 6px;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      padding: 3px 8px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .terminal-url span {
+      font-family: "Courier New", monospace;
+      font-size: 10px;
+      color: #9ca3af;
+    }
+
+    .terminal-body {
+      flex: 1;
+      position: relative;
+      min-height: 190px;
+    }
+
+    .terminal-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #020617;
+    }
+
+    .terminal-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--text-softer);
+      padding: 16px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .terminal-placeholder span {
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      margin-top: 6px;
+      color: #22c55e;
+    }
+
+    .hint-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .hint-row code {
+      font-size: 11px;
+    }
+
+    /* MOBILE ajustements */
+    @media (max-width: 600px) {
+      .page-title {
+        font-size: 18px;
+      }
+      .terminal-body {
+        min-height: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- HUD GAUCHE -->
+    <aside class="sidebar">
+      <div class="logo-block">
+        <div class="logo-coin">12,50</div>
+        <div class="logo-text">
+          <div class="logo-title">ouaisfi.eu · Arcade</div>
+          <div class="logo-sub">ARG statique basé sur toutes tes pages</div>
+        </div>
+        <span class="badge-small">jeu</span>
+      </div>
+
+      <div>
+        <div class="sidebar-section-title">Niveaux / Modules</div>
+        <ul id="level-list" class="level-list"></ul>
+      </div>
+
+      <div class="sidebar-section-title">Progression</div>
+      <div>
+        <div>Cartes explorées : <span id="progress-count">0</span> / <span id="progress-total">0</span></div>
+        <div class="xp-bar">
+          <div id="xp-bar-inner" class="xp-bar-inner"></div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div>
+          <strong>Comment jouer</strong><br />
+          Choisis un module dans la liste. Clique sur <em>Jouer ce module</em> pour l’ouvrir
+          dans le terminal. Quand tu estimes l’avoir exploré, marque-le comme complété.
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button id="btn-reset" class="btn-small">🔄 Reset progression</button>
+          <button id="btn-random" class="btn-small">🎲 Module aléatoire</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- SCÈNE PRINCIPALE -->
+    <main class="main">
+      <header class="top-bar">
+        <div>
+          <div class="breadcrumbs">/ jeu / hub-global.html</div>
+          <div class="page-title">
+            Arcade multi-pages
+            <span>statique · 12,50-based</span>
+          </div>
+        </div>
+        <div class="insert-coin">INSERT COIN / PRESS START</div>
+      </header>
+
+      <div class="pill-row">
+        <button class="pill-btn red" id="pill-red">
+          🔴 Pilule rouge
+          <span style="font-size:10px;">mode complot ARG / hardcore</span>
+        </button>
+        <button class="pill-btn blue" id="pill-blue">
+          🔵 Pilule bleue
+          <span style="font-size:10px;">mode tuto & pédagogique</span>
+        </button>
+      </div>
+
+      <section class="game-layout">
+        <!-- Panneau niveau courant -->
+        <article class="card" id="level-panel">
+          <div class="card-header">
+            <div class="card-header-title">
+              <span id="level-icon">🕹️</span>
+              <span id="level-name">Choisis un niveau</span>
+            </div>
+            <span id="level-difficulty" class="difficulty-badge">---</span>
+          </div>
+          <div class="card-body">
+            <p id="level-description">
+              Chaque page HTML qu’on a déjà fabriquée devient ici un module / niveau du jeu :
+              boutique, faux navigateurs, intranet, examens d’entrée, jeu «12,50», etc.
+            </p>
+            <div class="tag-row" id="level-tags"></div>
+
+            <div class="btn-row">
+              <button id="btn-play" class="btn-primary" disabled>
+                ▶ Jouer ce module
+              </button>
+              <button id="btn-mark-done" class="btn-ghost" disabled>
+                ✅ Marquer comme complété
+              </button>
+              <button id="btn-open-newtab" class="btn-ghost" disabled>
+                🌐 Ouvrir dans un nouvel onglet
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Terminal / Visionneuse -->
+        <section class="terminal">
+          <div class="card-header">
+            <div class="card-header-title">
+              <span>🖥️</span>
+              <span>Terminal d’exploration</span>
+            </div>
+            <span class="difficulty-badge">Mobile-first & scrollable</span>
+          </div>
+          <div class="terminal-screen">
+            <div class="terminal-topbar">
+              <div class="dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+              </div>
+              <div class="terminal-url">
+                <span id="terminal-url-text">about:blank</span>
+              </div>
+              <div style="font-size:10px; color:var(--text-softer);">
+                CTRL+R = reload
+              </div>
+            </div>
+            <div class="terminal-body">
+              <iframe id="terminal-frame" src="about:blank" title="Arcade"></iframe>
+              <div id="terminal-placeholder" class="terminal-placeholder">
+                Aucun module chargé pour l’instant.<br />
+                <span>&gt; Sélectionne un niveau à gauche, puis clique sur “Jouer ce module”.</span>
+              </div>
+            </div>
+          </div>
+          <div class="hint-row">
+            <div>
+              💾 Tu peux organiser tes fichiers dans le même dossier que ce hub et juste adapter
+              les URL dans le tableau <code>levels[]</code> du script.
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    /*
+      ============================
+      TABLEAU DES NIVEAUX / MODULES
+      ============================
+      Tu adaptes simplement:
+
+      - id        : identifiant interne
+      - title     : nom du module
+      - url       : fichier HTML réel que tu as déjà (même dossier ou sous-dossier)
+      - category  : type de page
+      - difficulty: "Branques", "Normal", "Expert", "Hardcore", etc.
+      - icon      : emoji pour le niveau
+      - tags      : mots-clés
+      - mode      : "red", "blue" ou "both" (pour filtrer avec les pilules)
+    */
+
+    const levels = [
+      {
+        id: "bilan",
+        title: "Bilan de vie · Site statique",
+        url: "bilan.html",
+        category: "Site perso",
+        difficulty: "Normal",
+        icon: "📊",
+        tags: ["bilan", "burn-out", "reconversion", "belgitude"],
+        mode: "blue"
+      },
+      {
+        id: "boutique",
+        title: "Boutique 12,50 · Produits & prestations",
+        url: "boutique.html",
+        category: "Boutique",
+        difficulty: "Normal",
+        icon: "🛒",
+        tags: ["12,50", "produits", "prestations", "json"],
+        mode: "both"
+      },
+      {
+        id: "jeu-12-50",
+        title: "Jeu concours «12,50»",
+        url: "12-50.html",
+        category: "Jeu",
+        difficulty: "Expert",
+        icon: "🧪",
+        tags: ["jeu concours", "matrix", "pilules", "easter eggs"],
+        mode: "red"
+      },
+      {
+        id: "earl",
+        title: "EARL · Faux moteur de recherche",
+        url: "earl.html",
+        category: "Moteur de recherche",
+        difficulty: "Branques",
+        icon: "🔍",
+        tags: ["moteur", "recherche", "meta-site"],
+        mode: "both"
+      },
+      {
+        id: "pac-fanclub",
+        title: "PAC · Fan club non officiel",
+        url: "pac.html",
+        category: "Organisation",
+        difficulty: "Normal",
+        icon: "📣",
+        tags: ["éducation permanente", "fan club", "mouvement"],
+        mode: "blue"
+      },
+      {
+        id: "pac-rapport",
+        title: "PAC · Rapport d’activité fictif",
+        url: "rapport.html",
+        category: "Rapport / Doc",
+        difficulty: "Expert",
+        icon: "📑",
+        tags: ["rapport", "fwb", "inspecteurs"],
+        mode: "blue"
+      },
+      {
+        id: "organisation",
+        title: "L’Organisation · Intranet socialement anonyme",
+        url: "organisation.html",
+        category: "Intranet",
+        difficulty: "Hardcore",
+        icon: "🕵️",
+        tags: ["agence", "renseignement", "SA sociale"],
+        mode: "red"
+      },
+      {
+        id: "ccplc",
+        title: "CCPLC · Société Anonyme Sociale",
+        url: "ccplc.html",
+        category: "Hub",
+        difficulty: "Normal",
+        icon: "🏛️",
+        tags: ["ccplc", "citoyenneté", "hub"],
+        mode: "both"
+      },
+      {
+        id: "onyx",
+        title: "ONYX · Faux Obsidian sur clé USB",
+        url: "onyx.html",
+        category: "Outil",
+        difficulty: "Expert",
+        icon: "💎",
+        tags: ["obsidian-like", "graph view", "intranet"],
+        mode: "both"
+      },
+      {
+        id: "etageres",
+        title: "Étagère · Dashboard de fichiers",
+        url: "etagere.html",
+        category: "Dashboard",
+        difficulty: "Branques",
+        icon: "🗂️",
+        tags: ["fichiers", "tous formats", "organisation"],
+        mode: "blue"
+      },
+      {
+        id: "test-plaidoyer",
+        title: "Test ultime · Plaidoyer citoyen",
+        url: "test-plaidoyer.html",
+        category: "Examen",
+        difficulty: "Hardcore",
+        icon: "🎓",
+        tags: ["plaidoyer", "questions", "examen"],
+        mode: "red"
+      },
+      {
+        id: "recrutement-vsse",
+        title: "Pré-test recrutement type VSSE",
+        url: "vsse.html",
+        category: "Test",
+        difficulty: "Hardcore",
+        icon: "🧠",
+        tags: ["vsse", "veille", "sûreté de l’État"],
+        mode: "red"
+      },
+      {
+        id: "nyxo-os",
+        title: "NYXO · Faux OS Web",
+        url: "nyxo.html",
+        category: "Système",
+        difficulty: "Expert",
+        icon: "💻",
+        tags: ["os fictif", "fenêtres", "modules"],
+        mode: "both"
+      },
+      {
+        id: "navigateur-kali",
+        title: "Navigateur type Kali · Chrome/Firefox",
+        url: "kali-browser.html",
+        category: "Navigateur",
+        difficulty: "Normal",
+        icon: "🌐",
+        tags: ["exploration web", "sandbox", "kali"],
+        mode: "both"
+      },
+      {
+        id: "portfolio-cynique",
+        title: "Portfolio cynique & gluant",
+        url: "portfolio.html",
+        category: "Perso",
+        difficulty: "Normal",
+        icon: "🧬",
+        tags: ["bim un jour", "bim toujours", "cynisme"],
+        mode: "blue"
+      }
+    ];
+
+    // DOM refs
+    const levelListEl = document.getElementById("level-list");
+    const progressCountEl = document.getElementById("progress-count");
+    const progressTotalEl = document.getElementById("progress-total");
+    const xpBarInner = document.getElementById("xp-bar-inner");
+
+    const pillRed = document.getElementById("pill-red");
+    const pillBlue = document.getElementById("pill-blue");
+
+    const levelIconEl = document.getElementById("level-icon");
+    const levelNameEl = document.getElementById("level-name");
+    const levelDifficultyEl = document.getElementById("level-difficulty");
+    const levelDescriptionEl = document.getElementById("level-description");
+    const levelTagsEl = document.getElementById("level-tags");
+
+    const btnPlay = document.getElementById("btn-play");
+    const btnMarkDone = document.getElementById("btn-mark-done");
+    const btnOpenNewTab = document.getElementById("btn-open-newtab");
+    const btnReset = document.getElementById("btn-reset");
+    const btnRandom = document.getElementById("btn-random");
+
+    const terminalFrame = document.getElementById("terminal-frame");
+    const terminalUrlText = document.getElementById("terminal-url-text");
+    const terminalPlaceholder = document.getElementById("terminal-placeholder");
+
+    // STATE
+    let currentMode = "both"; // "both" | "red" | "blue"
+    let currentLevelId = null;
+    const STORAGE_KEY = "ouaisfi_arcade_progress";
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return {};
+        return JSON.parse(raw);
+      } catch {
+        return {};
+      }
+    }
+
+    function saveProgress(progress) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    let progress = loadProgress(); // { [id]: true }
+
+    function getFilteredLevels() {
+      if (currentMode === "both") return levels;
+      return levels.filter((lvl) => lvl.mode === currentMode || lvl.mode === "both");
+    }
+
+    function renderLevelList() {
+      const visibleLevels = getFilteredLevels();
+      levelListEl.innerHTML = "";
+
+      visibleLevels.forEach((lvl) => {
+        const li = document.createElement("li");
+        li.className = "level-item";
+        li.dataset.id = lvl.id;
+
+        if (lvl.id === currentLevelId) {
+          li.classList.add("active");
+        }
+        if (progress[lvl.id]) {
+          li.classList.add("completed");
+        }
+
+        const check = document.createElement("div");
+        check.className = "level-check";
+        check.textContent = progress[lvl.id] ? "✓" : "";
+
+        const meta = document.createElement("div");
+        meta.className = "level-meta";
+
+        const title = document.createElement("div");
+        title.className = "level-title";
+        title.textContent = lvl.title;
+        const sub = document.createElement("div");
+        sub.className = "level-sub";
+        sub.textContent = lvl.category;
+
+        meta.appendChild(title);
+        meta.appendChild(sub);
+
+        const pill = document.createElement("div");
+        pill.className = "level-pill";
+        pill.textContent = lvl.difficulty;
+
+        li.appendChild(check);
+        li.appendChild(meta);
+        li.appendChild(pill);
+
+        li.addEventListener("click", () => selectLevel(lvl.id));
+
+        levelListEl.appendChild(li);
+      });
+
+      // Progress global
+      const total = levels.length;
+      const done = Object.keys(progress).filter((id) => progress[id]).length;
+      progressTotalEl.textContent = total;
+      progressCountEl.textContent = done;
+      const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+      xpBarInner.style.width = pct + "%";
+    }
+
+    function selectLevel(id) {
+      const lvl = levels.find((l) => l.id === id);
+      if (!lvl) return;
+
+      currentLevelId = id;
+      renderLevelList();
+
+      levelIconEl.textContent = lvl.icon || "🕹️";
+      levelNameEl.textContent = lvl.title;
+      levelDifficultyEl.textContent = lvl.difficulty || "---";
+
+      levelTagsEl.innerHTML = "";
+      (lvl.tags || []).forEach((t) => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        levelTagsEl.appendChild(span);
+      });
+
+      levelDescriptionEl.textContent =
+        "Ce module ouvre la page : " +
+        (lvl.url || "about:blank") +
+        ". Tu peux t’en servir comme niveau autonome du jeu global (indications, tests, boutique, etc.).";
+
+      btnPlay.disabled = false;
+      btnMarkDone.disabled = false;
+      btnOpenNewTab.disabled = false;
+    }
+
+    function playCurrentLevel() {
+      if (!currentLevelId) return;
+      const lvl = levels.find((l) => l.id === currentLevelId);
+      if (!lvl) return;
+
+      if (!lvl.url) return;
+
+      terminalFrame.src = lvl.url;
+      terminalUrlText.textContent = lvl.url;
+      terminalPlaceholder.style.display = "none";
+    }
+
+    function markCurrentLevelDone() {
+      if (!currentLevelId) return;
+      progress[currentLevelId] = true;
+      saveProgress(progress);
+      renderLevelList();
+    }
+
+    function openCurrentLevelNewTab() {
+      if (!currentLevelId) return;
+      const lvl = levels.find((l) => l.id === currentLevelId);
+      if (!lvl || !lvl.url) return;
+      window.open(lvl.url, "_blank");
+    }
+
+    function resetProgress() {
+      progress = {};
+      saveProgress(progress);
+      renderLevelList();
+    }
+
+    function randomLevel() {
+      const visible = getFilteredLevels();
+      if (!visible.length) return;
+      const rand = visible[Math.floor(Math.random() * visible.length)];
+      selectLevel(rand.id);
+      playCurrentLevel();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      renderLevelList();
+      // Si le niveau courant n’est plus visible, on le désélectionne
+      if (currentLevelId) {
+        const visibleIds = new Set(getFilteredLevels().map((l) => l.id));
+        if (!visibleIds.has(currentLevelId)) {
+          currentLevelId = null;
+          levelIconEl.textContent = "🕹️";
+          levelNameEl.textContent = "Choisis un niveau";
+          levelDifficultyEl.textContent = "---";
+          levelTagsEl.innerHTML = "";
+          levelDescriptionEl.textContent =
+            "Chaque page HTML qu’on a déjà fabriquée devient ici un module / niveau du jeu : boutique, faux navigateurs, intranet, examens d’entrée, jeu «12,50», etc.";
+          btnPlay.disabled = true;
+          btnMarkDone.disabled = true;
+          btnOpenNewTab.disabled = true;
+        }
+      }
+    }
+
+    // Events
+    btnPlay.addEventListener("click", playCurrentLevel);
+    btnMarkDone.addEventListener("click", markCurrentLevelDone);
+    btnOpenNewTab.addEventListener("click", openCurrentLevelNewTab);
+    btnReset.addEventListener("click", resetProgress);
+    btnRandom.addEventListener("click", randomLevel);
+
+    pillRed.addEventListener("click", () => {
+      setMode("red");
+      pillRed.classList.add("red");
+      pillBlue.classList.remove("blue");
+    });
+
+    pillBlue.addEventListener("click", () => {
+      setMode("blue");
+      pillBlue.classList.add("blue");
+      pillRed.classList.remove("red");
+    });
+
+    // Init
+    renderLevelList();
+  </script>
+</body>
+</html>
