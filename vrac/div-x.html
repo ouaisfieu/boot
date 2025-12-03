@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agence Gouvernementale – Division Opérations Stratégiques</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Site d’information officiel sur la création de la Division Opérations Stratégiques et son test de recrutement : conception d’un intranet à partir d’Internet et de documents classifiés simulés." />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #7dd3fc;
+      --accent-strong: #22d3ee;
+      --accent-soft: rgba(125, 211, 252, 0.13);
+      --accent-warn: #f97316;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --radius-lg: 18px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
+      --transition: 0.2s ease;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: var(--accent-strong); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(
+        to right,
+        rgba(15,23,42,0.98),
+        rgba(15,23,42,0.9)
+      );
+      border-bottom: 1px solid rgba(148,163,184,0.25);
+    }
+
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.96rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .logo-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 20%, #e5e7eb 0, #38bdf8 35%, #0f172a 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 2px rgba(56,189,248,0.4), 0 0 22px rgba(56,189,248,0.8);
+      font-size: 0.7rem;
+      color: #e5f2ff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      font-size: 0.86rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-strong);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    main { flex: 1; }
+
+    /* Hero */
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 18px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.8fr);
+      gap: 26px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: rgba(15,23,42,0.95);
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.1rem, 3vw, 2.6rem);
+      margin: 4px 0 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(to right, #7dd3fc, #22d3ee, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-lead {
+      font-size: 0.96rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    .hero-lead strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 16px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition),
+                  transform var(--transition), box-shadow var(--transition),
+                  color var(--transition);
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #22d3ee, #38bdf8);
+      border-color: transparent;
+      color: #020617;
+      font-weight: 600;
+      box-shadow: 0 14px 32px rgba(56,189,248,0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(56,189,248,0.7);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.96);
+      border-color: rgba(148,163,184,0.9);
+      transform: translateY(-1px);
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-card {
+      background:
+        radial-gradient(circle at top, rgba(56,189,248,0.18) 0, #020617 55%, #000 100%);
+      border-radius: 24px;
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 16px 16px 14px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 10% 0, rgba(125,211,252,0.28), transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(129,140,248,0.45), transparent 55%);
+      opacity: 0.8;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .hero-card-inner { position: relative; z-index: 1; }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: rgba(15,23,42,0.95);
+      font-size: 0.74rem;
+    }
+
+    .hero-pill span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #f97316;
+      box-shadow: 0 0 10px rgba(248,250,252,0.9);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 6px;
+      margin: 6px 0 8px;
+      font-size: 0.78rem;
+    }
+
+    .hero-stat {
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.3);
+      background: rgba(15,23,42,0.95);
+      padding: 6px 7px;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 0.78rem;
+    }
+
+    .hero-note {
+      font-size: 0.8rem;
+      margin-top: 4px;
+      color: rgba(226,232,240,0.9);
+      display: flex;
+      gap: 7px;
+      align-items: flex-start;
+    }
+
+    .hero-note span {
+      font-size: 1rem;
+    }
+
+    /* Sections */
+
+    section {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    section + section { margin-top: 6px; }
+
+    .section-title {
+      font-size: 1.12rem;
+      margin: 0 0 4px;
+    }
+
+    .section-sub {
+      font-size: 0.86rem;
+      color: var(--muted);
+      max-width: 700px;
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+
+    .section-sub strong { color: #e5e7eb; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.5), #020617);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 12px 13px;
+      box-shadow: 0 14px 35px rgba(15,23,42,0.9);
+      font-size: 0.86rem;
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .pill-accent {
+      border-color: rgba(56,189,248,0.9);
+      background: rgba(8,47,73,0.9);
+      color: #e0f2fe;
+    }
+
+    .pill-warn {
+      border-color: rgba(248,148,94,0.9);
+      background: rgba(67,20,7,0.9);
+      color: #fed7aa;
+    }
+
+    /* Test / projet */
+
+    .layout-2col {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 2.3fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .panel {
+      background: rgba(15,23,42,0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: 12px 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.8);
+      font-size: 0.85rem;
+    }
+
+    .panel h3 {
+      margin: 0 0 6px;
+      font-size: 0.96rem;
+    }
+
+    .panel h4 {
+      margin: 6px 0 4px;
+      font-size: 0.88rem;
+    }
+
+    .note-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .note-label span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .timeline {
+      border-left: 1px solid rgba(148,163,184,0.5);
+      margin: 4px 0 0;
+      padding-left: 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .step {
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .step::before {
+      content: "";
+      position: absolute;
+      left: -14px;
+      top: 4px;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 2px solid #38bdf8;
+      background: #020617;
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.25);
+    }
+
+    .step strong { display: block; }
+
+    .list {
+      margin: 4px 0;
+      padding-left: 17px;
+    }
+
+    .list li { margin-bottom: 2px; }
+
+    .badge-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .badge-inline span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #38bdf8;
+    }
+
+    .subgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .subcard {
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.45);
+      background: rgba(15,23,42,0.98);
+      padding: 7px 8px;
+      font-size: 0.8rem;
+    }
+
+    .subcard h4 {
+      margin: 0 0 4px;
+      font-size: 0.84rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+    }
+
+    .tag-green { background: #22c55e; }
+    .tag-amber { background: #fbbf24; }
+    .tag-red { background: #fb7185; }
+
+    /* Mini planificateur */
+
+    .planner-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+
+    .planner-table th,
+    .planner-table td {
+      border-bottom: 1px solid rgba(31,41,55,0.9);
+      padding: 4px 3px;
+      text-align: left;
+    }
+
+    .planner-table th {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .planner-table input[type="number"] {
+      width: 60px;
+      padding: 3px 4px;
+      border-radius: 8px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: #020617;
+      color: var(--text);
+      font-size: 0.8rem;
+    }
+
+    .planner-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .total-badge {
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.98);
+      font-size: 0.78rem;
+    }
+
+    .total-ok {
+      border-color: rgba(74,222,128,0.9);
+      color: #bbf7d0;
+    }
+
+    .total-warn {
+      border-color: rgba(248,250,252,0.8);
+      color: #e5e7eb;
+    }
+
+    .total-bad {
+      border-color: rgba(248,113,113,0.9);
+      color: #fecaca;
+    }
+
+    #plannerMessage {
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* Details */
+
+    details {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    details summary {
+      cursor: pointer;
+      padding: 3px 0;
+      outline: none;
+    }
+
+    details[open] summary {
+      color: var(--accent-strong);
+    }
+
+    /* Footer */
+
+    footer {
+      margin-top: 20px;
+      padding: 12px 18px 18px;
+      border-top: 1px solid rgba(30,64,175,0.6);
+      background: radial-gradient(circle at top, rgba(30,64,175,0.45), #020617);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-card { order: -1; }
+
+      .layout-2col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <div class="logo">
+      <div class="logo-mark">OS</div>
+      Agence Gouvernementale – Opérations Stratégiques
+    </div>
+    <nav class="nav-links">
+      <a href="#division">Division</a>
+      <a href="#test">Test d’entrée</a>
+      <a href="#materiel">Matériel</a>
+      <a href="#procedures">Procédures</a>
+      <a href="#recrutement">Recrutement</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="badge">
+        <div class="badge-dot"></div>
+        Communiqué officiel – Mise en place d’une Division « Opérations Stratégiques »
+      </div>
+      <h1>
+        Trier l’<span>information</span> pour construire l’intranet de la prochaine division d’opérations.
+      </h1>
+      <p class="hero-lead">
+        L’Agence Gouvernementale d’Analyse et de Renseignement (AGAR) annonce la création d’une
+        <strong>Division Opérations Stratégiques (DOS)</strong> au sein de sa principale agence de renseignement.
+        Pour y accéder, le test d’entrée consiste à <strong>concevoir l’intranet opérationnel</strong> de la future
+        division d’une deuxième agence de renseignement partenaire, à partir d’un vaste corpus d’Internet filtré
+        et de documents classifiés simulés.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" type="button"
+                onclick="document.getElementById('test').scrollIntoView({behavior:'smooth'})">
+          Consulter le test d’entrée
+          <span>⟶</span>
+        </button>
+        <button class="btn btn-ghost" type="button"
+                onclick="document.getElementById('recrutement').scrollIntoView({behavior:'smooth'})">
+          Voir toute la procédure de recrutement
+        </button>
+      </div>
+      <div class="hero-meta">
+        Site statique HTML/CSS/JS – aucune collecte de données, utilisable hors-ligne (clé USB, intranet sécurisé).
+      </div>
+    </div>
+
+    <aside class="hero-card" aria-label="Résumé du projet de test">
+      <div class="hero-card-inner">
+        <div class="hero-card-header">
+          <div>Épreuve principale – Projet Intranet DOS</div>
+          <div class="hero-pill">
+            <span></span> Durée totale indicative : 4 h
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>Corpus</strong>
+            <div>≈ 2 Go de données (Internet filtré + docs classifiés simulés).</div>
+          </div>
+          <div class="hero-stat">
+            <strong>Mission</strong>
+            <div>Construire une arborescence intranet et un guide d’usage opérationnel.</div>
+          </div>
+          <div class="hero-stat">
+            <strong>Évaluation</strong>
+            <div>Gestion de projet, tri critique, conscience des risques & dérives.</div>
+          </div>
+        </div>
+        <div class="hero-note">
+          <span>⚠️</span>
+          <div>
+            Le test est conçu comme une <strong>simulation réaliste</strong> de prise de poste : vous recevez
+            un volume d’information massif, fragmentaire, parfois contradictoire. Ce que nous observons,
+            c’est autant vos choix que vos doutes explicites.
+          </div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- DIVISION -->
+  <section id="division">
+    <h2 class="section-title">La Division Opérations Stratégiques (DOS)</h2>
+    <p class="section-sub">
+      La DOS sera chargée de <strong>coordonner les opérations sensibles</strong> entre plusieurs entités de
+      renseignement nationales. Elle opère à l’interface entre l’analyse, le terrain et la décision politique.
+      Sa mission première : <strong>rendre intelligible l’excès d’information</strong>, tout en restant lucide sur
+      les risques d’un pilotage par la donnée totale.
+    </p>
+
+    <div class="cards">
+      <article class="card">
+        <h3>Mandat</h3>
+        <p>
+          La Division Opérations Stratégiques coordonne :
+        </p>
+        <ul class="list">
+          <li>la consolidation multi-sources (Internet, renseignement humain, signaux techniques) ;</li>
+          <li>la diffusion sécurisée d’ordres et de consignes ;</li>
+          <li>la mise en cohérence des opérations avec le cadre légal et démocratique.</li>
+        </ul>
+        <div class="pill-row">
+          <span class="pill pill-accent">Interface analyse ↔ opération</span>
+          <span class="pill">Vision système</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Pourquoi un intranet dédié ?</h3>
+        <p>
+          Les opérations stratégiques nécessitent un <strong>espace d’information maîtrisé</strong> :
+          navigation par missions, par zones, par niveaux de classification, journalisation des décisions,
+          alertes éthiques. L’intranet sert de colonne vertébrale à cette division.
+        </p>
+        <div class="pill-row">
+          <span class="pill">Traçabilité</span>
+          <span class="pill">Lisibilité</span>
+          <span class="pill pill-warn">Limites à la surveillance totale</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Ce que le test cherche à mesurer</h3>
+        <p>
+          Le test de recrutement reproduit une situation réelle : vous êtes chargé·e de transformer un
+          amas de contenus hétérogènes en <strong>système d’information utilisable</strong>. Nous observons :
+        </p>
+        <ul class="list">
+          <li>votre capacité à <strong>prioriser</strong> ce qui entre ou non dans l’intranet ;</li>
+          <li>votre <strong>conscience des risques</strong> (opérationnels, juridiques, démocratiques) ;</li>
+          <li>votre faculté à documenter vos <strong>renoncements</strong> : ce que vous refusez d’installer.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- TEST D'ENTRÉE -->
+  <section id="test">
+    <h2 class="section-title">Test d’entrée – Projet Intranet pour une seconde agence de renseignement</h2>
+    <p class="section-sub">
+      L’épreuve principale de recrutement consiste à <strong>concevoir la structure d’un intranet opérationnel</strong>
+      pour la future Division des Opérations Stratégiques d’une seconde agence de renseignement partenaire.
+      Vous travaillez à partir de : (1) un corpus d’Internet filtré, (2) un ensemble de
+      <strong>documents classifiés simulés</strong>, fournis sur un poste isolé et sécurisé.
+    </p>
+
+    <div class="layout-2col">
+      <!-- Colonne gauche : procédure principale -->
+      <div class="panel">
+        <div class="note-label">
+          <span></span> Procédure principale – Gestion de projet sur 4 heures
+        </div>
+        <h3>Déroulé de l’épreuve (vue d’ensemble)</h3>
+        <p>
+          L’épreuve est structurée en <strong>6 phases successives</strong>, qui peuvent se recouper. Votre
+          journal de bord est aussi important que le résultat final.
+        </p>
+        <div class="timeline">
+          <div class="step">
+            <strong>Phase 0 – Prise en main (15 min)</strong>
+            <div>Lecture du cadre légal, de la charte éthique et des consignes de classification.</div>
+          </div>
+          <div class="step">
+            <strong>Phase 1 – Cadrage & personas (30 min)</strong>
+            <div>Clarification des profils utilisateurs, de leurs besoins et de leurs contraintes opérationnelles.</div>
+          </div>
+          <div class="step">
+            <strong>Phase 2 – Tri & cartographie des sources (75 min)</strong>
+            <div>Tri de l’Internet filtré et des documents classifiés simulés, regroupement en grands domaines.</div>
+          </div>
+          <div class="step">
+            <strong>Phase 3 – Architecture de l’intranet (75 min)</strong>
+            <div>Construction de l’arborescence, des pages types, et des droits d’accès principaux.</div>
+          </div>
+          <div class="step">
+            <strong>Phase 4 – Sécurisation & procédures secondaires (45 min)</strong>
+            <div>Définition des circuits de validation, d’alerte, d’archivage et de contestation.</div>
+          </div>
+          <div class="step">
+            <strong>Phase 5 – Synthèse & restitution (40 min)</strong>
+            <div>Production d’un dossier synthétique : carte de l’intranet, hypothèses, risques, limites acceptées.</div>
+          </div>
+        </div>
+
+        <h4>Livrables attendus</h4>
+        <ul class="list">
+          <li>une <strong>carte d’arborescence intranet</strong> (schéma ou liste structurée) ;</li>
+          <li>un <strong>guide d’usage opérationnel</strong> (2 à 4 pages) pour les agents ;</li>
+          <li>un <strong>journal de décision</strong> expliquant vos arbitrages et vos doutes ;</li>
+          <li>une <strong>note de risque & dystopie</strong> : ce que l’intranet rend possible… ou dangereux.</li>
+        </ul>
+
+        <details>
+          <summary>Voir le détail des actions attendues à chaque phase</summary>
+          <ul class="list">
+            <li><strong>Phase 0 :</strong> identifier ce qui est clairement interdit (ex : croiser telle source avec telle autre), noter vos questions.</li>
+            <li><strong>Phase 1 :</strong> définir 3 à 5 profils (analyste, officier de terrain, décideur, contrôle interne…), avec 3 besoins chacun.</li>
+            <li><strong>Phase 2 :</strong> étiqueter les sources en <em>pertinent</em>, <em>à surveiller</em>, <em>hors périmètre</em>.</li>
+            <li><strong>Phase 3 :</strong> préciser pour chaque dossier : <span class="badge-inline"><span></span> lecture / écriture / alerte</span>.</li>
+            <li><strong>Phase 4 :</strong> ajouter des « circuits de désaccord » : comment un agent peut-il contester un contenu ou un usage ?</li>
+            <li><strong>Phase 5 :</strong> formuler au moins 3 choses que vous refusez de faire même si on vous le demandait.</li>
+          </ul>
+        </details>
+      </div>
+
+      <!-- Colonne droite : mini planificateur + matériel -->
+      <div class="panel">
+        <h3>Plan de travail indicatif (à ajuster)</h3>
+        <p>
+          Vous pouvez adapter les temps par phase, mais la durée totale de l’épreuve reste
+          <strong>4 heures (240 minutes)</strong>. Utilisez le planificateur ci-dessous pour construire votre stratégie.
+        </p>
+
+        <table class="planner-table">
+          <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Objectif principal</th>
+            <th>Durée prévue (min)</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>0</td>
+            <td>Prise en main du cadre</td>
+            <td><input type="number" min="0" value="15" data-phase="0" /></td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Cadrage & personas</td>
+            <td><input type="number" min="0" value="30" data-phase="1" /></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Tri & cartographie</td>
+            <td><input type="number" min="0" value="75" data-phase="2" /></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Architecture intranet</td>
+            <td><input type="number" min="0" value="75" data-phase="3" /></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Sécurisation & procédures</td>
+            <td><input type="number" min="0" value="45" data-phase="4" /></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Synthèse & restitution</td>
+            <td><input type="number" min="0" value="0" data-phase="5" /></td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="planner-foot">
+          <div id="totalBadge" class="total-badge total-warn">
+            Total provisoire : <span id="totalMinutes">240</span> min
+          </div>
+          <button class="btn btn-primary" type="button" onclick="validerPlan()">
+            Vérifier le plan
+          </button>
+        </div>
+        <div id="plannerMessage">
+          Ajustez les durées par phase, puis cliquez sur « Vérifier le plan ».
+        </div>
+
+        <h4 style="margin-top:10px;">Rappel – Nature des données manipulées</h4>
+        <ul class="list">
+          <li><strong>Internet filtré :</strong> copies figées de pages publiques, sélectionnées en amont par l’AGAR.</li>
+          <li><strong>Documents classifiés simulés :</strong> matériaux inspirés de situations réelles, mais <em>fictionnalisés</em>.</li>
+          <li><strong>Aucun accès autonome</strong> à des systèmes de renseignement ou bases vivantes pendant l’épreuve.</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);">
+          L’objectif n’est pas d’enseigner comment contourner la confidentialité, mais de vérifier votre
+          capacité à <strong>respecter des limites</strong> tout en organisant des informations sensibles.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATÉRIEL DISPONIBLE -->
+  <section id="materiel">
+    <h2 class="section-title">Matériel mis à disposition pour le test</h2>
+    <p class="section-sub">
+      Tout le matériel nécessaire est fourni sur un <strong>poste isolé</strong>, sans accès à Internet ni aux
+      systèmes opérationnels réels. Le test peut être reproduit sur un <strong>simple intranet</strong> ou une
+      clé USB dédiée.
+    </p>
+
+    <div class="cards">
+      <article class="card">
+        <h3>1. Corpus de travail</h3>
+        <div class="subgrid">
+          <div class="subcard">
+            <h4>1.1 – Snapshot Internet filtré</h4>
+            <ul class="list">
+              <li>Articles de presse, rapports publics, bases statistiques ouvertes.</li>
+              <li>Forums et réseaux sociaux anonymisés (extraits). </li>
+              <li>Sites d’ONG, think tanks, institutions internationales.</li>
+            </ul>
+            <div class="tag">
+              <div class="tag-dot tag-green"></div>
+              Données publiques – usage encadré
+            </div>
+          </div>
+          <div class="subcard">
+            <h4>1.2 – Dossiers « classifiés » simulés</h4>
+            <ul class="list">
+              <li>Notes d’analyse, comptes rendus d’auditions, cartographies.</li>
+              <li>Instructions opérationnelles expurgées.</li>
+              <li>Transcriptions partielles d’échanges sécurisés.</li>
+            </ul>
+            <div class="tag">
+              <div class="tag-dot tag-red"></div>
+              Scénarios inspirés – ne pas réutiliser hors test
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>2. Outils techniques</h3>
+        <div class="subgrid">
+          <div class="subcard">
+            <h4>2.1 – Poste sécurisé</h4>
+            <ul class="list">
+              <li>Poste isolé (pas d’accès Internet pendant l’épreuve).</li>
+              <li>Suite bureautique de base (éditeur de texte, tableur, dessin simple).</li>
+              <li>Visionneuse PDF & lecteur multimédia.</li>
+            </ul>
+          </div>
+          <div class="subcard">
+            <h4>2.2 – Gabarits intranet</h4>
+            <ul class="list">
+              <li>Modèles de pages (Accueil, Mission, Dossier opération, Alerte, Historique).</li>
+              <li>Charte d’écriture (titres, résumés, niveaux d’alerte).</li>
+              <li>Grille de droits d’accès (lecture/écriture/alerte).</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>3. Procédures & documentation</h3>
+        <div class="subgrid">
+          <div class="subcard">
+            <h4>3.1 – Charte éthique & démocratique</h4>
+            <ul class="list">
+              <li>Principes de proportionnalité, nécessité, contrôle indépendant.</li>
+              <li>Cas d’usage explicitement interdits (surveillance globale, notation totale des agents…).</li>
+            </ul>
+            <div class="tag">
+              <div class="tag-dot tag-amber"></div>
+              S’obliger à dire non parfois
+            </div>
+          </div>
+          <div class="subcard">
+            <h4>3.2 – Journal de décision</h4>
+            <ul class="list">
+              <li>Fiche simple pour noter vos arbitrages et renoncements.</li>
+              <li>Colonnes : <em>sujet</em>, <em>choix</em>, <em>risque</em>, <em>alternatives</em>.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- PROCÉDURES SECONDAIRES -->
+  <section id="procedures">
+    <h2 class="section-title">Procédures secondaires obligatoires</h2>
+    <p class="section-sub">
+      En complément de la procédure principale de gestion de projet, plusieurs <strong>procédures secondaires</strong>
+      doivent être appliquées pendant l’épreuve. Elles reflètent la réalité du travail en environnement sensible :
+      on ne « trie » pas l’information sans rendre des comptes.
+    </p>
+
+    <div class="cards">
+      <article class="card">
+        <h3>1. Traçabilité des sources</h3>
+        <ul class="list">
+          <li>Pour chaque information intégrée à l’intranet, noter la <strong>source d’origine</strong>.</li>
+          <li>Identifier les <strong>chaînes de reprise</strong> (qui cite qui ?).</li>
+          <li>Souligner les zones d’incertitude ou de doute méthodologique.</li>
+        </ul>
+        <details>
+          <summary>Exemple de trace minimale attendue</summary>
+          <p style="font-size:0.8rem;">
+            « Carte risques / zone X » – dérivée de : Rapport ONG A (2019),
+            Note interne simulée B (Niveau 2), Article de presse C. Hypothèse forte
+            sur fiabilité ONG A, prudence sur C.
+          </p>
+        </details>
+      </article>
+
+      <article class="card">
+        <h3>2. Gestion des droits & contestations</h3>
+        <ul class="list">
+          <li>Associer chaque type de contenu à un <strong>niveau de classification</strong> simulé.</li>
+          <li>Préciser qui peut <strong>créer, modifier, consulter, alerter</strong>.</li>
+          <li>Prévoir un canal explicite pour contester un contenu ou un usage.</li>
+        </ul>
+        <details>
+          <summary>Indication pour le test</summary>
+          <p style="font-size:0.8rem;">
+            Vous ne codez pas les droits dans un système réel : vous les décrivez. On regarde
+            le <strong>raisonnement</strong>, pas la configuration technique.
+          </p>
+        </details>
+      </article>
+
+      <article class="card">
+        <h3>3. Revue éthique & « garde-fous »</h3>
+        <ul class="list">
+          <li>Identifier ce que l’intranet rendrait possible de problématique (profilage excessif, pilotage par score…).</li>
+          <li>Proposer au moins <strong>3 limites explicites</strong> (fonctionnalités refusées, accès restreints, journaux d’audit). </li>
+          <li>Prévoir un espace « droit au doute » pour les agents (questionner une consigne, signaler une dérive).</li>
+        </ul>
+        <div class="pill-row">
+          <span class="pill pill-warn">Conscience des dérives dystopiques</span>
+          <span class="pill">Protection des personnes</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>4. Restitution finale</h3>
+        <ul class="list">
+          <li>Préparer une <strong>présentation synthétique de 10 minutes</strong> (oral simulé).</li>
+          <li>Structurer : contexte, choix d’architecture, arbitrages, limites.</li>
+          <li>Répondre à des questions contradictoires (on teste votre <strong>capacité à tenir vos lignes rouges</strong>).</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- PROCÉDURE DE RECRUTEMENT GLOBALE -->
+  <section id="recrutement">
+    <h2 class="section-title">Suite de la procédure de recrutement</h2>
+    <p class="section-sub">
+      L’épreuve intranet n’est qu’un <strong>premier filtre</strong>. Elle est complétée par des entretiens,
+      des échanges contradictoires et des vérifications de sécurité. L’objectif n’est pas de recruter des
+      exécutants, mais des professionnels capables de penser le cadre dans lequel ils opèrent.
+    </p>
+
+    <div class="layout-2col">
+      <div class="panel">
+        <h3>Étapes du parcours candidat</h3>
+        <div class="timeline">
+          <div class="step">
+            <strong>Étape 1 – Pré-sélection de dossier</strong>
+            <div>Analyse du parcours, des motivations et de la capacité à travailler en environnement contraint.</div>
+          </div>
+          <div class="step">
+            <strong>Étape 2 – Épreuve intranet (4 h)</strong>
+            <div>Test décrit ci-dessus, réalisé sur site ou en centre dédié.</div>
+          </div>
+          <div class="step">
+            <strong>Étape 3 – Entretien de débrief opérationnel (1 h)</strong>
+            <div>Analyse commune de vos choix : ce que vous avez mis, retiré, refusé.</div>
+          </div>
+          <div class="step">
+            <strong>Étape 4 – Entretien éthique & démocratique (45 min)</strong>
+            <div>Discussion sur les limites du renseignement, la place du doute, la possibilité de dire non.</div>
+          </div>
+          <div class="step">
+            <strong>Étape 5 – Enquêtes administratives & sécurité</strong>
+            <div>Vérifications réglementaires classiques avant accès à des environnements sensibles.</div>
+          </div>
+          <div class="step">
+            <strong>Étape 6 – Intégration progressive</strong>
+            <div>Parcours d’accueil, mentorat, formation continue aux dérives possibles des dispositifs mis en place.</div>
+          </div>
+        </div>
+        <details>
+          <summary>Comment le test est-il noté ?</summary>
+          <ul class="list">
+            <li>Coherence globale du système intranet proposé.</li>
+            <li>Capacité à assumer des <strong>choix impopulaires mais justifiés</strong>.</li>
+            <li>Clarté de la documentation et du journal de bord.</li>
+            <li>Conscience explicite des dérives potentielles (dystopie organisationnelle).</li>
+          </ul>
+        </details>
+      </div>
+
+      <div class="panel">
+        <h3>Ce que nous observons… et ce que nous refusons</h3>
+        <p>
+          Le test n’est pas un concours de technicité, mais un révélateur de posture.
+        </p>
+        <h4>Nous valorisons</h4>
+        <ul class="list">
+          <li>La capacité à <strong>mettre des limites</strong> à l’exploitation des données.</li>
+          <li>La transparence sur vos doutes, vos hésitations, vos désaccords.</li>
+          <li>La faculté à transformer un chaos d’information en <strong>outils utiles aux autres</strong>.</li>
+        </ul>
+
+        <h4>Nous écartons</h4>
+        <ul class="list">
+          <li>Les propositions de <strong>surveillance totale</strong> déguisées en « simple optimisation ».</li>
+          <li>Les architectures d’intranet qui effacent toute possibilité de contestation.</li>
+          <li>Les démarches qui ignorent volontairement la charte éthique fournie.</li>
+        </ul>
+
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:4px;">
+          Une bonne note technique peut être invalidée par une absence de limites éthiques explicites.
+          À l’inverse, une architecture imparfaite mais lucidement argumentée peut retenir fortement
+          notre attention.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / RÉUTILISATION -->
+  <section id="contact">
+    <h2 class="section-title">Réutiliser ce site comme support de test</h2>
+    <p class="section-sub">
+      Ce site est conçu comme un <strong>gabarit autonome</strong> : une simple page HTML contenant tout
+      le nécessaire pour décrire une épreuve réaliste de gestion de projet en environnement sensible.
+      Vous pouvez l’adapter à votre propre organisation (publique ou privée).
+    </p>
+
+    <div class="cards">
+      <article class="card">
+        <h3>Mode d’emploi technique</h3>
+        <ul class="list">
+          <li>Téléchargez ce fichier en tant que <code>index.html</code>.</li>
+          <li>Ouvrez-le dans n’importe quel navigateur moderne (hors-ligne possible).</li>
+          <li>Placez-le sur une clé USB ou un intranet sécurisé pour vos sessions.</li>
+          <li>Modifiez les textes directement dans un éditeur (VS Code, Notepad++, etc.).</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>Adapter le scénario</h3>
+        <ul class="list">
+          <li>Remplacez les noms d’agences par des noms fictifs ou internes.</li>
+          <li>Substituez le corpus décrit par vos propres <em>données pédagogiques</em>.</li>
+          <li>Gardez la logique : tri d’informations, limites éthiques, intranet comme miroir de votre culture.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>Contact institutionnel (exemple)</h3>
+        <p>
+          Pour toute question relative à l’épreuve ou à la Division Opérations Stratégiques, une boîte fonctionnelle
+          dédiée peut être utilisée, par exemple :
+        </p>
+        <p style="font-size:0.8rem;color:var(--muted);">
+          <em>recrutement-dos@agence-gouv.example</em><br/>
+          (adresse fournie ici à titre illustratif, à remplacer par vos propres coordonnées).
+        </p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      © Agence Gouvernementale d’Analyse et de Renseignement – Division Opérations Stratégiques (fiction pédagogique).
+    </div>
+    <div>
+      Site statique HTML/CSS/JS, sans collecte de données ni scripts tiers. Idéal pour déploiement sur clé USB ou intranet fermé.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Petit planificateur : somme des temps par phase
+  function calculerTotal() {
+    const inputs = document.querySelectorAll('input[data-phase]');
+    let total = 0;
+    inputs.forEach(input => {
+      const val = parseInt(input.value, 10);
+      if (!isNaN(val)) total += val;
+    });
+    return total;
+  }
+
+  function majAffichageTotal() {
+    const total = calculerTotal();
+    const totalSpan = document.getElementById('totalMinutes');
+    const badge = document.getElementById('totalBadge');
+    totalSpan.textContent = total;
+    badge.classList.remove('total-ok', 'total-warn', 'total-bad');
+
+    if (total === 240) {
+      badge.classList.add('total-ok');
+    } else if (total >= 210 && total <= 270) {
+      badge.classList.add('total-warn');
+    } else {
+      badge.classList.add('total-bad');
+    }
+  }
+
+  function validerPlan() {
+    const total = calculerTotal();
+    const msg = document.getElementById('plannerMessage');
+
+    majAffichageTotal();
+
+    if (total === 240) {
+      msg.textContent = "Plan cohérent : vous avez réparti exactement 240 minutes. Rappelez-vous que dans la réalité, les imprévus existent : gardez une marge mentale.";
+    } else if (total < 240) {
+      msg.textContent = "Vous êtes en dessous de 240 minutes. Dans un environnement opérationnel, ce temps « en moins » sera très vite consommé par les aléas : prévoyez-le explicitement.";
+    } else {
+      msg.textContent = "Vous dépassez les 240 minutes. Essayez de simplifier certaines phases, ou d’accepter que tout ne sera pas parfait : la DOS ne cherche pas la toute-puissance, mais des priorités assumées.";
+    }
+  }
+
+  // Mise à jour automatique du total dès que l’utilisateur modifie une durée
+  document.querySelectorAll('input[data-phase]').forEach(input => {
+    input.addEventListener('input', majAffichageTotal);
+  });
+
+  // Initialisation
+  majAffichageTotal();
+</script>
+</body>
+</html>
