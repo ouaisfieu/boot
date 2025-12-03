@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projet S – Saison 3 (Culte de personnalité & portfolio GitHub)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0f172a;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148,163,184,0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      padding: 2rem 1.5rem 1rem;
+      border-bottom: 1px solid rgba(148,163,184,0.2);
+      text-align: center;
+    }
+    .title {
+      font-size: clamp(1.9rem, 3vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0 16px rgba(56,189,248,0.6);
+      margin: 0.2rem 0;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .3rem .8rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+    .subtitle {
+      max-width: 760px;
+      margin: 0.8rem auto 0;
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    .nav-back {
+      text-align: left;
+      margin-bottom: 1rem;
+      font-size: .8rem;
+    }
+    .nav-back a {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .35rem .75rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: .78rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .nav-back a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.8fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(2,6,23,0.98));
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      padding: 1.3rem 1.4rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin: 0 0 .6rem;
+    }
+    h3 {
+      font-size: .98rem;
+      margin: 0.8rem 0 .4rem;
+    }
+    p {
+      margin: 0 0 .5rem;
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+    .small {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    .prologue {
+      font-size: .9rem;
+      line-height: 1.6;
+      text-align: justify;
+    }
+    .prologue p {
+      margin-bottom: .7rem;
+    }
+    ul, ol {
+      margin: .3rem 0 .7rem;
+      padding-left: 1.1rem;
+      font-size: .88rem;
+    }
+    li { margin-bottom: .25rem; }
+    .tag {
+      display: inline-flex;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-right: .35rem;
+      margin-bottom: .35rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: .15rem .5rem;
+      border-radius: .6rem;
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-right: .3rem;
+    }
+    .schema {
+      border-radius: 1.1rem;
+      border: 1px solid var(--border);
+      padding: .7rem .8rem;
+      font-size: .86rem;
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.98));
+    }
+    .schema ul { margin-top: .2rem; }
+    .mission-block {
+      border-radius: 1.1rem;
+      border: 1px solid var(--border);
+      padding: .7rem .8rem;
+      margin-bottom: .85rem;
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.98));
+      font-size: .88rem;
+    }
+    .mission-id {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: .2rem;
+    }
+    .mission-title {
+      font-weight: 600;
+      margin-bottom: .2rem;
+    }
+    .mission-meta {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .35rem;
+    }
+    .mission-tags {
+      margin-top: .3rem;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .5rem;
+      margin-bottom: .4rem;
+      font-size: .88rem;
+    }
+    .checklist-item input {
+      margin-top: .1rem;
+      accent-color: var(--accent);
+    }
+    .level-text {
+      margin-top: .4rem;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .8rem;
+      background: rgba(15,23,42,0.9);
+      border-radius: .4rem;
+      padding: .05rem .3rem;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="pill">Saison 3 · Culte de personnalité neutre™</div>
+    <h1 class="title">PROJET S – PORTFOLIO DE CULTE SUR GITHUB</h1>
+    <p class="subtitle">
+      Saison 3 explore les <strong>cultes de la personnalité</strong> à l’ère des profils, des followers et des stars de code.
+      Le but ludique&nbsp;: concevoir un <strong>portfolio GitHub culte</strong> autour de ta propre personne, mais avec
+      une <strong>distance critique</strong> et des garde-fous éthiques.
+    </p>
+  </header>
+
+  <main>
+    <div class="nav-back">
+      <a href="index.html">← Retour au jeu (index)</a>
+      &nbsp;·&nbsp;
+      <a href="saison1.html">Saison 1</a>
+      &nbsp;·&nbsp;
+      <a href="saison2.html">Saison 2</a>
+    </div>
+
+    <div class="layout">
+      <!-- Colonne gauche : cadre + prologue + architecture -->
+      <section>
+        <article class="card">
+          <h2>1. Cadre & avertissement éthique</h2>
+          <p class="small">
+            Cette saison joue avec l’idée de <strong>culte de la personnalité</strong> : mythifier son profil,
+            scénariser son GitHub comme un autel, chercher une aura « virale ».  
+            Mais elle repose sur trois principes non négociables&nbsp;:
+          </p>
+          <ul>
+            <li>Pas de manipulation de masse, pas de harcèlement, pas de dérive sectaire réelle.</li>
+            <li>Pas d’endoctrinement politique, religieux ou idéologique.</li>
+            <li>Le « culte » est un <strong>dispositif artistique et critique</strong>, pas une prise de pouvoir sur autrui.</li>
+          </ul>
+          <p class="small">
+            Le jeu t’invite à construire un <strong>personnage public lucide</strong>&nbsp;: tu exagères certains traits,
+            mais tu sais que tu joues. Tu peux stopper à tout moment.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>2. Prologue – « Tu n’es pas assez iconique, et c’est très bien »</h2>
+          <div class="prologue">
+            <p>
+              On dit que, pour exister, il faut une image de profil nette, une biographie courte et un lien cliquable.
+              On dit aussi qu’il faut se différencier, se vendre, se raconter. On le dit tellement que, parfois,
+              on finit par oublier ce qu’il y a derrière la photo.
+            </p>
+            <p>
+              Un jour, on t’a conseillé de “soigner ta présence en ligne”. Tu as hoché la tête, tu as ouvert GitHub,
+              LinkedIn, des réseaux dont tu oublies les mots de passe. Chaque fois, on t’a demandé la même chose :
+              une version simple de toi-même, optimisée pour la consommation rapide.
+            </p>
+            <p>
+              Pendant que tu hésitais sur l’emoji à mettre dans ta bio, des millions d’autres profils faisaient la même chose.
+              Des développeurs et développeuses se fabriquaient des avatars, des slogans, des pages d’accueil comme des autels.
+              Il fallait être mémorable, mais aussi rassurant, professionnel mais pas ennuyeux, singulier mais pas étrange.
+            </p>
+            <p>
+              Tu t’es demandé à quoi ça ressemblerait si quelqu’un prenait tout ça au sérieux, vraiment au sérieux :
+              un <em>culte de personnalité</em> construit comme un projet open source. Un dépôt GitHub comme un temple.
+              Un README comme un évangile. Des issues comme des confessions. Des stars comme des petites bougies allumées.
+            </p>
+            <p>
+              Alors tu as décidé d’en faire une saison de jeu. Pas pour devenir un gourou, mais pour voir
+              jusqu’où on peut pousser la logique avant qu’elle craque. Tu as promis de rester lucide.
+              Tu as promis de ne vénérer que ce que tu peux fork.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>3. Architecture du « culte GitHub »</h2>
+          <p class="small">
+            Dans cette saison, ton « culte de personnalité » est une <strong>métaphore</strong> :
+            un ensemble de fichiers, de textes, de visuels qui encadrent ton personnage public comme si c’était
+            une figure mythologique, mais de façon assumée et critique.
+          </p>
+
+          <div class="schema">
+            <strong>Ton dépôt principal sur GitHub devient :</strong>
+            <ul>
+              <li><strong>Le temple :</strong> le repository central (ex. <code>username/culte-de-moi</code>).</li>
+              <li><strong>L’évangile :</strong> le <code>README.md</code> raconte ton mythe personnel, version stylisée.</li>
+              <li><strong>Les reliques :</strong> captures d’écran, projets, anecdotes, commits marquants.</li>
+              <li><strong>Les rituels :</strong> des actions récurrentes (commits thématiques, journaux, releases symboliques).</li>
+              <li><strong>Les adeptes :</strong> en réalité, juste des visiteurs curieux, pas des disciples.</li>
+            </ul>
+          </div>
+
+          <p style="margin-top:.6rem;font-size:.86rem;">
+            Objectif ludique&nbsp;: créer un portfolio GitHub qui a une <strong>personnalité culte</strong>
+            (ton ton, ton esthétique, tes obsessions), sans mentir sur tes compétences ni manipuler qui que ce soit.
+          </p>
+        </article>
+      </section>
+
+      <!-- Colonne droite : plan d'action + missions + suivi -->
+      <section>
+        <article class="card">
+          <h2>4. Plan d’action en 4 étapes</h2>
+          <p class="small">
+            Tu peux suivre ces étapes comme un TP structuré. À chaque étape, réalise au moins une mission S3-0x.
+          </p>
+          <ol>
+            <li>
+              <strong>Inventaire de toi-même (brut)</strong>  
+              Liste de façon froide tes compétences, projets, obsessions, tics de langage, centres d’intérêt.
+            </li>
+            <li>
+              <strong>Construction du personnage public</strong>  
+              Décide ce que tu amplifies, ce que tu assumes, ce que tu laisses hors-champ.
+            </li>
+            <li>
+              <strong>Design du dépôt « culte » sur GitHub</strong>  
+              Création ou refonte d’un repo central + README stylé, sections, visuels.
+            </li>
+            <li>
+              <strong>Rituels & diffusion minimale</strong>  
+              Quelques actions répétées (commits, journaux, mises à jour) + partage contrôlé à un cercle choisi.
+            </li>
+          </ol>
+        </article>
+
+        <article class="card">
+          <h2>5. Missions de la Saison 3</h2>
+
+          <div class="mission-block">
+            <div class="mission-id">S3-01</div>
+            <div class="mission-title">Inventaire sans filtre</div>
+            <div class="mission-meta">Introspection · 20–30 min · Diff. 1/5</div>
+            <p>
+              Écris une liste exhaustive et brute de ce qui te définit aujourd’hui&nbsp;: compétences,
+              projets, obsessions, traits de caractère, marottes, choses dont tu parles trop.
+            </p>
+            <p>
+              Publie une version épurée (anonymisée si tu veux) sous forme de gist, de note ou de README minimal.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S3-01</span>
+              <span class="tag">#Inventaire</span>
+            </div>
+          </div>
+
+          <div class="mission-block">
+            <div class="mission-id">S3-02</div>
+            <div class="mission-title">Mythologie personnelle</div>
+            <div class="mission-meta">Narration · 30–45 min · Diff. 2/5</div>
+            <p>
+              Transforme ton inventaire en une courte « mythologie de toi » : raconte ton parcours comme si tu
+              étais un personnage culte, mais en restant factuel (pas de mensonge).
+            </p>
+            <p>
+              Intègre ce texte dans un brouillon de <code>README.md</code> pour ton futur dépôt GitHub.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S3-02</span>
+              <span class="tag">#Mythologie</span>
+            </div>
+          </div>
+
+          <div class="mission-block">
+            <div class="mission-id">S3-03</div>
+            <div class="mission-title">Temple GitHub</div>
+            <div class="mission-meta">Technique & design · 45–90 min · Diff. 3/5</div>
+            <p>
+              Crée ou refonds un dépôt GitHub dédié à ton culte neutre&nbsp;:  
+              <code>username/culte-de-moi</code> (ou autre nom qui te fait rire).
+            </p>
+            <p>
+              Ajoute un <code>README.md</code> structuré avec&nbsp;:
+              <ul>
+                <li>une introduction cultissime mais honnête,</li>
+                <li>une section « croyances » = ce que tu cherches à faire dans tes projets,</li>
+                <li>une section « miracles » = projets dont tu es fier/fière,</li>
+                <li>une section « limites » = ce que tu n’es pas.</li>
+              </ul>
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S3-03</span>
+              <span class="tag">#TempleGitHub</span>
+            </div>
+          </div>
+
+          <div class="mission-block">
+            <div class="mission-id">S3-04</div>
+            <div class="mission-title">Rituels de commit</div>
+            <div class="mission-meta">Pratique · 30–60 min · Diff. 2/5</div>
+            <p>
+              Définis un petit rituel de contribution à ton culte GitHub (ex. une entrée de journal
+              dans un fichier <code>journal.md</code> chaque semaine, une amélioration symbolique par mois, etc.).
+            </p>
+            <p>
+              Effectue au moins un commit « rituel » avec un message de commit stylé mais compréhensible.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S3-04</span>
+              <span class="tag">#Rituel</span>
+            </div>
+          </div>
+
+          <div class="mission-block">
+            <div class="mission-id">S3-05</div>
+            <div class="mission-title">Culte critique</div>
+            <div class="mission-meta">Réflexion critique · 20–30 min · Diff. 2/5</div>
+            <p>
+              Ajoute dans ton dépôt une section ou un fichier <code>anti-manifeste.md</code> où tu expliques lucidement
+              les dangers des cultes de personnalité et les limites de ton propre culte neutre.
+            </p>
+            <p>
+              Partage ce dépôt seulement à un <strong>cercle de confiance</strong>, pas comme une propagande de masse.
+            </p>
+            <div class="mission-tags">
+              <span class="tag">#ProjetS</span>
+              <span class="tag">#S3-05</span>
+              <span class="tag">#AntiManifeste</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>6. Suivi de progression – Saison 3</h2>
+          <p class="small">
+            Tu peux utiliser cette checklist pour suivre ta saison. Les données restent dans ton navigateur (localStorage).
+          </p>
+
+          <div id="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" data-key="cadre" id="chk-cadre" />
+              <label for="chk-cadre">J’ai lu le cadre éthique et je comprends que le « culte » est métaphorique.</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="repo" id="chk-repo" />
+              <label for="chk-repo">J’ai créé ou refondu un dépôt GitHub dédié à mon culte de personnalité neutre.</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="readme" id="chk-readme" />
+              <label for="chk-readme">Mon <code>README.md</code> raconte une version mythifiée mais honnête de moi.</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="rituel" id="chk-rituel" />
+              <label for="chk-rituel">J’ai mis en place au moins un rituel de commit (journal, mise à jour régulière…).</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" data-key="anti" id="chk-anti" />
+              <label for="chk-anti">J’ai écrit un anti-manifeste lucide sur les limites et risques des cultes.</label>
+            </div>
+          </div>
+
+          <p id="progressText" class="level-text">
+            Coche les cases au fur et à mesure. Le but n’est pas de devenir une idole, mais de comprendre comment les idoles se fabriquent.
+          </p>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      Page statique – tu peux la copier sur une clé USB, la servir sur GitHub Pages ou l’ouvrir en local.
+      Le véritable « culte » reste sous ton contrôle, dans ton dépôt, avec ta propre ironie.
+    </p>
+  </footer>
+
+  <script>
+    // Checklist locale pour la saison 3
+    const STORAGE_KEY_S3 = "projetS_saison3_checklist_v1";
+    const checklist = document.getElementById("checklist");
+    const progressText = document.getElementById("progressText");
+
+    function loadStateS3() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_S3) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveStateS3(state) {
+      localStorage.setItem(STORAGE_KEY_S3, JSON.stringify(state));
+    }
+
+    const stateS3 = loadStateS3();
+
+    checklist.querySelectorAll("input[type=checkbox]").forEach(input => {
+      const key = input.dataset.key;
+      if (stateS3[key]) input.checked = true;
+      input.addEventListener("change", () => {
+        stateS3[key] = input.checked;
+        saveStateS3(stateS3);
+        updateProgressS3();
+      });
+    });
+
+    function updateProgressS3() {
+      const boxes = checklist.querySelectorAll("input[type=checkbox]");
+      let count = 0;
+      boxes.forEach(b => { if (b.checked) count++; });
+
+      if (count === 0) {
+        progressText.textContent = "Tu es au seuil du temple : rien n’est encore en ligne, tout est encore possible.";
+      } else if (count <= 2) {
+        progressText.textContent = "Le culte neutre prend forme : ton dépôt commence à ressembler à quelque chose de mythologique.";
+      } else if (count <= 4) {
+        progressText.textContent = "Ton portfolio culte est presque complet. N’oublie pas de garder ta lucidité à portée de main.";
+      } else {
+        progressText.textContent = "Tu as traversé la Saison 3 : ton GitHub est culte et critique à la fois. Le reste dépend des autres.";
+      }
+    }
+
+    updateProgressS3();
+  </script>
+</body>
+</html>
