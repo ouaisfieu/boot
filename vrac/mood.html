@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Opération BOUT D'INTERNET – UAC Intranet Node</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: #05010a;
+      --bg-panel: #111827;
+      --hud-bg: #131316;
+      --accent-red: #f97316;
+      --accent-red-strong: #f97316;
+      --accent-green: #4ade80;
+      --accent-yellow: #eab308;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --metal: #4b5563;
+      --border-metal: #9ca3af;
+      --scanline: rgba(255,255,255,0.02);
+      --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-doom: "Courier New", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      color: var(--text);
+      background: radial-gradient(circle at top, #111827 0, #020617 50%, #000 100%);
+      font-family: var(--font-ui);
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .screen {
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 12px;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.9)),
+        repeating-linear-gradient(
+          to bottom,
+          var(--scanline) 0px,
+          var(--scanline) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      box-shadow:
+        0 0 0 4px #111827,
+        0 0 0 8px #4b5563,
+        0 25px 60px rgba(0,0,0,0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top center, rgba(255,255,255,0.12), transparent 55%);
+      mix-blend-mode: soft-light;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    /* Effet léger de scintillement */
+    @keyframes crt-flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.985; }
+      100% { opacity: 1; }
+    }
+
+    .screen-inner {
+      position: relative;
+      padding: 8px;
+      animation: crt-flicker 1.5s infinite steps(2, end);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background:
+        linear-gradient(180deg, #111827 0%, #020617 70%, #000 100%);
+      border: 2px solid var(--metal);
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.06),
+        0 4px 8px rgba(0,0,0,0.8);
+      margin-bottom: 8px;
+    }
+
+    .uac-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .uac-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 2px solid var(--border-metal);
+      background:
+        linear-gradient(135deg, #1f2937, #4b5563);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-doom);
+      font-size: 14px;
+      color: var(--accent-yellow);
+      box-shadow:
+        0 0 0 1px #000,
+        0 0 10px rgba(234,179,8,0.5);
+    }
+
+    .uac-text {
+      font-family: var(--font-doom);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .status-indicators {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-doom);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-metal);
+      background: rgba(0,0,0,0.6);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(74,222,128,0.9);
+      background: radial-gradient(circle, var(--accent-green) 0, #16a34a 70%, #052e16 100%);
+    }
+
+    .status-dot--alert {
+      box-shadow: 0 0 10px rgba(239,68,68,0.9);
+      background: radial-gradient(circle, #f97373 0, #dc2626 70%, #450a0a 100%);
+      animation: alert-blink 0.9s infinite;
+    }
+
+    @keyframes alert-blink {
+      0%, 80% { opacity: 1; }
+      81%, 100% { opacity: 0.2; }
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 8px;
+      padding: 8px;
+      background:
+        linear-gradient(180deg, #020617 0%, #030712 60%, #000 100%);
+      border-radius: 8px;
+      border: 2px solid #111827;
+      box-shadow:
+        inset 0 0 0 1px rgba(148,163,184,0.4),
+        0 8px 16px rgba(0,0,0,0.9);
+    }
+
+    @media (max-width: 840px) {
+      .hud {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Panneau gauche */
+
+    .panel-main {
+      border-radius: 6px;
+      background:
+        linear-gradient(180deg, #020617 0%, #030712 50%, #020617 100%);
+      border: 1px solid #4b5563;
+      box-shadow:
+        inset 0 0 0 1px rgba(15,23,42,0.8),
+        0 4px 10px rgba(0,0,0,0.9);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 320px;
+    }
+
+    .panel-main-header {
+      padding: 6px 10px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #374151;
+      background:
+        linear-gradient(180deg, #111827 0%, #020617 100%);
+    }
+
+    .doom-title {
+      font-family: var(--font-doom);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 13px;
+      color: var(--accent-red-strong);
+      text-shadow:
+        0 0 5px rgba(248,113,113,0.6),
+        0 0 12px rgba(217,70,239,0.3);
+    }
+
+    .doom-subtitle {
+      font-family: var(--font-doom);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .panel-main-body {
+      padding: 10px 10px 8px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .mission-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-family: var(--font-doom);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 9px;
+    }
+
+    .mission-tag {
+      padding: 3px 6px;
+      border-radius: 4px;
+      background: rgba(0,0,0,0.8);
+      border: 1px solid #374151;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .mission-tag--critical {
+      border-color: var(--danger);
+      color: var(--danger);
+      text-shadow: 0 0 4px rgba(248,113,113,0.8);
+    }
+
+    .mission-summary {
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    .mission-summary strong {
+      color: var(--accent-yellow);
+      font-weight: 600;
+    }
+
+    .mission-summary em {
+      color: var(--muted);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      position: relative;
+      font-family: var(--font-doom);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 2px solid #6b7280;
+      background:
+        linear-gradient(180deg, #27272a 0%, #111827 100%);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.08),
+        0 3px 0 #020617,
+        0 4px 8px rgba(0,0,0,0.9);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(120deg, rgba(255,255,255,0.16), transparent 30%, transparent 70%, rgba(148,163,184,0.26));
+      mix-blend-mode: soft-light;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .btn:hover {
+      transform: translateY(1px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 1px 0 #020617,
+        0 2px 6px rgba(0,0,0,0.9);
+      border-color: var(--accent-yellow);
+      background: linear-gradient(180deg, #3f3f46 0%, #111827 100%);
+    }
+
+    .btn:hover::after {
+      opacity: 0.6;
+    }
+
+    .btn-primary {
+      border-color: var(--accent-red);
+      background:
+        linear-gradient(180deg, #f97316 0%, #b91c1c 50%, #111827 100%);
+      color: #fefce8;
+      text-shadow:
+        0 0 4px rgba(0,0,0,0.9),
+        0 0 8px rgba(0,0,0,0.9);
+    }
+
+    .btn-secondary {
+      border-color: #6b7280;
+    }
+
+    .btn-icon {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-green) 0, #166534 70%, #052e16 100%);
+      box-shadow: 0 0 6px rgba(74,222,128,0.9);
+    }
+
+    .btn-icon--danger {
+      background: radial-gradient(circle, #f97373 0, #dc2626 70%, #450a0a 100%);
+      box-shadow: 0 0 6px rgba(239,68,68,0.9);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      font-family: var(--font-doom);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 640px) {
+      .meta-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .meta-cell {
+      border-radius: 3px;
+      border: 1px solid #374151;
+      padding: 3px 5px;
+      background: rgba(0,0,0,0.9);
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .meta-label {
+      font-size: 9px;
+      color: #6b7280;
+    }
+
+    .meta-value {
+      color: var(--text);
+    }
+
+    .meta-value--danger {
+      color: var(--danger);
+    }
+
+    .meta-value--ok {
+      color: var(--accent-green);
+    }
+
+    /* Terminal à droite */
+
+    .panel-side {
+      border-radius: 6px;
+      background:
+        linear-gradient(180deg, #020617 0%, #030712 50%, #020617 100%);
+      border: 1px solid #4b5563;
+      box-shadow:
+        inset 0 0 0 1px rgba(15,23,42,0.8),
+        0 4px 10px rgba(0,0,0,0.9);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 320px;
+    }
+
+    .panel-side-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-doom);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      border-bottom: 1px solid #374151;
+      padding-bottom: 3px;
+    }
+
+    .led-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .led {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: #111827;
+      border: 1px solid #4b5563;
+      box-shadow: 0 0 0 1px #020617;
+    }
+
+    .led--on {
+      background: radial-gradient(circle, #22c55e 0, #16a34a 70%, #052e16 100%);
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+
+    .terminal {
+      flex: 1;
+      background: #020617;
+      border-radius: 3px;
+      border: 1px solid #111827;
+      box-shadow:
+        inset 0 0 10px rgba(0,0,0,0.9),
+        0 0 0 1px #020617;
+      font-family: var(--font-doom);
+      font-size: 11px;
+      color: var(--accent-green);
+      padding: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .terminal-output {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 2px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .terminal-line {
+      line-height: 1.4;
+    }
+
+    .terminal-line--system {
+      color: var(--accent-green);
+    }
+
+    .terminal-line--warning {
+      color: var(--accent-yellow);
+    }
+
+    .terminal-line--error {
+      color: var(--danger);
+    }
+
+    .terminal-input-row {
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .terminal-prompt {
+      color: var(--accent-red-strong);
+    }
+
+    .terminal-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-doom);
+      font-size: 11px;
+    }
+
+    .terminal-help {
+      margin-top: 4px;
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    /* Bas d’écran façon HUD */
+
+    .hud-bottom {
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 2px solid #4b5563;
+      background:
+        linear-gradient(180deg, #111827 0%, #020617 100%);
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.1),
+        0 -3px 0 #020617,
+        0 3px 10px rgba(0,0,0,0.9);
+      font-family: var(--font-doom);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hud-metrics {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .metric {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+    }
+
+    .metric-value {
+      color: var(--accent-yellow);
+    }
+
+    .metric-value--danger {
+      color: var(--danger);
+    }
+
+    .hud-note {
+      max-width: 360px;
+    }
+
+    .doom-em {
+      color: var(--accent-red);
+    }
+
+    /* Scrollbar custom (optionnel) */
+
+    .terminal-output::-webkit-scrollbar {
+      width: 6px;
+    }
+    .terminal-output::-webkit-scrollbar-track {
+      background: #020617;
+    }
+    .terminal-output::-webkit-scrollbar-thumb {
+      background: #4b5563;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+<div class="screen">
+  <div class="screen-inner">
+    <!-- BARRE DU HAUT -->
+    <div class="top-bar">
+      <div class="uac-logo">
+        <div class="uac-mark">U</div>
+        <div class="uac-text">
+          INTRANET NODE // CELLULE STRATÉGIE NUMÉRIQUE
+        </div>
+      </div>
+      <div class="status-indicators">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>LINK: INTRANET</span>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot status-dot--alert"></span>
+          <span>DYSTOPIA RISK: HIGH</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HUD PRINCIPAL -->
+    <div class="hud">
+      <!-- Panel gauche -->
+      <section class="panel-main">
+        <header class="panel-main-header">
+          <div class="doom-title">OPÉRATION BOUT D'INTERNET</div>
+          <div class="doom-subtitle">MISSION DE RECRUTEMENT – UAC LEVEL 2</div>
+        </header>
+
+        <div class="panel-main-body">
+          <div class="mission-tag-row">
+            <span class="mission-tag mission-tag--critical">STATUS: EN ATTENTE D'EXÉCUTION</span>
+            <span class="mission-tag">MODE: HTML / CSS / JS PUR</span>
+            <span class="mission-tag">ENV: INTRANET / CLÉ USB</span>
+          </div>
+
+          <div class="mission-summary">
+            Bienvenue, opérateur·rice.
+            <br /><br />
+            Votre objectif : <strong>récupérer un dépôt GitHub public</strong>,
+            l’ausculter comme un <em>niveau caché</em> d’un vieux FPS,
+            puis construire un <strong>mini-site intranet augmenté</strong>
+            pour briefer les plus hautes sphères de l’organisation.
+            <br /><br />
+            Cette page est votre <span class="doom-em">écran titre</span> :
+            elle présente la mission, les indicateurs vitaux et
+            vous donne accès au reste du niveau&nbsp;:
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" data-nav="mission">
+              <span class="btn-icon btn-icon--danger"></span>
+              Lancer la mission
+            </button>
+            <button class="btn btn-secondary" data-nav="depot">
+              <span class="btn-icon"></span>
+              Dépôt analysé
+            </button>
+            <button class="btn btn-secondary" data-nav="briefing">
+              <span class="btn-icon"></span>
+              Briefing direction
+            </button>
+            <button class="btn btn-secondary" data-nav="dystopie">
+              <span class="btn-icon"></span>
+              Risques & dystopie
+            </button>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-cell">
+              <span class="meta-label">Réf mission</span>
+              <span class="meta-value" id="ref-mission">OM-BI-XXXX-01</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Candidat·e</span>
+              <span class="meta-value" id="meta-candidate">non enregistré</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Délai</span>
+              <span class="meta-value meta-value--danger">5 jours ouvrables</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Mode hors-ligne</span>
+              <span class="meta-value meta-value--ok">opérationnel</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Dépôt cible</span>
+              <span class="meta-value" id="meta-repo">à renseigner</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Intégrité</span>
+              <span class="meta-value">check manuel requis</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel droit : faux terminal -->
+      <aside class="panel-side">
+        <div class="panel-side-header">
+          <span>CONSOLE // BRIEFING MISSION</span>
+          <div class="led-row">
+            <div class="led led--on"></div>
+            <div class="led"></div>
+            <div class="led"></div>
+          </div>
+        </div>
+
+        <div class="terminal" aria-label="Console de briefing">
+          <div class="terminal-output" id="terminal-output">
+            <!-- contenu rempli via JS -->
+          </div>
+          <div class="terminal-input-row">
+            <span class="terminal-prompt">root@uac&gt;</span>
+            <input
+              id="terminal-input"
+              class="terminal-input"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="tapez help, mission, depot, dystopie..."
+            />
+          </div>
+          <div class="terminal-help">
+            commandes : help · mission · depot · briefing · dystopie · clear
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- HUD bas -->
+    <footer class="hud-bottom">
+      <div class="hud-metrics">
+        <div class="metric">
+          <span class="metric-label">SÉCURITÉ INTRANET</span>
+          <span class="metric-value metric-value--danger">SOUS SURVEILLANCE</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">CHARGE COGNITIVE</span>
+          <span class="metric-value">OPTIMISÉE</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">RISQUE DYSTOPIQUE</span>
+          <span class="metric-value metric-value--danger">ÉLEVÉ SI PASSIF</span>
+        </div>
+      </div>
+      <div class="hud-note">
+        Ne vous contentez pas de suivre les plateformes : 
+        <span class="doom-em">mappez le niveau</span>, révélez ce qui contrôle qui,
+        et préparez la direction à y survivre.
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>
+  // Petit stockage local pour le nom et le dépôt
+  (function () {
+    var STORAGE_KEY = "doom-home-meta-v1";
+    var defaultState = {
+      candidate: "",
+      repo: ""
+    };
+
+    function loadState() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultState;
+        var parsed = JSON.parse(raw);
+        return Object.assign({}, defaultState, parsed);
+      } catch (e) {
+        return defaultState;
+      }
+    }
+
+    function saveState(state) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        // stockage désactivé => on ignore
+      }
+    }
+
+    var state = loadState();
+
+    // Mettre à jour les champs affichés
+    function updateMetaDisplay() {
+      var candidate = state.candidate || "non enregistré";
+      var repo = state.repo || "à renseigner";
+
+      var candidateSpan = document.getElementById("meta-candidate");
+      var repoSpan = document.getElementById("meta-repo");
+      var refSpan = document.getElementById("ref-mission");
+
+      if (candidateSpan) candidateSpan.textContent = candidate;
+      if (repoSpan) repoSpan.textContent = repo;
+
+      if (refSpan) {
+        var year = new Date().getFullYear();
+        refSpan.textContent = "OM-BI-" + year + "-01";
+      }
+    }
+
+    updateMetaDisplay();
+
+    // Terminal "fake" pour expliquer la mission
+    var terminalOutput = document.getElementById("terminal-output");
+    var terminalInput = document.getElementById("terminal-input");
+
+    function printLine(text, type) {
+      if (!terminalOutput) return;
+      var line = document.createElement("div");
+      line.className = "terminal-line" + (type ? " terminal-line--" + type : "");
+      line.textContent = text;
+      terminalOutput.appendChild(line);
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+
+    function printIntro() {
+      printLine("UAC // CELLULE STRATÉGIE NUMÉRIQUE", "system");
+      printLine("Boot sequence OK. Intranet node online.", "system");
+      printLine("", "system");
+      printLine("Tapez 'help' pour afficher les commandes disponibles.", "system");
+      printLine("", "system");
+    }
+
+    function clearTerminal() {
+      if (!terminalOutput) return;
+      terminalOutput.innerHTML = "";
+    }
+
+    function cmdHelp() {
+      printLine("COMMANDES DISPONIBLES :", "system");
+      printLine("  help      : liste les commandes", "system");
+      printLine("  mission   : objectif et phases", "system");
+      printLine("  depot     : infos sur le dépôt GitHub à analyser", "system");
+      printLine("  briefing  : synthèse pour la direction", "system");
+      printLine("  dystopie  : risques & dérives à surveiller", "system");
+      printLine("  id        : renseigner candidat·e / dépôt", "system");
+      printLine("  clear     : nettoie la console", "system");
+    }
+
+    function cmdMission() {
+      printLine("OBJECTIF MISSION :", "system");
+      printLine(
+        "- Récupérer un « bout d'Internet » : dépôt GitHub public (site ou projet web).",
+        "system"
+      );
+      printLine(
+        "- Cartographier les fichiers, dépendances et risques (techniques + organisationnels).",
+        "system"
+      );
+      printLine(
+        "- Produire un mini-site intranet statique (HTML/CSS/JS pur) expliquant le tout.",
+        "system"
+      );
+      printLine("", "system");
+      printLine("PHASES (SUGGÉRÉES) :", "system");
+      printLine("  1. CLONE_LEVEL     : cloner / télécharger le dépôt.", "system");
+      printLine("  2. MAP_ARCH        : cartographier l'architecture.", "system");
+      printLine("  3. BUILD_BRIEFING  : concevoir le mini-site intranet.", "system");
+      printLine("  4. EXEC_SUMMARY    : préparer la synthèse pour la direction.", "system");
+      printLine("  5. PACKAGE_PAYLOAD : empaqueter pour clé USB / intranet.", "system");
+    }
+
+    function cmdDepot() {
+      var repo = state.repo || "non renseigné";
+      printLine("DÉPÔT CIBLE : " + repo, repo === "non renseigné" ? "warning" : "system");
+      printLine("", "system");
+      printLine(
+        "Le dépôt doit idéalement contenir :",
+        "system"
+      );
+      printLine(
+        "- Au moins un fichier HTML principal (point d'entrée).",
+        "system"
+      );
+      printLine(
+        "- Des ressources statiques (CSS, JS, images, docs).",
+        "system"
+      );
+      printLine(
+        "- Quelques dépendances externes (CDN, API, lib JS) pour nourrir l'analyse.",
+        "system"
+      );
+    }
+
+    function cmdBriefing() {
+      printLine("BRIEFING DIRECTION – ATTENDUS :", "system");
+      printLine(
+        "- 3 à 5 messages clés : risques, opportunités, implications organisationnelles.",
+        "system"
+      );
+      printLine(
+        "- Un langage compréhensible par des non-techniciens.",
+        "system"
+      );
+      printLine(
+        "- Des recommandations concrètes : que faire dans les 3 à 12 mois.",
+        "system"
+      );
+      printLine(
+        "- Un clin d'œil explicite aux dérives possibles (surveillance, dépendance, verrouillage).",
+        "warning"
+      );
+    }
+
+    function cmdDystopie() {
+      printLine("MODULE DYSTOPIE // POINTS DE VIGILANCE :", "warning");
+      printLine(
+        "- Qui contrôle la plateforme sur laquelle repose le dépôt ?",
+        "system"
+      );
+      printLine(
+        "- Que se passe-t-il si le service central tombe ou change de conditions d'utilisation ?",
+        "system"
+      );
+      printLine(
+        "- Quel niveau de traçabilité / surveillance accompagne l'usage de cet outil ?",
+        "system"
+      );
+      printLine(
+        "- Quelles habitudes de travail l'outil installe (et verrouille) dans l'organisation ?",
+        "system"
+      );
+      printLine(
+        "Votre mission n'est pas seulement de décrire le code, mais de cartographier le pouvoir.",
+        "warning"
+      );
+    }
+
+    function cmdId() {
+      printLine("IDENTIFICATION CANDIDAT·E & DÉPÔT", "system");
+      var name = prompt("Nom du/de la candidat·e ?");
+      if (name) {
+        state.candidate = name.trim();
+      }
+      var repo = prompt("URL ou nom du dépôt GitHub analysé ?");
+      if (repo) {
+        state.repo = repo.trim();
+      }
+      saveState(state);
+      updateMetaDisplay();
+      printLine("Métadonnées mises à jour.", "system");
+    }
+
+    function handleCommand(raw) {
+      var cmd = (raw || "").trim().toLowerCase();
+      if (!cmd) return;
+
+      if (cmd === "help") {
+        cmdHelp();
+      } else if (cmd === "mission") {
+        cmdMission();
+      } else if (cmd === "depot") {
+        cmdDepot();
+      } else if (cmd === "briefing") {
+        cmdBriefing();
+      } else if (cmd === "dystopie") {
+        cmdDystopie();
+      } else if (cmd === "clear") {
+        clearTerminal();
+        printIntro();
+      } else if (cmd === "id") {
+        cmdId();
+      } else {
+        printLine("Commande inconnue : " + cmd, "error");
+        printLine("Tapez 'help' pour la liste des commandes.", "system");
+      }
+    }
+
+    if (terminalInput) {
+      terminalInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          var value = terminalInput.value;
+          printLine("root@uac> " + value);
+          terminalInput.value = "";
+          handleCommand(value);
+        }
+      });
+    }
+
+    // Navigation boutons => affiche quelques lignes dans la console
+    document.querySelectorAll("[data-nav]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var nav = btn.getAttribute("data-nav");
+        printLine("");
+        printLine(">>> NAVIGATION : " + nav.toUpperCase(), "system");
+        if (nav === "mission") {
+          cmdMission();
+        } else if (nav === "depot") {
+          cmdDepot();
+        } else if (nav === "briefing") {
+          cmdBriefing();
+        } else if (nav === "dystopie") {
+          cmdDystopie();
+        }
+      });
+    });
+
+    // Intro au chargement
+    printIntro();
+  })();
+</script>
+</body>
+</html>
