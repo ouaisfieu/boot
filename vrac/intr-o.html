@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Silent Protocol · Option B · Debrief</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --fg: #e5f2dd;
+      --soft: #91a58a;
+      --accent: #a3ff78;
+      --accent-warn: #fbbf24;
+      --danger: #f97373;
+      --border: #1a2a20;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color: var(--fg);
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .shell {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      height: 100vh;
+      margin: 0 auto;
+      background: radial-gradient(circle at 50% -10%, #0f172a 0, #000 70%);
+      padding: 12px 10px;
+      color: var(--fg);
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid #000;
+      border-right: 2px solid #000;
+    }
+
+    /* Effet CRT */
+    .scanline {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.35) 0px,
+        rgba(0, 0, 0, 0.35) 2px,
+        rgba(0, 0, 0, 0.0) 3px
+      );
+      mix-blend-mode: multiply;
+      opacity: 0.4;
+      z-index: 5;
+    }
+
+    .glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      box-shadow:
+        inset 0 0 120px rgba(0,0,0,0.95),
+        0 0 200px rgba(163,255,120,0.12);
+      z-index: 4;
+    }
+
+    /* HEADER */
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--soft);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .logo {
+      font-size: 13px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .header-right {
+      text-align: right;
+      font-size: 10px;
+    }
+
+    .status-dot {
+      height: 6px;
+      width: 6px;
+      border-radius: 999px;
+      background: var(--danger);
+      display: inline-block;
+      margin-right: 4px;
+      box-shadow: 0 0 6px rgba(248,113,113,0.8);
+    }
+
+    /* ZONE D'AVERTISSEMENT */
+
+    .warning-bar {
+      margin: 8px 0 6px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--accent-warn);
+      background: rgba(15,23,42,0.9);
+      font-size: 11px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .warning-label {
+      font-weight: 700;
+      color: var(--accent-warn);
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: 10px;
+    }
+
+    /* CONSOLE PRINCIPALE */
+
+    .console {
+      flex: 1;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 50% -20%, #111827 0, #020617 42%, #000 100%);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .console-inner {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148,163,184,0.6) transparent;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .console-inner::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .console-inner::-webkit-scrollbar-thumb {
+      background: rgba(148,163,184,0.6);
+      border-radius: 999px;
+    }
+
+    .prompt-line {
+      font-size: 11px;
+      color: var(--soft);
+      margin-bottom: 6px;
+    }
+
+    .prompt-line span.path {
+      color: var(--accent);
+    }
+
+    .block {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+      margin-bottom: 10px;
+    }
+
+    .block.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .block-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .block-content {
+      color: var(--fg);
+    }
+
+    .block-content p {
+      margin: 4px 0;
+    }
+
+    .block-content em {
+      color: var(--soft);
+      font-style: normal;
+    }
+
+    .tagline {
+      font-size: 11px;
+      color: var(--soft);
+      margin-top: 6px;
+    }
+
+    .spoiler {
+      color: var(--danger);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+
+    ul {
+      margin: 4px 0 4px 14px;
+      padding: 0;
+    }
+
+    li {
+      margin: 2px 0;
+    }
+
+    .code {
+      font-family: inherit;
+      font-size: 11px;
+      padding: 2px 4px;
+      border-radius: 3px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid var(--border);
+      display: inline-block;
+    }
+
+    /* BAS D'ÉCRAN */
+
+    .footer-bar {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    .hint {
+      opacity: 0.7;
+    }
+
+    .menu-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--fg);
+      padding: 4px 10px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-primary {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 640px) {
+      .shell {
+        padding: 8px 6px;
+      }
+      .console {
+        padding: 8px;
+      }
+      .warning-bar {
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="scanline"></div>
+  <div class="glow"></div>
+
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">SILENT PROTOCOL</div>
+      <div>OPTION B · Debrief narratif — environnement : <span style="color:var(--accent-warn)">ALIEN_LIKE_PSYCHE</span></div>
+    </div>
+    <div class="header-right">
+      <div><span class="status-dot"></span>STATUS: DEBRIEF EN COURS</div>
+      <div>BRIDGE TERMINAL · NOSTROMO_SIM v0.3</div>
+    </div>
+  </header>
+
+  <section class="warning-bar">
+    <div class="warning-label">⚠ SPOILERS</div>
+    <div>
+      Cette page explique l’<strong>option A</strong> (l’intro silencieuse « SILENT PROTOCOL ») comme si tu lisais un
+      <em>rapport de mission</em> dans un vaisseau à la dérive.<br />
+      <strong>Attention :</strong> ce debrief contient des éléments cruciaux sur l’ambiance, les mécaniques,
+      les factions et la suite du jeu de rôle. À ne montrer qu’aux personnes prêtes à voir derrière l’écran noir.
+    </div>
+  </section>
+
+  <main class="console">
+    <div class="console-inner" id="consoleInner">
+      <div class="prompt-line">
+        [LOG] mount /dev/intro-A &gt; <span class="path">/usr/share/silent_protocol/debrief_b</span>
+      </div>
+
+      <!-- Blocs révélés progressivement -->
+
+      <div class="block" data-delay="800">
+        <div class="block-title">01 · CONTEXTE GÉNÉRAL</div>
+        <div class="block-content">
+          <p>
+            L’<strong>option A</strong> ouvre le jeu comme un rêve silencieux :
+            écran noir, fumée blanche, logo en lente apparition.
+            C’est l’équivalent de la scène d’ouverture d’<em>Alien</em> ou de
+            la station qui tourne dans <em>2001</em> : rien ne parle, mais tout
+            annonce que quelque chose est déjà cassé dans le décor.
+          </p>
+          <p>
+            Le joueur croit assister à un <em>simple écran titre</em>.<br>
+            En réalité, il vient d’entrer dans un <strong>protocole d’isolement</strong> :
+            un filtre mental qui teste comment il réagit à :
+          </p>
+          <ul>
+            <li>le silence absolu ;</li>
+            <li>la lenteur imposée ;</li>
+            <li>l’absence d’explication immédiate.</li>
+          </ul>
+          <p class="tagline">
+            S’il reste, il est jouable. S’il quitte, il était déjà mort dans l’univers du jeu.
+          </p>
+        </div>
+      </div>
+
+      <div class="block" data-delay="4200">
+        <div class="block-title">02 · CE QUE RACONTE L’OPTION A SANS LE DIRE</div>
+        <div class="block-content">
+          <p>
+            Le logo <strong>SILENT·PROTOCOL</strong> et le menu minimaliste évoquent les interfaces
+            d’ordinateurs embarqués des années 80 :
+            mélange entre le MU-TH-UR d’<em>Alien</em>, les écrans verts d’<em>Outland</em>
+            et les consoles austères de <em>Blade Runner</em>.
+          </p>
+          <p>
+            Derrière cette façade sobre, on plante déjà <strong>trois thèmes majeurs</strong> du jeu :
+          </p>
+          <ul>
+            <li><strong>Survie informationnelle</strong> : tu n’es pas en train de sauver la galaxie, tu essaies juste de ne pas te faire avaler par les flux.</li>
+            <li><strong>Consentement mou</strong> : tu cliques sur « Nouvelle partie » comme tu acceptes des conditions d’utilisation que tu n’as pas lues.</li>
+            <li><strong>Isolement social</strong> : tout est silencieux, mais tu sens que quelqu’un — ou quelque chose — t’observe déjà.</li>
+          </ul>
+          <p class="tagline">
+            L’intro A n’est pas un décor : c’est un <span class="code">scan psychologique passif</span>.
+          </p>
+        </div>
+      </div>
+
+      <div class="block" data-delay="7800">
+        <div class="block-title">03 · RYTHME LENT & HORREUR PSYCHOLOGIQUE</div>
+        <div class="block-content">
+          <p>
+            L’ambiance <strong>Alien</strong>, ici, ce n’est pas les monstres.
+            C’est le <em>temps qui se dilate</em> :
+          </p>
+          <ul>
+            <li>les écrans restent noirs un peu trop longtemps ;</li>
+            <li>les phrases apparaissent une par une, comme des logs de bord ;</li>
+            <li>le joueur n’a aucun son pour se rassurer, ni musique héroïque, ni “ding” de validation.</li>
+          </ul>
+          <p>
+            On s’inspire de ces moments où :
+          </p>
+          <ul>
+            <li>Ripley avance dans un couloir qui grince sans savoir d’où vient le bruit ;</li>
+            <li>un vaisseau survole une planète inconnue, et la caméra <em>refuse</em> d’accélérer ;</li>
+            <li>la radio ne répond plus, mais les écrans continuent d’afficher des données “normales”.</li>
+          </ul>
+          <p class="tagline">
+            Le “monstre”, dans ce jeu, c’est la sensation d’être <strong>un humain banal</strong>
+            coincé dans un système beaucoup plus grand que lui.
+          </p>
+        </div>
+      </div>
+
+      <div class="block" data-delay="12000">
+        <div class="block-title">04 · SPOILERS CONTRÔLÉS SUR LA SUITE</div>
+        <div class="block-content">
+          <p class="spoiler">spoilers narratifs (option B uniquement)</p>
+          <p>
+            Voici ce que l’option A <strong>prépare</strong> pour les chapitres suivants :
+          </p>
+          <ul>
+            <li>
+              Les boutons du menu ne sont pas que des entrées : ce sont des
+              <strong>lignes temporelles</strong>.
+              <br><em>« Nouvelle partie »</em> = tu reprends depuis ton réveil dans le monde réel.<br>
+              <em>« Prologue silencieux »</em> = tu revis la mise en place du piège narratif.<br>
+              <em>« Crédits & intentions »</em> = méta-lecture assumée pour les joueurs curieux ou MJ.
+            </li>
+            <li>
+              Chaque option mènera à une <strong>piste de jeu différente</strong> :
+              enquête citoyenne, thriller institutionnel, survival mental au milieu des infos.
+            </li>
+            <li>
+              Certains choix de navigation (quand cliquer, quoi ignorer, combien de temps rester sur un texte)
+              seront considérés comme des <strong>jets de dés invisibles</strong> pour déterminer ton profil.
+            </li>
+          </ul>
+          <p class="tagline">
+            La suite du jeu se souviendra notamment de :
+            <span class="code">ta patience</span>,
+            <span class="code">ta curiosité</span>,
+            <span class="code">tes réflexes d’évitement</span>.
+          </p>
+        </div>
+      </div>
+
+      <div class="block" data-delay="16500">
+        <div class="block-title">05 · FACTIONS & POINTS DE VUE CACHÉS</div>
+        <div class="block-content">
+          <p>
+            Même si rien n’est affiché dans l’option A, le jeu repose déjà sur
+            <strong>trois grandes forces en présence</strong> :
+          </p>
+          <ul>
+            <li>
+              <strong>Les Mainteneurs</strong><br>
+              Ceux qui surveillent les systèmes, réparent les fuites, patchent les dégâts.
+              Ils voient la société comme un vaisseau qui ne peut pas se permettre de s’arrêter.
+            </li>
+            <li>
+              <strong>Les Exploitants</strong><br>
+              Ils considèrent l’information comme une ressource à extraire, trier, monétiser.
+              Ce sont les héritiers moraux des compagnies d’<em>Alien</em> :
+              la priorité, c’est la mission, pas l’équipage.
+            </li>
+            <li>
+              <strong>Les Veilleurs</strong><br>
+              Ceux qui essaient de garder une conscience critique, de relier les signaux
+              entre eux, de faire de la veille citoyenne pour ne pas devenir des figurants.
+            </li>
+          </ul>
+          <p>
+            Le joueur, lui, commence officiellement comme <strong>simple passager</strong>.<br>
+            Officieusement, son comportement dans l’intro décide vers quelle faction le jeu
+            le poussera tout doucement.
+          </p>
+        </div>
+      </div>
+
+      <div class="block" data-delay="21200">
+        <div class="block-title">06 · TYPE DE SCÈNES À VENIR</div>
+        <div class="block-content">
+          <p>
+            L’ambiance Alien ne sert pas qu’à faire joli : elle sert à structurer le futur gameplay.
+            La suite du jeu alternera entre :
+          </p>
+          <ul>
+            <li>
+              <strong>Scènes de couloir</strong> (navigation web / menus)<br>
+              Tu passes d’un écran à l’autre, tu ouvres des dossiers, tu lis des logs.
+              C’est l’équivalent de marcher dans les entrailles du vaisseau.
+            </li>
+            <li>
+              <strong>Scènes de salle des machines</strong> (tableaux de bord, cartes, plans)<br>
+              Tu vois les systèmes de loin : flux d’info, réseaux, acteurs.
+              Tu peux décider où tu mets ton attention — et où tu fermes les yeux.
+            </li>
+            <li>
+              <strong>Scènes de réveil</strong> (retour à la vie quotidienne)<br>
+              Tu te demandes comment continuer à jouer sans faire exploser ta vraie vie,
+              ton temps, ta santé mentale.
+            </li>
+          </ul>
+          <p class="tagline">
+            Le jeu ne te demande pas d’être héroïque.<br>
+            Il te demande : <strong>« jusqu’où peux-tu rester lucide ? »</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="block" data-delay="25800">
+        <div class="block-title">07 · MÉTA-CONSEILS POUR LE MJ (OU L’AUTEUR)</div>
+        <div class="block-content">
+          <p>
+            Si tu utilises ce jeu comme <strong>outil de veille</strong> ou de
+            <strong>sensibilisation</strong>, l’option B te donne les règles de base :
+          </p>
+          <ul>
+            <li>Ne pas tout expliquer d’un coup : laisser le silence faire peur avant de rassurer.</li>
+            <li>Utiliser les références cultes comme des <em>balises</em>, jamais comme des béquilles.</li>
+            <li>Assumer que certains joueurs décrocheront — et que ce choix fait partie de l’expérience.</li>
+            <li>
+              Prévoir des <strong>issues de secours</strong> : pause, retour au réel, mode “light” où on joue
+              l’enquête sans creuser les aspects trop anxiogènes.
+            </li>
+          </ul>
+          <p>
+            L’objectif n’est pas de traumatiser, mais de montrer à quel point
+            la réalité peut <em>déjà</em> ressembler à un huis clos dans un vaisseau,
+            quand on parle d’information, de pouvoir et de survie sociale.
+          </p>
+        </div>
+      </div>
+
+      <div class="block" data-delay="30500">
+        <div class="block-title">08 · DERNIERS SPOILERS AVANT DE JOUER</div>
+        <div class="block-content">
+          <p class="spoiler">zone spoiler final</p>
+          <p>
+            Plus tard dans la campagne, le joueur découvrira que :
+          </p>
+          <ul>
+            <li>
+              Le « protocole » n’est pas un seul système,
+              mais une <strong>superposition de couches</strong>
+              (administratives, médiatiques, numériques, émotionnelles).
+            </li>
+            <li>
+              Son propre comportement de navigation — ce qu’il clique, ce qu’il lit, ce qu’il ignore —
+              a servi de <strong>profilage discret</strong> pour alimenter le scénario.
+            </li>
+            <li>
+              Certaines “coïncidences” (articles, pubs, personnages, événements) sont des
+              <strong>échos volontairement exagérés</strong> de notre monde,
+              pour rendre visible ce qui d’habitude reste diffus.
+            </li>
+          </ul>
+          <p class="tagline">
+            La vraie question de fin de partie ne sera pas : « as-tu gagné ? »,
+            mais : <strong>« qu’est-ce que tu vois différemment, maintenant ? »</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="block" data-delay="34800">
+        <div class="block-title">09 · RECOMMANDATION FINALE</div>
+        <div class="block-content">
+          <p>
+            Utilise l’option A pour <strong>jouer la scène</strong>.<br>
+            Utilise l’option B pour <strong>construire le jeu</strong>, préparer le ton, assurer le cadre,
+            et rassurer les joueurs qui ont besoin de comprendre où ils mettent les pieds.
+          </p>
+          <p>
+            Tu peux relier cette page :
+          </p>
+          <ul>
+            <li>comme <strong>annexe MJ</strong> dans ton site de jeu,</li>
+            <li>comme <strong>dossier “classification interne”</strong> dans un intranet fictif,</li>
+            <li>ou comme <strong>briefing secret</strong> déverrouillé après quelques parties.</li>
+          </ul>
+          <p class="tagline">
+            Dans tous les cas : l’écran noir n’est pas un bug.<br>
+            C’est là que commence la partie.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="hint">
+        [ESPACE] pour révéler tout · La progression lente est voulue — comme un vaisseau qui dérive sans bruit.
+      </div>
+      <div class="menu-actions">
+        <button class="btn" id="btnRevealAll">révéler tout</button>
+        <button class="btn btn-primary" id="btnBackIntro">retour option a</button>
+        <button class="btn" id="btnPlayerFile">dossier joueur</button>
+        <button class="btn" id="btnGmFile">dossier meneur</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const blocks = Array.from(document.querySelectorAll('.block'));
+  const consoleInner = document.getElementById('consoleInner');
+  const btnRevealAll = document.getElementById('btnRevealAll');
+  const btnBackIntro = document.getElementById('btnBackIntro');
+  const btnPlayerFile = document.getElementById('btnPlayerFile');
+  const btnGmFile = document.getElementById('btnGmFile');
+
+  let timers = [];
+  let allRevealed = false;
+
+  function scheduleBlocks() {
+    blocks.forEach(block => {
+      const delay = parseInt(block.dataset.delay || '0', 10);
+      const t = setTimeout(() => {
+        revealBlock(block);
+      }, delay);
+      timers.push(t);
+    });
+  }
+
+  function revealBlock(block) {
+    if (!block.classList.contains('visible')) {
+      block.classList.add('visible');
+      // auto-scroll vers le bas
+      consoleInner.scrollTo({
+        top: consoleInner.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  function revealAllBlocks() {
+    allRevealed = true;
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+    blocks.forEach(block => {
+      block.classList.add('visible');
+    });
+    consoleInner.scrollTo({
+      top: consoleInner.scrollHeight,
+      behavior: 'smooth'
+    });
+  }
+
+  // Bouton "révéler tout"
+  btnRevealAll.addEventListener('click', revealAllBlocks);
+
+  // Espace = révéler tout
+  window.addEventListener('keydown', (e) => {
+    if (e.key === ' ') {
+      e.preventDefault();
+      if (!allRevealed) revealAllBlocks();
+    }
+  });
+
+  // Retour vers l'intro A (tu peux adapter le nom du fichier)
+  btnBackIntro.addEventListener('click', () => {
+    window.location.href = 'intro-rpg.html';
+  });
+
+  // Dossier joueur / meneur : placeholders pour l’instant
+  btnPlayerFile.addEventListener('click', () => {
+    alert("Dossier Joueur · À venir :\n\n• Version allégée sans spoilers\n• Feuille de personnage\n• Guide de survie dans l’univers");
+  });
+
+  btnGmFile.addEventListener('click', () => {
+    alert("Dossier Meneur · À venir :\n\n• Trame générale de campagne\n• Conseils de rythme & tension\n• Cartographie des factions & révélations");
+  });
+
+  // Lancement séquentiel
+  window.addEventListener('load', scheduleBlocks);
+</script>
+</body>
+</html>
