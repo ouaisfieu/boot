@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Topo de survie · Veille citoyenne & stratégique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #030712;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #f97316;
+      --accent2: #22c55e;
+      --accent3: #22d3ee;
+      --border: #1f2937;
+      --shadow: 0 24px 60px rgba(0,0,0,0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(251,113,133,0.24), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(56,189,248,0.22), transparent 60%),
+        linear-gradient(to bottom, #020617, #000 55%, #020617 100%);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 12px 10px 22px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    header.site-header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.32em;
+      color: var(--soft);
+    }
+
+    h1 {
+      margin: 4px 0 4px;
+      font-size: clamp(20px, 5vw, 26px);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--soft);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* cadeau */
+
+    .gift-card {
+      margin-top: 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 0 0, rgba(250,204,21,0.18), transparent 60%),
+        rgba(15,23,42,0.97);
+      border: 1px solid #facc15;
+      box-shadow: var(--shadow);
+      padding: 10px 11px 11px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 720px) {
+      .gift-card {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .gift-img-wrap {
+      text-align: center;
+    }
+
+    .gift-img-wrap img {
+      max-width: 220px;
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,0.9);
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,1),
+        0 16px 30px rgba(0,0,0,0.9);
+      background: #020617;
+    }
+
+    .gift-text-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 4px;
+    }
+
+    .gift-text-body {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    /* layout principal */
+
+    .layout {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 820px) {
+      .layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .card {
+      border-radius: 18px;
+      background: rgba(15,23,42,0.98);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 10px 11px 11px;
+    }
+
+    .card-soft {
+      border-radius: 14px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid #374151;
+      padding: 7px 9px;
+      font-size: 13px;
+    }
+
+    h2 {
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 0 0 5px;
+    }
+
+    h3 {
+      font-size: 13px;
+      margin: 6px 0 3px;
+    }
+
+    p {
+      margin: 3px 0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    ul, ol {
+      padding-left: 18px;
+      margin: 3px 0;
+      font-size: 13px;
+    }
+
+    li { margin: 2px 0; }
+
+    small { font-size: 11px; }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      padding: 1px 6px;
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    .pill-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+      margin-bottom: 3px;
+    }
+
+    .step-row {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 2px solid var(--accent2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent2);
+      box-shadow: 0 0 12px rgba(34,197,94,0.6);
+      background: radial-gradient(circle at 20% 20%, #bbf7d0, #0f172a);
+    }
+
+    .step-body {
+      font-size: 13px;
+    }
+
+    .quote-block {
+      margin-top: 5px;
+      border-radius: 12px;
+      border: 1px dashed rgba(148,163,184,0.9);
+      padding: 6px 7px;
+      font-size: 12px;
+      color: var(--soft);
+      font-style: italic;
+    }
+
+    /* liens & "vrac" */
+
+    .link-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 3px 0;
+      font-size: 13px;
+    }
+
+    .link-list li {
+      margin: 2px 0 3px;
+    }
+
+    .link-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9ca3af;
+      display: block;
+    }
+
+    .link-desc {
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .section-divider {
+      margin: 6px 0;
+      border-top: 1px solid #374151;
+    }
+
+    a {
+      color: #fb923c;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    a:hover {
+      color: #fed7aa;
+    }
+
+    .footer-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--soft);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="site-header">
+    <div class="eyebrow">dossier d'initiation officieux</div>
+    <h1>Veille citoyenne & stratégique</h1>
+    <p class="subtitle">
+      Tu as survécu au questionnaire sectaire à 12,50.  
+      Voici maintenant le topo sérieux (mais accessible) pour comprendre
+      ce que tu es en train de faire quand tu “joues” à cartographier le monde.
+    </p>
+  </header>
+
+  <!-- CADEAU DE BIENVENUE -->
+  <section class="gift-card">
+    <div class="gift-img-wrap">
+      <img src="https://dl.ouaisfi.eu/images/ck-1.gif" alt="Cadeau de bienvenue · Jeton de veille" />
+    </div>
+    <div>
+      <div class="gift-text-title">cadeau de bienvenue</div>
+      <div class="gift-text-body">
+        Ceci est ton <strong>jeton de veille</strong> : une façon de te rappeler que chaque clic,
+        chaque onglet, chaque “je regarderai ça plus tard” est une mini-décision stratégique.
+        <br /><br />
+        Tu peux enregistrer cette image, l’utiliser comme avatar, la coller dans tes notes,
+        ou la transformer en sticker IRL.  
+        Tant que ça te rappelle que ton attention est une ressource, c’est gagné.
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENU PRINCIPAL -->
+  <section class="layout">
+    <!-- COLONNE GAUCHE : TOPO -->
+    <article class="card">
+      <h2>Comprendre de quoi on parle (sans jargon)</h2>
+
+      <div class="card-soft">
+        <h3>1. Veille citoyenne</h3>
+        <p>
+          On parle de <strong>veille citoyenne</strong> quand des personnes, des collectifs, des assos
+          ou des publics s’organisent pour :
+        </p>
+        <ul>
+          <li>suivre des <strong>enjeux de société</strong> (logement, climat, travail, numérique…);</li>
+          <li>croiser plusieurs sources (médias, rapports, expériences vécues, terrain…);</li>
+          <li>mettre en commun leurs observations (réunions, sites, murs d’infos, jeux comme le tien…);</li>
+          <li>produire des <strong>lectures critiques partagées</strong>, pas juste des coups de gueule isolés.</li>
+        </ul>
+        <p>
+          C’est de la veille “par le bas”, sans badge, sans uniforme, avec une éthique :
+          <em>ne pas nuire, ne pas fliquer, comprendre pour pouvoir agir ensemble</em>.
+        </p>
+        <div class="tag-row">
+          <span class="tag">éducation populaire</span>
+          <span class="tag">intelligence collective</span>
+          <span class="tag">auto-défense intellectuelle</span>
+        </div>
+      </div>
+
+      <div class="card-soft" style="margin-top:6px;">
+        <h3>2. Veille stratégique & intelligence économique</h3>
+        <p>
+          Dans le monde des entreprises et des États, on parle plutôt de
+          <strong>veille stratégique</strong> ou d’<strong>intelligence économique</strong> :
+        </p>
+        <ul>
+          <li>collecter, analyser, valoriser, diffuser et <strong>protéger</strong> l’information stratégique;</li>
+          <li>anticiper les évolutions (marchés, technologies, réglementations…);</li>
+          <li>aider à la prise de décision (investir, se défendre, se positionner…).</li>
+        </ul>
+        <p>
+          Certaines institutions en ont fait un véritable métier, avec des formations,
+          des certifications, des cellules dédiées, etc.
+        </p>
+        <div class="tag-row">
+          <span class="tag">veille stratégique</span>
+          <span class="tag">intelligence économique</span>
+          <span class="tag">stratégie & signaux faibles</span>
+        </div>
+      </div>
+
+      <div class="card-soft" style="margin-top:6px;">
+        <h3>3. Le cycle commun (citoyen ou stratégique)</h3>
+        <p class="pill-title">un même geste, des intentions différentes</p>
+
+        <div class="step-row">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Définir ce qu’on surveille</strong><br />
+            Thème, territoire, acteurs, temporalité.  
+            Dans ton jeu : ce sont les <em>axes de l’échiquier</em>, les tags, les fiches.
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Collecter</strong><br />
+            Articles, rapports, posts, discussions, observations de terrain, données ouvertes…  
+            Dans ton jeu : ce sont les liens, les notes, les coordonnées, les images.
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Trier & analyser</strong><br />
+            Ce qui est fiable / douteux, ce qui est central / périphérique, ce qui revient souvent.  
+            Dans ton jeu : ce sont les niveaux de “risque”, les connexions entre cases.
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>Partager</strong><br />
+            Note de veille, dossier, carte mentale, réunion, jeu, atelier…  
+            Dans ton jeu : ce sont les exports JSON/CSV/Markdown, les parties à plusieurs.
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>Protéger</strong><br />
+            Ce qui ne doit pas fuiter, ce qui doit rester anonymisé, ce qui n’a rien à faire sur un serveur.  
+            Dans ton jeu : tout tourne en local, tu choisis ce que tu exportes, tu assumes ce que tu partages.
+          </div>
+        </div>
+
+        <div class="quote-block">
+          “La différence entre un service secret et un atelier citoyen, ce n’est pas le sérieux du travail :  
+          c’est ce qu’on cherche à <strong>protéger</strong> et ce qu’on accepte de <strong>rendre public</strong>.”
+        </div>
+      </div>
+
+      <div class="card-soft" style="margin-top:6px;">
+        <h3>4. Bonnes pratiques pour ton jeu (et pour la vraie vie)</h3>
+        <ul>
+          <li>Ne note que des choses que tu serais prêt·e à <strong>expliquer en public</strong>.</li>
+          <li>Privilégie les <strong>acteurs publics</strong>, les institutions, les organisations, pas les personnes privées.</li>
+          <li>Note tes sources (un lien, un rapport, une rencontre) même en version courte.</li>
+          <li>Garde le droit de dire “je ne sais pas” et de laisser des cases vides.</li>
+          <li>Si quelque chose te met mal à l’aise, tu le gardes pour toi (ou tu l’effaces).</li>
+        </ul>
+        <p>
+          Tu peux utiliser ce topo comme base pour un <strong>atelier grand public</strong> :
+          une personne explique, les autres jouent avec la MAP.
+        </p>
+      </div>
+    </article>
+
+    <!-- COLONNE DROITE : LIENS EN VRAC & JEU -->
+    <aside class="card">
+      <h2>Liens en vrac & bibliothèque de départ</h2>
+
+      <div class="card-soft">
+        <h3>Nos pages dans le “parc”</h3>
+        <ul class="link-list">
+          <li>
+            <span class="link-label">Générique</span>
+            <a href="intro-jeu.html">intro-jeu.html</a>
+            <div class="link-desc">Cinématique façon dessin animé, puis menu principal du jeu.</div>
+          </li>
+          <li>
+            <span class="link-label">Borne d'arcade</span>
+            <a href="zalagtiga.html">zalagtiga.html</a>
+            <div class="link-desc">Ambiance Galaga / Poelaert, briefing de mission & mur de photos.</div>
+          </li>
+          <li>
+            <span class="link-label">Terminal & MAP</span>
+            <a href="minitel-boot-map.html">minitel-boot-map.html</a>
+            <div class="link-desc">Boot Minitel, Konami code, échiquier d’enquête et fiches.</div>
+          </li>
+          <li>
+            <span class="link-label">Secte à 12,50</span>
+            <a href="secte-1250.html">secte-1250.html</a>
+            <div class="link-desc">Questionnaire sectaire pacifiste & engagement symbolique en cash.</div>
+          </li>
+          <li>
+            <span class="link-label">Guide complet</span>
+            <a href="guide-jeu-zalagtiga.html">guide-jeu-zalagtiga.html</a>
+            <div class="link-desc">Règles, modes de jeu, factions, arbre de décision, etc.</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="card-soft" style="margin-top:6px;">
+        <h3>Ressources sérieuses sur la veille & l'intelligence éco</h3>
+        <ul class="link-list">
+          <li>
+            <span class="link-label">Définition “officielle” de la veille stratégique</span>
+            <a href="https://fr.wikipedia.org/wiki/Veille_strat%C3%A9gique" target="_blank" rel="noopener">
+              Wikipédia · Veille stratégique
+            </a>
+            <div class="link-desc">
+              Vue d’ensemble sur la veille, ses objectifs et ses différents types (technologique, concurrentielle, juridique…).
+            </div>
+          </li>
+          <li>
+            <span class="link-label">Intelligence économique & bonnes pratiques</span>
+            <a href="https://www.nievre.gouv.fr/Actions-de-l-Etat/Economie-et-emploi/Intelligence-economique-les-bonnes-pratiques-en-entreprise" target="_blank" rel="noopener">
+              Dossier · Intelligence économique (France)
+            </a>
+            <div class="link-desc">
+              Petit topo institutionnel sur la collecte, l’analyse et la protection de l’information stratégique.
+            </div>
+          </li>
+          <li>
+            <span class="link-label">Guide complet (recherche & IE)</span>
+            <a href="https://www.enseignementsup-recherche.gouv.fr/sites/default/files/content_migration/document/GuideIErecherche_278301.pdf" target="_blank" rel="noopener">
+              Guide “Intelligence économique & recherche”
+            </a>
+            <div class="link-desc">
+              Un PDF dense mais intéressant sur la façon de penser l’IE dans le monde académique.
+            </div>
+          </li>
+          <li>
+            <span class="link-label">Formation & “guerre économique”</span>
+            <a href="https://www.ege.fr/" target="_blank" rel="noopener">
+              École de Guerre Économique (EGE)
+            </a>
+            <div class="link-desc">
+              Établissement privé français spécialisé en intelligence économique et stratégies de puissance économiques.
+            </div>
+          </li>
+          <li>
+            <span class="link-label">Réseau de praticiens</span>
+            <a href="https://www.aege.fr/" target="_blank" rel="noopener">
+              AEGE · Réseau des experts en intelligence économique
+            </a>
+            <div class="link-desc">
+              Réseau de diplômé·es et de praticien·nes de l’intelligence économique, lié à l’EGE.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="card-soft" style="margin-top:6px;">
+        <h3>Fictions d’espionnage pour mettre tout ça en perspective</h3>
+        <p>
+          L’espionnage et la veille, ça a aussi produit des tonnes de récits.  
+          Quelques pistes (à adapter selon les publics) :
+        </p>
+        <ul class="link-list">
+          <li>
+            <span class="link-label">Classiques stratégiques</span>
+            <div class="link-desc">
+              <em>L’Art de la guerre</em> (Sun Tzu), relu à la lumière de la compétition économique ;  
+              les romans de <strong>John le Carré</strong> sur la guerre froide et la loyauté.
+            </div>
+          </li>
+          <li>
+            <span class="link-label">Espionnage & institutions</span>
+            <div class="link-desc">
+              <em>La Taupe</em>, <em>Tinker Tailor Soldier Spy</em>, <em>Les Patriotes</em>,  
+              les séries qui montrent des organisations obsédées par l’information.
+            </div>
+          </li>
+          <li>
+            <span class="link-label">Sociétés sous surveillance</span>
+            <div class="link-desc">
+              <em>1984</em>, <em>Brazil</em>, <em>Mr. Robot</em>, <em>The Wire</em>…  
+              Pas du “renseignement” au sens strict, mais des plongées dans les systèmes.
+            </div>
+          </li>
+        </ul>
+        <p style="margin-top:4px;">
+          Tu peux t’amuser à placer ces univers dans ton échiquier (cases “fictions”, “scénarios extrêmes”)
+          pour comparer avec la réalité que tu observes.
+        </p>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="card-soft" style="margin-top:6px;">
+        <h3>Comment continuer à jouer avec ce topo</h3>
+        <p>Pour relier cette page au reste du jeu :</p>
+        <ul>
+          <li>Depuis <strong>secte-1250.html</strong>, ajoute un bouton “Comprendre ce que je fais” vers `topo-veille.html`.</li>
+          <li>Depuis le <strong>guide du jeu</strong>, fais un lien “Annexe : topo sur la veille & l’IE”.</li>
+          <li>Dans ton <strong>échiquier</strong>, crée une colonne ou une ligne “méta” qui renvoie à ce topo.</li>
+        </ul>
+        <p>
+          Tu peux aussi imprimer cette page (ou en faire un PDF) et la donner comme fiche de
+          contexte à des participant·es avant un atelier.
+        </p>
+      </div>
+    </aside>
+  </section>
+
+  <p class="footer-note">
+    Ce document n’est ni un cours d’espionnage, ni un manuel de guerre économique :  
+    c’est un <strong>mode d’emploi pour ne plus subir l’information comme un bruit de fond</strong>.
+  </p>
+</main>
+</body>
+</html>
