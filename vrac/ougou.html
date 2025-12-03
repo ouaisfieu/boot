@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Morpion Dé 360 – Combos à débloquer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #020617;
+      --card-soft: #0b1220;
+      --border: #1f2937;
+      --primary: #38bdf8;
+      --accent: #f97316;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --success: #22c55e;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-soft: 0 22px 60px rgba(0,0,0,0.7);
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      --cube-front: #f97373;
+      --cube-back: #38bdf8;
+      --cube-left: #4ade80;
+      --cube-right: #facc15;
+      --cube-top: #a855f7;
+      --cube-bottom: #f97316;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text);
+      padding: 20px 16px 32px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 52%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 16px 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at top, rgba(56,189,248,0.16), transparent 55%),
+        radial-gradient(circle at bottom, rgba(248,113,113,0.16), transparent 55%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .title-block h1 {
+      font-size: 1.45rem;
+      line-height: 1.2;
+    }
+
+    .title-block h1 span {
+      color: var(--primary);
+    }
+
+    .subtitle {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.4);
+    }
+
+    /* BOARD */
+
+    .board-wrapper {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    @media (max-width: 720px) {
+      .board-wrapper {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      max-width: 260px;
+    }
+
+    .cell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: radial-gradient(circle at top, #111827 0, #020617 75%);
+      color: var(--text);
+      font-size: 2.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(15,23,42,0.8);
+      transition: transform 0.08s, box-shadow 0.08s, border-color 0.08s, background 0.08s;
+    }
+
+    .cell:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+      box-shadow: 0 13px 30px rgba(56,189,248,0.6);
+    }
+
+    .cell.disabled {
+      cursor: default;
+      opacity: 0.5;
+      transform: none;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.8);
+    }
+
+    .cell.win {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(248,113,113,0.7), 0 18px 40px rgba(248,113,113,0.6);
+      background: radial-gradient(circle at top, rgba(248,113,113,0.2), #020617 75%);
+    }
+
+    .status-block {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .status-main {
+      font-size: 1.05rem;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .status-main span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .btn-row {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn {
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.1s, border-color 0.1s, color 0.1s, transform 0.08s;
+    }
+
+    .btn:hover {
+      background: #0f172a;
+      border-color: var(--primary);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #0f172a;
+      font-weight: 600;
+      box-shadow: 0 10px 26px rgba(56,189,248,0.7);
+    }
+
+    .btn.primary:hover {
+      background: #0ea5e9;
+      border-color: #0ea5e9;
+      transform: translateY(-1px);
+      box-shadow: 0 15px 34px rgba(56,189,248,0.8);
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    /* CUBE SECTION */
+
+    .cube-card {
+      margin-top: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: radial-gradient(circle at top, #020617, #020617);
+      padding: 10px 11px 9px;
+    }
+
+    .cube-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 720px) {
+      .cube-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .cube-stage {
+      perspective: 650px;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto;
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.15s linear;
+    }
+
+    .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      border: 2px solid rgba(15,23,42,0.9);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: #020617;
+      cursor: pointer;
+      text-shadow: 0 0 4px rgba(255,255,255,0.9);
+    }
+
+    .face-front  { background: var(--cube-front);  transform: translateZ(90px); }
+    .face-back   { background: var(--cube-back);   transform: rotateY(180deg) translateZ(90px); }
+    .face-right  { background: var(--cube-right);  transform: rotateY(90deg) translateZ(90px); }
+    .face-left   { background: var(--cube-left);   transform: rotateY(-90deg) translateZ(90px); }
+    .face-top    { background: var(--cube-top);    transform: rotateX(90deg) translateZ(90px); }
+    .face-bottom { background: var(--cube-bottom); transform: rotateX(-90deg) translateZ(90px); }
+
+    .cube-legend {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 0.8rem;
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .control label {
+      color: var(--muted);
+    }
+
+    .control input[type="range"] {
+      width: 100%;
+    }
+
+    .colors-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+      font-size: 0.78rem;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 4px 6px;
+      border-radius: 10px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(30,64,175,0.7);
+    }
+
+    .color-row span {
+      color: var(--muted);
+    }
+
+    .color-row input[type="color"] {
+      border: none;
+      background: transparent;
+      width: 32px;
+      height: 22px;
+      padding: 0;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* RIGHT COLUMN: COMBOS + EXPORT */
+
+    .right-card {
+      background: radial-gradient(circle at top, #020617, #020617);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 13px;
+    }
+
+    .right-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .right-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .combo-list {
+      font-size: 0.8rem;
+      max-height: 230px;
+      overflow: auto;
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      padding: 6px 7px;
+    }
+
+    .combo-item {
+      padding: 5px 6px;
+      border-radius: 8px;
+      background: rgba(15,23,42,0.75);
+      border: 1px solid rgba(55,65,81,0.9);
+      margin-bottom: 5px;
+    }
+
+    .combo-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .combo-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 2px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .combo-win {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .color-dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.7);
+    }
+
+    .export-area {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.8);
+      padding: 7px 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .export-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .export-status {
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    footer {
+      max-width: 1120px;
+      margin: 14px auto 0;
+      font-size: 0.76rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <!-- LEFT: GAME + CUBE -->
+  <section class="card">
+    <div class="card-inner">
+      <div class="header">
+        <div class="title-block">
+          <h1>Morpion <span>Dé 360</span></h1>
+          <p class="subtitle">
+            Gagne des parties de morpion pendant que tu tripotes un dé 3D aux facettes colorées.
+            Chaque victoire = une combo débloquée avec la configuration du dé.
+          </p>
+        </div>
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span>HTML pur · JS pur · tient sur une clé USB</span>
+        </div>
+      </div>
+
+      <div class="board-wrapper">
+        <div>
+          <div class="board" id="board">
+            <!-- cells injected by JS -->
+          </div>
+        </div>
+        <div>
+          <div class="status-block">
+            <div class="status-main" id="status-main">Tour du joueur <span>X</span></div>
+            <div id="status-sub" class="subtitle">
+              Clique une case vide pour jouer · X commence. Le dé n’est là que pour la beauté (et la symbolique de combo).
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn primary" type="button" onclick="resetBoard(false)">
+              Nouvelle manche
+            </button>
+            <button class="btn" type="button" onclick="resetBoard(true)">
+              Tout réinitialiser (combos inclus)
+            </button>
+          </div>
+          <div class="note">
+            Chaque fois que quelqu’un gagne, on enregistre : la combinaison (ligne/colonne/diagonale) + les couleurs actuelles du dé.
+          </div>
+        </div>
+      </div>
+
+      <!-- CUBE 3D -->
+      <div class="cube-card">
+        <div style="font-size:0.86rem; margin-bottom:4px;">
+          <strong>Dé 360 · plateaux colorés</strong>
+        </div>
+        <div class="cube-layout">
+          <div>
+            <div class="cube-stage">
+              <div class="cube" id="cube">
+                <div class="face face-front"  data-face="front">FRONT</div>
+                <div class="face face-back"   data-face="back">BACK</div>
+                <div class="face face-right"  data-face="right">RIGHT</div>
+                <div class="face face-left"   data-face="left">LEFT</div>
+                <div class="face face-top"    data-face="top">TOP</div>
+                <div class="face face-bottom" data-face="bottom">BOTTOM</div>
+              </div>
+            </div>
+            <div class="cube-legend">
+              Fais tourner le dé avec les sliders, clique sur les couleurs pour customiser les facettes.  
+              Au moment d’une victoire, on retient “l’empreinte” du dé.
+            </div>
+          </div>
+          <div>
+            <div class="controls-grid">
+              <div class="control">
+                <label for="rotX">Rotation X (haut / bas)</label>
+                <input id="rotX" type="range" min="-180" max="180" value="-24">
+              </div>
+              <div class="control">
+                <label for="rotY">Rotation Y (gauche / droite)</label>
+                <input id="rotY" type="range" min="-180" max="180" value="32">
+              </div>
+            </div>
+
+            <div class="colors-grid">
+              <div class="color-row">
+                <span>Front</span>
+                <input type="color" id="color-front" value="#f97373">
+              </div>
+              <div class="color-row">
+                <span>Back</span>
+                <input type="color" id="color-back" value="#38bdf8">
+              </div>
+              <div class="color-row">
+                <span>Left</span>
+                <input type="color" id="color-left" value="#4ade80">
+              </div>
+              <div class="color-row">
+                <span>Right</span>
+                <input type="color" id="color-right" value="#facc15">
+              </div>
+              <div class="color-row">
+                <span>Top</span>
+                <input type="color" id="color-top" value="#a855f7">
+              </div>
+              <div class="color-row">
+                <span>Bottom</span>
+                <input type="color" id="color-bottom" value="#f97316">
+              </div>
+            </div>
+
+            <div class="note">
+              Bonus : clique directement sur une face du dé pour ouvrir le sélecteur de couleur correspondant.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: COMBOS + EXPORT -->
+  <section class="right-card">
+    <div class="right-title">Combinaisons débloquées</div>
+    <div class="right-sub">
+      Historique des victoires, avec la combinaison gagnante et les couleurs du dé 360 au moment du coup final.
+    </div>
+
+    <div class="combo-list" id="combo-list">
+      <div class="combo-item">
+        <div class="combo-header">
+          <span>Encore aucune victoire</span>
+          <span class="combo-win">Commence à jouer ⬅</span>
+        </div>
+        <div style="font-size:0.78rem; color:var(--muted);">
+          Dès que quelqu’un gagne, chaque manche sera enregistrée ici.
+        </div>
+      </div>
+    </div>
+
+    <div class="export-area">
+      <strong>Export du plateau & du dé</strong><br>
+      Tu peux sortir l’état actuel (plateau, couleurs du dé, combos) dans différents formats textuels.
+      <div class="export-row">
+        <button class="btn" type="button" onclick="exportJSON()">
+          Exporter en JSON
+        </button>
+        <button class="btn" type="button" onclick="copyMarkdown()">
+          Copier en Markdown
+        </button>
+        <button class="btn" type="button" onclick="copyText()">
+          Copier en texte brut
+        </button>
+      </div>
+      <div class="export-status" id="export-status">
+        Rien n’est stocké ailleurs que dans ton navigateur. Libre à toi de coller ça dans un fichier, un Git, un mail, etc.
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div>Morpion Dé 360 · jeu statique HTML/JS · aucune base de données, aucune inscription, juste toi et ton navigateur.</div>
+  <div style="font-family:var(--mono);">
+    state: {board, cubeColors, combos} → export JSON / Markdown / text
+  </div>
+</footer>
+
+<script>
+  /********************
+   * ÉTAT GLOBAL
+   ********************/
+  const state = {
+    board: Array(9).fill(null),
+    currentPlayer: "X",
+    finished: false,
+    cube: {
+      front: "#f97373",
+      back: "#38bdf8",
+      left: "#4ade80",
+      right: "#facc15",
+      top: "#a855f7",
+      bottom: "#f97316",
+    },
+    combos: [] // { winner, lineName, board, cubeSnapshot, timestamp }
+  };
+
+  const winningLines = [
+    { indexes: [0,1,2], name: "Ligne 1 (haut)" },
+    { indexes: [3,4,5], name: "Ligne 2 (milieu)" },
+    { indexes: [6,7,8], name: "Ligne 3 (bas)" },
+    { indexes: [0,3,6], name: "Colonne 1 (gauche)" },
+    { indexes: [1,4,7], name: "Colonne 2 (milieu)" },
+    { indexes: [2,5,8], name: "Colonne 3 (droite)" },
+    { indexes: [0,4,8], name: "Diagonale principale" },
+    { indexes: [2,4,6], name: "Diagonale secondaire" },
+  ];
+
+  /********************
+   * INITIALISATION BOARD
+   ********************/
+  const boardEl = document.getElementById("board");
+  const statusMainEl = document.getElementById("status-main");
+  const statusSubEl = document.getElementById("status-sub");
+
+  function buildBoard() {
+    boardEl.innerHTML = "";
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement("button");
+      cell.className = "cell";
+      cell.dataset.index = i;
+      cell.addEventListener("click", onCellClick);
+      boardEl.appendChild(cell);
+    }
+    updateBoardUI();
+  }
+
+  function updateBoardUI(highlight = []) {
+    const cells = boardEl.querySelectorAll(".cell");
+    cells.forEach(cell => {
+      const idx = Number(cell.dataset.index);
+      const value = state.board[idx];
+      cell.textContent = value || "";
+      cell.classList.toggle("disabled", state.finished || !!value);
+      cell.classList.toggle("win", highlight.includes(idx));
+    });
+
+    if (state.finished) {
+      const winner = checkWinner();
+      if (winner) {
+        statusMainEl.innerHTML = `Victoire de <span>${winner.symbol}</span> · ${winner.lineName}`;
+        statusSubEl.textContent = "Combo enregistrée dans le panneau de droite. Clique « Nouvelle manche » pour rejouer.";
+      } else {
+        statusMainEl.textContent = "Match nul";
+        statusSubEl.textContent = "Aucune combo gagnante · tu peux rejouer ou changer les couleurs du dé.";
+      }
+    } else {
+      statusMainEl.innerHTML = `Tour du joueur <span>${state.currentPlayer}</span>`;
+      statusSubEl.textContent = "Clique une case vide pour jouer. Le dé peut être modifié à tout moment.";
+    }
+  }
+
+  function onCellClick(e) {
+    const idx = Number(e.currentTarget.dataset.index);
+    if (state.finished || state.board[idx]) return;
+
+    state.board[idx] = state.currentPlayer;
+    const winner = checkWinner();
+    if (winner) {
+      state.finished = true;
+      registerCombo(winner);
+      updateBoardUI(winner.indexes);
+    } else if (state.board.every(v => v)) {
+      state.finished = true;
+      updateBoardUI();
+    } else {
+      state.currentPlayer = state.currentPlayer === "X" ? "O" : "X";
+      updateBoardUI();
+    }
+  }
+
+  function checkWinner() {
+    for (const line of winningLines) {
+      const [a,b,c] = line.indexes;
+      const v1 = state.board[a];
+      if (v1 && v1 === state.board[b] && v1 === state.board[c]) {
+        return {
+          symbol: v1,
+          indexes: line.indexes,
+          lineName: line.name
+        };
+      }
+    }
+    return null;
+  }
+
+  function resetBoard(clearCombos) {
+    state.board = Array(9).fill(null);
+    state.currentPlayer = "X";
+    state.finished = false;
+    if (clearCombos) {
+      state.combos = [];
+      renderCombos();
+    }
+    updateBoardUI();
+  }
+
+  /********************
+   * DÉ 360 : ROTATION + COULEURS
+   ********************/
+  const cubeEl = document.getElementById("cube");
+  const rotXEl = document.getElementById("rotX");
+  const rotYEl = document.getElementById("rotY");
+
+  function updateCubeRotation() {
+    const x = Number(rotXEl.value);
+    const y = Number(rotYEl.value);
+    cubeEl.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
+  }
+
+  rotXEl.addEventListener("input", updateCubeRotation);
+  rotYEl.addEventListener("input", updateCubeRotation);
+  updateCubeRotation();
+
+  const colorInputs = {
+    front:  document.getElementById("color-front"),
+    back:   document.getElementById("color-back"),
+    left:   document.getElementById("color-left"),
+    right:  document.getElementById("color-right"),
+    top:    document.getElementById("color-top"),
+    bottom: document.getElementById("color-bottom"),
+  };
+
+  function updateCubeColors() {
+    state.cube.front = colorInputs.front.value;
+    state.cube.back = colorInputs.back.value;
+    state.cube.left = colorInputs.left.value;
+    state.cube.right = colorInputs.right.value;
+    state.cube.top = colorInputs.top.value;
+    state.cube.bottom = colorInputs.bottom.value;
+
+    document.documentElement.style.setProperty("--cube-front", state.cube.front);
+    document.documentElement.style.setProperty("--cube-back", state.cube.back);
+    document.documentElement.style.setProperty("--cube-left", state.cube.left);
+    document.documentElement.style.setProperty("--cube-right", state.cube.right);
+    document.documentElement.style.setProperty("--cube-top", state.cube.top);
+    document.documentElement.style.setProperty("--cube-bottom", state.cube.bottom);
+  }
+
+  Object.keys(colorInputs).forEach(face => {
+    colorInputs[face].addEventListener("input", updateCubeColors);
+  });
+  updateCubeColors();
+
+  // Clique sur une face => ouvre le color picker associé
+  cubeEl.querySelectorAll(".face").forEach(faceEl => {
+    faceEl.addEventListener("click", () => {
+      const face = faceEl.dataset.face;
+      const input = colorInputs[face];
+      if (input && typeof input.showPicker === "function") {
+        input.showPicker();
+      } else if (input) {
+        input.focus();
+      }
+    });
+  });
+
+  /********************
+   * COMBOS : HISTORIQUE DES VICTOIRES
+   ********************/
+  const comboListEl = document.getElementById("combo-list");
+
+  function registerCombo(win) {
+    const snapshot = {
+      front: state.cube.front,
+      back: state.cube.back,
+      left: state.cube.left,
+      right: state.cube.right,
+      top: state.cube.top,
+      bottom: state.cube.bottom,
+    };
+    const boardCopy = [...state.board];
+    const timestamp = new Date().toISOString();
+
+    state.combos.push({
+      winner: win.symbol,
+      lineName: win.lineName,
+      indexes: win.indexes.slice(),
+      board: boardCopy,
+      cube: snapshot,
+      timestamp,
+    });
+
+    renderCombos();
+  }
+
+  function renderCombos() {
+    comboListEl.innerHTML = "";
+    if (state.combos.length === 0) {
+      const item = document.createElement("div");
+      item.className = "combo-item";
+      item.innerHTML = `
+        <div class="combo-header">
+          <span>Encore aucune victoire</span>
+          <span class="combo-win">Commence à jouer ⬅</span>
+        </div>
+        <div style="font-size:0.78rem; color:var(--muted);">
+          Dès que quelqu’un gagne, chaque manche sera enregistrée ici
+          avec la ligne gagnante et l’état du dé.
+        </div>
+      `;
+      comboListEl.appendChild(item);
+      return;
+    }
+
+    state.combos.forEach((combo, idx) => {
+      const item = document.createElement("div");
+      item.className = "combo-item";
+
+      const dateShort = combo.timestamp.slice(0, 19).replace("T", " ");
+      item.innerHTML = `
+        <div class="combo-header">
+          <span>#${idx + 1} · ${combo.lineName}</span>
+          <span class="combo-win">Gagnant : ${combo.winner}</span>
+        </div>
+        <div style="font-size:0.78rem; color:var(--muted);">
+          ${dateShort}
+        </div>
+      `;
+
+      const dots = document.createElement("div");
+      dots.className = "color-dots";
+      const faces = ["front","back","left","right","top","bottom"];
+      faces.forEach(f => {
+        const d = document.createElement("div");
+        d.className = "dot";
+        d.style.background = combo.cube[f];
+        d.title = `${f}: ${combo.cube[f]}`;
+        dots.appendChild(d);
+      });
+      item.appendChild(dots);
+
+      comboListEl.appendChild(item);
+    });
+  }
+
+  /********************
+   * EXPORT
+   ********************/
+  const exportStatusEl = document.getElementById("export-status");
+
+  function getExportData() {
+    return {
+      board: state.board,
+      currentPlayer: state.currentPlayer,
+      finished: state.finished,
+      cube: state.cube,
+      combos: state.combos,
+      generatedAt: new Date().toISOString(),
+    };
+  }
+
+  function exportJSON() {
+    const data = getExportData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "morpion-de360-state.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+
+    exportStatusEl.textContent = "Fichier JSON généré. Tu peux le stocker, le versionner, l’envoyer, etc.";
+  }
+
+  function copyMarkdown() {
+    const data = getExportData();
+    const faces = data.cube;
+    const lines = [];
+    lines.push("# Morpion Dé 360 – État du jeu");
+    lines.push("");
+    lines.push("## Plateau");
+    lines.push("");
+    const row = i => `| ${cellChar(i)} | ${cellChar(i+1)} | ${cellChar(i+2)} |`;
+    function cellChar(i) {
+      return data.board[i] ? data.board[i] : "·";
+    }
+    lines.push("|   |   |   |");
+    lines.push("|---|---|---|");
+    lines.push(row(0));
+    lines.push(row(3));
+    lines.push(row(6));
+    lines.push("");
+    lines.push(`Joueur courant : **${data.currentPlayer}**`);
+    lines.push(`Partie terminée : **${data.finished ? "oui" : "non"}**`);
+    lines.push("");
+    lines.push("## Dé 360 – couleurs des facettes");
+    lines.push("");
+    lines.push(`- Front  : \`${faces.front}\``);
+    lines.push(`- Back   : \`${faces.back}\``);
+    lines.push(`- Left   : \`${faces.left}\``);
+    lines.push(`- Right  : \`${faces.right}\``);
+    lines.push(`- Top    : \`${faces.top}\``);
+    lines.push(`- Bottom : \`${faces.bottom}\``);
+    lines.push("");
+    lines.push("## Combinaisons débloquées");
+    lines.push("");
+    if (!data.combos.length) {
+      lines.push("_Aucune victoire enregistrée pour l’instant._");
+    } else {
+      data.combos.forEach((combo, idx) => {
+        lines.push(`### #${idx + 1} – ${combo.lineName} (gagnant : ${combo.winner})`);
+        lines.push("");
+        lines.push(`- Date        : ${combo.timestamp}`);
+        lines.push(`- Index cases : [${combo.indexes.join(", ")}]`);
+        lines.push("");
+      });
+    }
+    lines.push("");
+    lines.push(`Export généré automatiquement le ${data.generatedAt}.`);
+
+    const md = lines.join("\n");
+    copyToClipboard(md, "Markdown prêt à être collé (README, note, issue Git, etc.).");
+  }
+
+  function copyText() {
+    const data = getExportData();
+    let txt = "";
+    txt += "Morpion Dé 360 – État du jeu\n";
+    txt += "-----------------------------\n\n";
+    txt += "Plateau (0-8):\n";
+    txt += data.board.map((v,i) => `${i}:${v || "."}`).join(" ") + "\n\n";
+    txt += `Joueur courant : ${data.currentPlayer}\n`;
+    txt += `Partie terminée : ${data.finished ? "oui" : "non"}\n\n`;
+    txt += "Dé 360 :\n";
+    Object.entries(data.cube).forEach(([k,v]) => {
+      txt += `  ${k} = ${v}\n`;
+    });
+    txt += "\nCombos :\n";
+    if (!data.combos.length) {
+      txt += "  (aucune)\n";
+    } else {
+      data.combos.forEach((c, idx) => {
+        txt += `  #${idx+1} ${c.lineName} – gagnant: ${c.winner} – cases: [${c.indexes.join(", ")}]\n`;
+      });
+    }
+    copyToClipboard(txt, "Texte brut copié. Tu peux le déposer dans n’importe quel bloc-notes.");
+  }
+
+  function copyToClipboard(text, okMessage) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        exportStatusEl.textContent = okMessage;
+      }).catch(() => {
+        exportStatusEl.textContent = "Impossible de copier automatiquement. Tu peux coller l’export JSON ou retaper ce que tu veux garder.";
+      });
+    } else {
+      exportStatusEl.textContent = "Navigation trop limitée pour la copie automatique. Tu peux utiliser l’export JSON à la place.";
+    }
+  }
+
+  /********************
+   * BOOT
+   ********************/
+  buildBoard();
+  renderCombos();
+  updateBoardUI();
+</script>
+</body>
+</html>
