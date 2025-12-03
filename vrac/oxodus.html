@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>sudoxo · JDR de l’information & canevas · HUB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --fg: #e5e7eb;
+      --soft: #9ca3af;
+      --accent: #38bdf8;
+      --accent2: #f97316;
+      --x-color: #22c55e;
+      --o-color: #fb7185;
+      --card: #020617;
+      --border: #1f2937;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.2), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(248,113,113,0.2), transparent 55%),
+        linear-gradient(to bottom, #020617, #000 60%, #020617 100%);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 12px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    /* HEADER */
+
+    header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    header .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--soft);
+    }
+
+    header h1 {
+      margin: 4px 0;
+      font-size: clamp(20px, 5vw, 28px);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    header p.subtitle {
+      margin: 0 auto;
+      max-width: 780px;
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    /* LAYOUT PRINCIPAL */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: 18px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+      padding: 10px 12px 12px;
+      font-size: 13px;
+    }
+
+    .card h2 {
+      font-size: 14px;
+      margin: 0 0 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .card p {
+      font-size: 12px;
+      margin: 3px 0;
+      color: var(--soft);
+    }
+
+    /* BOARD OXO */
+
+    .board-wrapper {
+      margin-top: 8px;
+      border-radius: 16px;
+      padding: 10px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.2), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(248,250,252,0.1), transparent 60%),
+        #020617;
+      border: 1px solid var(--border);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .cell {
+      position: relative;
+      border-radius: 14px;
+      border: 2px solid #111827;
+      background: #020617;
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out;
+    }
+
+    @media (max-width: 480px) {
+      .cell { min-height: 72px; }
+    }
+
+    .cell:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.9);
+      border-color: var(--accent);
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.25), transparent 70%);
+    }
+
+    .cell-symbol {
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    .cell-symbol.x {
+      color: var(--x-color);
+      text-shadow: 0 0 10px rgba(34,197,94,0.5);
+    }
+
+    .cell-symbol.o {
+      color: var(--o-color);
+      text-shadow: 0 0 10px rgba(248,113,113,0.5);
+    }
+
+    .cell-label {
+      position: absolute;
+      bottom: 4px;
+      left: 6px;
+      right: 6px;
+      font-size: 9px;
+      color: var(--soft);
+      opacity: 0.9;
+    }
+
+    .status-bar {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .status-main {
+      font-size: 13px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 3px 7px;
+      border: 1px solid #334155;
+      background: #020617;
+      font-size: 11px;
+    }
+
+    .pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    .dot-x { background: var(--x-color); }
+    .dot-o { background: var(--o-color); }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      font-size: 11px;
+      padding: 5px 9px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      background: radial-gradient(circle at 20% 0, #e0f2fe, #0ea5e9);
+      color: #02131f;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .score-bar {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* JOURNAL */
+
+    .log {
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 6px 7px;
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .log h3 {
+      font-size: 11px;
+      margin: 0 0 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .log-entry { margin: 2px 0; }
+
+    /* PANNEAU DROITE : CANEVAS + JDR */
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 2px;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--soft);
+      font-size: 11px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent);
+      background: #020617;
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* CANEVAS */
+
+    .canvas-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .canvas-title-block {
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    .canvas-title-block strong { color: var(--fg); }
+
+    .canvas-block-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 3px 7px;
+      border: 1px solid var(--border);
+      background: #020617;
+      font-size: 11px;
+    }
+
+    .canvas-block-badge span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .canvas-body {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 6px 7px;
+      font-size: 12px;
+    }
+
+    .canvas-body p.hint {
+      font-size: 11px;
+      color: var(--soft);
+      margin-bottom: 4px;
+    }
+
+    textarea#canvasNotes {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      padding: 5px 6px;
+      font-size: 12px;
+      font-family: inherit;
+    }
+
+    .canvas-meta {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .progress-wrapper {
+      margin-top: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 6px 7px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .progress-bar-outer {
+      margin-top: 4px;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      overflow: hidden;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #eab308, #f97316, #ef4444);
+      transition: width 0.25s ease-out;
+    }
+
+    .success-banner {
+      margin-top: 6px;
+      padding: 5px 7px;
+      border-radius: 10px;
+      border: 1px solid #22c55e;
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.35), transparent 60%);
+      color: #bbf7d0;
+      font-size: 12px;
+      display: none;
+    }
+
+    .success-banner.visible { display: block; }
+
+    /* JDR : BIBLIOTHEQUE + SCENARIO */
+
+    .jdr-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 6px;
+    }
+
+    @media (max-width: 820px) {
+      .jdr-grid { grid-template-columns: minmax(0,1fr); }
+    }
+
+    .jdr-section {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 6px 7px;
+      font-size: 12px;
+    }
+
+    .jdr-section h3 {
+      font-size: 11px;
+      margin: 0 0 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--soft);
+    }
+
+    .module-list {
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .module-item {
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      padding: 4px 5px;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+
+    .module-item-title {
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .module-item small {
+      display: block;
+      color: var(--soft);
+    }
+
+    .module-item a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      font-size: 11px;
+    }
+
+    .module-actions {
+      margin-top: 3px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .scenario-list {
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 4px;
+      font-size: 11px;
+    }
+
+    .scenario-step {
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      padding: 4px 5px;
+      margin-bottom: 4px;
+    }
+
+    .scenario-step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .scenario-step-title {
+      font-weight: 600;
+    }
+
+    .scenario-step-meta {
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    .scenario-step-actions {
+      margin-top: 3px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .scenario-step-actions button {
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: var(--fg);
+      font-size: 10px;
+      padding: 2px 5px;
+      cursor: pointer;
+    }
+
+    .jdr-export {
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 6px 7px;
+      font-size: 11px;
+    }
+
+    .jdr-export-actions {
+      margin-bottom: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .jdr-export textarea {
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 11px;
+      padding: 4px 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .jdr-export-hint {
+      margin-top: 2px;
+      color: var(--soft);
+      font-size: 10px;
+    }
+
+    .jdr-goodies {
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #020617;
+      padding: 6px 7px;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .jdr-goodies ul { margin: 3px 0; padding-left: 18px; }
+    .jdr-goodies li { margin: 2px 0; }
+
+    .mode-label {
+      font-size: 10px;
+      color: var(--soft);
+      margin-bottom: 2px;
+    }
+
+    .current-block-info {
+      margin: 4px 0 6px;
+      padding: 4px 6px;
+      border-radius: 8px;
+      border: 1px dashed #4b5563;
+      background: #020617;
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .current-block-info strong { color: var(--fg); }
+
+    .current-block-info .warn { color: #fbbf24; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">jeu d’oxo · business model canevas · hub jdr web statique</div>
+    <h1>sudoxo</h1>
+    <p class="subtitle">
+      Un morpion qui sert de <strong>table de mixage</strong> pour concevoir un jeu de rôle en ligne
+      sur la <strong>place de l’information</strong> dans les rapports de force économiques,
+      en contexte de <strong>guerre hybride</strong>.  
+      Chaque case ⇨ <strong>bloc de canevas</strong> + <strong>module HTML</strong> (une de tes pages statiques)
+      + <strong>étape du scénario</strong>.  
+      Le geste complet est maintenant visible : <strong>1. clique une case</strong> → <strong>2. choisis un module</strong> → <strong>3. “Ajouter au scénario”</strong>.
+    </p>
+  </header>
+
+  <section class="layout">
+    <!-- COLONNE GAUCHE : JEU OXO -->
+    <article class="card">
+      <h2>Plateau OXO · Signal vs Bruit</h2>
+      <p>
+        X = <strong>Signal</strong> (information utile), O = <strong>Bruit</strong> (désinfo / overload).  
+        <strong>Chaque clic sur une case :</strong> joue le coup, sélectionne un bloc du canevas et prépare le lien vers un module HTML.
+      </p>
+
+      <div class="board-wrapper">
+        <div id="board" class="board"></div>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-main" id="statusText">
+          Tour de <span style="color:var(--x-color);font-weight:600;">X (Signal)</span>.
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;">
+          <span class="pill">
+            <span class="dot dot-x"></span> X = Signal
+          </span>
+          <span class="pill">
+            <span class="dot dot-o"></span> O = Bruit
+          </span>
+          <button class="btn" id="resetBtn">Réinitialiser la manche</button>
+        </div>
+      </div>
+
+      <div class="score-bar">
+        <div id="scoreText">Score · X : 0 — O : 0 · Manches jouées : 0</div>
+        <div>
+          <small>
+            Objectif : que ton canevas soit rempli, ton scénario cohérent, et que quelqu’un d’autre puisse jouer juste avec la doc.
+          </small>
+        </div>
+      </div>
+
+      <div class="log" id="log">
+        <h3>Journal de partie</h3>
+      </div>
+    </article>
+
+    <!-- COLONNE DROITE : CANEVAS + JDR -->
+    <aside class="card">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="canvas">Canevas & notes</button>
+        <button class="tab-btn" data-tab="jdr">JDR · modules & scénario</button>
+      </div>
+
+      <!-- Onglet 1 : CANEVAS -->
+      <div class="tab-pane active" id="tab-canvas">
+        <div class="canvas-header-row">
+          <div class="canvas-title-block" id="canvasTitleBlock">
+            Clique sur une case du plateau pour lier ton coup à un bloc du Business Model Canvas.
+          </div>
+          <div class="canvas-block-badge">
+            <span class="dot"></span>
+            <span id="canvasBlockName">Aucun bloc sélectionné</span>
+          </div>
+        </div>
+
+        <div class="canvas-body">
+          <p class="hint" id="canvasHint">
+            Utilise ce champ comme brouillon sérieux : hypothèses, tensions d’info, mécaniques de jeu, exemples concrets…
+          </p>
+          <textarea id="canvasNotes" placeholder="Ex : Pour les segments d’acteurs, qui sont les puissants, qui sont les vulnérables, et comment ton JDR montre ce déséquilibre d’information ?"></textarea>
+
+          <div class="canvas-meta">
+            <div id="canvasMetaLeft">
+              Bloc lié à la case : <strong>–</strong>
+            </div>
+            <div id="canvasMetaRight">
+              Coup actuel : <span id="currentPlayerLabel">X (Signal)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-wrapper">
+          <div>
+            <strong>Progression du canevas :</strong>
+            <span id="progressText">0 / 9 blocs renseignés</span>
+          </div>
+          <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="progressBar"></div>
+          </div>
+          <div class="success-banner" id="successBanner">
+            🌍 <strong>Succès planétaire (prototype) :</strong> les 9 blocs sont renseignés.  
+            Maintenant : exporte en JSON, sauvegarde dans le navigateur, et/ou publie le pitch Markdown.
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet 2 : JDR -->
+      <div class="tab-pane" id="tab-jdr">
+        <div class="jdr-grid">
+          <!-- Bibliothèque de modules -->
+          <div class="jdr-section">
+            <h3>Bibliothèque de modules (pages HTML)</h3>
+            <div class="current-block-info" id="currentBlockInfo">
+              <span class="warn">Aucun bloc sélectionné.</span>  
+              Clique d’abord une case du plateau à gauche : elle définira à la fois le bloc de canevas et le coup (Signal/Bruit)
+              auquel tu vas associer le module.
+            </div>
+            <p style="font-size:11px;color:var(--soft);">
+              Chaque module est une page web statique existante ou à venir
+              (NYXO, ONYX, Monocpoly, intranet, casino, minitel, etc.).  
+              <strong>Geste :</strong> 1) clique une case, 2) viens ici, 3) “Ajouter au scénario”.
+            </p>
+            <div class="module-list" id="moduleList"></div>
+            <p style="margin-top:4px;font-size:10px;color:var(--soft);">
+              Pour ajouter d’autres pages : édite <code>sudoxo.html</code>,
+              cherche <code>modulesLibrary</code> dans le JS et complète la liste.
+            </p>
+          </div>
+
+          <!-- Scénario JDR -->
+          <div class="jdr-section">
+            <h3>Scénario du JDR (ordre des modules)</h3>
+            <p style="font-size:11px;color:var(--soft);">
+              Chaque étape = un module + un bloc de canevas + le coup (Signal ou Bruit) qui a mené à cette étape.
+            </p>
+            <div class="scenario-list" id="scenarioList"></div>
+          </div>
+        </div>
+
+        <!-- Export / Import JDR -->
+        <div class="jdr-export">
+          <div class="mode-label">
+            Mode EXPORT / IMPORT : <strong>JSON</strong> pour revenir dans sudoxo, <strong>Markdown</strong> pour publier.
+          </div>
+          <div class="jdr-export-actions">
+            <button class="btn" id="btnExportJson">Exporter design (JSON)</button>
+            <button class="btn" id="btnImportJson">Importer design (JSON)</button>
+            <button class="btn" id="btnExportMd">Exporter pitch (Markdown)</button>
+            <button class="btn" id="btnSaveLocal">Sauvegarder dans le navigateur</button>
+            <button class="btn" id="btnLoadLocal">Charger sauvegarde</button>
+            <button class="btn" id="btnResetAll">Réinitialiser tout</button>
+          </div>
+          <textarea id="jdrExportTextarea" placeholder="JSON (pour import / sauvegarde) ou Markdown (pour publier). Pour importer : colle ici un JSON exporté auparavant."></textarea>
+          <div class="jdr-export-hint">
+            👉 <strong>Import JSON :</strong> la zone doit contenir un texte qui commence par <code>{</code> et se termine par <code>}</code>.  
+            JSON = pour rejouer dans sudoxo. Markdown = pour publier (Hugo, Jekyll, Grav, GitHub, PDF…).  
+            Une sauvegarde automatique est stockée dans <code>localStorage</code>.
+          </div>
+        </div>
+
+        <div class="jdr-goodies">
+          <strong>Goodies pour réussir le jeu dans le jeu :</strong>
+          <ul>
+            <li><strong>1.</strong> Clique des cases, note les idées dans les blocs, laisse venir le jeu.</li>
+            <li><strong>2.</strong> Ouvre tes modules (NYXO, ONYX, Monocpoly, 12,50, intranet, minitel, etc.).</li>
+            <li><strong>3.</strong> Pour chaque moment clé, choisis une case (bloc + Signal/Bruit), puis “Ajouter au scénario”.</li>
+            <li><strong>4.</strong> Utilise <em>Export JSON</em> & <em>Sauvegarde navigateur</em> pour garder ton design,
+              et <em>Export Markdown</em> pour faire ton dossier public / page de site.</li>
+            <li><strong>5.</strong> Branchement final : tes vrais fichiers HTML sur ton hébergement (GitHub Pages, Vercel, Grav, etc.).</li>
+            <li><strong>6.</strong> Si quelqu’un peut jouer en lisant juste la doc sans t’appeler : tu as gagné.</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <script>
+    // ----- BLOCS DE CANEVAS ----- //
+    const canvasBlocks = [
+      { id: 0, name: "Segments d’acteurs", short: "Segments",
+        hint: "Qui sont les acteurs (éco, politiques, médiatiques, publics) touchés par la guerre de l’info ? Qui joue ton jeu ?" },
+      { id: 1, name: "Proposition de valeur", short: "Valeur",
+        hint: "Quel éclairage unique ton jeu apporte-t-il sur les rapports de force info / économie / guerre hybride ?" },
+      { id: 2, name: "Canaux de diffusion", short: "Canaux",
+        hint: "Par où ton jeu circule-t-il (web, mobile, écoles, asbl, réseaux sociaux, salons…) ?" },
+      { id: 3, name: "Partenaires clés", short: "Partenaires",
+        hint: "Avec qui coopères-tu (associations, médias, écoles, studios, réseaux militants…) pour porter le jeu ?" },
+      { id: 4, name: "Cœur du système (dynamique info/pouvoir)", short: "Cœur du système",
+        hint: "Comment ta mécanique de jeu matérialise-t-elle le lien entre information, pouvoir économique et guerre hybride ?" },
+      { id: 5, name: "Relations avec les joueurs/communautés", short: "Relations",
+        hint: "Comment tu entretiens la relation avec les joueuses/joueurs ? Communauté, mises à jour, campagnes, forums..." },
+      { id: 6, name: "Ressources clés", short: "Ressources",
+        hint: "De quoi as-tu besoin : temps, équipe, data, illustrations, musique, moteurs de jeu, partenaires locaux… ?" },
+      { id: 7, name: "Activités clés", short: "Activités",
+        hint: "Quelles sont les activités critiques : design, écriture, veille, animation, formation, support… ?" },
+      { id: 8, name: "Coûts & Revenus / Impact", short: "Coûts & Revenus",
+        hint: "Quels coûts réels, quels flux de revenus (ou financements), et quel impact éducatif / citoyen espères-tu ?" }
+    ];
+
+    // ----- MODULES (PAGES HTML STATIQUES) ----- //
+    const modulesLibrary = [
+      { id: "monocpoly", title: "Monocpoly · Oligarchie vs Collectif Citoyen",
+        file: "monocpoly.html", type: "Jeu de plateau / Veille",
+        summary: "Jeu hybride Monopoli/StarCraft utilisé comme carte de veille sur les rapports de force économiques." },
+      { id: "monitor", title: "Monitor · Terminal minitel de monitoring",
+        file: "monitor.html", type: "Minitel / Monitoring",
+        summary: "Interface minitel + visionneuse pour suivre et surveiller des pages et dossiers." },
+      { id: "titus", title: "Titus · Console expérimentale",
+        file: "titus.html", type: "Console / Expérimentation",
+        summary: "Prototype de console / visualisation (à adapter selon ton usage)." },
+      { id: "nyxo", title: "NYXO · Faux OS dystopique",
+        file: "nyxo.html", type: "Faux OS",
+        summary: "Système d’exploitation fictif, fenêtres, modules, ambiance surveillance & glitch." },
+      { id: "onyx", title: "ONYX · Intranet de renseignement",
+        file: "onyx.html", type: "Intranet / Obsidian-like",
+        summary: "Intranet clé USB façon Obsidian avec graph view et fichiers markdown." },
+      { id: "earl", title: "EARL · Faux moteur de recherche",
+        file: "earl.html", type: "Moteur de recherche",
+        summary: "Page façon Google mais en faux, utilisée comme point d’entrée à l’écosystème." },
+      { id: "pac", title: "PAC Fan Club · Présence & Action Culturelles",
+        file: "pac.html", type: "Fan club / Preuve de concept",
+        summary: "Site fan club non officiel utilisé comme démonstrateur pour un mouvement d’éducation permanente." },
+      { id: "pacG", title: "PAC-G · Variante plus critique",
+        file: "pac-g.html", type: "Site critique",
+        summary: "Version plus corrosive autour des mêmes enjeux, en mode Sharky." },
+      { id: "rapportPac", title: "rapport.html · Rapport d’activité fictif",
+        file: "rapport.html", type: "Rapport / Documentation",
+        summary: "Rapport d’activité inspiré des décrets FWB pour une reconnaissance officielle." },
+      { id: "spam642", title: "Le 642 · Machine à sous & casino",
+        file: "spam.html", type: "Jeu casino / Sensibilisation",
+        summary: "Machine à sous disco néon où il ne faut surtout pas tomber sur 642 (LA LOOZE ULTIME)." },
+      { id: "bilan", title: "bilan.html · Site de bilan personnel",
+        file: "bilan.html", type: "Bilan / Portfolio",
+        summary: "Site bilan de vie professionnelle, en mode belge révolté contre le système." },
+      { id: "organisation", title: "organisation.html · L’Organisation",
+        file: "organisation.html", type: "Agence de renseignement sociale",
+        summary: "Page d’accueil d’une 'Société Anonyme Sociale' qui ne dit pas son nom, avec organigramme & recrutement." },
+      { id: "testRecrutement", title: "test-recrutement.html · Préparation test",
+        file: "test-recrutement.html", type: "Test / Evaluation",
+        summary: "Page de préparation au test de recrutement, matching des profils avec les rôles." },
+      { id: "jeu12_50", title: "12,50 · Jeu concours",
+        file: "12-50.html", type: "Jeu concours / Meta-site",
+        summary: "Site concours pour créer le site statique le plus 'wow', avec droit d’entrée à 12,50 caché en easter egg." }
+      // ➜ Ajoute ici tous les autres modules au fur et à mesure.
+    ];
+
+    // ----- ÉTAT JEU OXO ----- //
+    let board = Array(9).fill(null); // 'X' | 'O' | null
+    let currentPlayer = 'X';
+    let gameOver = false;
+    let scoreX = 0;
+    let scoreO = 0;
+    let rounds = 0;
+
+    // ----- ÉTAT CANEVAS & SCÉNARIO ----- //
+    const canvasNotes = Array(9).fill("");
+    const scenarioSteps = []; // { id, moduleId, blockIndex, playerSymbol }
+
+    // ----- DOM ----- //
+    const boardEl = document.getElementById("board");
+    const statusTextEl = document.getElementById("statusText");
+    const resetBtn = document.getElementById("resetBtn");
+    const logEl = document.getElementById("log");
+    const scoreTextEl = document.getElementById("scoreText");
+
+    const canvasTitleBlockEl = document.getElementById("canvasTitleBlock");
+    const canvasBlockBadgeNameEl = document.getElementById("canvasBlockName");
+    const canvasHintEl = document.getElementById("canvasHint");
+    const canvasNotesEl = document.getElementById("canvasNotes");
+    const canvasMetaLeftEl = document.getElementById("canvasMetaLeft");
+    const canvasMetaRightEl = document.getElementById("canvasMetaRight");
+    const currentPlayerLabelEl = document.getElementById("currentPlayerLabel");
+    const progressTextEl = document.getElementById("progressText");
+    const progressBarEl = document.getElementById("progressBar");
+    const successBannerEl = document.getElementById("successBanner");
+
+    const moduleListEl = document.getElementById("moduleList");
+    const scenarioListEl = document.getElementById("scenarioList");
+    const currentBlockInfoEl = document.getElementById("currentBlockInfo");
+
+    const btnExportJson = document.getElementById("btnExportJson");
+    const btnImportJson = document.getElementById("btnImportJson");
+    const btnExportMd = document.getElementById("btnExportMd");
+    const btnSaveLocal = document.getElementById("btnSaveLocal");
+    const btnLoadLocal = document.getElementById("btnLoadLocal");
+    const btnResetAll = document.getElementById("btnResetAll");
+    const jdrExportTextarea = document.getElementById("jdrExportTextarea");
+
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanes = {
+      canvas: document.getElementById("tab-canvas"),
+      jdr: document.getElementById("tab-jdr")
+    };
+
+    // ----- Onglets ----- //
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tab = btn.dataset.tab;
+        tabButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        Object.entries(tabPanes).forEach(([key, pane]) => {
+          pane.classList.toggle("active", key === tab);
+        });
+      });
+    });
+
+    // ----- Board OXO ----- //
+    function buildBoard() {
+      boardEl.innerHTML = "";
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement("button");
+        cell.className = "cell";
+        cell.dataset.index = i;
+
+        const sym = board[i];
+        const symSpan = document.createElement("div");
+        symSpan.className = "cell-symbol";
+        if (sym === 'X') {
+          symSpan.textContent = 'X';
+          symSpan.classList.add("x");
+        } else if (sym === 'O') {
+          symSpan.textContent = 'O';
+          symSpan.classList.add("o");
+        } else {
+          symSpan.textContent = "";
+        }
+
+        const label = document.createElement("div");
+        label.className = "cell-label";
+        label.textContent = canvasBlocks[i].short;
+
+        cell.appendChild(symSpan);
+        cell.appendChild(label);
+        boardEl.appendChild(cell);
+      }
+    }
+
+    boardEl.addEventListener("click", (e) => {
+      const cell = e.target.closest(".cell");
+      if (!cell) return;
+      const index = Number(cell.dataset.index);
+      handleCellClick(index);
+    });
+
+    function handleCellClick(index) {
+      if (!gameOver && board[index] === null) {
+        board[index] = currentPlayer;
+        buildBoard();
+        log(`Coup de ${currentPlayer} sur la case ${index + 1} (${canvasBlocks[index].short}).`);
+        const winner = checkWinner();
+        if (winner) {
+          gameOver = true;
+          rounds++;
+          if (winner === 'X') scoreX++; else scoreO++;
+          updateScore();
+          statusTextEl.innerHTML = `Victoire de <span style="font-weight:600;color:${winner === 'X' ? 'var(--x-color)' : 'var(--o-color)'};">${winner}</span>.`;
+          log(`Manche ${rounds} remportée par ${winner}.`);
+        } else if (board.every(c => c !== null)) {
+          gameOver = true;
+          rounds++;
+          updateScore();
+          statusTextEl.textContent = "Match nul. Signal et Bruit s’annulent.";
+          log(`Manche ${rounds} : match nul.`);
+        } else {
+          togglePlayer();
+          updateStatusText();
+        }
+      }
+      // Dans tous les cas, on sélectionne le bloc correspondant pour le canevas + JDR
+      selectCanvasBlock(index);
+    }
+
+    function togglePlayer() {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      updateCurrentPlayerLabel();
+    }
+
+    function updateCurrentPlayerLabel() {
+      currentPlayerLabelEl.textContent = currentPlayer === 'X' ? "X (Signal)" : "O (Bruit)";
+    }
+
+    function updateStatusText() {
+      if (currentPlayer === 'X') {
+        statusTextEl.innerHTML = `Tour de <span style="color:var(--x-color);font-weight:600;">X (Signal)</span>.`;
+      } else {
+        statusTextEl.innerHTML = `Tour de <span style="color:var(--o-color);font-weight:600;">O (Bruit)</span>.`;
+      }
+    }
+
+    function checkWinner() {
+      const lines = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      for (const [a,b,c] of lines) {
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) return board[a];
+      }
+      return null;
+    }
+
+    resetBtn.addEventListener("click", () => {
+      board = Array(9).fill(null);
+      currentPlayer = 'X';
+      gameOver = false;
+      buildBoard();
+      updateCurrentPlayerLabel();
+      updateStatusText();
+      log("Nouvelle manche lancée.");
+    });
+
+    function updateScore() {
+      scoreTextEl.textContent = `Score · X : ${scoreX} — O : ${scoreO} · Manches jouées : ${rounds}`;
+    }
+
+    function log(msg) {
+      const div = document.createElement("div");
+      div.className = "log-entry";
+      div.textContent = msg;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // ----- Canevas ----- //
+    let currentBlockIndex = null;
+    let isUpdatingFromCode = false;
+
+    function selectCanvasBlock(index) {
+      currentBlockIndex = index;
+      const block = canvasBlocks[index];
+
+      canvasTitleBlockEl.innerHTML = `Tu travailles actuellement sur : <strong>${block.name}</strong>.`;
+      canvasBlockBadgeNameEl.textContent = block.short;
+      canvasHintEl.textContent = block.hint;
+      canvasMetaLeftEl.innerHTML = `Bloc lié à la case : <strong>${index + 1}/9</strong> · ${block.name}`;
+      updateCurrentPlayerLabel();
+      canvasMetaRightEl.innerHTML = `Coup actuel : <span>${currentPlayer === 'X' ? "X (Signal)" : "O (Bruit)"}</span>`;
+
+      isUpdatingFromCode = true;
+      canvasNotesEl.value = canvasNotes[index] || "";
+      isUpdatingFromCode = false;
+
+      updateCurrentBlockInfoForModules();
+      updateModuleAddButtonsState();
+    }
+
+    canvasNotesEl.addEventListener("input", () => {
+      if (isUpdatingFromCode) return;
+      if (currentBlockIndex === null) return;
+      canvasNotes[currentBlockIndex] = canvasNotesEl.value;
+      updateProgress();
+      saveDesignToLocal();
+    });
+
+    function updateProgress() {
+      const filled = canvasNotes.filter(text => (text || "").trim().length > 0).length;
+      const total = canvasNotes.length;
+      const ratio = filled / total;
+      progressTextEl.textContent = `${filled} / ${total} blocs renseignés`;
+      progressBarEl.style.width = `${ratio * 100}%`;
+      successBannerEl.classList.toggle("visible", filled === total);
+    }
+
+    function updateCurrentBlockInfoForModules() {
+      if (currentBlockIndex === null) {
+        currentBlockInfoEl.innerHTML = `
+          <span class="warn">Aucun bloc sélectionné.</span>  
+          Clique d’abord une case du plateau à gauche : elle définira à la fois le bloc de canevas et le coup (Signal/Bruit)
+          auquel tu vas associer le module.
+        `;
+      } else {
+        const b = canvasBlocks[currentBlockIndex];
+        currentBlockInfoEl.innerHTML = `
+          Bloc actuellement sélectionné pour les modules :  
+          <strong>#${currentBlockIndex + 1} — ${b.name}</strong><br/>
+          Le prochain module que tu ajoutes sera lié à ce bloc, avec le coup actuel : 
+          <strong>${currentPlayer === 'X' ? 'X (Signal)' : 'O (Bruit)'}</strong>.
+        `;
+      }
+    }
+
+    // ----- Modules & scénario ----- //
+    function renderModulesLibrary() {
+      moduleListEl.innerHTML = "";
+      modulesLibrary.forEach(mod => {
+        const div = document.createElement("div");
+        div.className = "module-item";
+        div.dataset.id = mod.id;
+        div.innerHTML = `
+          <div class="module-item-title">${mod.title}</div>
+          <small>${mod.type}</small>
+          <small>${mod.summary}</small>
+          <small>Fichier : <code>${mod.file}</code></small>
+          <div class="module-actions">
+            <a href="${mod.file}" target="_blank" rel="noopener noreferrer">Ouvrir le module</a>
+            <button class="btn" data-action="add">Ajouter au scénario</button>
+          </div>
+        `;
+        const addBtn = div.querySelector("button[data-action='add']");
+        addBtn.addEventListener("click", () => {
+          addModuleToScenario(mod.id);
+        });
+        moduleListEl.appendChild(div);
+      });
+      updateModuleAddButtonsState();
+    }
+
+    function updateModuleAddButtonsState() {
+      const addButtons = moduleListEl.querySelectorAll("button[data-action='add']");
+      addButtons.forEach(btn => {
+        btn.disabled = (currentBlockIndex === null);
+      });
+    }
+
+    function addModuleToScenario(moduleId) {
+      if (currentBlockIndex === null) {
+        alert("Clique d’abord une case du plateau (à gauche) pour sélectionner un bloc de canevas.");
+        return;
+      }
+      const mod = modulesLibrary.find(m => m.id === moduleId);
+      if (!mod) return;
+      const block = canvasBlocks[currentBlockIndex];
+      scenarioSteps.push({
+        id: scenarioSteps.length + 1,
+        moduleId: mod.id,
+        blockIndex: currentBlockIndex,
+        playerSymbol: currentPlayer
+      });
+      log(`Module "${mod.title}" lié au bloc "${block.name}" (case ${currentBlockIndex + 1}) par ${currentPlayer}.`);
+      renderScenario();
+      saveDesignToLocal();
+    }
+
+    function renderScenario() {
+      scenarioListEl.innerHTML = "";
+      if (!scenarioSteps.length) {
+        scenarioListEl.innerHTML = `<div style="font-size:11px;color:var(--soft);">
+          Aucune étape pour l’instant.  
+          Geste complet : 1) clique une case à gauche, 2) viens ici, 3) « Ajouter au scénario » sur un module.
+        </div>`;
+        return;
+      }
+
+      scenarioSteps.forEach((step, index) => {
+        const mod = modulesLibrary.find(m => m.id === step.moduleId);
+        const block = canvasBlocks[step.blockIndex];
+        const div = document.createElement("div");
+        div.className = "scenario-step";
+        div.innerHTML = `
+          <div class="scenario-step-header">
+            <div class="scenario-step-title">
+              Étape ${index + 1} · ${mod ? mod.title : step.moduleId}
+            </div>
+            <div class="scenario-step-meta">
+              Bloc : ${block ? block.short : "?"} · Case : ${step.blockIndex + 1} · Coup : ${step.playerSymbol}
+            </div>
+          </div>
+          <div class="scenario-step-actions">
+            <button data-action="up">↑</button>
+            <button data-action="down">↓</button>
+            <button data-action="remove">Supprimer</button>
+          </div>
+        `;
+
+        const btnUp = div.querySelector("button[data-action='up']");
+        const btnDown = div.querySelector("button[data-action='down']");
+        const btnRemove = div.querySelector("button[data-action='remove']");
+
+        btnUp.addEventListener("click", () => {
+          if (index === 0) return;
+          const tmp = scenarioSteps[index - 1];
+          scenarioSteps[index - 1] = scenarioSteps[index];
+          scenarioSteps[index] = tmp;
+          renderScenario();
+          saveDesignToLocal();
+        });
+
+        btnDown.addEventListener("click", () => {
+          if (index === scenarioSteps.length - 1) return;
+          const tmp = scenarioSteps[index + 1];
+          scenarioSteps[index + 1] = scenarioSteps[index];
+          scenarioSteps[index] = tmp;
+          renderScenario();
+          saveDesignToLocal();
+        });
+
+        btnRemove.addEventListener("click", () => {
+          scenarioSteps.splice(index, 1);
+          renderScenario();
+          saveDesignToLocal();
+        });
+
+        scenarioListEl.appendChild(div);
+      });
+    }
+
+    // ----- DESIGN COURANT (pour JSON / localStorage) ----- //
+    function getCurrentDesign() {
+      return {
+        meta: {
+          name: "sudoxo",
+          description: "Jeu de rôle web statique sur la place de l’information en guerre hybride.",
+          savedAt: new Date().toISOString()
+        },
+        canvasNotes: [...canvasNotes],
+        scenarioSteps: scenarioSteps.map(s => ({
+          id: s.id,
+          moduleId: s.moduleId,
+          blockIndex: s.blockIndex,
+          playerSymbol: s.playerSymbol
+        }))
+      };
+    }
+
+    function applyDesign(design) {
+      if (!design || !Array.isArray(design.canvasNotes) || !Array.isArray(design.scenarioSteps)) {
+        throw new Error("Design invalide");
+      }
+
+      for (let i = 0; i < canvasNotes.length; i++) {
+        canvasNotes[i] = design.canvasNotes[i] || "";
+      }
+
+      scenarioSteps.length = 0;
+      design.scenarioSteps.forEach(s => {
+        if (typeof s.blockIndex === "number" && s.blockIndex >= 0 && s.blockIndex < 9) {
+          scenarioSteps.push({
+            id: scenarioSteps.length + 1,
+            moduleId: s.moduleId,
+            blockIndex: s.blockIndex,
+            playerSymbol: s.playerSymbol === 'O' ? 'O' : 'X'
+          });
+        }
+      });
+
+      updateProgress();
+      renderScenario();
+
+      if (currentBlockIndex !== null) {
+        selectCanvasBlock(currentBlockIndex);
+      } else {
+        canvasNotesEl.value = "";
+        updateCurrentBlockInfoForModules();
+        updateModuleAddButtonsState();
+      }
+    }
+
+    // ----- Export JSON ----- //
+    btnExportJson.addEventListener("click", () => {
+      const design = getCurrentDesign();
+      jdrExportTextarea.value = JSON.stringify(design, null, 2);
+    });
+
+    // ----- Import JSON ----- //
+    btnImportJson.addEventListener("click", () => {
+      const text = jdrExportTextarea.value.trim();
+      if (!text) {
+        alert("Colle un JSON exporté dans la zone avant d’importer.");
+        return;
+      }
+      if (!text.startsWith("{") || !text.endsWith("}")) {
+        alert("Ce texte ne ressemble pas à un JSON (il doit commencer par { et finir par }).");
+        return;
+      }
+      try {
+        const design = JSON.parse(text);
+        applyDesign(design);
+        saveDesignToLocal();
+        log("Design importé depuis JSON.");
+      } catch (e) {
+        console.error(e);
+        alert("JSON invalide. Vérifie la syntaxe (tu peux repartir d’un export).");
+      }
+    });
+
+    // ----- Export Markdown ----- //
+    btnExportMd.addEventListener("click", () => {
+      let md = `# sudoxo · Design de jeu de rôle\n\n`;
+      md += `Jeu basé sur un morpion (Signal vs Bruit) et un Business Model Canevas adapté à la guerre hybride.\n\n`;
+
+      md += `## 1. Canevas (9 blocs)\n\n`;
+      canvasBlocks.forEach((b, i) => {
+        md += `### ${i + 1}. ${b.name}\n\n`;
+        const note = (canvasNotes[i] || "").trim();
+        if (note) {
+          md += `${note}\n\n`;
+        } else {
+          md += `_Bloc non renseigné._\n\n`;
+        }
+      });
+
+      md += `## 2. Bibliothèque de modules (pages HTML)\n\n`;
+      modulesLibrary.forEach(m => {
+        md += `### ${m.title}\n`;
+        md += `- Fichier : \`${m.file}\`\n`;
+        md += `- Type : ${m.type}\n`;
+        md += `- Résumé : ${m.summary}\n\n`;
+      });
+
+      md += `## 3. Scénario du JDR (ordre des étapes)\n\n`;
+      if (!scenarioSteps.length) {
+        md += `_Aucune étape définie._\n`;
+      } else {
+        scenarioSteps.forEach((step, i) => {
+          const mod = modulesLibrary.find(m => m.id === step.moduleId);
+          const block = canvasBlocks[step.blockIndex];
+          md += `### Étape ${i + 1} · ${mod ? mod.title : step.moduleId}\n`;
+          md += `- Bloc de canevas : ${block ? block.name : "?"}\n`;
+          md += `- Case sur le plateau : ${step.blockIndex + 1}\n`;
+          md += `- Coup lié sur le plateau : ${step.playerSymbol}\n`;
+          if (mod) {
+            md += `- Fichier : \`${mod.file}\`\n`;
+            md += `- Résumé : ${mod.summary}\n`;
+          }
+          md += `\n`;
+        });
+      }
+
+      jdrExportTextarea.value = md;
+    });
+
+    // ----- Sauvegarde navigateur ----- //
+    function saveDesignToLocal() {
+      try {
+        const design = getCurrentDesign();
+        localStorage.setItem("sudoxo_design", JSON.stringify(design));
+      } catch (e) {
+        console.warn("Impossible de sauvegarder dans le navigateur :", e);
+      }
+    }
+
+    function loadDesignFromLocal() {
+      try {
+        const raw = localStorage.getItem("sudoxo_design");
+        if (!raw) {
+          alert("Aucune sauvegarde locale trouvée.");
+          return;
+        }
+        const design = JSON.parse(raw);
+        applyDesign(design);
+        log("Design chargé depuis la sauvegarde navigateur.");
+      } catch (e) {
+        console.warn("Erreur de chargement localStorage :", e);
+        alert("Erreur lors du chargement de la sauvegarde.");
+      }
+    }
+
+    btnSaveLocal.addEventListener("click", () => {
+      saveDesignToLocal();
+      log("Design sauvegardé manuellement dans le navigateur.");
+    });
+
+    btnLoadLocal.addEventListener("click", () => {
+      loadDesignFromLocal();
+    });
+
+    // ----- Reset complet ----- //
+    btnResetAll.addEventListener("click", () => {
+      if (!confirm("Tout réinitialiser ? (canevas, scénario et sauvegarde locale)")) return;
+
+      for (let i = 0; i < canvasNotes.length; i++) canvasNotes[i] = "";
+      canvasNotesEl.value = "";
+      currentBlockIndex = null;
+      canvasTitleBlockEl.innerHTML = "Clique sur une case du plateau pour lier ton coup à un bloc du Business Model Canvas.";
+      canvasBlockBadgeNameEl.textContent = "Aucun bloc sélectionné";
+      canvasHintEl.textContent = "Utilise ce champ comme brouillon sérieux : hypothèses, tensions d’info, mécaniques de jeu, exemples concrets…";
+      canvasMetaLeftEl.innerHTML = "Bloc lié à la case : <strong>–</strong>";
+      canvasMetaRightEl.innerHTML = "Coup actuel : <span>X (Signal)</span>";
+
+      scenarioSteps.length = 0;
+      renderScenario();
+
+      try { localStorage.removeItem("sudoxo_design"); } catch (e) {}
+
+      updateProgress();
+      updateCurrentBlockInfoForModules();
+      updateModuleAddButtonsState();
+      log("Tout a été réinitialisé (canevas, scénario, sauvegarde).");
+    });
+
+    // ----- Init ----- //
+    function init() {
+      buildBoard();
+      updateCurrentPlayerLabel();
+      updateStatusText();
+      updateScore();
+      updateProgress();
+      renderModulesLibrary();
+      renderScenario();
+      updateCurrentBlockInfoForModules();
+      log("Bienvenue dans sudoxo. Geste de base : 1) clique une case, 2) va dans « JDR », 3) ajoute un module au scénario.");
+
+      try {
+        const raw = localStorage.getItem("sudoxo_design");
+        if (raw) {
+          const design = JSON.parse(raw);
+          applyDesign(design);
+          log("Design précédent rechargé automatiquement depuis le navigateur.");
+        }
+      } catch (e) {
+        console.warn("Erreur de chargement auto :", e);
+      }
+    }
+
+    init();
+  </script>
+</main>
+</body>
+</html>
