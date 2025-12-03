@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ECHO-0 · PHASE GAMIFIÉE · Vénusien XP Board</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-card: #020617;
+      --bg-soft: #020617;
+      --accent: #22c55e;
+      --accent2: #38bdf8;
+      --accent3: #f97316;
+      --accent4: #a855f7;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --radius: 18px;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top, #020617 0, #000 60%);
+      color: var(--text);
+      font-family: var(--font-sans);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 10px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      max-height: 900px;
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.18), transparent 55%),
+        linear-gradient(145deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scanline {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.45) 1px,
+        transparent 1px
+      );
+      background-size: 100% 2px;
+      mix-blend-mode: soft-light;
+      opacity: 0.25;
+      z-index: 0;
+    }
+
+    .noise {
+      position: absolute;
+      inset: -40px;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+      opacity: 0.22;
+      z-index: 0;
+    }
+
+    .inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    /* HEADER */
+
+    .header {
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(to right, rgba(15,23,42,0.98), rgba(15,23,42,0.86));
+    }
+
+    .traffic {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .dot.red { background: #fb7185; }
+    .dot.yellow { background: #fbbf24; }
+    .dot.green { background: #22c55e; }
+
+    .badge-drive {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.95), rgba(15,23,42,0.9));
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .drive-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.35);
+    }
+
+    .drive-title {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hdr-spacer {
+      flex: 1;
+    }
+
+    .hdr-meta {
+      display: flex;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--muted);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      padding: 2px 7px;
+      background: rgba(15,23,42,0.9);
+    }
+
+    /* HERO / HUD */
+
+    .hero {
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.97), rgba(2,6,23,0.99));
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .hero-title {
+      font-size: 18px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+      font-weight: 700;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
+      overflow: hidden;
+      opacity: 0.3;
+    }
+
+    .glitch::before {
+      color: var(--accent2);
+      transform: translateX(-1px);
+      clip-path: inset(0 0 50% 0);
+    }
+
+    .glitch::after {
+      color: var(--accent3);
+      transform: translateX(1px);
+      clip-path: inset(50% 0 0 0);
+    }
+
+    .hero-sub {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 430px;
+    }
+
+    .hud {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .hud-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .hud-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .hud-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.92);
+    }
+
+    .xp-bar-wrap {
+      width: 100%;
+      max-width: 260px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      overflow: hidden;
+      background: rgba(15,23,42,0.95);
+    }
+
+    .xp-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      transition: width 0.25s ease-out;
+    }
+
+    .hud-circle-wrap {
+      width: 44px;
+      height: 44px;
+    }
+
+    .hud-circle-wrap svg {
+      width: 44px;
+      height: 44px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn-hero {
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text);
+      padding: 4px 10px;
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.15s, border-color 0.15s;
+    }
+
+    .btn-hero.primary {
+      border-color: rgba(56,189,248,0.9);
+      background: radial-gradient(circle at top, rgba(56,189,248,0.28), rgba(15,23,42,0.97));
+    }
+
+    .btn-hero:hover {
+      transform: translateY(-1px);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .hero-hint {
+      font-size: 10px;
+      color: #6b7280;
+      font-family: var(--font-mono);
+    }
+
+    .kbd {
+      display: inline-block;
+      padding: 1px 4px;
+      border-radius: 3px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(15,23,42,0.9);
+      font-size: 10px;
+      font-family: var(--font-mono);
+    }
+
+    /* NOUVEAU : bloc lorem vénusien au centre du panneau principal */
+
+    .hero-lorem {
+      margin-top: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.6;
+      max-height: 130px;
+      overflow: auto;
+    }
+
+    .hero-lorem-line {
+      margin-bottom: 3px;
+    }
+
+    .hero-lorem-line .vx {
+      color: #c4b5fd;
+      font-style: italic;
+    }
+
+    .hero-lorem-line .vn {
+      color: #fef9c3;
+    }
+
+    a.hero-link {
+      color: var(--accent2);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(56,189,248,0.6);
+      padding-bottom: 1px;
+      cursor: pointer;
+    }
+
+    a.hero-link:hover {
+      color: #e0f2fe;
+      border-bottom-style: solid;
+    }
+
+    a.hero-link.signal {
+      color: var(--accent3);
+      border-bottom-color: rgba(249,115,22,0.85);
+    }
+
+    a.hero-link.signal:hover {
+      color: #fed7aa;
+    }
+
+    /* NAV TABS */
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 6px 7px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15,23,42,0.97);
+      overflow-x: auto;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.95);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .tab.active {
+      color: var(--text);
+      border-color: rgba(244,114,182,0.9);
+      background: radial-gradient(circle at top, rgba(244,114,182,0.24), rgba(15,23,42,0.96));
+    }
+
+    .tab.active .tab-dot {
+      background: var(--accent4);
+      box-shadow: 0 0 0 3px rgba(168,85,247,0.4);
+    }
+
+    /* PANELS */
+
+    .panels {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel {
+      flex: 1;
+      min-height: 0;
+      display: none;
+      padding: 8px 8px 10px;
+    }
+
+    .panel.active {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    /* MISSIONS PANEL */
+
+    .missions-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .missions-list {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 2px;
+    }
+
+    .mission-card {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.97);
+      padding: 9px 10px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mission-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mission-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mission-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.8);
+      font-size: 9px;
+      color: #7dd3fc;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .mission-desc {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .mission-tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 2px;
+      font-size: 11px;
+    }
+
+    .task-row {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+
+    .task-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(15,23,42,0.97);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    .task-row.done .task-check {
+      background: radial-gradient(circle at top, rgba(34,197,94,0.45), rgba(15,23,42,0.96));
+      border-color: rgba(34,197,94,0.9);
+      transform: scale(0.96);
+    }
+
+    .task-label {
+      flex: 1;
+      color: var(--muted);
+    }
+
+    .task-row.done .task-label {
+      color: #9ca3af;
+      text-decoration: line-through;
+      opacity: 0.9;
+    }
+
+    .mission-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      font-size: 10px;
+      color: #6b7280;
+      margin-top: 3px;
+    }
+
+    .xp-chip {
+      border-radius: 999px;
+      padding: 2px 7px;
+      border: 1px solid rgba(34,197,94,0.8);
+      background: rgba(15,23,42,0.96);
+      color: #bbf7d0;
+      font-family: var(--font-mono);
+    }
+
+    .mission-progress-bar {
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      overflow: hidden;
+      background: rgba(15,23,42,0.96);
+    }
+
+    .mission-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent3), var(--accent2));
+      width: 0%;
+      transition: width 0.2s ease-out;
+    }
+
+    /* SCAN PANEL (IMAGES) */
+
+    .scan-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .scan-header {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .scan-grid {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+      padding-right: 2px;
+    }
+
+    @media (min-width: 640px) {
+      .scan-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 960px) {
+      .scan-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .scan-card {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.97);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+    }
+
+    .scan-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(56,189,248,0.8);
+      box-shadow: 0 10px 25px rgba(15,23,42,0.9);
+    }
+
+    .scan-image-wrap {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      height: 150px;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.35), #020617);
+    }
+
+    .scan-image-wrap.venus {
+      background: radial-gradient(circle at top, rgba(168,85,247,0.35), #020617);
+    }
+
+    .scan-image-wrap.dystopia {
+      background: radial-gradient(circle at top, rgba(239,68,68,0.45), #020617);
+    }
+
+    .scan-svg {
+      position: absolute;
+      inset: 0;
+    }
+
+    .scan-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(15,23,42,0.65), rgba(15,23,42,0.92));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 8px;
+      opacity: 1;
+      transition: opacity 0.18s;
+    }
+
+    .scan-card.scanned .scan-overlay {
+      opacity: 0;
+    }
+
+    .scan-card.scanned .scan-badge {
+      background: radial-gradient(circle at top, rgba(34,197,94,0.4), rgba(15,23,42,0.96));
+      border-color: rgba(34,197,94,0.9);
+      color: #bbf7d0;
+    }
+
+    .scan-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+    }
+
+    .scan-title {
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .scan-badge {
+      border-radius: 999px;
+      padding: 2px 6px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.96);
+      color: #9ca3af;
+    }
+
+    /* CODEX PANEL (VENUSIAN CODEX) */
+
+    .codex-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .codex-header {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .codex-body {
+      flex: 1;
+      min-height: 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.97);
+      padding: 9px 11px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
+    .codex-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .codex-body::-webkit-scrollbar-thumb {
+      background: rgba(55,65,81,0.9);
+      border-radius: 999px;
+    }
+
+    .codex-block {
+      margin-bottom: 10px;
+    }
+
+    .codex-line {
+      margin-bottom: 3px;
+    }
+
+    .codex-line.vx { color: #c4b5fd; font-style: italic; }
+    .codex-line.vn { color: #fef9c3; }
+
+    .codex-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 3px;
+    }
+
+    .btn-small {
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text);
+      padding: 4px 8px;
+      font-size: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-small:hover {
+      background: rgba(15,23,42,0.9);
+    }
+
+    .codex-random {
+      margin-top: 5px;
+      font-size: 11px;
+      color: #93c5fd;
+      font-family: var(--font-mono);
+      min-height: 18px;
+    }
+
+    a.codex-link {
+      color: var(--accent2);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(56,189,248,0.6);
+      padding-bottom: 1px;
+      cursor: pointer;
+    }
+
+    a.codex-link:hover {
+      color: #e0f2fe;
+      border-bottom-style: solid;
+    }
+
+    a.codex-link.signal {
+      color: var(--accent3);
+      border-bottom-color: rgba(249,115,22,0.8);
+    }
+
+    a.codex-link.signal:hover {
+      color: #fed7aa;
+    }
+
+    /* OVERLAY LEVEL-UP */
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(15,23,42,0.2), rgba(0,0,0,0.96));
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .overlay.active {
+      display: flex;
+    }
+
+    .overlay-card {
+      border-radius: 20px;
+      border: 1px solid rgba(34,197,94,0.9);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.35), rgba(15,23,42,0.98));
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+      padding: 14px 16px 10px;
+      max-width: 380px;
+      text-align: center;
+      font-family: var(--font-mono);
+    }
+
+    .overlay-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 4px;
+    }
+
+    .overlay-body {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .overlay-body strong {
+      color: var(--text);
+    }
+
+    .overlay-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text);
+      padding: 4px 9px;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .overlay-btn:hover {
+      background: rgba(15,23,42,0.9);
+    }
+
+    @media (min-width: 860px) {
+      .hero {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .hero-top {
+        flex: 1;
+      }
+      .hud {
+        flex: 1;
+        align-items: flex-end;
+      }
+    }
+
+    @keyframes glitch-jump {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(-1px, -1px); }
+      50% { transform: translate(1px, 1px); }
+      75% { transform: translate(-1px, 1px); }
+      100% { transform: translate(0,0); }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="scanline"></div>
+  <div class="noise"></div>
+  <div class="inner">
+    <header class="header">
+      <div class="traffic">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="badge-drive">
+        <span class="drive-led"></span>
+        <span class="drive-title">ECHO-0</span>
+        <span>PHASE · GAME</span>
+      </div>
+      <div class="hdr-spacer"></div>
+      <div class="hdr-meta">
+        <span class="chip">Mode : mobile-first</span>
+        <span class="chip">Instance : <span id="profileLabel">—</span></span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-top">
+        <div class="hero-title-block">
+          <div class="hero-title">
+            <span class="glitch" data-text="VENUS-XP">VENUS-XP</span>
+            <span>// BOARD</span>
+          </div>
+          <div class="hero-sub">
+            Tableau de bord d’une instance <strong>gamifiée</strong>.  
+            Tu gagnes de l’XP en complétant des missions, en scannant les images
+            et en décodant du lorem ipsum <span style="color:#f97316;">bilingue vénusien</span>.
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-hero primary" data-tab-target="missions">🎯 Missions</button>
+          <button class="btn-hero" data-tab-target="scan">🖼 Scans</button>
+          <button class="btn-hero" data-tab-target="codex">📜 Codex</button>
+        </div>
+      </div>
+
+      <div class="hud">
+        <div class="hud-row">
+          <span class="hud-label">Niveau</span>
+          <span class="hud-pill"><span id="levelLabel">1</span> · <span id="titleLabel">instance novice</span></span>
+        </div>
+        <div class="hud-row">
+          <span class="hud-label">XP</span>
+          <div class="xp-bar-wrap">
+            <div id="xpBar" class="xp-bar"></div>
+          </div>
+          <span class="hud-pill"><span id="xpLabel">0</span> / 100</span>
+        </div>
+        <div class="hud-row" style="align-items:center;">
+          <span class="hud-label">Dystopie index</span>
+          <div class="hud-circle-wrap">
+            <!-- mini-radar SVG -->
+            <svg viewBox="0 0 44 44">
+              <defs>
+                <linearGradient id="gRadar" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#22c55e" stop-opacity="0.2"/>
+                </linearGradient>
+              </defs>
+              <circle cx="22" cy="22" r="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+              <circle cx="22" cy="22" r="12" fill="none" stroke="#1f2937" stroke-width="1"/>
+              <circle cx="22" cy="22" r="5" fill="none" stroke="#1f2937" stroke-width="1"/>
+              <path id="radarArc" d="" fill="url(#gRadar)" />
+              <line x1="22" y1="22" x2="36" y2="14" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="hud-pill" id="dystopiaLabel">faible · tu commences à remarquer</span>
+        </div>
+      </div>
+
+      <div class="hero-hint">
+        Règle n°1 : on ne parle jamais des règles.  
+        Règle n°2 : il n’y a pas de règle.  
+        Règle n°3 : on s’en fout pas mal.  
+        Bonus XP si tu en inventes une quatrième IRL.
+      </div>
+
+      <!-- NOUVEAU BLOC CENTRAL : LOREM VÉNUSIEN GAMIFIÉ -->
+      <div class="hero-lorem">
+        <div class="hero-lorem-line">
+          <span class="vx">Vx:</span>
+          <a href="#hx-1" class="hero-link signal">Lorem venusia</a> orbitum instans,
+          <a href="#hx-2" class="hero-link">ipsum-urbanum</a> filtrat
+          <a href="#hx-3" class="hero-link signal">signa minora</a> sub luce néon.
+        </div>
+        <div class="hero-lorem-line">
+          <span class="vn">Vn:</span>
+          Juste un tableau de bord anodin, avec
+          <a href="#hx-4" class="hero-link">quelques boutons</a>,
+          un radar,
+          et deux-trois
+          <a href="#hx-5" class="hero-link signal">clins d’œil cachés</a> pour qui clique vraiment.
+        </div>
+        <div class="hero-lorem-line">
+          <span class="vx">Vx:</span>
+          Instans tu
+          <a href="#hx-6" class="hero-link">lectorem</a> fingis,
+          sed systéma te loggat ut
+          <a href="#hx-7" class="hero-link signal">joueur·euse</a> dès le premier scroll.
+        </div>
+        <div class="hero-lorem-line">
+          <span class="vn">Vn:</span>
+          Chaque
+          <a href="#hx-8" class="hero-link">petit lien</a> peut devenir
+          un futur morceau de lore,
+          un ID CSS,
+          ou le grain de sable dans la
+          <a href="#hx-9" class="hero-link signal">machine dystopique</a>.
+        </div>
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="missions">
+        <span class="tab-dot"></span> Missions
+      </button>
+      <button class="tab" data-tab="scan">
+        <span class="tab-dot"></span> Scans d’images
+      </button>
+      <button class="tab" data-tab="codex">
+        <span class="tab-dot"></span> Codex vénusien
+      </button>
+    </nav>
+
+    <div class="panels">
+      <!-- MISSIONS PANEL -->
+      <section class="panel active" id="tab-missions">
+        <div class="panel-title">MISSIONS · XP IRL</div>
+        <div class="missions-layout">
+          <div class="missions-list" id="missionsList"></div>
+        </div>
+      </section>
+
+      <!-- SCANS PANEL -->
+      <section class="panel" id="tab-scan">
+        <div class="panel-title">SCANS · IMAGES & GLITCH</div>
+        <div class="scan-layout">
+          <div class="scan-header">
+            <div>
+              Touche les images pour les "scanner".  
+              Chaque scan vénusien donne de l’XP.
+            </div>
+            <div>
+              Scans complétés : <span id="scanCount">0</span>/<span id="scanTotal">0</span>
+            </div>
+          </div>
+          <div class="scan-grid" id="scanGrid"></div>
+        </div>
+      </section>
+
+      <!-- CODEX PANEL -->
+      <section class="panel" id="tab-codex">
+        <div class="panel-title">CODEX · LOREM IPSUM BILINGUE VÉNUSIEN</div>
+        <div class="codex-layout">
+          <div class="codex-header">
+            <div>
+              VX = vénusien, VN = voisinage humain.  
+              Clique les fragments marqués pour engranger un peu d’XP linguistique.
+            </div>
+            <div style="font-size:10px;color:#6b7280;">
+              Tu peux réutiliser ces expressions dans des commits, posts, descriptions… comme si de rien n’était.
+            </div>
+          </div>
+          <div class="codex-body" id="codexBody"></div>
+          <div class="codex-actions">
+            <button class="btn-small" id="btnRandomPhrase">✨ Générer une phrase vénusienne</button>
+            <button class="btn-small" id="btnCopyHint">📎 Idée d’usage</button>
+          </div>
+          <div class="codex-random" id="codexRandom"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- OVERLAY LEVEL-UP -->
+  <div class="overlay" id="levelOverlay">
+    <div class="overlay-card">
+      <div class="overlay-title">LEVEL UP</div>
+      <div class="overlay-body">
+        Tu viens de passer au niveau <strong><span id="overlayLevel">2</span></strong>.  
+        Officiellement, tu restes "juste une personne curieuse".  
+        Officieusement, tu es une <strong>instance plus consciente</strong> de la dystopie ambiante.
+      </div>
+      <button class="overlay-btn" id="overlayClose">
+        OK · retour au tableau de bord
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --------- Profil pseudo-aléatoire ----------
+  const profiles = [
+    "instance curieuse",
+    "scanneur·se de signaux",
+    "recruteur·se discret·e",
+    "gardien·ne de clé USB",
+    "anomalie coopérative"
+  ];
+  document.getElementById("profileLabel").textContent =
+    profiles[Math.floor(Math.random() * profiles.length)];
+
+  // --------- XP / LEVEL SYSTEM ----------
+  const XP_KEY = "ECHO0_XP_v2";
+  const LEVEL_KEY = "ECHO0_LEVEL_v2";
+
+  let xp = parseInt(localStorage.getItem(XP_KEY) || "0", 10);
+  let level = parseInt(localStorage.getItem(LEVEL_KEY) || "1", 10);
+  const xpBar = document.getElementById("xpBar");
+  const xpLabel = document.getElementById("xpLabel");
+  const levelLabel = document.getElementById("levelLabel");
+  const titleLabel = document.getElementById("titleLabel");
+  const levelOverlay = document.getElementById("levelOverlay");
+  const overlayLevel = document.getElementById("overlayLevel");
+
+  function levelTitle(lv) {
+    if (lv <= 1) return "instance novice";
+    if (lv === 2) return "émetteur·rice de signaux";
+    if (lv === 3) return "cartographe d’absurdités";
+    if (lv === 4) return "détecteur·rice de dystopie";
+    return "co-créateur·rice du jeu";
+  }
+
+  function refreshXPUI() {
+    const base = (level - 1) * 100;
+    const xpInLevel = xp - base;
+    const pct = Math.max(0, Math.min(100, xpInLevel));
+    xpBar.style.width = pct + "%";
+    xpLabel.textContent = xpInLevel.toString();
+    levelLabel.textContent = level.toString();
+    titleLabel.textContent = levelTitle(level);
+  }
+
+  function addXP(amount) {
+    xp = Math.max(0, xp + amount);
+    const newLevel = Math.floor(xp / 100) + 1;
+    if (newLevel > level) {
+      level = newLevel;
+      overlayLevel.textContent = level.toString();
+      levelOverlay.classList.add("active");
+    }
+    localStorage.setItem(XP_KEY, xp.toString());
+    localStorage.setItem(LEVEL_KEY, level.toString());
+    refreshXPUI();
+    refreshDystopia();
+  }
+
+  document.getElementById("overlayClose").addEventListener("click", () => {
+    levelOverlay.classList.remove("active");
+  });
+
+  refreshXPUI();
+
+  // --------- DYSTOPIA INDEX RADAR ----------
+  const radarArc = document.getElementById("radarArc");
+  const dystopiaLabel = document.getElementById("dystopiaLabel");
+  function refreshDystopia() {
+    const maxLevel = 6;
+    const lv = Math.min(level, maxLevel);
+    const angle = (lv / maxLevel) * Math.PI * 1.8;
+    const cx = 22, cy = 22, r = 20;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    const largeArc = angle > Math.PI ? 1 : 0;
+    const d = [
+      "M", cx, cy,
+      "L", cx + r, cy,
+      "A", r, r, 0, largeArc, 1, x, y,
+      "Z"
+    ].join(" ");
+    radarArc.setAttribute("d", d);
+
+    if (lv <= 2) dystopiaLabel.textContent = "faible · tu commences à remarquer";
+    else if (lv === 3) dystopiaLabel.textContent = "moyen · les patterns se répètent";
+    else if (lv === 4) dystopiaLabel.textContent = "fort · difficile de faire semblant";
+    else dystopiaLabel.textContent = "critique · il est temps de créer autre chose";
+  }
+  refreshDystopia();
+
+  // --------- MISSIONS (gamifiées) ----------
+  const MISSIONS = [
+    {
+      id: "m1",
+      title: "Mission A – Trace anodine",
+      tag: "PUBLIC",
+      xp: 30,
+      description: "Créer un contenu en ligne totalement banal, mais porteur d’un marqueur discret de l’instance.",
+      tasks: [
+        "Choisir une plateforme (post, commentaire, repo, etc.).",
+        "Publier un contenu neutre (recette, note technique, review...).",
+        "Cacher une référence à \"instance\" ou \"ECHO-0\" dans la structure.",
+        "Noter l’URL quelque part (dans ta tête, pas ici)."
+      ]
+    },
+    {
+      id: "m2",
+      title: "Mission B – Copain-copain en miroir",
+      tag: "CRYPTIC",
+      xp: 40,
+      description: "Écrire un texte à double lecture contenant le mot-clé « copain-copain ».",
+      tasks: [
+        "Imaginer un texte qui change de sens selon la ponctuation ou la mise en page.",
+        "Y glisser le mot « copain-copain » sans l’expliquer.",
+        "Le publier sur un espace public (ou semi-public).",
+        "Laisser passer quelques jours avant d’y repenser."
+      ]
+    },
+    {
+      id: "m3",
+      title: "Mission C – Dystopie banale",
+      tag: "DYSTOPIE",
+      xp: 30,
+      description: "Observer et décrire une situation quotidienne avec un détail dystopique accepté par tout le monde.",
+      tasks: [
+        "Repérer une scène réelle (transport, open-space, administration...).",
+        "Noter ce qui semble « normal » mais ne le serait pas dans un monde sain.",
+        "Écrire un court paragraphe descriptif.",
+        "Le conserver comme matériau pour une histoire ou un jeu plus tard."
+      ]
+    },
+    {
+      id: "m4",
+      title: "Mission D – Refaire l’instance",
+      tag: "META",
+      xp: 50,
+      description: "Cloner cette page, la modifier et en faire ta propre version.",
+      tasks: [
+        "Récupérer ce fichier HTML.",
+        "Changer au moins un texte, une mission, une image.",
+        "L’enregistrer comme nouvelle instance (clé, dossier, repo...).",
+        "Considérer que tu es aussi un peu créateur·rice du jeu."
+      ]
+    }
+  ];
+
+  const missionsList = document.getElementById("missionsList");
+
+  function taskKey(missionId, index) {
+    return "ECHO0_TASK_" + missionId + "_" + index;
+  }
+
+  function isTaskDone(missionId, index) {
+    return localStorage.getItem(taskKey(missionId, index)) === "1";
+  }
+
+  function setTaskDone(missionId, index, done) {
+    localStorage.setItem(taskKey(missionId, index), done ? "1" : "0");
+  }
+
+  function renderMissions() {
+    missionsList.innerHTML = "";
+    MISSIONS.forEach(m => {
+      const card = document.createElement("div");
+      card.className = "mission-card";
+
+      const header = document.createElement("div");
+      header.className = "mission-header";
+
+      const title = document.createElement("div");
+      title.className = "mission-title";
+      title.textContent = m.title;
+      header.appendChild(title);
+
+      const tag = document.createElement("div");
+      tag.className = "mission-tag";
+      tag.textContent = m.tag;
+      header.appendChild(tag);
+
+      card.appendChild(header);
+
+      const desc = document.createElement("div");
+      desc.className = "mission-desc";
+      desc.textContent = m.description;
+      card.appendChild(desc);
+
+      const tasksWrap = document.createElement("div");
+      tasksWrap.className = "mission-tasks";
+
+      let doneCount = 0;
+
+      m.tasks.forEach((t, idx) => {
+        const row = document.createElement("div");
+        row.className = "task-row";
+        const check = document.createElement("div");
+        check.className = "task-check";
+        check.textContent = "✓";
+        const label = document.createElement("div");
+        label.className = "task-label";
+        label.textContent = t;
+        row.appendChild(check);
+        row.appendChild(label);
+
+        const done = isTaskDone(m.id, idx);
+        if (done) {
+          row.classList.add("done");
+          doneCount++;
+        }
+
+        row.addEventListener("click", () => {
+          const currentlyDone = row.classList.contains("done");
+          row.classList.toggle("done");
+          setTaskDone(m.id, idx, !currentlyDone);
+
+          if (!currentlyDone) addXP(Math.floor(m.xp / m.tasks.length));
+
+          const newDoneCount = m.tasks.reduce((acc, _, i) => acc + (isTaskDone(m.id, i) ? 1 : 0), 0);
+          progressFill.style.width = (newDoneCount / m.tasks.length * 100) + "%";
+          footerLeft.textContent = newDoneCount + "/" + m.tasks.length + " tâches";
+
+        });
+
+        tasksWrap.appendChild(row);
+      });
+
+      card.appendChild(tasksWrap);
+
+      const footer = document.createElement("div");
+      footer.className = "mission-footer";
+
+      const footerLeft = document.createElement("div");
+      footerLeft.textContent = doneCount + "/" + m.tasks.length + " tâches";
+      footer.appendChild(footerLeft);
+
+      const footerRight = document.createElement("div");
+      footerRight.style.display = "flex";
+      footerRight.style.gap = "6px";
+      footerRight.style.alignItems = "center";
+
+      const progress = document.createElement("div");
+      progress.className = "mission-progress-bar";
+      const progressFill = document.createElement("div");
+      progressFill.className = "mission-progress-fill";
+      progressFill.style.width = (doneCount / m.tasks.length * 100) + "%";
+      progress.appendChild(progressFill);
+      footerRight.appendChild(progress);
+
+      const xpChip = document.createElement("div");
+      xpChip.className = "xp-chip";
+      xpChip.textContent = "+" + m.xp + " XP max";
+      footerRight.appendChild(xpChip);
+
+      footer.appendChild(footerRight);
+      card.appendChild(footer);
+
+      missionsList.appendChild(card);
+    });
+  }
+
+  renderMissions();
+
+  // --------- SCAN IMAGES ----------
+  const SCANS = [
+    {
+      id: "s1",
+      title: "Vue orbitale d’un nœud urbain",
+      type: "venus",
+      overlay: "VX: lorem-orbitum urbis scintillat.\nVN: une ville vue d’en haut, quadrillée de capteurs.",
+      xp: 10
+    },
+    {
+      id: "s2",
+      title: "Couloir de bureau infini",
+      type: "dystopia",
+      overlay: "VX: open-space ad vitam.\nVN: néons, open space, badge obligatoire, sourire optionnel.",
+      xp: 10
+    },
+    {
+      id: "s3",
+      title: "Salle de contrôle silencieuse",
+      type: "venus",
+      overlay: "VX: multimonitor venusia.\nVN: écrans partout, personne ne regarde vraiment.",
+      xp: 10
+    },
+    {
+      id: "s4",
+      title: "Place publique sous surveillance",
+      type: "dystopia",
+      overlay: "VX: camera-oculus ridet.\nVN: caméra « pour votre sécurité » à chaque coin.",
+      xp: 10
+    },
+    {
+      id: "s5",
+      title: "Clé USB perdue",
+      type: "venus",
+      overlay: "VX: echo-instans dormiens.\nVN: une clé oubliée sur une table. Vraiment oubliée ?",
+      xp: 10
+    },
+    {
+      id: "s6",
+      title: "Réseau de lignes lumineuses",
+      type: "venus",
+      overlay: "VX: nexus venusia.\nVN: les connexions qu’on ne voit jamais, mais qui décident du reste.",
+      xp: 10
+    }
+  ];
+
+  const scanGrid = document.getElementById("scanGrid");
+  const scanCountEl = document.getElementById("scanCount");
+  const scanTotalEl = document.getElementById("scanTotal");
+  const SCAN_KEY_PREFIX = "ECHO0_SCAN_";
+
+  function isScanned(id) {
+    return localStorage.getItem(SCAN_KEY_PREFIX + id) === "1";
+  }
+
+  function setScanned(id, scanned) {
+    localStorage.setItem(SCAN_KEY_PREFIX + id, scanned ? "1" : "0");
+  }
+
+  function createScanSVG(type) {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", "0 0 200 150");
+
+    const bg = document.createElementNS(svgNS, "rect");
+    bg.setAttribute("x", "0");
+    bg.setAttribute("y", "0");
+    bg.setAttribute("width", "200");
+    bg.setAttribute("height", "150");
+    bg.setAttribute("fill", "transparent");
+    svg.appendChild(bg);
+
+    if (type === "dystopia") {
+      for (let i = 0; i < 7; i++) {
+        const r = document.createElementNS(svgNS, "rect");
+        const w = 20 + Math.random() * 20;
+        const h = 40 + Math.random() * 60;
+        const x = 10 + i * 26;
+        const y = 140 - h;
+        r.setAttribute("x", x);
+        r.setAttribute("y", y);
+        r.setAttribute("width", w);
+        r.setAttribute("height", h);
+        r.setAttribute("fill", "rgba(15,23,42,0.95)");
+        r.setAttribute("stroke", "rgba(148,163,184,0.6)");
+        r.setAttribute("stroke-width", "1");
+        svg.appendChild(r);
+      }
+      const cam = document.createElementNS(svgNS, "circle");
+      cam.setAttribute("cx", "165");
+      cam.setAttribute("cy", "30");
+      cam.setAttribute("r", "10");
+      cam.setAttribute("fill", "rgba(239,68,68,0.9)");
+      svg.appendChild(cam);
+      const camLens = document.createElementNS(svgNS, "circle");
+      camLens.setAttribute("cx", "165");
+      camLens.setAttribute("cy", "30");
+      camLens.setAttribute("r", "4");
+      camLens.setAttribute("fill", "#020617");
+      svg.appendChild(camLens);
+    } else {
+      for (let i = 0; i < 4; i++) {
+        const ellipse = document.createElementNS(svgNS, "ellipse");
+        ellipse.setAttribute("cx", "100");
+        ellipse.setAttribute("cy", "75");
+        ellipse.setAttribute("rx", 30 + i * 15);
+        ellipse.setAttribute("ry", 18 + i * 10);
+        ellipse.setAttribute("fill", "none");
+        ellipse.setAttribute("stroke", "rgba(148,163,184,0.6)");
+        ellipse.setAttribute("stroke-width", "1");
+        svg.appendChild(ellipse);
+      }
+      const c = document.createElementNS(svgNS, "circle");
+      c.setAttribute("cx", "100");
+      c.setAttribute("cy", "75");
+      c.setAttribute("r", "10");
+      c.setAttribute("fill", "rgba(56,189,248,0.9)");
+      svg.appendChild(c);
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2;
+        const x2 = 100 + 50 * Math.cos(angle);
+        const y2 = 75 + 35 * Math.sin(angle);
+        const line = document.createElementNS(svgNS, "line");
+        line.setAttribute("x1", "100");
+        line.setAttribute("y1", "75");
+        line.setAttribute("x2", x2);
+        line.setAttribute("y2", y2);
+        line.setAttribute("stroke", "rgba(56,189,248,0.7)");
+        line.setAttribute("stroke-width", "1");
+        svg.appendChild(line);
+      }
+    }
+
+    return svg;
+  }
+
+  function renderScans() {
+    scanGrid.innerHTML = "";
+    let scannedCount = 0;
+
+    SCANS.forEach(scan => {
+      const card = document.createElement("div");
+      card.className = "scan-card";
+
+      const imgWrap = document.createElement("div");
+      imgWrap.className = "scan-image-wrap";
+      if (scan.type === "venus") imgWrap.classList.add("venus");
+      if (scan.type === "dystopia") imgWrap.classList.add("dystopia");
+
+      const svg = createScanSVG(scan.type);
+      svg.classList.add("scan-svg");
+      imgWrap.appendChild(svg);
+
+      const overlay = document.createElement("div");
+      overlay.className = "scan-overlay";
+      overlay.textContent = scan.overlay;
+      imgWrap.appendChild(overlay);
+
+      card.appendChild(imgWrap);
+
+      const footer = document.createElement("div");
+      footer.className = "scan-footer";
+
+      const title = document.createElement("div");
+      title.className = "scan-title";
+      title.textContent = scan.title;
+      footer.appendChild(title);
+
+      const badge = document.createElement("div");
+      badge.className = "scan-badge";
+      badge.textContent = "+ " + scan.xp + " XP";
+      footer.appendChild(badge);
+
+      card.appendChild(footer);
+      scanGrid.appendChild(card);
+
+      const alreadyScanned = isScanned(scan.id);
+      if (alreadyScanned) {
+        card.classList.add("scanned");
+        scannedCount++;
+      }
+
+      card.addEventListener("click", () => {
+        const wasScanned = card.classList.contains("scanned");
+        if (!wasScanned) {
+          card.classList.add("scanned");
+          setScanned(scan.id, true);
+          addXP(scan.xp);
+        } else {
+          card.classList.toggle("scanned");
+          setScanned(scan.id, card.classList.contains("scanned"));
+        }
+        updateScanCount();
+      });
+    });
+
+    scanTotalEl.textContent = SCANS.length.toString();
+    scanCountEl.textContent = scannedCount.toString();
+  }
+
+  function updateScanCount() {
+    let c = 0;
+    SCANS.forEach(s => { if (isScanned(s.id)) c++; });
+    scanCountEl.textContent = c.toString();
+  }
+
+  renderScans();
+
+  // --------- CODEX (bilingue vénusien plein de liens) ----------
+  const codexBody = document.getElementById("codexBody");
+  const codexRandom = document.getElementById("codexRandom");
+
+  const CODEX_BLOCKS = [
+    {
+      vx: 'Vx: <a href="#vx-1" class="codex-link signal">Lorem vènus</a> orbis instans, ' +
+          '<a href="#vx-2" class="codex-link">ipsum-orbita</a> copulat civitates, ' +
+          '<a href="#vx-3" class="codex-link signal">instanciae ludentes</a> pingunt graphum latentem.',
+      vn: 'Vn: Le texte semble vide, mais chaque <a href="#vn-1" class="codex-link">fragment cliquable</a> ' +
+          'peut devenir un futur <a href="#vn-2" class="codex-link signal">indice</a> dans un post, ' +
+          'un <a href="#vn-3" class="codex-link">commit Git</a> ou une légende anodine.'
+    },
+    {
+      vx: 'Vx: <a href="#vx-4" class="codex-link">Dolor dystopiae</a> dulcis, ' +
+          'quia feed infinitum <a href="#vx-5" class="codex-link signal">scrollat</a> te ad somnum, ' +
+          'dum <a href="#vx-6" class="codex-link">camere tacitae</a> omnia memorant.',
+      vn: 'Vn: Les <a href="#vn-4" class="codex-link signal">algos</a> sourient, ' +
+          'les <a href="#vn-5" class="codex-link">caméras</a> clignotent, ' +
+          'et toi tu laisses un <a href="#vn-6" class="codex-link signal">petit mot vénusien</a> au milieu de la mise à jour de ton statut.'
+    },
+    {
+      vx: 'Vx: <a href="#vx-7" class="codex-link">Regula aurea</a> non scribitur, ' +
+          'sed respiratur: <a href="#vx-8" class="codex-link signal">t’as nihil compris</a> et hoc est initium ludi.',
+      vn: 'Vn: Si tu attends la règle parfaite, tu restes spectateur. ' +
+          'Dès que tu cliques, que tu <a href="#vn-7" class="codex-link">inventes un usage</a>, ' +
+          'tu deviens <a href="#vn-8" class="codex-link signal">co-créateur du décor</a>.'
+    },
+    {
+      vx: 'Vx: <a href="#vx-9" class="codex-link">Copain-copain</a> non est emoji, ' +
+          'sed pactum tacitum inter <a href="#vx-10" class="codex-link signal">instans A</a> et ' +
+          '<a href="#vx-11" class="codex-link signal">instans B</a>, sub oculis systemæ dormientis.',
+      vn: 'Vn: Deux personnes qui comprennent la même blague cachée dans ' +
+          'un <a href="#vn-9" class="codex-link">lorem random</a>, ' +
+          'c’est déjà un <a href="#vn-10" class="codex-link signal">réseau parallèle</a>.'
+    },
+    {
+      vx: 'Vx: <a href="#vx-12" class="codex-link">Echo-0</a> susurrat in ' +
+          '<a href="#vx-13" class="codex-link signal">USB anonymis</a>, ' +
+          'quæ viagant per manus ignotas et <a href="#vx-14" class="codex-link">pockets</a> urbanas.',
+      vn: 'Vn: Tu peux transformer n’importe quel support en instance : ' +
+          '<a href="#vn-11" class="codex-link signal">clé USB</a>, ' +
+          '<a href="#vn-12" class="codex-link">zip</a>, ' +
+          '<a href="#vn-13" class="codex-link signal">dossier partagé</a>, ' +
+          'tant que tu y glisses un petit <a href="#vn-14" class="codex-link">écho</a> de ce codex.'
+    }
+  ];
+
+  const RANDOM_PHRASES = [
+    "Vx: Hyperlorem venusia ping, VN: commit de test qui veut dire beaucoup trop.",
+    "Vx: Copain-copain in codice commentario, VN: clin d’œil à qui saura lire entre les lignes.",
+    "Vx: Dystopia light edition, VN: interface lisse pour réalité rugueuse.",
+    "Vx: Instans dubitat, VN: c’est souvent là que le jeu commence vraiment.",
+    "Vx: Nexus caméræ et cookies, VN: un seul et même graphe, vues différentes."
+  ];
+
+  function renderCodex() {
+    codexBody.innerHTML = "";
+    CODEX_BLOCKS.forEach(block => {
+      const wrap = document.createElement("div");
+      wrap.className = "codex-block";
+
+      const lineVx = document.createElement("div");
+      lineVx.className = "codex-line vx";
+      lineVx.innerHTML = block.vx;
+      wrap.appendChild(lineVx);
+
+      const lineVn = document.createElement("div");
+      lineVn.className = "codex-line vn";
+      lineVn.innerHTML = block.vn;
+      wrap.appendChild(lineVn);
+
+      codexBody.appendChild(wrap);
+    });
+
+    wireCodexLinks();
+  }
+
+  function wireCodexLinks() {
+    const links = codexBody.querySelectorAll("a.codex-link");
+    links.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (link.dataset.clicked === "1") return;
+        link.dataset.clicked = "1";
+        const bonus = link.classList.contains("signal") ? 3 : 1;
+        addXP(bonus);
+        link.style.opacity = "0.9";
+      });
+    });
+  }
+
+  renderCodex();
+
+  document.getElementById("btnRandomPhrase").addEventListener("click", () => {
+    const phrase = RANDOM_PHRASES[Math.floor(Math.random() * RANDOM_PHRASES.length)];
+    codexRandom.textContent = phrase;
+    addXP(5);
+  });
+
+  document.getElementById("btnCopyHint").addEventListener("click", () => {
+    codexRandom.textContent =
+      "Idée : utilise une phrase VX/VN comme description de commit, nom de branche, ou légende de photo banale.";
+  });
+
+  // --------- Liens vénusiens dans le panneau principal ----------
+  function wireHeroLinks() {
+    const heroLinks = document.querySelectorAll("a.hero-link");
+    heroLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (link.dataset.clicked === "1") return;
+        link.dataset.clicked = "1";
+        const bonus = link.classList.contains("signal") ? 4 : 2;
+        addXP(bonus);
+        link.style.opacity = "0.85";
+      });
+    });
+  }
+  wireHeroLinks();
+
+  // --------- TABS & HERO BUTTONS ----------
+  const tabs = document.querySelectorAll(".tab");
+  const panels = document.querySelectorAll(".panel");
+  const heroButtons = document.querySelectorAll(".btn-hero[data-tab-target]");
+
+  function activateTab(name) {
+    tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+    panels.forEach(p => p.classList.toggle("active", p.id === "tab-" + name));
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => activateTab(tab.dataset.tab));
+  });
+
+  heroButtons.forEach(btn => {
+    btn.addEventListener("click", () => activateTab(btn.dataset.tabTarget));
+  });
+
+  // --------- Glitch animation au survol ----------
+  const glitch = document.querySelector(".glitch");
+  if (glitch) {
+    glitch.addEventListener("mouseenter", () => {
+      glitch.style.animation = "glitch-jump 0.15s steps(2, end) 0s 3";
+    });
+    glitch.addEventListener("animationend", () => {
+      glitch.style.animation = "";
+    });
+  }
+</script>
+</body>
+</html>
