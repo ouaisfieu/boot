@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Le Vrai Connard – Portefeuille politique officiel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg2: #020617;
+      --accent: #f97316;
+      --accent-soft: rgba(249,115,22,0.16);
+      --accent-strong: #fb923c;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148,163,184,0.45);
+      --danger: #ef4444;
+      --good: #22c55e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* BACKGROUND ORBS */
+    .orb {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(40px);
+      opacity: 0.38;
+      z-index: -1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .orb-1 {
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(248,113,113,0.9), transparent);
+      top: -60px; left: -60px;
+      animation: floatOrb1 18s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(56,189,248,0.9), transparent);
+      bottom: -80px; right: -40px;
+      animation: floatOrb2 20s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(129,140,248,0.85), transparent);
+      top: 40%; left: 60%;
+      animation: floatOrb3 26s linear infinite alternate;
+    }
+
+    @keyframes floatOrb1 {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(40px,70px); }
+    }
+    @keyframes floatOrb2 {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(-60px,-30px); }
+    }
+    @keyframes floatOrb3 {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(10px,-40px); }
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(2,6,23,0.92), rgba(2,6,23,0.72));
+      border-bottom: 1px solid rgba(148,163,184,0.3);
+      padding: .7rem 1.5rem;
+    }
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .brand-logo {
+      width: 32px; height: 32px;
+      border-radius: 999px;
+      border: 2px solid rgba(0,0,0,0.7);
+      background:
+        radial-gradient(circle at 30% 30%, #f97316 0, #f97316 30%, transparent 35%),
+        radial-gradient(circle at 70% 30%, #f97316 0, #f97316 30%, transparent 35%),
+        radial-gradient(circle at 50% 80%, #ef4444 0, #7f1d1d 55%, #0b1120 90%);
+      box-shadow: 0 0 18px rgba(249,115,22,0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .brand-logo::after {
+      content: "VC";
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      color: rgba(15,23,42,0.9);
+      padding: 0 .25rem;
+      border-radius: 999px;
+      background: rgba(248,250,252,0.9);
+    }
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-title span:first-child {
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .brand-title span:last-child {
+      font-size: .68rem;
+      color: var(--muted);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--muted);
+    }
+    nav a {
+      color: inherit;
+      padding-bottom: .1rem;
+      border-bottom: 1px solid transparent;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    nav a:hover {
+      border-bottom-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .mode-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: .3rem .7rem;
+      font-size: .72rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      cursor: pointer;
+      background: rgba(15,23,42,0.98);
+      color: var(--muted);
+    }
+    .mode-dot {
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(249,115,22,0.9);
+    }
+
+    body.lucid .mode-dot {
+      background: var(--good);
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+    body.lucid .mode-toggle {
+      border-color: rgba(34,197,94,0.7);
+      color: #bbf7d0;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* HERO */
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0,2.1fr) minmax(0,1.5fr);
+      gap: 1.6rem;
+      padding: 1.6rem 0 1rem;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .17em;
+      color: var(--muted);
+    }
+    .hero-kicker span {
+      display: inline-block;
+      width: 30px;
+      height: 1px;
+      background: rgba(148,163,184,0.7);
+    }
+    .hero-title {
+      font-size: clamp(2.3rem, 4.2vw, 3.3rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      line-height: 1.05;
+    }
+    .hero-title strong {
+      color: var(--accent-strong);
+      text-shadow: 0 0 26px rgba(248,113,113,0.9);
+      white-space: nowrap;
+    }
+    .hero-sub {
+      max-width: 600px;
+      font-size: .97rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .hero-sub mark {
+      background: rgba(248,113,113,0.08);
+      border-radius: .35rem;
+      padding: 0 .2rem;
+      color: var(--text);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: .7rem;
+    }
+    .btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: .6rem 1.2rem;
+      font-size: .8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+    }
+    .btn-primary {
+      background: radial-gradient(circle at top left, #fed7aa, var(--accent));
+      color: #02131f;
+      border-color: transparent;
+      box-shadow: 0 14px 40px rgba(248,113,113,0.7);
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .btn-ghost {
+      background: rgba(15,23,42,0.95);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: .6rem;
+    }
+    .flag {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      padding: .16rem .65rem;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      color: var(--muted);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .hero-right {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .profile-card {
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15,23,42,0.97));
+      padding: 1.2rem 1.2rem 1rem;
+      box-shadow: 0 16px 44px rgba(15,23,42,1);
+      max-width: 340px;
+      width: 100%;
+      font-size: .86rem;
+    }
+    .profile-top {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      margin-bottom: .6rem;
+    }
+    .avatar {
+      width: 64px; height: 64px;
+      border-radius: 999px;
+      border: 2px solid rgba(15,23,42,0.9);
+      background:
+        radial-gradient(circle at 30% 30%, #f97316 0, #fed7aa 45%, transparent 48%),
+        radial-gradient(circle at 70% 32%, #f97316 0, #fed7aa 45%, transparent 48%),
+        radial-gradient(circle at 50% 100%, #7f1d1d 0, #0b1120 65%);
+      position: relative;
+      box-shadow: 0 0 24px rgba(248,113,113,0.9);
+    }
+    .avatar::after {
+      content: "";
+      position: absolute;
+      top: 36%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+    }
+    .avatar::before {
+      content: "";
+      position: absolute;
+      top: 64%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+    }
+    .profile-name {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .profile-role {
+      font-size: .78rem;
+      color: var(--muted);
+    }
+    .profile-poll {
+      margin-top: .4rem;
+      font-size: .78rem;
+      color: var(--muted);
+    }
+    .poll-bar {
+      margin-top: .25rem;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,1);
+      overflow: hidden;
+      position: relative;
+    }
+    .poll-fill {
+      height: 100%;
+      width: 78%;
+      background: linear-gradient(90deg, var(--accent), var(--danger));
+    }
+    .profile-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: .45rem;
+      margin-top: .7rem;
+    }
+    .metric {
+      border-radius: .9rem;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.95);
+      padding: .4rem .45rem;
+      text-align: center;
+    }
+    .metric strong {
+      display: block;
+      font-size: .9rem;
+    }
+    .metric span {
+      font-size: .68rem;
+      color: var(--muted);
+    }
+    .profile-quote {
+      margin-top: .6rem;
+      font-style: italic;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    /* GENERIC SECTION */
+
+    section {
+      margin-top: 2.2rem;
+    }
+    .section-label {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--muted);
+      margin-bottom: .35rem;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: .7rem;
+    }
+    .card {
+      border-radius: 1.3rem;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.94);
+      padding: 1rem 1.1rem;
+      font-size: .88rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0,1.6fr) minmax(0,1.4fr);
+      gap: 1.4rem;
+    }
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .list-clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .list-item {
+      display: flex;
+      gap: .45rem;
+      margin-bottom: .5rem;
+      color: var(--muted);
+    }
+    .list-dot {
+      flex-shrink: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      margin-top: .38rem;
+    }
+    .list-item strong { color: var(--text); }
+
+    /* PROGRAMME CREUX VS LUCIDE */
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: .18rem .65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      background: rgba(15,23,42,0.96);
+      margin-bottom: .4rem;
+    }
+
+    .duo {
+      display: grid;
+      grid-template-columns: minmax(0,1.1fr) minmax(0,1.1fr);
+      gap: .8rem;
+      font-size: .85rem;
+    }
+    @media (max-width: 760px) {
+      .duo { grid-template-columns: 1fr; }
+    }
+    .duo-box {
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: .7rem .8rem;
+      background: rgba(15,23,42,0.98);
+    }
+    .duo-title {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      color: var(--muted);
+      margin-bottom: .3rem;
+    }
+    .duo-text {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    body.lucid .connard-text {
+      display: none;
+    }
+    body:not(.lucid) .lucid-text {
+      display: none;
+    }
+
+    /* TABLE CONTRADICTIONS */
+
+    .table {
+      border-radius: 1.1rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      font-size: .83rem;
+    }
+    .table-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1.4fr 1.4fr;
+      gap: .4rem;
+      padding: .5rem .7rem;
+    }
+    .table-header {
+      background: rgba(15,23,42,1);
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+    }
+    .table-row:nth-child(even):not(.table-header) {
+      background: rgba(15,23,42,0.9);
+    }
+
+    /* SCANDALES */
+
+    .timeline {
+      border-left: 1px solid rgba(148,163,184,0.6);
+      margin-left: .5rem;
+      padding-left: .8rem;
+      font-size: .84rem;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: .7rem;
+      color: var(--muted);
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -1.05rem;
+      top: .2rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(248,113,113,0.9);
+      box-shadow: 0 0 12px rgba(248,113,113,0.9);
+    }
+    .timeline-item strong {
+      color: var(--text);
+    }
+
+    /* CONTACT / FOOTER */
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 1.5rem 2.2rem;
+      font-size: .76rem;
+      color: var(--muted);
+    }
+    .tiny {
+      font-size: .7rem;
+      color: #6b7280;
+    }
+    a {
+      color: var(--accent-strong);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      header { padding: .6rem 1rem; }
+      main { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- background orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo"></div>
+        <div class="brand-title">
+          <span>LE VRAI CONNARD</span>
+          <span>portefeuille politique officiel</span>
+        </div>
+      </div>
+      <nav>
+        <a data-scroll="#hero">Intro</a>
+        <a data-scroll="#programme">Programme</a>
+        <a data-scroll="#contradictions">Contradictions</a>
+        <a data-scroll="#scandales">Scandales</a>
+        <a data-scroll="#meta">Mode lucide</a>
+      </nav>
+      <button class="mode-toggle" id="modeToggle">
+        <div class="mode-dot"></div>
+        <span id="modeLabel">Mode connard</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-left">
+        <div class="hero-kicker">
+          <span></span>
+          <div>portefeuille du professionnel de la promesse</div>
+        </div>
+        <h1 class="hero-title">
+          Je suis <strong>l’avenir</strong><br/>
+          dont je vais surtout profiter.
+        </h1>
+        <p class="hero-sub connard-text">
+          Bienvenue sur le site officiel du <strong>Vrai Connard en politique</strong> :  
+          celui qui parle fort, promet tout, signe peu, et atterrit toujours sur ses pieds.
+          Ici, chaque ligne est pensée pour flatter ton espoir tout en nourrissant
+          <mark>mon ego et ma carrière</mark>.
+        </p>
+        <p class="hero-sub lucid-text">
+          Bienvenue sur la vitrine d’un <strong>politicien archétypal</strong> :
+          verbe facile, promesses gonflées, angles morts bien rangés.  
+          Ce site est un <mark>mode d’emploi satirique</mark> : il montre comment
+          on fabrique une image brillante avec un contenu creux.  
+          Tu peux t’en servir pour reconnaître le même pattern ailleurs.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="btnScrollProgramme">
+            Voir mon « programme »
+          </button>
+          <button class="btn btn-ghost" id="btnCopyPunch">
+            Copier ma phrase creuse préférée
+          </button>
+        </div>
+
+        <div class="hero-flags">
+          <div class="flag">Toujours « proche du peuple »</div>
+          <div class="flag">Jamais responsable</div>
+          <div class="flag">Communication &gt; Réalité</div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="profile-card">
+          <div class="profile-top">
+            <div class="avatar" aria-hidden="true"></div>
+            <div>
+              <div class="profile-name">[Nom du Vrai Connard]</div>
+              <div class="profile-role connard-text">
+                Profession&nbsp;: élu professionnel &amp; grand orchestrateur de promesses.
+              </div>
+              <div class="profile-role lucid-text">
+                Archétype&nbsp;: figure politique qui survit à tout, même à ses propres discours.
+              </div>
+              <div class="profile-poll">
+                Intentions de vote projetées : <strong>78 %</strong>… dans sa tête.
+                <div class="poll-bar">
+                  <div class="poll-fill"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-metrics">
+            <div class="metric">
+              <strong>999+</strong>
+              <span>promesses en circulation</span>
+            </div>
+            <div class="metric">
+              <strong>3</strong>
+              <span>vraies idées par décennie</span>
+            </div>
+            <div class="metric">
+              <strong>0</strong>
+              <span>faute reconnue publiquement</span>
+            </div>
+          </div>
+
+          <div class="profile-quote connard-text">
+            « Je vous ai compris, surtout quand ça m’arrange. »
+          </div>
+          <div class="profile-quote lucid-text">
+            « Si ce site te paraît crédible, pose-toi des questions sur les vitrines qu’on te sert partout. »
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRAMME -->
+    <section id="programme">
+      <div class="section-label">programme officiel</div>
+      <div class="section-title">Ce que je dis que je vais faire</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="pill">Version vitrine</div>
+          <div class="duo">
+            <div class="duo-box">
+              <div class="duo-title">1. « Redonner le pouvoir au peuple »</div>
+              <p class="duo-text connard-text">
+                Consultations citoyennes, plateformes participatives, selfies sur les marchés :
+                je multiplie les symboles de proximité. Les décisions importantes, elles, restent
+                bien au chaud, loin des gens qui en subissent les conséquences.
+              </p>
+              <p class="duo-text lucid-text">
+                Le slogan parfait : il rassure tout le monde et ne veut strictement rien dire
+                si on ne précise pas les mécanismes concrets.  
+                À repérer dans tous les programmes : promesse de « pouvoir » sans explication
+                sur les contre-pouvoirs.
+              </p>
+            </div>
+            <div class="duo-box">
+              <div class="duo-title">2. « Moderniser sans laisser personne de côté »</div>
+              <p class="duo-text connard-text">
+                J’adore cette phrase : elle sonne bien, elle brille, elle ne s’engage sur rien.
+                Elle me permet d’annoncer des réformes brutales en les emballant dans de la
+                novlangue bien repassée.
+              </p>
+              <p class="duo-text lucid-text">
+                Formule coussin : on promet la révolution et le statu quo en même temps.  
+                À chaque fois que tu lis ça, demande-toi simplement : qui gagne quoi, qui perd quoi ?
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="pill">Mode d’emploi</div>
+          <ul class="list-clean">
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div class="connard-text">
+                <strong>Toujours général, jamais concret.</strong><br/>
+                Plus c’est flou, plus ça passe à la télé. Je laisse les détails pour plus tard, quand plus personne ne regarde.
+              </div>
+              <div class="lucid-text">
+                <strong>Repère le flou organisé.</strong><br/>
+                Un programme qui tourne autour de concepts vagues sans mesures vérifiables est surtout un bon exercice de style.
+              </div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div class="connard-text">
+                <strong>Je suis toujours d’accord… après coup.</strong><br/>
+                Quand une idée devient populaire, j’explique que c’était la mienne depuis le début. Personne ne va vérifier.
+              </div>
+              <div class="lucid-text">
+                <strong>Observe les retournements magiques.</strong><br/>
+                Le vrai indicateur : ce que quelqu’un défend quand c’est risqué, pas quand c’est déjà à la mode.
+              </div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div class="connard-text">
+                <strong>Je dis « nous », mais je pense « moi ».</strong><br/>
+                « Nous avons décidé », « nous pensons que » : derrière, il y a surtout mon intérêt et celui de mon camp.
+              </div>
+              <div class="lucid-text">
+                <strong>Traduis les phrases.</strong><br/>
+                Remplace mentalement « nous » par « moi » et regarde si la phrase tient encore debout.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTRADICTIONS -->
+    <section id="contradictions">
+      <div class="section-label">cohérence très relative</div>
+      <div class="section-title">Mes contradictions, parfaitement assumées (en interne)</div>
+      <div class="card">
+        <div class="table">
+          <div class="table-row table-header">
+            <div>Thème</div>
+            <div>Ce que je dis</div>
+            <div>Ce que ça veut dire</div>
+          </div>
+          <div class="table-row">
+            <div>Transparence</div>
+            <div class="connard-text">« Tout sera clair, tout sera publié. »</div>
+            <div class="lucid-text">« Nous publierons surtout ce qui nous arrange, bien présenté. »</div>
+            <div class="connard-text">« Nous avons déjà fait beaucoup, regardez ce rapport. »</div>
+          </div>
+          <div class="table-row">
+            <div></div>
+            <div class="lucid-text">
+              « Nous publierons surtout ce qui nous arrange, bien présenté. »
+            </div>
+            <div class="lucid-text">
+              Regarde toujours ce qui manque, pas seulement ce qui est mis en avant.
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div>Écoute</div>
+            <div class="connard-text">« Je vous écoute. »</div>
+            <div class="connard-text">« Je prends la parole tout de suite après pour conclure à ma façon. »</div>
+          </div>
+          <div class="table-row">
+            <div></div>
+            <div class="lucid-text">« Je vous laisse parler, mais la décision est déjà prise. »</div>
+            <div class="lucid-text">
+              L’écoute réelle se voit dans les changements concrets, pas dans le nombre de réunions.
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div>Responsabilité</div>
+            <div class="connard-text">« J’assume tout. »</div>
+            <div class="connard-text">« …mais précisément rien, en détail. »</div>
+          </div>
+          <div class="table-row">
+            <div></div>
+            <div class="lucid-text">« J’assume les phrases, pas les conséquences. »</div>
+            <div class="lucid-text">
+              Cherche la phrase qui dit explicitement : « voici ce que j’ai mal fait, et ce que je vais changer. »
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCANDALES -->
+    <section id="scandales">
+      <div class="section-label">scandales & damage control</div>
+      <div class="section-title">Comment j’ai survécu à tout ça</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <p class="connard-text">
+            Un vrai connard en politique ne craint pas le scandale : il le traverse,
+            le recycle, et finit par l’utiliser comme preuve de sa « résistance ».
+          </p>
+          <p class="lucid-text">
+            Ici, pas de vraie autobiographie : juste une <strong>liste de techniques</strong>
+            qu’on retrouve dans presque tous les scandales politiques.
+          </p>
+          <div class="timeline">
+            <div class="timeline-item">
+              <strong>Étape 1 : Minimiser</strong><br/>
+              D’abord, ce n’est « pas grave ». Une erreur, un détail, un malentendu.
+            </div>
+            <div class="timeline-item">
+              <strong>Étape 2 : Diluer</strong><br/>
+              « Tout le monde fait ça », « le système est comme ça », « c’est plus compliqué ».
+            </div>
+            <div class="timeline-item">
+              <strong>Étape 3 : Déplacer</strong><br/>
+              On met en avant une autre histoire, plus choquante ou plus spectaculaire.
+            </div>
+            <div class="timeline-item">
+              <strong>Étape 4 : Retourner</strong><br/>
+              Devenir la victime : « chasse aux sorcières », « cabale », « procès médiatique ».
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="connard-text">
+            La clé, c’est que l’attention se fatigue plus vite que ma carrière.  
+            Si je tiens quelques semaines, je peux revenir comme si de rien n’était.
+          </p>
+          <p class="lucid-text">
+            La clé, pour toi, c’est de reconnaître ce scénario quand tu le vois
+            et de garder la mémoire un peu plus longtemps que le cycle médiatique.
+          </p>
+          <ul class="list-clean">
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Astuce de survie :</strong> toujours avoir un « sujet suivant » prêt à sortir.
+              </div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Astuce lucide :</strong> noter quelque part les affaires non résolues, et regarder qui en profite.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- META / MODE LUCIDE -->
+    <section id="meta">
+      <div class="section-label">mode lucide</div>
+      <div class="section-title">Ce site comme arme anti-connards</div>
+      <div class="grid-2">
+        <div class="card">
+          <p>
+            Tu peux utiliser ce site comme :
+          </p>
+          <ul class="list-clean">
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Un miroir</strong> : si tu vois ce ton et ces techniques
+                dans la vraie vie, ton radar fonctionne.
+              </div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Un filtre</strong> : pour décoder les programmes trop beaux,
+                les discours trop propres, les mea culpa trop contrôlés.
+              </div>
+            </li>
+            <li class="list-item">
+              <div class="list-dot"></div>
+              <div>
+                <strong>Un exercice</strong> : réécris des phrases creuses en version
+                lucide, comme dans le mode alterné de ce site.
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="tiny">
+            Important : ce site ne vise <strong>aucune personne réelle en particulier</strong>.  
+            C’est un condensé de comportements et de tics qu’on retrouve un peu partout
+            dans la vie publique.  
+            Si tu y reconnais quelqu’un, c’est que le problème dépasse largement cette page HTML.
+          </p>
+          <p class="tiny" style="margin-top:.6rem;">
+            Tu peux modifier ce fichier, enlever le côté connard et en faire un
+            portfolio de <em>politicien honnête</em>. Ça demandera surtout de rédiger
+            des choses concrètes, vérifiables, et de reconnaître clairement les limites.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Site statique : aucun cookie, aucun tracking, juste une caricature.
+    </p>
+    <p class="tiny">
+      Si tu l’ouvres depuis une clé USB, il fonctionne quand même.  
+      Le véritable test, c’est ce que tu reconnaîtras ensuite dans le monde réel.
+    </p>
+  </footer>
+
+  <script>
+    // Smooth scroll
+    document.querySelectorAll("nav a[data-scroll], #btnScrollProgramme").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const targetId = link.getAttribute("data-scroll") || "#programme";
+        const el = document.querySelector(targetId);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      });
+    });
+
+    // Mode lucide
+    const toggle = document.getElementById("modeToggle");
+    const modeLabel = document.getElementById("modeLabel");
+    function updateModeLabel() {
+      if (document.body.classList.contains("lucid")) {
+        modeLabel.textContent = "Mode lucide";
+      } else {
+        modeLabel.textContent = "Mode connard";
+      }
+    }
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("lucid");
+      updateModeLabel();
+    });
+    updateModeLabel();
+
+    // Punchline
+    const punch = "Je suis l’avenir dont je vais surtout profiter.";
+    document.getElementById("btnCopyPunch")?.addEventListener("click", async () => {
+      const btn = document.getElementById("btnCopyPunch");
+      try {
+        await navigator.clipboard.writeText(punch);
+        const old = btn.textContent;
+        btn.textContent = "Punchline copiée ✔";
+        setTimeout(() => btn.textContent = old, 1600);
+      } catch {
+        alert("Punchline : " + punch);
+      }
+    });
+  </script>
+</body>
+</html>
