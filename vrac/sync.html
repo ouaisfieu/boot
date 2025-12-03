@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>µServices Async — Petites annonces numériques (archivées & intranets classifiés)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #05060a;
+      --bg-alt: #0c0f18;
+      --card: #111827;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.14);
+      --accent-strong: #f97316;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --radius-xl: 18px;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.8);
+      --shadow-chip: 0 10px 25px rgba(15, 23, 42, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1200px;
+      padding: 24px 16px 40px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: conic-gradient(from 210deg, #38bdf8, #22c55e, #f97316, #38bdf8);
+      padding: 2px;
+    }
+
+    .logo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 0, #1f2933, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e5e7eb;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0.03em;
+    }
+
+    .title-block p {
+      margin: 2px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-chip);
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.08s ease-out;
+    }
+
+    .chip span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .chip[data-active="true"] {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 860px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, #1f2937 0, #020617 55%);
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 16px 14px;
+      backdrop-filter: blur(22px);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 10px;
+    }
+
+    .panel-header h2 {
+      font-size: 15px;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+    }
+
+    .panel-header span.count {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .ads-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 460px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .ad-card {
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.85));
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 12px 12px 10px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 10px;
+      row-gap: 4px;
+      transition: border-color 0.12s, transform 0.09s ease-out, background 0.12s, opacity 0.12s;
+    }
+
+    .ad-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.97));
+    }
+
+    .ad-card[data-active="true"] {
+      border-color: var(--accent-strong);
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.15), var(--shadow-soft);
+    }
+
+    .ad-card[data-status="soldout"] {
+      opacity: 0.6;
+    }
+
+    .ad-card[data-status="soldout"]:hover {
+      opacity: 0.8;
+    }
+
+    .ad-main-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .ad-company {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .ad-meta {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 2px 7px 3px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+    }
+
+    .badge.level-debutant { border-color: #22c55e; color: #bbf7d0; }
+    .badge.level-inter { border-color: #38bdf8; color: #bae6fd; }
+    .badge.level-avance { border-color: #f97316; color: #fed7aa; }
+
+    .badge-async {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .badge-micro {
+      border-color: #a855f7;
+      color: #e9d5ff;
+      background: rgba(168, 85, 247, 0.08);
+    }
+
+    .badge-status-soldout {
+      border-color: rgba(248, 113, 113, 0.9);
+      color: #fecaca;
+      background: rgba(127, 29, 29, 0.5);
+    }
+
+    .badge-status-available {
+      border-color: #22c55e;
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.12);
+    }
+
+    .price {
+      font-size: 13px;
+      font-weight: 600;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .price.soldout {
+      text-decoration: line-through;
+      color: #9ca3af;
+    }
+
+    .duration {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .ad-detail {
+      display: none;
+    }
+
+    .ad-detail[data-visible="true"] {
+      display: block;
+    }
+
+    .detail-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .detail-title {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .detail-company {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .detail-body {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #d1d5db;
+      margin-bottom: 10px;
+      white-space: pre-line;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .meta-row span.label {
+      color: #9ca3af;
+    }
+
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      box-shadow: 0 12px 25px rgba(8, 47, 73, 0.8);
+      margin-bottom: 12px;
+    }
+
+    .github-link:hover {
+      background: rgba(8, 47, 73, 0.9);
+    }
+
+    .github-link svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .comment-section {
+      border-top: 1px solid rgba(55, 65, 81, 0.8);
+      padding-top: 10px;
+      margin-top: 6px;
+    }
+
+    .comment-section h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+
+    .comment {
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .comment-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .comment-meta span.author {
+      font-weight: 500;
+    }
+
+    .comment[data-tone="salty"] {
+      border-color: rgba(248, 113, 113, 0.7);
+      background: radial-gradient(circle at top left, rgba(127, 29, 29, 0.7), rgba(15, 23, 42, 0.95));
+      color: #fee2e2;
+    }
+
+    .comment[data-tone="salty"] .comment-meta {
+      color: #fecaca;
+    }
+
+    .comment[data-tone="meta"] {
+      border-style: dashed;
+      border-color: rgba(148, 163, 184, 0.8);
+      font-style: italic;
+    }
+
+    .tag-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--muted);
+    }
+
+    .hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .hint strong {
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="logo">
+        <div class="logo-mark">
+          <div class="logo-inner">µA</div>
+        </div>
+        <div class="title-block">
+          <h1>µServices Async</h1>
+          <p>
+            Petites annonces de micro-prestations numériques 100% distanciel asynchrone.
+            Les anciennes missions sont complètes (consultables), seules restent les intranets classifiés.
+          </p>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <button class="chip" data-filter="all" data-active="true">
+          <span class="dot"></span> Tout voir
+        </button>
+        <button class="chip" data-filter="available">
+          <span class="dot"></span> Disponibles (intranets)
+        </button>
+        <button class="chip" data-filter="soldout">
+          <span class="dot"></span> Archivées (sold out)
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Liste d'annonces -->
+      <section class="panel" aria-label="Liste d'annonces">
+        <div class="panel-header">
+          <h2>Annonces</h2>
+          <span class="count" id="ad-count">0 annonce</span>
+        </div>
+        <div class="ads-list" id="ads-list">
+          <!-- ANCIENNES ANNONCES — SOLD OUT -->
+
+          <article class="ad-card" data-id="ad1" data-level="debutant" data-status="soldout">
+            <div>
+              <div class="ad-main-title">Relecture bienveillante de votre premier script</div>
+              <div class="ad-company">Indie Mentor·e — collectif anti-bullshit job</div>
+              <div class="ad-meta">
+                <span>Python, JS, Bash</span>
+                <span>Max 80 lignes</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">7 € / script</div>
+              <div class="duration">Complet — consultable</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad2" data-level="intermediaire" data-status="soldout">
+            <div>
+              <div class="ad-main-title">Micro-audit de performance front minimaliste</div>
+              <div class="ad-company">Studio Latence Zéro</div>
+              <div class="ad-meta">
+                <span>Core Web Vitals</span>
+                <span>HTML/CSS/JS pur</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">25 €</div>
+              <div class="duration">Complet — consultable</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad3" data-level="avance" data-status="soldout">
+            <div>
+              <div class="ad-main-title">Robot de scraping éthique ultra-light</div>
+              <div class="ad-company">Coopérative Copyleft &amp; Café</div>
+              <div class="ad-meta">
+                <span>Python / Go</span>
+                <span>1 site ciblé</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">39 €</div>
+              <div class="duration">Complet — consultable</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad4" data-level="intermediaire" data-status="soldout">
+            <div>
+              <div class="ad-main-title">Générateur de faux contenus corporate absurdes</div>
+              <div class="ad-company">DystopiDev Incognito</div>
+              <div class="ad-meta">
+                <span>JSON, Markdown</span>
+                <span>API-ready</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">19 €</div>
+              <div class="duration">Complet — consultable</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad5" data-level="debutant" data-status="soldout">
+            <div>
+              <div class="ad-main-title">Pack favicon + manifest pour votre site statique</div>
+              <div class="ad-company">Micro-Agence Clé-USB</div>
+              <div class="ad-meta">
+                <span>PNG + SVG</span>
+                <span>Light mode / dark mode</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">9 €</div>
+              <div class="duration">Complet — consultable</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad6" data-level="avance" data-status="soldout">
+            <div>
+              <div class="ad-main-title">Hardening express de votre dépôt GitHub public</div>
+              <div class="ad-company">Noyau Dur Sécurité</div>
+              <div class="ad-meta">
+                <span>CI, secrets, licences</span>
+                <span>Rapport détaillé</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">59 €</div>
+              <div class="duration">Complet — consultable</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad7" data-level="intermediaire" data-status="soldout">
+            <div>
+              <div class="ad-main-title">Mini-atelier vidéo asynchrone : “Git sans drama”</div>
+              <div class="ad-company">Async School</div>
+              <div class="ad-meta">
+                <span>3 capsules de 7 min</span>
+                <span>Exercices guidés</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">15 €</div>
+              <div class="duration">Complet — consultable</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad8" data-level="debutant" data-status="soldout">
+            <div>
+              <div class="ad-main-title">Traduction “anti-jargon” de vos specs produit</div>
+              <div class="ad-company">Collectif Anti-PowerPoint</div>
+              <div class="ad-meta">
+                <span>FR / EN</span>
+                <span>Max 4 pages</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">22 €</div>
+              <div class="duration">Complet — consultable</div>
+            </div>
+          </article>
+
+          <!-- NOUVELLES ANNONCES — DISPONIBLES : TRI D’UN BOUT D’INTERNET -> INTRANET CLASSIFIÉ -->
+
+          <article class="ad-card" data-id="ad9" data-level="debutant" data-status="available">
+            <div>
+              <div class="ad-main-title">Trier votre “bazar de liens” en mini intranet thématique</div>
+              <div class="ad-company">Collectif Classeur Humain</div>
+              <div class="ad-meta">
+                <span>Favoris, captures, liens</span>
+                <span>Intranet HTML statique</span>
+              </div>
+            </div>
+            <div>
+              <div class="price">29 €</div>
+              <div class="duration">Encore dispo</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad10" data-level="intermediaire" data-status="available">
+            <div>
+              <div class="ad-main-title">Curateur d’un bout d’internet → intranet classifié par usages</div>
+              <div class="ad-company">IntraNomade</div>
+              <div class="ad-meta">
+                <span>Docs, articles, vidéos</span>
+                <span>Tags + sections</span>
+              </div>
+            </div>
+            <div>
+              <div class="price">49 €</div>
+              <div class="duration">Encore dispo</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad11" data-level="intermediaire" data-status="available">
+            <div>
+              <div class="ad-main-title">Cartographie d’un sujet : de “trop de liens” à intranet clair</div>
+              <div class="ad-company">Cartographes du Web Lent</div>
+              <div class="ad-meta">
+                <span>Thème unique</span>
+                <span>Plan + arborescence</span>
+              </div>
+            </div>
+            <div>
+              <div class="price">59 €</div>
+              <div class="duration">Encore dispo</div>
+            </div>
+          </article>
+
+          <article class="ad-card" data-id="ad12" data-level="avance" data-status="available">
+            <div>
+              <div class="ad-main-title">Transformation d’un export forum / Discord en intranet classifié</div>
+              <div class="ad-company">Archives Alternatives</div>
+              <div class="ad-meta">
+                <span>Export texte / HTML</span>
+                <span>Fils → dossiers</span>
+              </div>
+            </div>
+            <div>
+              <div class="price">79 €</div>
+              <div class="duration">Encore dispo</div>
+            </div>
+          </article>
+        </div>
+        <p class="hint">
+          Astuce : les annonces marquées “Sold out” sont complètes mais restent consultables.
+          Les seules prestations encore disponibles consistent à trier un bout d’internet pour en faire un
+          intranet classifié, sans SaaS opaque ni usine à gaz.
+        </p>
+      </section>
+
+      <!-- Détail d'annonce -->
+      <section class="panel" aria-label="Détail de l'annonce sélectionnée">
+        <!-- Détail Annonce 1 (sold out) -->
+        <article class="ad-detail" id="ad1" data-visible="true" data-status="soldout">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Relecture bienveillante de votre premier script</h2>
+              <div class="detail-company">Indie Mentor·e — collectif anti-bullshit job</div>
+              <div class="detail-tags">
+                <span class="badge level-debutant">Débutant</span>
+                <span class="badge-status-soldout">Sold out (archive)</span>
+                <span class="badge-micro">Micro-prestation</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">7 € / script</div>
+              <div class="duration">Mission complète</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Mission terminée. L’annonce reste visible pour t’inspirer et montrer qu’on peut
+            faire de la pédagogie sans humilier les gens.
+
+            Vous m’envoyiez votre script (max 80 lignes), je renvoyais :
+            • des commentaires clairs directement dans le code,
+            • une version réécrite “propre” à côté,
+            • un mini récap des bonnes pratiques adaptées à votre niveau.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Stack :</span> Python, JavaScript ou Bash</span>
+            <span><span class="label">Statut :</span> complet — plus de nouvelles demandes</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/indie-mentor/relecture-premier-script" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+              0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+              -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+              -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+              2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+              2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+              8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/>
+            </svg>
+            Workflow historique sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">dev_en_burnout</span>
+                <span class="time">il y a 2 jours</span>
+              </div>
+              <div class="comment-body">
+                Plus utile que toutes les “revues de code” toxiques de mon entreprise.
+                Là-bas on m’humilie en réunion, ici on m’explique. Cherchez l’erreur.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">troll_social</span>
+                <span class="time">il y a 5 heures</span>
+              </div>
+              <div class="comment-body">
+                Pendant ce temps, des grosses boîtes facturent 1200 € la même chose dans un “bootcamp”
+                sponsorisé. Sérieusement, arrêtez de poster vos annonces corporate ici :
+                votre “culture feedback” c’est juste du flicage avec des emojis.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="meta">
+              <div class="comment-meta">
+                <span class="author">_instance_du_jeu</span>
+                <span class="time">à l’instant</span>
+              </div>
+              <div class="comment-body">
+                Rappel : chaque annonce archivée est un fossile de la dystopie.
+                Celles qui restent parlent de reprendre le contrôle sur ce qu’on lit.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 2 (sold out) -->
+        <article class="ad-detail" id="ad2" data-status="soldout">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Micro-audit de performance front minimaliste</h2>
+              <div class="detail-company">Studio Latence Zéro</div>
+              <div class="detail-tags">
+                <span class="badge level-inter">Intermédiaire</span>
+                <span class="badge-status-soldout">Sold out (archive)</span>
+                <span class="badge-micro">Micro-audit</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">25 €</div>
+              <div class="duration">Mission complète</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Mission complète, mais doc toujours accessible.
+
+            On recevait un site statique (ou un zip), on renvoyait :
+            • un rapport concret pour alléger le CSS,
+            • des suggestions pour couper le JS inutile,
+            • quelques corrections pour passer les Core Web Vitals sans framework obèse.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Livrables :</span> rapport PDF + diff de fichiers</span>
+            <span><span class="label">Statut :</span> complet, modèle réutilisable depuis le repo</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/studio-latence-zero/micro-audit-front" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Template de rapport sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">ancien_consultant</span>
+                <span class="time">il y a 6 h</span>
+              </div>
+              <div class="comment-body">
+                Je faisais ça en “consulting premium” pour une ESN.
+                Facturé 850 € la journée, enrobé de buzzwords et de slides moches.
+                Ici aucune direction marketing pour polluer le boulot, c’est reposant.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">site_vitrine_93</span>
+                <span class="time">hier</span>
+              </div>
+              <div class="comment-body">
+                Mon site passe de “ça rame” à “ça charge instantanément”.
+                Si seulement ma boîte pouvait comprendre que l’optimisation, ce n’est pas rajouter un dashboard.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 3 (sold out) -->
+        <article class="ad-detail" id="ad3" data-status="soldout">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Robot de scraping éthique ultra-light</h2>
+              <div class="detail-company">Coopérative Copyleft &amp; Café</div>
+              <div class="detail-tags">
+                <span class="badge level-avance">Avancé</span>
+                <span class="badge-status-soldout">Sold out (archive)</span>
+                <span class="badge-micro">Micro-bot</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">39 €</div>
+              <div class="duration">Mission complète</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Mission terminée, mais le concept survit.
+
+            Robot qui :
+            • respecte le robots.txt,
+            • limite les requêtes,
+            • stocke les données dans un format simple (CSV, JSON),
+            pour montrer qu’on peut analyser le web sans se prendre pour une méga-plateforme de surveillance.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Langages :</span> Python (requests + selectolax) ou Go</span>
+            <span><span class="label">Inclut :</span> README + script de lancement</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/coop-copyleft/micro-scraper-ethique" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Exemple de bot sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">no-data-harvester</span>
+                <span class="time">il y a 3 j</span>
+              </div>
+              <div class="comment-body">
+                Merci d’insister sur le mot “éthique”.
+                Contrairement à certaines plate-formes qui aspirent tout le web
+                puis jouent les victimes quand les gens se plaignent.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">chercheur_indé</span>
+                <span class="time">il y a 20 h</span>
+              </div>
+              <div class="comment-body">
+                Parfait pour monter un dataset propre.
+                Beaucoup plus sain que les “labs” des grandes boîtes qui font n’importe quoi,
+                puis se cachent derrière des mots genre “innovation responsable”.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 4 (sold out, avec <ipsum>ipsum</ipsum> en gras) -->
+        <article class="ad-detail" id="ad4" data-status="soldout">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Générateur de faux contenus corporate absurdes</h2>
+              <div class="detail-company">DystopiDev Incognito</div>
+              <div class="detail-tags">
+                <span class="badge level-inter">Intermédiaire</span>
+                <span class="badge-status-soldout">Sold out (archive)</span>
+                <span class="badge-micro">Micro-outil</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">19 €</div>
+              <div class="duration">Mission complète</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Marre des communiqués internes vides de sens ?
+            Ce petit générateur produisait à la demande :
+            • des phrases vides mais très sérieuses,
+            • des objectifs SMART totalement déconnectés du réel,
+            • des “roadmaps” qui n’aboutiront jamais.
+
+            Exemple de token que le générateur pouvait insérer en mode “glitch” :
+            <strong>&lt;ipsum&gt;ipsum&lt;/ipsum&gt;</strong>
+            (ça casse les slides et rappelle que quelque chose cloche dans la matrice).
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Format :</span> CLI Node.js + fichier de config</span>
+            <span><span class="label">Licence :</span> MIT — réutilisable</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/dystopidev/generateur-absurd-corporate" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Repo d’exemple sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">RH_visionnaire</span>
+                <span class="time">il y a 1 h</span>
+              </div>
+              <div class="comment-body">
+                Certaines phrases générées sont INDISTINGUABLES de nos mails internes.
+                Gênant. Mais drôle. Notre direction pourrait acheter ce script et personne ne verrait la différence.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">troll_anonyme</span>
+                <span class="time">il y a 3 h</span>
+              </div>
+              <div class="comment-body">
+                Les services com’ corporate devraient au moins créditer leurs générateurs de vide.
+                Là c’est du plagiat d’absurde. Payé très cher.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 5 (sold out) -->
+        <article class="ad-detail" id="ad5" data-status="soldout">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Pack favicon + manifest pour votre site statique</h2>
+              <div class="detail-company">Micro-Agence Clé-USB</div>
+              <div class="detail-tags">
+                <span class="badge level-debutant">Débutant</span>
+                <span class="badge-status-soldout">Sold out (archive)</span>
+                <span class="badge-micro">Micro-pack</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">9 €</div>
+              <div class="duration">Mission complète</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Pack minimaliste pour donner une identité aux sites statiques.
+            Rien de magique : juste ce que les générateurs en ligne compliquent inutilement.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Entrée :</span> simple description + vos couleurs</span>
+            <span><span class="label">Sortie :</span> zip prêt à déposer dans /public</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/micro-agence-cle-usb/pack-favicon-manifest" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Exemple de pack sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">no_framework_plz</span>
+                <span class="time">il y a 7 h</span>
+              </div>
+              <div class="comment-body">
+                Les générateurs en ligne sont blindés de trackers.
+                Ici je lis le code, je le mets sur ma clé USB et basta.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 6 (sold out) -->
+        <article class="ad-detail" id="ad6" data-status="soldout">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Hardening express de votre dépôt GitHub public</h2>
+              <div class="detail-company">Noyau Dur Sécurité</div>
+              <div class="detail-tags">
+                <span class="badge level-avance">Avancé</span>
+                <span class="badge-status-soldout">Sold out (archive)</span>
+                <span class="badge-micro">Micro-audit</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">59 €</div>
+              <div class="duration">Mission complète</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Audit rapide pour taper sur les vrais problèmes plutôt que sur des “process sécurité”
+            écrits par des gens qui ne committent jamais rien.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Conditions :</span> dépôt public ou accès temporaire</span>
+            <span><span class="label">Inclut :</span> checklist réutilisable</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/noyau-dur-securite/hardening-github-express" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Checklist publique sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">secops_fatigue</span>
+                <span class="time">il y a 9 j</span>
+              </div>
+              <div class="comment-body">
+                Les boîtes adorent parler de “maturité sécurité” pendant qu’elles laissent traîner des secrets
+                dans des repos publics. Mais ça, bizarrement, ça ne va jamais dans les slides au COMEX.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 7 (sold out) -->
+        <article class="ad-detail" id="ad7" data-status="soldout">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Mini-atelier vidéo asynchrone : “Git sans drama”</h2>
+              <div class="detail-company">Async School</div>
+              <div class="detail-tags">
+                <span class="badge level-inter">Intermédiaire</span>
+                <span class="badge-status-soldout">Sold out (archive)</span>
+                <span class="badge-micro">Micro-formation</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">15 €</div>
+              <div class="duration">Session complète</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Trois vidéos pour comprendre Git sans transformer chaque merge en drame collectif.
+            L’atelier est complet, mais le repo d’exercices est toujours dispo pour s’entraîner.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Support :</span> PDF récap + commandes essentielles</span>
+            <span><span class="label">Statut :</span> plus d’inscriptions, ressources ouvertes</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/async-school/git-sans-drama" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Repo d’exercices sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">git_terrorise</span>
+                <span class="time">il y a 4 j</span>
+              </div>
+              <div class="comment-body">
+                Mon entreprise m’a imposé une “certification” Git avec 80 slides.
+                J’ai plus appris avec ces trois petites vidéos et un vrai repo.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 8 (sold out) -->
+        <article class="ad-detail" id="ad8" data-status="soldout">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Traduction “anti-jargon” de vos specs produit</h2>
+              <div class="detail-company">Collectif Anti-PowerPoint</div>
+              <div class="detail-tags">
+                <span class="badge level-debutant">Débutant</span>
+                <span class="badge-status-soldout">Sold out (archive)</span>
+                <span class="badge-micro">Micro-traduction</span>
+              </div>
+            </div>
+            <div>
+              <div class="price soldout">22 €</div>
+              <div class="duration">Mission complète</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Vous envoyiez vos specs saturées de jargon,
+            vous récupériez une version compréhensible par des humains, avec des schémas ASCII.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Langues :</span> français &lt;&gt; anglais</span>
+            <span><span class="label">Longueur :</span> max 4 pages A4</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/collectif-anti-ppt/traduction-anti-jargon" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Exemples de conversions sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">trop_de_kpi</span>
+                <span class="time">il y a 10 h</span>
+              </div>
+              <div class="comment-body">
+                J’ai découvert que ma fiche de poste, traduite en langage normal, tenait sur 4 lignes.
+                Le reste, c’était du théâtre pour dirigeants en quête de buzzwords.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- === NOUVELLES ANNONCES DISPONIBLES : TRI D’UN BOUT D’INTERNET === -->
+
+        <!-- Détail Annonce 9 -->
+        <article class="ad-detail" id="ad9" data-status="available">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Trier votre “bazar de liens” en mini intranet thématique</h2>
+              <div class="detail-company">Collectif Classeur Humain</div>
+              <div class="detail-tags">
+                <span class="badge level-debutant">Débutant</span>
+                <span class="badge-status-available">Disponible</span>
+                <span class="badge-micro">Intranet statique</span>
+              </div>
+            </div>
+            <div>
+              <div class="price">29 €</div>
+              <div class="duration">Encore dispo</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Vous m’envoyez un bout d’internet :
+            • votre fichier de favoris exporté,
+            • un document texte avec une liste de liens,
+            • quelques notes en vrac.
+
+            Je transforme tout ça en un mini intranet HTML :
+            • pages classées par thème,
+            • sections “à lire”, “référence”, “urgent plus tard”,
+            • navigation simple, lisible hors ligne, pensé pour vivre sur une clé USB ou un dossier partagé.
+
+            Pas de SaaS, pas de compte à créer, pas de tracking : juste un petit site statique qui remet de l’ordre
+            dans le chaos de vos onglets.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Entrée :</span> export de favoris / liste de liens</span>
+            <span><span class="label">Sortie :</span> intranet HTML + README</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/classeur-humain/intranet-favoris-minimal" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Structure d’intranet exemple sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">tab-collector</span>
+                <span class="time">il y a 2 j</span>
+              </div>
+              <div class="comment-body">
+                500 onglets ouverts, transformés en petit intranet sobre.
+                Je ne pensais pas que “fermer des onglets” pouvait me faire autant de bien.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">anti_portail_saas</span>
+                <span class="time">il y a 3 h</span>
+              </div>
+              <div class="comment-body">
+                Incroyable : on peut organiser de l’info SANS rajouter un “portail collaboratif 360°”
+                vendu par une boîte qui ne lit jamais rien de ce qu’elle stocke.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 10 -->
+        <article class="ad-detail" id="ad10" data-status="available">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Curateur d’un bout d’internet → intranet classifié par usages</h2>
+              <div class="detail-company">IntraNomade</div>
+              <div class="detail-tags">
+                <span class="badge level-inter">Intermédiaire</span>
+                <span class="badge-status-available">Disponible</span>
+                <span class="badge-micro">Intranet classifié</span>
+              </div>
+            </div>
+            <div>
+              <div class="price">49 €</div>
+              <div class="duration">Encore dispo</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Vous avez “un bout d’internet” pour votre équipe :
+            docs internes dans le cloud, liens vers vidéos, articles, tutos, threads de blog…
+            Personne ne sait plus où cliquer.
+
+            J’en fais un intranet classifié par usages :
+            • rubriques “Onboarding”, “Référence”, “Rituels de l’équipe”, “À questionner”,
+            • badges pour marquer ce qui est vraiment critique vs. pure déco cosmétique,
+            • version HTML qui tourne dans n’importe quel navigateur sans login.
+
+            Bonus : je refuse d’intégrer les slides purement décoratives.
+            Si votre entreprise tient à ses “visions inspirantes” vides, elle peut les remettre elle-même.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Entrée :</span> liens + exports PDF/HTML</span>
+            <span><span class="label">Sortie :</span> intranet structuré, prêt à copier-coller</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/intranomade/intranet-par-usages" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Gabarit d’intranet par usages sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">nouvel_arrivant</span>
+                <span class="time">hier</span>
+              </div>
+              <div class="comment-body">
+                Onboarding dans ma boîte : 14 liens vers des “portails” différents.
+                On a tout regroupé dans un intranet statique, et soudain, tout a du sens.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">troll_intranet</span>
+                <span class="time">il y a 3 h</span>
+              </div>
+              <div class="comment-body">
+                Les consultants ont vendu un “digital workplace” hors de prix.
+                Ce mini intranet fait mieux en une page HTML. Quelqu’un va finir par s’énerver au COMEX.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 11 -->
+        <article class="ad-detail" id="ad11" data-status="available">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Cartographie d’un sujet : de “trop de liens” à intranet clair</h2>
+              <div class="detail-company">Cartographes du Web Lent</div>
+              <div class="detail-tags">
+                <span class="badge level-inter">Intermédiaire</span>
+                <span class="badge-status-available">Disponible</span>
+                <span class="badge-micro">Intranet thématique</span>
+              </div>
+            </div>
+            <div>
+              <div class="price">59 €</div>
+              <div class="duration">Encore dispo</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Vous travaillez sur un sujet précis (ex : “numérique soutenable”, “organisation du travail”, “IA + éthique”)
+            et vous avez accumulé :
+            • des articles,
+            • des rapports PDF,
+            • des threads, vidéos, podcasts.
+
+            Je prends ce bout d’internet et j’en fais un intranet thématique :
+            • arborescence simple (Débuter / Approfondir / Critiques / Alternatives),
+            • repères visuels pour distinguer la propagande de la réflexion critique,
+            • fichiers HTML que vous pouvez ouvrir dans un simple navigateur, hors connexion.
+
+            L’idée : transformer le flux infini en bibliothèque modeste mais habitable.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Entrée :</span> liste de liens + éventuels fichiers</span>
+            <span><span class="label">Sortie :</span> intranet /dossier prêt à ziper</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/web-lent/cartographie-intranet-thematique" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Exemple d’intranet thématique sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">veille_fatiguee</span>
+                <span class="time">il y a 1 j</span>
+              </div>
+              <div class="comment-body">
+                À force de recevoir des “newsletters de veille” inutiles, je ne retenais plus rien.
+                Cet intranet par thème est mille fois plus efficace que le spam corporatiste.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">troll_veille</span>
+                <span class="time">il y a 2 h</span>
+              </div>
+              <div class="comment-body">
+                Les “veilles stratégiques” des grosses boîtes sont souvent des copier-coller de LinkedIn.
+                Là au moins, quelqu’un lit vraiment avant de classer.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détail Annonce 12 -->
+        <article class="ad-detail" id="ad12" data-status="available">
+          <div class="detail-header">
+            <div>
+              <h2 class="detail-title">Transformation d’un export forum / Discord en intranet classifié</h2>
+              <div class="detail-company">Archives Alternatives</div>
+              <div class="detail-tags">
+                <span class="badge level-avance">Avancé</span>
+                <span class="badge-status-available">Disponible</span>
+                <span class="badge-micro">Intranet d’archives</span>
+              </div>
+            </div>
+            <div>
+              <div class="price">79 €</div>
+              <div class="duration">Encore dispo</div>
+            </div>
+          </div>
+
+          <div class="detail-body">
+            Vous récupérez un export de forum, de canal Discord ou d’un outil de chat
+            (en respectant les conditions d’utilisation, bien sûr) :
+            le résultat brut est illisible.
+
+            Je prends ce bout d’internet conversationnel et je le transforme en intranet d’archives :
+            • regroupement par thèmes et par périodes,
+            • pages “questions fréquentes” extraites des vraies discussions,
+            • liens croisés pour retrouver les décisions cachées dans les fils.
+
+            L’objectif : sortir de l’amnésie organisée, sans dépendre d’un SaaS capricieux.
+          </div>
+
+          <div class="meta-row">
+            <span><span class="label">Entrée :</span> export texte / HTML du forum ou serveur</span>
+            <span><span class="label">Sortie :</span> intranet statique classifié + plan d’index</span>
+          </div>
+
+          <a class="github-link" href="https://github.com/archives-alternatives/intranet-archives-forum" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 
+            0-.19-.01-.82-.01-1.49-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52
+            -.01-.53.63-.01 1.08.59 1.23.83.72 1.22 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64
+            -.92-3.64-4.07 0-.9.31-1.64.82-2.22-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.85a7.33 7.33 0 0 1 
+            2-.28c.68 0 1.37.09 2 .28 1.53-1.07 2.2-.85 2.2-.85.44 1.1.16 1.92.08 2.12.51.58.82 1.32.82 
+            2.22 0 3.16-1.87 3.86-3.65 4.07.29.26.54.77.54 1.56 0 1.13-.01 2.03-.01 2.31 0 .21.15.47.55.39A8 
+            8 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/></svg>
+            Script de génération d’archives sur GitHub
+          </a>
+
+          <div class="comment-section">
+            <h3>Commentaires</h3>
+
+            <div class="comment" data-tone="normal">
+              <div class="comment-meta">
+                <span class="author">ancien_modo</span>
+                <span class="time">il y a 5 h</span>
+              </div>
+              <div class="comment-body">
+                Des années de discussions enfin lisibles autrement que via une barre de recherche foireuse.
+                C’est triste de voir que les grosses plateformes n’y avaient jamais pensé sérieusement.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="salty">
+              <div class="comment-meta">
+                <span class="author">troll_archive</span>
+                <span class="time">il y a 1 h</span>
+              </div>
+              <div class="comment-body">
+                Les entreprises prétendent “capitaliser la connaissance” puis la laissent moisir
+                dans des chats fermés. Un intranet statique fait mieux que leur “knowledge management” buzzwordisé.
+              </div>
+            </div>
+
+            <div class="comment" data-tone="meta">
+              <div class="comment-meta">
+                <span class="author">S_ou_pas</span>
+                <span class="time">maintenant</span>
+              </div>
+              <div class="comment-body">
+                Trier un bout d’internet, c’est déjà refuser le flux infini.
+                Un intranet classifié, c’est une micro-zone libérée de la dystopie.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <p class="hint">
+          <strong>Rappel :</strong> les anciennes annonces sont toutes “Sold out” mais consultables.
+          Les seules prestations encore ouvertes consistent à trier un bout d’internet pour créer
+          un intranet classifié, consultable hors-ligne, copiable sur une clé USB, partageable en petit cercle.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const adCards = document.querySelectorAll(".ad-card");
+    const adDetails = document.querySelectorAll(".ad-detail");
+    const chips = document.querySelectorAll(".chip");
+    const adCount = document.getElementById("ad-count");
+
+    function showAdDetail(id) {
+      adDetails.forEach(d => {
+        d.dataset.visible = (d.id === id).toString();
+      });
+      adCards.forEach(card => {
+        card.dataset.active = (card.dataset.id === id).toString();
+      });
+    }
+
+    adCards.forEach(card => {
+      card.addEventListener("click", () => {
+        showAdDetail(card.dataset.id);
+      });
+    });
+
+    function updateVisibleAds(filter) {
+      let visible = 0;
+      adCards.forEach(card => {
+        const status = card.dataset.status;
+        let match = false;
+
+        if (filter === "all") match = true;
+        else if (filter === "available") match = status === "available";
+        else if (filter === "soldout") match = status === "soldout";
+
+        card.style.display = match ? "grid" : "none";
+        if (match) visible++;
+      });
+      adCount.textContent = visible + " annonce" + (visible > 1 ? "s" : "");
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        const filter = chip.dataset.filter;
+        chips.forEach(c => c.dataset.active = "false");
+        chip.dataset.active = "true";
+        updateVisibleAds(filter);
+
+        // si on filtre sur "disponibles", afficher un détail d’annonce dispo par défaut
+        if (filter === "available") {
+          const firstAvailable = document.querySelector(".ad-card[data-status='available']");
+          if (firstAvailable) showAdDetail(firstAvailable.dataset.id);
+        }
+      });
+    });
+
+    // état initial : tout voir
+    updateVisibleAds("all");
+  </script>
+</body>
+</html>
