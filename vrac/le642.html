@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Le 642 – LA LOOZE ULTIME</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+:root {
+  --text: #e5e7eb;
+  --text-soft: #9ca3af;
+  --accent: #22c55e;
+  --danger: #f97316;
+}
+
+/* RESET & BASE */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #020617;
+}
+
+/* ---- DÉCOR COSMIQUE GARDÉ ---- */
+
+.bg-psy {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(244,114,182,0.9) 0, transparent 35%),
+    radial-gradient(circle at 90% 15%, rgba(45,212,191,0.9) 0, transparent 40%),
+    radial-gradient(circle at 15% 85%, rgba(250,204,21,0.9) 0, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(96,165,250,0.9) 0, transparent 38%),
+    radial-gradient(circle at 50% 50%, rgba(30,64,175,1) 0, rgba(15,23,42,1) 60%);
+  filter: saturate(1.7) contrast(1.2);
+  animation: bgMove 18s ease-in-out infinite alternate;
+}
+
+.bg-psy::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    conic-gradient(from 0deg,
+      rgba(56,189,248,0.32),
+      rgba(250,204,21,0.35),
+      rgba(34,197,94,0.36),
+      rgba(244,114,182,0.4),
+      rgba(56,189,248,0.32));
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  animation: spinSlow 35s linear infinite;
+}
+
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at top, rgba(15,23,42,0.55), rgba(15,23,42,0.98)),
+    radial-gradient(circle at bottom, rgba(15,23,42,0.9), rgba(0,0,0,0.95));
+}
+
+.bg-noise {
+  position: fixed;
+  inset: -50%;
+  z-index: 1;
+  background-image: radial-gradient(circle, rgba(15,23,42,0.4) 1px, transparent 0);
+  background-size: 6px 6px;
+  opacity: 0.25;
+  mix-blend-mode: soft-light;
+  animation: noiseDrift 12s linear infinite alternate;
+}
+
+@keyframes bgMove {
+  0% { transform: scale(1.05) translate(0,0); }
+  50% { transform: scale(1.12) translate(-18px, 12px); }
+  100% { transform: scale(1.07) translate(14px, -10px); }
+}
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes noiseDrift {
+  0%   { transform: translate(0,0); }
+  50%  { transform: translate(30px,-20px); }
+  100% { transform: translate(-20px,20px); }
+}
+
+/* ---- DISCO BALLS / LUMIÈRES ---- */
+
+.disco-orb {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  top: -40px;
+  left: 10%;
+  background:
+    radial-gradient(circle at 30% 20%, #f9fafb 0, #e5e7eb 12%, transparent 60%),
+    conic-gradient(
+      from 0deg,
+      rgba(248,250,252,0.8),
+      rgba(147,197,253,0.9),
+      rgba(129,230,217,0.9),
+      rgba(248,250,252,0.8)
+    );
+  box-shadow:
+    0 0 18px rgba(248,250,252,0.9),
+    0 0 80px rgba(56,189,248,0.8);
+  animation: orbSwing 4.5s ease-in-out infinite alternate;
+  z-index: 2;
+}
+
+.disco-orb::after {
+  content: "";
+  position: absolute;
+  inset: 35%;
+  background-image: linear-gradient(90deg, rgba(15,23,42,0.4) 50%, transparent 50%);
+  background-size: 8px 8px;
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+
+.disco-orb.right {
+  left: auto;
+  right: 8%;
+  width: 90px;
+  height: 90px;
+  animation-duration: 3.6s;
+}
+
+@keyframes orbSwing {
+  0%   { transform: translateX(-12px) translateY(0) rotate(-6deg); }
+  50%  { transform: translateX(4px) translateY(10px) rotate(4deg); }
+  100% { transform: translateX(12px) translateY(0) rotate(-2deg); }
+}
+
+.disco-rays {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    conic-gradient(from 180deg,
+      rgba(59,130,246,0.15),
+      transparent,
+      rgba(244,114,182,0.2),
+      transparent,
+      rgba(34,197,94,0.15),
+      transparent);
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  animation: raysSpin 22s linear infinite;
+}
+
+@keyframes raysSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ---- CONTENEUR CASINO MOBILE FIRST ---- */
+
+.app-wrapper {
+  position: relative;
+  z-index: 3;
+  width: min(460px, 100%);
+  padding: 16px;
+}
+
+.slot-card {
+  width: 100%;
+  border-radius: 18px;
+  padding: 14px 13px 16px;
+  background:
+    radial-gradient(circle at 10% 0, rgba(30,64,175,0.85), rgba(15,23,42,0.98));
+  box-shadow:
+    0 18px 60px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(148,163,184,0.45);
+  border: 1px solid rgba(30,64,175,0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+/* contour néon */
+
+.slot-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    conic-gradient(from 0deg,
+      rgba(244,114,182,0.0),
+      rgba(244,114,182,0.65),
+      rgba(52,211,153,0.75),
+      rgba(56,189,248,0.75),
+      rgba(244,114,182,0.65),
+      rgba(244,114,182,0.0));
+  opacity: 0.75;
+  filter: blur(22px);
+  mix-blend-mode: screen;
+  z-index: -1;
+  animation: neonLoop 16s linear infinite;
+}
+
+@keyframes neonLoop {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* en-tête */
+
+.slot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.slot-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.slot-game-name {
+  font-size: 22px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fef9c3;
+  text-shadow:
+    0 0 6px rgba(250,204,21,0.9),
+    0 0 16px rgba(248,250,252,0.6);
+}
+
+.slot-subtitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(191,219,254,0.9);
+}
+
+.slot-pill {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(248,250,252,0.5);
+  color: #fef2f2;
+  background: linear-gradient(90deg, rgba(248,113,113,0.85), rgba(239,68,68,0.85));
+  box-shadow:
+    0 0 8px rgba(248,113,113,0.9),
+    0 0 24px rgba(239,68,68,0.7);
+}
+
+/* panneau score */
+
+.slot-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(148,163,184,0.5);
+}
+
+.status-label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 10px;
+}
+
+.status-value {
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+/* machine à sous */
+
+.slot-machine {
+  border-radius: 14px;
+  padding: 10px 8px 12px;
+  background:
+    radial-gradient(circle at 50% 0, rgba(248,250,252,0.12), rgba(15,23,42,0.98));
+  border: 1px solid rgba(15,23,42,0.9);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(30,64,175,0.9);
+  position: relative;
+}
+
+/* halo disco sur le bandeau */
+
+.slot-machine::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  background:
+    radial-gradient(circle at 0 0, rgba(56,189,248,0.6), transparent 60%),
+    radial-gradient(circle at 100% 10%, rgba(244,114,182,0.6), transparent 60%),
+    radial-gradient(circle at 50% 100%, rgba(250,204,21,0.4), transparent 70%);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* bande des rouleaux */
+
+.reels-wrapper {
+  position: relative;
+  border-radius: 12px;
+  padding: 6px;
+  background: radial-gradient(circle at 50% 0, #020617, #020617);
+  border: 1px solid rgba(148,163,184,0.6);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.reels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.reel {
+  position: relative;
+  height: 84px;
+  border-radius: 10px;
+  background: radial-gradient(circle at 50% 0, #020617, #020617);
+  overflow: hidden;
+  border: 1px solid rgba(30,64,175,0.9);
+  box-shadow:
+    0 0 22px rgba(15,23,42,0.9),
+    inset 0 0 10px rgba(15,23,42,0.95);
+}
+
+.reel-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.reel-number {
+  font-size: 42px;
+  font-weight: 700;
+  text-shadow:
+    0 0 6px rgba(248,250,252,0.9),
+    0 0 18px rgba(129,230,217,0.9);
+}
+
+/* couloris par position pour l'ambiance */
+
+.reel:nth-child(1) .reel-number {
+  color: #38bdf8;
+}
+.reel:nth-child(2) .reel-number {
+  color: #a855f7;
+}
+.reel:nth-child(3) .reel-number {
+  color: #22c55e;
+}
+
+/* animation spin */
+
+.reel.spinning .reel-number {
+  animation: spinNumber 0.5s linear infinite;
+}
+
+@keyframes spinNumber {
+  0%   { transform: translateY(0); opacity: 0.8; }
+  50%  { transform: translateY(-10px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.8; }
+}
+
+/* barre du bas (bouton + mise) */
+
+.slot-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.bet-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.bet-value {
+  font-weight: 600;
+  color: #e5e7eb;
+  min-width: 50px;
+}
+
+/* bouton spin */
+
+.spin-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 0;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  color: #020617;
+  background: radial-gradient(circle at 0 0, #f97316, #facc15);
+  box-shadow:
+    0 10px 25px rgba(248,113,113,0.9),
+    0 0 0 1px rgba(15,23,42,1);
+}
+
+.spin-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 4px 12px rgba(248,113,113,0.8),
+    0 0 0 1px rgba(15,23,42,1);
+}
+
+.spin-label {
+  white-space: nowrap;
+}
+
+/* message central / bannière */
+
+.banner {
+  margin-top: 10px;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  text-align: center;
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(148,163,184,0.6);
+  color: var(--text-soft);
+}
+
+.banner span.strong {
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+/* toast surprise */
+
+.toast {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 76px;
+  margin-inline: auto;
+  width: min(340px, 100%);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 11px;
+  background: radial-gradient(circle at 0 0, rgba(34,197,94,0.9), rgba(15,23,42,0.98));
+  border: 1px solid rgba(22,163,74,0.85);
+  color: #bbf7d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow:
+    0 16px 40px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(15,23,42,0.9);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  z-index: 10;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* overlay LOSE ULTIME */
+
+.overlay-lose {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: radial-gradient(circle at top, rgba(248,113,113,0.4), rgba(15,23,42,0.98));
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-inner {
+  max-width: 360px;
+  width: 90%;
+  border-radius: 20px;
+  padding: 16px 14px 18px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 10% 0, rgba(15,23,42,0.98), rgba(15,23,42,1));
+  box-shadow:
+    0 22px 80px rgba(0,0,0,1),
+    0 0 0 1px rgba(148,163,184,0.75);
+  border: 1px solid rgba(248,113,113,0.9);
+  overflow: hidden;
+  position: relative;
+}
+
+/* fond glitché */
+
+.overlay-inner::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(248,113,113,0.15),
+      rgba(248,113,113,0.15) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  animation: glitchLines 1s steps(2,end) infinite;
+}
+
+@keyframes glitchLines {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+.lose-title {
+  font-size: 20px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fee2e2;
+  text-shadow:
+    0 0 4px rgba(248,250,252,0.9),
+    0 0 16px rgba(248,113,113,0.9);
+  margin-bottom: 6px;
+}
+
+.lose-sub {
+  font-size: 12px;
+  color: #fecaca;
+  margin-bottom: 8px;
+}
+
+.lose-num {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  color: #fef3c7;
+  text-shadow:
+    0 0 6px rgba(250,204,21,1),
+    0 0 30px rgba(248,113,113,1);
+  margin-bottom: 10px;
+}
+
+.lose-tip {
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.btn-reset {
+  margin-top: 10px;
+  border-radius: 999px;
+  border: none;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(90deg,#22c55e,#a855f7,#0ea5e9);
+  color: #020617;
+  box-shadow: 0 10px 30px rgba(15,23,42,0.9);
+}
+
+/* MOBILE OPTI */
+
+@media (max-width: 480px) {
+  .slot-game-name {
+    font-size: 18px;
+  }
+  .reel {
+    height: 72px;
+  }
+  .reel-number {
+    font-size: 34px;
+  }
+  .spin-btn {
+    font-size: 13px;
+    padding-inline: 8px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-psy"></div>
+<div class="bg-overlay"></div>
+<div class="bg-noise"></div>
+<div class="disco-orb"></div>
+<div class="disco-orb right"></div>
+<div class="disco-rays"></div>
+
+<div class="app-wrapper">
+  <div class="slot-card">
+    <div class="slot-header">
+      <div class="slot-title-block">
+        <div class="slot-game-name">LE 642</div>
+        <div class="slot-subtitle">NE TOMBE PAS DESSUS</div>
+      </div>
+      <div class="slot-pill">LA LOOZE ULTIME</div>
+    </div>
+
+    <div class="slot-status">
+      <div class="status-chip">
+        <span class="status-label">Solde</span>
+        <span class="status-value" id="balance">1250</span>
+        <span class="status-label">jetons</span>
+      </div>
+      <div class="status-chip">
+        <span class="status-label">Dernier spin</span>
+        <span class="status-value" id="lastResult">—</span>
+      </div>
+      <div class="status-chip">
+        <span class="status-label">Danger</span>
+        <span class="status-value">6 · 4 · 2</span>
+      </div>
+    </div>
+
+    <div class="slot-machine">
+      <div class="reels-wrapper">
+        <div class="reels">
+          <div class="reel" data-index="0">
+            <div class="reel-inner">
+              <div class="reel-number" id="reel0">0</div>
+            </div>
+          </div>
+          <div class="reel" data-index="1">
+            <div class="reel-inner">
+              <div class="reel-number" id="reel1">0</div>
+            </div>
+          </div>
+          <div class="reel" data-index="2">
+            <div class="reel-inner">
+              <div class="reel-number" id="reel2">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slot-controls">
+        <div class="bet-group">
+          <span class="status-label">Mise</span>
+          <span class="bet-value" id="betValue">10</span>
+          <span class="status-label">jetons</span>
+        </div>
+        <button class="spin-btn" id="spinBtn">
+          <span class="spin-label">SPIN</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="banner" id="banner">
+      <span class="strong">Règle d’or :</span> tout va bien... tant que tu n’affiches pas <span class="strong">642</span>.
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="overlay-lose" id="overlayLose">
+  <div class="overlay-inner">
+    <div class="lose-title">LA LOOZE ULTIME</div>
+    <div class="lose-sub">Tu as tiré le seul combo vraiment interdit.</div>
+    <div class="lose-num">6&nbsp;4&nbsp;2</div>
+    <div class="lose-tip">
+      Ton solde est parti en vacances à Passendaele.<br/>
+      Tu peux retenter ta chance avec un nouveau crédit.
+    </div>
+    <button class="btn-reset" id="btnReset">Nouvelle partie (1250 jetons)</button>
+  </div>
+</div>
+
+<script>
+const balanceEl = document.getElementById("balance");
+const lastResultEl = document.getElementById("lastResult");
+const bannerEl = document.getElementById("banner");
+const spinBtn = document.getElementById("spinBtn");
+const toast = document.getElementById("toast");
+const overlayLose = document.getElementById("overlayLose");
+const btnReset = document.getElementById("btnReset");
+const betValueEl = document.getElementById("betValue");
+
+let balance = 1250;
+let bet = 10;
+let spinning = false;
+
+const reels = [
+  document.getElementById("reel0"),
+  document.getElementById("reel1"),
+  document.getElementById("reel2"),
+];
+
+function updateBalance(delta) {
+  balance += delta;
+  if (balance < 0) balance = 0;
+  balanceEl.textContent = balance;
+}
+
+function setBanner(text, type = "info") {
+  let color = "var(--text-soft)";
+  if (type === "danger") color = "#fecaca";
+  if (type === "win") color = "#bbf7d0";
+  bannerEl.style.color = color;
+  bannerEl.innerHTML = text;
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2400);
+}
+
+/* petite ambiance sonore synthé (bip court) */
+
+function beep(freq = 880, duration = 120) {
+  if (!window.AudioContext && !window.webkitAudioContext) return;
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration/1000);
+    osc.start();
+    osc.stop(ctx.currentTime + duration/1000 + 0.02);
+  } catch(e) {
+    // on ignore si audio bloque
+  }
+}
+
+/* logiques de spin */
+
+function spin() {
+  if (spinning) return;
+  if (balance < bet) {
+    setBanner("Plus assez de jetons. Petit tour de LOOT gratuit ? Peut-être plus tard…", "danger");
+    showToast("Recharge mentale recommandée avant de rejouer.");
+    return;
+  }
+
+  spinning = true;
+  updateBalance(-bet);
+  setBanner("Les rouleaux tournent… essaie de ne PAS regarder le 6, ni le 4, ni le 2.", "info");
+  beep(600, 80);
+
+  const finalDigits = [];
+  const spinTimes = [600, 900, 1200];
+
+  reels.forEach((reel, index) => {
+    reel.parentElement.parentElement.parentElement.classList.add("spinning");
+    let ticks = 0;
+    const interval = setInterval(() => {
+      reel.textContent = Math.floor(Math.random() * 10);
+      ticks++;
+      if (ticks % 3 === 0) beep(300 + index*60, 40);
+    }, 60);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      const digit = Math.floor(Math.random() * 10);
+      reel.textContent = digit;
+      finalDigits[index] = digit;
+      reel.parentElement.parentElement.parentElement.classList.remove("spinning");
+
+      if (index === reels.length - 1) {
+        setTimeout(() => {
+          resolveResult(finalDigits);
+        }, 80);
+      }
+    }, spinTimes[index]);
+  });
+}
+
+function resolveResult(d) {
+  const [a, b, c] = d;
+  lastResultEl.textContent = `${a}${b}${c}`;
+
+  // 642 = lose ultime
+  if (a === 6 && b === 4 && c === 2) {
+    overlayLose.style.display = "flex";
+    spinning = false;
+    beep(140, 600);
+    beep(120, 600);
+    beep(90, 600);
+    return;
+  }
+
+  let message = "";
+  let type = "info";
+  let delta = 0;
+
+  // triple
+  if (a === b && b === c) {
+    delta = 250;
+    type = "win";
+    message = `JACKPOT néon : ${a}${b}${c}. +${delta} jetons (mais tu as quand même frôlé la 642).`;
+    beep(880, 160);
+    beep(1200, 200);
+  } else {
+    const digitsSet = new Set(d);
+    const has6 = digitsSet.has(6);
+    const has4 = digitsSet.has(4);
+    const has2 = digitsSet.has(2);
+
+    if (has6 && has4 && has2) {
+      // presque 642 (tous présents mais pas dans l'ordre exact)
+      delta = -20;
+      type = "danger";
+      message = `Combo toxique (tous les chiffres maudits, mais pas alignés) : ${a}${b}${c}. -20 jetons de frisson.`;
+      beep(260, 140);
+    } else if ((a + b + c) % 3 === 0) {
+      // petit bonus fun
+      delta = 15;
+      type = "win";
+      message = `Alignement cosmique (somme divisible par 3) : +${delta} jetons pour la beauté du geste.`;
+      beep(720, 120);
+    } else if (a === 6 || b === 4 || c === 2) {
+      delta = 0;
+      type = "info";
+      message = `Un des chiffres maudits est sorti (${a}${b}${c}). Tu joues avec le feu, mais sans pertes cette fois.`;
+    } else {
+      // résultat neutre / léger gain aléatoire
+      const rnd = Math.random();
+      if (rnd < 0.25) {
+        delta = 10;
+        type = "win";
+        message = `Mini win cosmique : +${delta} jetons. Rien d’extra, mais ça paye la prochaine mise.`;
+        beep(660, 100);
+      } else {
+        delta = 0;
+        type = "info";
+        message = `Rien de spécial sur ${a}${b}${c}. Le casino adore ce genre de tour.`;
+      }
+    }
+  }
+
+  if (delta !== 0) updateBalance(delta);
+  setBanner(message, type);
+  triggerRandomSurprise(d);
+  spinning = false;
+}
+
+/* surprises type casino moderne */
+
+const surpriseMessages = [
+  "Surprise : un bot te propose de doubler ta mise… mais il est en congé maladie.",
+  "Cosmos bonus : si tu proposes 12,50 € IRL à un ami, tu gagnes +12 karma.",
+  "Easter egg : si tu fais 000 trois fois d’affilée, tu déverrouilles le mode \"machine à café\".",
+  "Astuce : ce casino n’est sponsorisé par personne, même pas par la Looze elle-même.",
+  "Tip sérieux : joue avec tes idées, pas avec ton loyer.",
+];
+
+function triggerRandomSurprise(digits) {
+  const [a,b,c] = digits;
+  const rnd = Math.random();
+
+  if (a === 1 && b === 2 && c === 5) {
+    showToast("Combo 125 : tu débloques le badge secret \"12,50 inside\" (dans ta tête).");
+    return;
+  }
+
+  if (rnd < 0.25) {
+    const msg = surpriseMessages[Math.floor(Math.random() * surpriseMessages.length)];
+    showToast(msg);
+  }
+}
+
+/* events */
+
+spinBtn.addEventListener("click", spin);
+
+btnReset.addEventListener("click", () => {
+  balance = 1250;
+  balanceEl.textContent = balance;
+  overlayLose.style.display = "none";
+  setBanner("Nouveau crédit : 1250 jetons. Rappelle-toi : tout sauf 642.", "info");
+});
+
+/* track souris pour l’ambiance (optionnel) */
+window.addEventListener("pointermove", (e) => {
+  // on ne fait rien de visible pour l’instant, mais ça pourrait piloter des effets
+});
+</script>
+
+</body>
+</html>
