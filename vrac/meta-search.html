@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Méta-moteur RG – Cherche partout sauf ailleurs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #020617;
+      --card: #020617;
+      --border: #1f2937;
+      --primary: #38bdf8;
+      --accent: #f97316;
+      --accent2: #a855f7;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --shadow-soft: 0 24px 65px rgba(0,0,0,0.9);
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    * { box-sizing:border-box; margin:0; padding:0; }
+
+    body {
+      font-family:var(--sans);
+      background:
+        radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px 12px 24px;
+    }
+
+    .page {
+      width:100%;
+      max-width:980px;
+      background:radial-gradient(circle at top, #020617 0, #020617 55%);
+      border-radius:26px;
+      border:1px solid rgba(51,65,85,0.9);
+      box-shadow:var(--shadow-soft);
+      padding:18px 18px 16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .page::before {
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.12), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(168,85,247,0.12), transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(248,113,113,0.1), transparent 50%);
+      opacity:0.9;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .inner {
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+    }
+
+    /* LOGO + HEADER */
+
+    .logo-block {
+      text-align:center;
+      margin-top:6px;
+    }
+
+    .logo-text {
+      font-size:2.1rem;
+      font-weight:800;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      color:#e5e7eb;
+    }
+
+    .logo-r {
+      color:#38bdf8;
+    }
+
+    .logo-g {
+      color:#f97316;
+    }
+
+    .logo-sub {
+      margin-top:3px;
+      font-size:0.86rem;
+      color:var(--muted);
+    }
+
+    .logo-sub span {
+      color:var(--accent2);
+      font-weight:500;
+    }
+
+    /* SEARCH BAR */
+
+    .search-box {
+      margin-top:14px;
+      width:100%;
+      max-width:680px;
+      background:rgba(15,23,42,0.95);
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,0.95);
+      box-shadow:0 18px 40px rgba(15,23,42,0.95);
+      padding:5px 6px 5px 12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .search-icon {
+      width:20px;
+      height:20px;
+      border-radius:999px;
+      border:2px solid var(--muted);
+      position:relative;
+    }
+
+    .search-icon::after {
+      content:"";
+      position:absolute;
+      right:-4px;
+      bottom:-4px;
+      width:8px;
+      height:2px;
+      border-radius:999px;
+      background:var(--muted);
+      transform:rotate(35deg);
+    }
+
+    #q {
+      flex:1;
+      background:transparent;
+      border:none;
+      outline:none;
+      font-size:0.98rem;
+      color:var(--text);
+    }
+
+    #q::placeholder {
+      color:#64748b;
+    }
+
+    .search-buttons {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:8px;
+      justify-content:center;
+      font-size:0.82rem;
+      color:var(--muted);
+    }
+
+    .s-btn {
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(51,65,85,0.9);
+      background:rgba(15,23,42,0.9);
+      color:var(--muted);
+      cursor:pointer;
+      transition:background 0.1s,border-color 0.1s,color 0.1s,transform 0.08s;
+    }
+
+    .s-btn:hover {
+      background:#0f172a;
+      border-color:var(--primary);
+      color:var(--text);
+      transform:translateY(-1px);
+    }
+
+    .s-btn.primary {
+      background:var(--primary);
+      border-color:var(--primary);
+      color:#0f172a;
+      font-weight:600;
+      box-shadow:0 10px 24px rgba(56,189,248,0.85);
+    }
+
+    .s-btn.primary:hover {
+      background:#0ea5e9;
+      border-color:#0ea5e9;
+    }
+
+    /* RESULTS */
+
+    .results {
+      margin-top:12px;
+      width:100%;
+      max-width:820px;
+      border-radius:18px;
+      border:1px solid rgba(51,65,85,0.9);
+      background:rgba(15,23,42,0.95);
+      padding:10px 10px 9px;
+      max-height:420px;
+      overflow:auto;
+    }
+
+    .results-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:6px;
+      font-size:0.78rem;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .results-count span {
+      color:var(--primary);
+    }
+
+    .filters {
+      display:flex;
+      flex-wrap:wrap;
+      gap:4px;
+    }
+
+    .filter-pill {
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(51,65,85,0.9);
+      background:rgba(15,23,42,0.95);
+      font-size:0.74rem;
+      color:var(--muted);
+      cursor:pointer;
+      transition:background 0.1s,border-color 0.1s,color 0.1s;
+    }
+
+    .filter-pill.active {
+      background:#0f172a;
+      border-color:var(--primary);
+      color:var(--text);
+    }
+
+    .result-item {
+      padding:7px 7px 6px;
+      border-radius:12px;
+      cursor:pointer;
+      transition:background 0.1s,transform 0.08s,box-shadow 0.1s;
+    }
+
+    .result-item:hover {
+      background:#020617;
+      transform:translateY(-1px);
+      box-shadow:0 12px 26px rgba(0,0,0,0.7);
+    }
+
+    .result-title {
+      font-size:0.96rem;
+      color:#e5e7eb;
+      margin-bottom:1px;
+    }
+
+    .result-title span.highlight {
+      background:rgba(56,189,248,0.2);
+      border-radius:4px;
+      padding:0 2px;
+    }
+
+    .result-url {
+      font-size:0.78rem;
+      color:#4ade80;
+      font-family:var(--mono);
+      margin-bottom:2px;
+    }
+
+    .result-desc {
+      font-size:0.84rem;
+      color:var(--muted);
+      margin-bottom:2px;
+    }
+
+    .result-meta {
+      display:flex;
+      flex-wrap:wrap;
+      gap:4px;
+      font-size:0.76rem;
+      color:var(--muted);
+      align-items:center;
+    }
+
+    .tag {
+      display:inline-block;
+      padding:1px 6px;
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:#020617;
+      font-size:0.74rem;
+      color:#9ca3af;
+    }
+
+    .cat {
+      padding:1px 6px;
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:#0f172a;
+      font-size:0.74rem;
+      color:#e5e7eb;
+    }
+
+    .empty-msg {
+      font-size:0.84rem;
+      color:var(--muted);
+      padding:6px 6px 4px;
+    }
+
+    footer {
+      margin-top:6px;
+      font-size:0.78rem;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    footer span {
+      font-family:var(--mono);
+      font-size:0.75rem;
+    }
+
+    @media (max-width:640px) {
+      .page { padding:14px 12px 12px; border-radius:20px; }
+      .logo-text { font-size:1.7rem; }
+      .results { max-height:320px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="inner">
+    <header class="logo-block">
+      <div class="logo-text">
+        <span class="logo-r">R</span><span class="logo-g">G</span> Search
+      </div>
+      <div class="logo-sub">
+        Un seul champ, <span>tout ton univers</span> : intranet, jeux, glitch, EP, bounties…
+      </div>
+    </header>
+
+    <!-- BARRE DE RECHERCHE -->
+    <div class="search-box">
+      <div class="search-icon"></div>
+      <input id="q" type="text" autocomplete="off"
+             placeholder="Cherche intranet, morpion, éducation permanente, glitch, bounties, etc.">
+      <button class="s-btn primary" type="button" id="btn-search">
+        Chercher ici
+      </button>
+    </div>
+
+    <div class="search-buttons">
+      <button class="s-btn" type="button" data-suggest="mouvement d’éducation permanente">
+        Éducation permanente
+      </button>
+      <button class="s-btn" type="button" data-suggest="intranet p. seudo">
+        Intranet P. Seudo
+      </button>
+      <button class="s-btn" type="button" data-suggest="morpion">
+        Morpion Dé 360
+      </button>
+      <button class="s-btn" type="button" data-suggest="belgium glitch">
+        Portail belgium glitché
+      </button>
+      <button class="s-btn" type="button" id="btn-lucky">
+        J’ai de la chance ici
+      </button>
+    </div>
+
+    <!-- RÉSULTATS -->
+    <section class="results" id="results">
+      <div class="results-header">
+        <div class="results-count">
+          Résultats : <span id="result-count">0</span>
+        </div>
+        <div class="filters">
+          <div class="filter-pill active" data-filter="all">Tous</div>
+          <div class="filter-pill" data-filter="intro">Intro / tuto</div>
+          <div class="filter-pill" data-filter="intranet">Intranets</div>
+          <div class="filter-pill" data-filter="jeu">Jeux / expériences</div>
+          <div class="filter-pill" data-filter="satire">Satire / glitch</div>
+        </div>
+      </div>
+      <div id="result-list"></div>
+    </section>
+
+    <footer>
+      Cette page ne va nulle part ailleurs : tout se passe en HTML/JS local.  
+      <br><span>modules[] → filtre → clique → ouvre le fichier à côté.</span>
+    </footer>
+  </div>
+</div>
+
+<script>
+  /**************************************
+   * 1. CATALOGUE DES MODULES LOCAUX
+   **************************************/
+  // ⬇⬇⬇
+  // IMPORTANT : adapte les filenames si besoin
+  // (mais laisse la structure, c’est elle qui donne la “recherche”)
+  const modules = [
+    {
+      id: "intro",
+      title: "Intro RG – J’ai cinq ans",
+      file: "intro-rg.html",
+      category: "intro",
+      typeLabel: "Tutoriel",
+      description: "Explication ultra simple de ton univers : un dossier, des fichiers HTML, des gros boutons.",
+      tags: ["tuto","5 ans","comment ça marche","dossier","fichiers"]
+    },
+    {
+      id: "gros-bouton",
+      title: "Gros Bouton – Lanceur univers",
+      file: "index.html",
+      category: "intro",
+      typeLabel: "Lanceur",
+      description: "Page avec deux gros boutons : un pour l’intro, un pour le site d’éducation permanente.",
+      tags: ["lanceur","accueil","simple","gros bouton"]
+    },
+    {
+      id: "gr",
+      title: "GR – Mouvement d’éducation permanente FWB",
+      file: "gr.html",
+      category: "intranet",
+      typeLabel: "Site EP",
+      description: "Portail sérieux pour un mouvement d’éducation permanente : vitrine + logique d’intranet.",
+      tags: ["éducation permanente","FWB","mouvement","vitrine","sérieux"]
+    },
+    {
+      id: "ep-full",
+      title: "Mouvement EP – Intranet + console",
+      file: "mouvement-ep-fwb.html",
+      category: "intranet",
+      typeLabel: "Intranet + console",
+      description: "Version complète EP avec intranet interne, console texte, gestion des projets et export local.",
+      tags: ["console","intranet","EP","projets","localStorage"]
+    },
+    {
+      id: "pseudo-intra",
+      title: "Intranet P. Seudo – Organisation derrière l’organisation",
+      file: "intranet-pseudo.html",
+      category: "intranet",
+      typeLabel: "Intranet multi-couches",
+      description: "Couche publique, privée et confidentielle pour P. Seudo, orchestrant l’univers de S. Harky.",
+      tags: ["multi-couches","secret","organisation","hub","p. seudo"]
+    },
+    {
+      id: "bounty",
+      title: "BountyRepo – Tête à prix sur GitHub",
+      file: "bountyrepo.html",
+      category: "intranet",
+      typeLabel: "Outil mission",
+      description: "Proposer des missions comme des bounties : dépôt Git, email, export markdown, etc.",
+      tags: ["github","bounty","missions","markdown","mail"]
+    },
+    {
+      id: "devis",
+      title: "Services & demande de devis",
+      file: "services-devis.html",
+      category: "intro",
+      typeLabel: "Vitrine pro",
+      description: "Page sérieuse pour présenter tes services et permettre à des clients de demander un devis.",
+      tags: ["devis","clients","banque","pro","services"]
+    },
+    {
+      id: "devis-pro",
+      title: "Générateur de devis professionnel",
+      file: "devis-pro.html",
+      category: "intranet",
+      typeLabel: "Outil pro",
+      description: "Générer des devis clean pour institutions, banques, appels d’offres, etc.",
+      tags: ["devis","pdf-friendly","facturation"]
+    },
+    {
+      id: "lobby",
+      title: "Portfolio – Lobbyiste parfait",
+      file: "portfolio-lobbyiste.html",
+      category: "intro",
+      typeLabel: "Portfolio",
+      description: "Présentation hyper pro d’activités de plaidoyer, affaires publiques, expertise institutionnelle.",
+      tags: ["lobby","affaires publiques","plaidoyer","portfolio"]
+    },
+    {
+      id: "spy",
+      title: "Portfolio – Intelligence stratégique",
+      file: "portfolio-espion.html",
+      category: "intro",
+      typeLabel: "Portfolio",
+      description: "Profil d’enquêteur légal : due diligence, risque, conformité, enquêtes documentaires.",
+      tags: ["espion","intelligence","due diligence","conformité"]
+    },
+    {
+      id: "belgium",
+      title: "Portail fédéral glitché",
+      file: "belgium-glitch.html",
+      category: "satire",
+      typeLabel: "Satire",
+      description: "Clone institutionnel dysfonctionnel, piraté par un “collectif” approximatif, parfait pour montrer l’absurde.",
+      tags: ["satire","dystopie","administration","glitch"]
+    },
+    {
+      id: "nobrainer",
+      title: "NoBrainer – Hub du jeu anarcho-geek",
+      file: "nobrainer-hub.html",
+      category: "jeu",
+      typeLabel: "Hub de jeu",
+      description: "Point d’entrée pour ton jeu anarcho-geek bourré de références et de modules cachés.",
+      tags: ["jeu","anarcho-geek","nobrainer","hub"]
+    },
+    {
+      id: "morpion",
+      title: "Morpion Dé 360",
+      file: "morpion-de360.html",
+      category: "jeu",
+      typeLabel: "Jeu",
+      description: "Morpion classique branché sur un dé 3D : facettes colorées, combos débloquées, export JSON/Markdown.",
+      tags: ["morpion","jeu","dé 3D","export","combos"]
+    },
+    {
+      id: "tutoriel-rg",
+      title: "Guide RG – Tutoriel grand public",
+      file: "rg-tutoriel.html",
+      category: "intro",
+      typeLabel: "Tutoriel",
+      description: "Explication pas à pas : de la page BROL à la page EP, en mode grand public.",
+      tags: ["tutoriel","BROL","GR","explications"]
+    }
+  ];
+
+  // Filtre courant
+  let currentFilter = "all";
+
+  /**************************************
+   * 2. RENDU DES RÉSULTATS
+   **************************************/
+  const qInput = document.getElementById("q");
+  const btnSearch = document.getElementById("btn-search");
+  const btnLucky = document.getElementById("btn-lucky");
+  const resultList = document.getElementById("result-list");
+  const resultCount = document.getElementById("result-count");
+  const filterPills = document.querySelectorAll(".filter-pill");
+
+  function normalize(str) {
+    return (str || "").toLowerCase();
+  }
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const q = query.trim();
+    if (!q) return text;
+    const regex = new RegExp("(" + escapeRegex(q) + ")", "ig");
+    return text.replace(regex, "<span class=\"highlight\">$1</span>");
+  }
+
+  function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function matchesFilter(module) {
+    if (currentFilter === "all") return true;
+    if (currentFilter === "satire") return module.category === "satire";
+    if (currentFilter === "jeu") return module.category === "jeu";
+    if (currentFilter === "intranet") return module.category === "intranet";
+    if (currentFilter === "intro") return module.category === "intro";
+    return true;
+  }
+
+  function search() {
+    const q = normalize(qInput.value);
+    let results = modules.filter(m => matchesFilter(m));
+
+    if (q) {
+      results = results.filter(m => {
+        const hay = [
+          m.title,
+          m.description,
+          m.file,
+          m.typeLabel,
+          ...(m.tags || [])
+        ].map(normalize).join(" ");
+        return hay.includes(q);
+      });
+    }
+
+    renderResults(results, q);
+  }
+
+  function renderResults(list, query) {
+    resultList.innerHTML = "";
+    resultCount.textContent = list.length;
+
+    if (list.length === 0) {
+      const div = document.createElement("div");
+      div.className = "empty-msg";
+      div.innerHTML = "Aucun résultat ici pour l’instant. Vérifie l’orthographe ou essaie un mot-clé plus large.";
+      resultList.appendChild(div);
+      return;
+    }
+
+    list.forEach(m => {
+      const item = document.createElement("div");
+      item.className = "result-item";
+      item.addEventListener("click", () => openModule(m));
+
+      const titleHTML = highlight(m.title, query);
+      const descHTML = query ? highlight(m.description, query) : m.description;
+
+      item.innerHTML = `
+        <div class="result-title">${titleHTML}</div>
+        <div class="result-url">./${m.file}</div>
+        <div class="result-desc">${descHTML}</div>
+        <div class="result-meta">
+          <span class="cat">${m.typeLabel}</span>
+          ${
+            (m.tags || [])
+              .slice(0,4)
+              .map(t => `<span class="tag">${t}</span>`)
+              .join("")
+          }
+        </div>
+      `;
+
+      resultList.appendChild(item);
+    });
+  }
+
+  function openModule(m) {
+    // Ouvre simplement le fichier .html dans le même dossier
+    window.location.href = m.file;
+  }
+
+  /**************************************
+   * 3. ÉVÉNEMENTS
+   **************************************/
+  qInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      search();
+    }
+  });
+
+  btnSearch.addEventListener("click", search);
+
+  document.querySelectorAll("[data-suggest]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const v = btn.getAttribute("data-suggest");
+      qInput.value = v;
+      search();
+    });
+  });
+
+  btnLucky.addEventListener("click", () => {
+    const filtered = modules.filter(m => matchesFilter(m));
+    const list = filtered.length ? filtered : modules;
+    const choice = list[Math.floor(Math.random() * list.length)];
+    openModule(choice);
+  });
+
+  filterPills.forEach(pill => {
+    pill.addEventListener("click", () => {
+      filterPills.forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      currentFilter = pill.getAttribute("data-filter");
+      search();
+    });
+  });
+
+  // Afficher tout au début
+  search();
+</script>
+</body>
+</html>
