@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Morpion & Dé 360 – Jeu modulable + export</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Police simple -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --panel: #020617;
+      --card: #0b1220;
+      --card-soft: #020617;
+      --fg: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-2: #22c55e;
+      --border: #1e293b;
+      --danger: #fb7185;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%),
+        radial-gradient(circle at bottom, #020617 0, #000 65%);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    main {
+      max-width: 1120px;
+      width: 100%;
+      margin: auto;
+    }
+
+    .layout {
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 900px) {
+      .layout {
+        grid-template-columns: 1.5fr 1.5fr 1.1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow:
+        0 24px 60px rgba(15,23,42,0.9),
+        0 0 0 1px rgba(15,23,42,0.8);
+      padding: 0.9rem 1rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    h1 {
+      font-size: clamp(1.6rem, 2.3vw + 1rem, 2.2rem);
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.6rem;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+    }
+
+    /* Morpion */
+
+    .board-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      grid-template-rows: repeat(3, 70px);
+      gap: 4px;
+    }
+
+    @media (min-width: 480px) {
+      .board {
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: repeat(3, 80px);
+      }
+    }
+
+    .cell {
+      width: 70px;
+      height: 70px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #020617, #020617);
+      border-radius: 14px;
+      border: 1px solid #1e293b;
+      cursor: pointer;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #e5e7eb;
+      box-shadow: 0 10px 26px rgba(15,23,42,0.9);
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.1s;
+    }
+
+    .cell:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 32px rgba(15,23,42,0.95);
+      border-color: rgba(56,189,248,0.6);
+    }
+
+    .cell.disabled {
+      cursor: default;
+      opacity: 0.6;
+    }
+
+    .cell.win {
+      border-color: var(--accent-2);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 18px 34px rgba(34,197,94,0.4);
+    }
+
+    .board-status {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .board-status strong {
+      color: var(--accent);
+    }
+
+    .board-buttons {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.9);
+      color: var(--fg);
+      font-size: 0.8rem;
+      padding: 0.35rem 0.8rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(56,189,248,0.22), #020617);
+      color: #e0f2fe;
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 14px 34px rgba(56,189,248,0.5);
+    }
+
+    .btn-danger {
+      border-color: rgba(248,113,113,0.9);
+      color: #fecaca;
+    }
+
+    /* Cube 3D */
+
+    .cube-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .cube-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 600px;
+      height: 190px;
+    }
+
+    .cube {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      transform-style: preserve-3d;
+      transform: rotateX(-25deg) rotateY(35deg);
+      transition: transform 0.3s ease-out;
+    }
+
+    .face {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 14px;
+      border: 2px solid rgba(15,23,42,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #020617;
+      background: #e5e7eb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+    }
+
+    .face span {
+      background: rgba(15,23,42,0.9);
+      color: #f9fafb;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+    }
+
+    .face-front  { transform: translateZ(40px); }
+    .face-back   { transform: rotateY(180deg) translateZ(40px); }
+    .face-right  { transform: rotateY(90deg) translateZ(40px); }
+    .face-left   { transform: rotateY(-90deg) translateZ(40px); }
+    .face-top    { transform: rotateX(90deg) translateZ(40px); }
+    .face-bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+    .cube-controls {
+      display: grid;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    @media (min-width: 480px) {
+      .cube-controls {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+    }
+
+    .control-group {
+      background: var(--card-soft);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.5rem;
+    }
+
+    .control-group h3 {
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+      color: var(--muted);
+    }
+
+    .face-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .face-control label {
+      font-size: 0.78rem;
+    }
+
+    .face-control input[type="color"] {
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .slider-row span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      min-width: 42px;
+    }
+
+    .slider-row input[type="range"] {
+      flex: 1;
+    }
+
+    .hint {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    /* Journal + export */
+
+    .journal {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 0.6rem;
+    }
+
+    .journal-log {
+      flex: 1;
+      min-height: 120px;
+      max-height: 220px;
+      background: var(--card-soft);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.6rem;
+      font-size: 0.8rem;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      margin-bottom: 0.25rem;
+    }
+
+    .log-entry span.tag {
+      font-size: 0.72rem;
+      padding: 0.05rem 0.4rem;
+      border-radius: 999px;
+      margin-right: 0.3rem;
+    }
+
+    .tag-win {
+      background: rgba(34,197,94,0.2);
+      color: #bbf7d0;
+    }
+
+    .tag-info {
+      background: rgba(56,189,248,0.2);
+      color: #bae6fd;
+    }
+
+    .tag-export {
+      background: rgba(250,204,21,0.2);
+      color: #fef9c3;
+    }
+
+    .export-block {
+      background: var(--card-soft);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.6rem;
+      font-size: 0.78rem;
+    }
+
+    .export-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="layout">
+
+    <!-- Intro + Morpion -->
+    <section class="card">
+      <h1>Morpion & dé 360</h1>
+      <p class="subtitle">
+        Tu joues au morpion classique, mais chaque victoire débloque une
+        <strong>combinaison</strong> associée à une facette du dé.  
+        Tu peux ensuite <strong>recolorer les facettes</strong> et <strong>exporter</strong> la configuration.
+      </p>
+      <div class="badge-row">
+        <span class="badge">Morpion 3×3</span>
+        <span class="badge">Dé 3D rotatif</span>
+        <span class="badge">Couleurs modifiables</span>
+        <span class="badge">Export JSON / CSV / Copie</span>
+      </div>
+
+      <div class="board-wrapper" style="margin-top:1rem;">
+        <div class="board" id="board">
+          <!-- 9 cases -->
+          <button class="cell" data-index="0"></button>
+          <button class="cell" data-index="1"></button>
+          <button class="cell" data-index="2"></button>
+          <button class="cell" data-index="3"></button>
+          <button class="cell" data-index="4"></button>
+          <button class="cell" data-index="5"></button>
+          <button class="cell" data-index="6"></button>
+          <button class="cell" data-index="7"></button>
+          <button class="cell" data-index="8"></button>
+        </div>
+
+        <div class="board-status" id="boardStatus">
+          Joueur actuel : <strong>X</strong>
+        </div>
+
+        <div class="board-buttons">
+          <button class="btn btn-primary" id="btnNewGame" type="button">Nouvelle partie</button>
+          <button class="btn btn-danger" id="btnResetAll" type="button">Tout remettre à zéro</button>
+        </div>
+
+        <p class="hint">
+          Règle spéciale : à chaque victoire, une ligne gagnante est liée à une facette du dé.
+          Tu peux ensuite jouer avec les couleurs et exporter.
+        </p>
+      </div>
+    </section>
+
+    <!-- Cube 360 -->
+    <section class="card">
+      <h2 style="font-size:1rem;margin-bottom:0.4rem;">Dé 360 – couleurs & orientation</h2>
+      <p class="subtitle" style="font-size:0.82rem;margin-bottom:0.4rem;">
+        Chaque facette peut représenter un type de combinaison gagnante,
+        un niveau de difficulté ou ce que tu veux.
+      </p>
+
+      <div class="cube-wrapper">
+        <div class="cube-area">
+          <div class="cube" id="cube">
+            <div class="face face-front"  data-face="front"><span>FRONT</span></div>
+            <div class="face face-back"   data-face="back"><span>BACK</span></div>
+            <div class="face face-right"  data-face="right"><span>RIGHT</span></div>
+            <div class="face face-left"   data-face="left"><span>LEFT</span></div>
+            <div class="face face-top"    data-face="top"><span>TOP</span></div>
+            <div class="face face-bottom" data-face="bottom"><span>BOTTOM</span></div>
+          </div>
+        </div>
+
+        <div class="cube-controls">
+          <div class="control-group">
+            <h3>Couleurs des facettes</h3>
+            <div class="face-control">
+              <label for="colorFront">Front</label>
+              <input type="color" id="colorFront" value="#f97316" data-face="front">
+            </div>
+            <div class="face-control">
+              <label for="colorBack">Back</label>
+              <input type="color" id="colorBack" value="#10b981" data-face="back">
+            </div>
+            <div class="face-control">
+              <label for="colorRight">Right</label>
+              <input type="color" id="colorRight" value="#3b82f6" data-face="right">
+            </div>
+            <div class="face-control">
+              <label for="colorLeft">Left</label>
+              <input type="color" id="colorLeft" value="#eab308" data-face="left">
+            </div>
+            <div class="face-control">
+              <label for="colorTop">Top</label>
+              <input type="color" id="colorTop" value="#a855f7" data-face="top">
+            </div>
+            <div class="face-control">
+              <label for="colorBottom">Bottom</label>
+              <input type="color" id="colorBottom" value="#ec4899" data-face="bottom">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Orientation (360°)</h3>
+            <div class="slider-row">
+              <span>X&nbsp;°</span>
+              <input type="range" min="-180" max="180" value="-25" id="rotX">
+            </div>
+            <div class="slider-row">
+              <span>Y&nbsp;°</span>
+              <input type="range" min="-180" max="180" value="35" id="rotY">
+            </div>
+            <div style="margin-top:0.35rem;display:flex;gap:0.35rem;flex-wrap:wrap;">
+              <button class="btn" type="button" id="btnRandomFace">Associer prochaine victoire à une facette aléatoire</button>
+              <button class="btn" type="button" id="btnResetCube">Réinitialiser dé</button>
+            </div>
+            <p class="hint">
+              Les victoires seront associées à des facettes au hasard (ou selon ton choix plus tard si tu veux raffiner).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Journal + export -->
+    <section class="card">
+      <div class="journal">
+        <div>
+          <h2 style="font-size:1rem;margin-bottom:0.3rem;">Journal des combinaisons</h2>
+          <p class="subtitle" style="font-size:0.8rem;">
+            Ici, tu vois quelles lignes gagnantes ont été débloquées et à quelle facette du dé elles sont liées.
+          </p>
+        </div>
+
+        <div class="journal-log" id="log"></div>
+
+        <div class="export-block">
+          <strong>Export du plateau & du dé</strong>
+          <p class="hint">
+            Ça ne fait pas “tous les formats de l’univers”, mais tu peux déjà récupérer
+            : JSON (config), CSV (tableur) ou texte (copier-coller).
+          </p>
+          <div class="export-buttons">
+            <button class="btn btn-primary" type="button" id="btnExportJSON">Exporter en JSON</button>
+            <button class="btn" type="button" id="btnExportCSV">Exporter en CSV</button>
+            <button class="btn" type="button" id="btnCopyJSON">Copier JSON dans le presse-papiers</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script>
+  // --- ÉTAT GLOBAL ---
+  const board = Array(9).fill("");
+  let currentPlayer = "X";
+  let gameOver = false;
+
+  const winningCombos = [
+    [0,1,2],[3,4,5],[6,7,8], // lignes
+    [0,3,6],[1,4,7],[2,5,8], // colonnes
+    [0,4,8],[2,4,6]          // diagonales
+  ];
+
+  const faces = {
+    front:  { color: "#f97316" },
+    back:   { color: "#10b981" },
+    right:  { color: "#3b82f6" },
+    left:   { color: "#eab308" },
+    top:    { color: "#a855f7" },
+    bottom: { color: "#ec4899" }
+  };
+
+  let unlockedCombos = []; // { winner, combo, face }
+  let nextFaceMode = "random"; // pour plus tard si tu veux compliquer
+
+  // --- DOM ELEMENTS ---
+  const cells = document.querySelectorAll(".cell");
+  const boardStatus = document.getElementById("boardStatus");
+  const btnNewGame = document.getElementById("btnNewGame");
+  const btnResetAll = document.getElementById("btnResetAll");
+  const log = document.getElementById("log");
+
+  const cube = document.getElementById("cube");
+  const rotX = document.getElementById("rotX");
+  const rotY = document.getElementById("rotY");
+  const faceColorInputs = document.querySelectorAll(".face-control input[type='color']");
+  const facesDOM = document.querySelectorAll(".face");
+
+  const btnRandomFace = document.getElementById("btnRandomFace");
+  const btnResetCube = document.getElementById("btnResetCube");
+
+  const btnExportJSON = document.getElementById("btnExportJSON");
+  const btnExportCSV  = document.getElementById("btnExportCSV");
+  const btnCopyJSON   = document.getElementById("btnCopyJSON");
+
+  // --- UTILITAIRES ---
+
+  function updateBoardStatus(text) {
+    boardStatus.innerHTML = text;
+  }
+
+  function addLogEntry(type, text) {
+    const div = document.createElement("div");
+    div.className = "log-entry";
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    if (type === "win") tag.classList.add("tag-win");
+    else if (type === "export") tag.classList.add("tag-export");
+    else tag.classList.add("tag-info");
+    tag.textContent = type === "win" ? "WIN" : type === "export" ? "EXPORT" : "INFO";
+
+    const span = document.createElement("span");
+    span.textContent = " " + text;
+
+    div.appendChild(tag);
+    div.appendChild(span);
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function randomFaceName() {
+    const keys = Object.keys(faces);
+    const idx = Math.floor(Math.random() * keys.length);
+    return keys[idx];
+  }
+
+  function highlightWinCombo(combo) {
+    cells.forEach(c => c.classList.remove("win"));
+    combo.forEach(i => {
+      const cell = document.querySelector(`.cell[data-index="${i}"]`);
+      if (cell) cell.classList.add("win");
+    });
+  }
+
+  function resetBoard(keepUnlocked = true) {
+    for (let i = 0; i < 9; i++) board[i] = "";
+    cells.forEach(c => {
+      c.textContent = "";
+      c.classList.remove("disabled","win");
+    });
+    currentPlayer = "X";
+    gameOver = false;
+    updateBoardStatus(`Joueur actuel : <strong>${currentPlayer}</strong>`);
+    if (!keepUnlocked) {
+      unlockedCombos = [];
+      log.textContent = "";
+      addLogEntry("info","Journal remis à zéro.");
+    } else {
+      addLogEntry("info","Nouvelle manche, combinaisons débloquées conservées.");
+    }
+  }
+
+  function resetCube() {
+    rotX.value = -25;
+    rotY.value = 35;
+    updateCubeRotation();
+    // reset couleurs
+    faceColorInputs.forEach(input => {
+      const faceName = input.dataset.face;
+      const defaultColor = input.defaultValue || "#e5e7eb";
+      input.value = defaultColor;
+      faces[faceName].color = defaultColor;
+    });
+    applyFaceColors();
+    addLogEntry("info","Dé réinitialisé.");
+  }
+
+  function updateCubeRotation() {
+    const x = Number(rotX.value);
+    const y = Number(rotY.value);
+    cube.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
+  }
+
+  function applyFaceColors() {
+    facesDOM.forEach(faceEl => {
+      const name = faceEl.dataset.face;
+      faceEl.style.background = faces[name].color;
+    });
+  }
+
+  function buildState() {
+    return {
+      board: [...board],
+      currentPlayer,
+      faces: { ...faces },
+      unlockedCombos: unlockedCombos.map(c => ({
+        winner: c.winner,
+        combo: c.combo,
+        face: c.face
+      }))
+    };
+  }
+
+  function downloadFile(filename, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // --- LOGIQUE DU MORPION ---
+
+  function checkWinner() {
+    for (const combo of winningCombos) {
+      const [a,b,c] = combo;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return combo;
+      }
+    }
+    return null;
+  }
+
+  function isBoardFull() {
+    return board.every(v => v !== "");
+  }
+
+  function handleCellClick(e) {
+    const cell = e.currentTarget;
+    const index = Number(cell.dataset.index);
+    if (gameOver || board[index]) return;
+
+    board[index] = currentPlayer;
+    cell.textContent = currentPlayer;
+
+    const winnerCombo = checkWinner();
+    if (winnerCombo) {
+      gameOver = true;
+      highlightWinCombo(winnerCombo);
+
+      const faceName = randomFaceName();
+      unlockedCombos.push({
+        winner: currentPlayer,
+        combo: winnerCombo,
+        face: faceName
+      });
+
+      updateBoardStatus(
+        `Victoire de <strong>${currentPlayer}</strong> ! Combinaison liée à la facette <strong>${faceName.toUpperCase()}</strong> du dé.`
+      );
+
+      addLogEntry(
+        "win",
+        `Joueur ${currentPlayer} – ligne ${winnerCombo.join("-")} liée à la facette ${faceName.toUpperCase()}.`
+      );
+
+      // désactiver les cases restantes
+      cells.forEach(c => c.classList.add("disabled"));
+      return;
+    }
+
+    if (isBoardFull()) {
+      gameOver = true;
+      updateBoardStatus("Match nul. Aucune nouvelle combinaison débloquée.");
+      addLogEntry("info","Match nul – pas de nouvelle combinaison.");
+      return;
+    }
+
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+    updateBoardStatus(`Joueur actuel : <strong>${currentPlayer}</strong>`);
+  }
+
+  // --- ÉVÉNEMENTS ---
+
+  cells.forEach(cell => {
+    cell.addEventListener("click", handleCellClick);
+  });
+
+  btnNewGame.addEventListener("click", () => {
+    resetBoard(true);
+  });
+
+  btnResetAll.addEventListener("click", () => {
+    resetBoard(false);
+  });
+
+  // Rotation cube
+  rotX.addEventListener("input", updateCubeRotation);
+  rotY.addEventListener("input", updateCubeRotation);
+
+  // Couleurs de faces
+  faceColorInputs.forEach(input => {
+    input.addEventListener("input", () => {
+      const faceName = input.dataset.face;
+      faces[faceName].color = input.value;
+      applyFaceColors();
+    });
+  });
+
+  btnRandomFace.addEventListener("click", () => {
+    addLogEntry("info","Prochaines victoires continueront à être associées à des facettes au hasard (mode actuel).");
+  });
+
+  btnResetCube.addEventListener("click", () => {
+    resetCube();
+  });
+
+  // Export JSON
+  btnExportJSON.addEventListener("click", () => {
+    const state = buildState();
+    const json = JSON.stringify(state, null, 2);
+    downloadFile("morpion-de-360.json", json, "application/json");
+    addLogEntry("export","Export JSON téléchargé.");
+  });
+
+  // Export CSV (très simple)
+  btnExportCSV.addEventListener("click", () => {
+    const state = buildState();
+    const lines = [];
+    lines.push("type;cle;valeur");
+
+    // Plateau
+    lines.push("board;ligne1;" + state.board.slice(0,3).join(""));
+    lines.push("board;ligne2;" + state.board.slice(3,6).join(""));
+    lines.push("board;ligne3;" + state.board.slice(6,9).join(""));
+    lines.push("meta;currentPlayer;" + state.currentPlayer);
+
+    // Faces
+    Object.entries(state.faces).forEach(([name, obj]) => {
+      lines.push(`face;${name};${obj.color}`);
+    });
+
+    // Combinaisons
+    state.unlockedCombos.forEach((c, idx) => {
+      lines.push(
+        `combo;${idx + 1};winner=${c.winner},cases=${c.combo.join("-")},face=${c.face}`
+      );
+    });
+
+    const csv = lines.join("\n");
+    downloadFile("morpion-de-360.csv", csv, "text/csv;charset=utf-8");
+    addLogEntry("export","Export CSV téléchargé.");
+  });
+
+  // Copie JSON
+  btnCopyJSON.addEventListener("click", async () => {
+    try {
+      const state = buildState();
+      const json = JSON.stringify(state, null, 2);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(json);
+        addLogEntry("export","JSON copié dans le presse-papiers.");
+      } else {
+        addLogEntry("export","Impossible d’utiliser le presse-papiers automatiquement, mais voici le JSON dans la console.");
+        console.log(json);
+      }
+    } catch (err) {
+      addLogEntry("export","Erreur lors de la copie du JSON.");
+    }
+  });
+
+  // INIT
+  applyFaceColors();
+  updateCubeRotation();
+  addLogEntry("info","Bienvenue. Joue une partie de morpion, observe quelles combinaisons se lient aux facettes du dé, puis exporte la configuration.");
+
+</script>
+</body>
+</html>
