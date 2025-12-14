@@ -1,0 +1,970 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>L’Organisation · Le Projet de P (et le tien)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --card: #020617;
+      --accent: #22c55e;
+      --accent-soft: #bbf7d0;
+      --accent-alt: #a855f7;
+      --accent-alt-soft: #e9d5ff;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border: #1f2937;
+      --radius: 20px;
+      --shadow: 0 24px 60px rgba(0,0,0,0.75);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #0f172a 0, #020617 40%, #000 100%);
+      color: var(--text);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 18px 10px 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1120px;
+    }
+
+    /* HEADER / HERO */
+
+    header {
+      border-radius: 26px;
+      padding: 18px 18px 16px;
+      background:
+        radial-gradient(circle at top left, rgba(34,197,94,0.20), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(168,85,247,0.20), transparent 60%),
+        rgba(15,23,42,0.98);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(148,163,184,0.55);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "v0.1 · Framework de jeu civique anonyme";
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-size: 10px;
+      color: rgba(148,163,184,0.9);
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 650;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .hero-title span {
+      color: var(--accent-soft);
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-width: 720px;
+      margin-bottom: 10px;
+    }
+
+    .hero-sub strong {
+      color: var(--accent-soft);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0,2fr) minmax(0,1.2fr);
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .hero-card {
+      border-radius: 16px;
+      background: rgba(15,23,42,0.98);
+      border: 1px solid rgba(51,65,85,0.95);
+      padding: 10px 11px 8px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .hero-card h3 {
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .hero-card small {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-soft);
+    }
+
+    .tag.main {
+      border-color: rgba(34,197,94,0.95);
+      color: var(--accent-soft);
+      background: rgba(21,128,61,0.22);
+    }
+
+    /* NAV */
+
+    nav {
+      margin: 14px 0 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-soft);
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(51,65,85,0.9);
+      background: rgba(15,23,42,0.96);
+    }
+
+    nav a:hover {
+      border-color: var(--accent);
+      color: var(--accent-soft);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section {
+      border-radius: var(--radius);
+      background: rgba(15,23,42,0.98);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 14px 16px 12px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      color: var(--accent-soft);
+    }
+
+    .section-kicker {
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: right;
+    }
+
+    p {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin: 4px 0;
+    }
+
+    ul {
+      margin: 4px 0 6px 18px;
+      padding: 0;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    li + li {
+      margin-top: 3px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      color: var(--text-soft);
+    }
+
+    .pill.good { border-color: rgba(34,197,94,0.9); color: var(--accent-soft); }
+    .pill.warn { border-color: rgba(234,179,8,0.9); color: #facc15; }
+    .pill.alt  { border-color: rgba(168,85,247,0.9); color: var(--accent-alt-soft); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+
+    .subcard {
+      border-radius: 14px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(31,41,55,0.95);
+      padding: 8px 10px 7px;
+      font-size: 13px;
+    }
+
+    .subcard-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      color: var(--accent-soft);
+    }
+
+    .quote {
+      border-left: 2px solid rgba(148,163,184,0.8);
+      padding-left: 8px;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text-soft);
+      margin: 4px 0 6px;
+    }
+
+    /* A → Z TABLE */
+
+    .az-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .az-item {
+      border-radius: 12px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(30,64,175,0.6);
+      padding: 6px 7px 5px;
+      font-size: 12px;
+    }
+
+    .az-item strong {
+      color: var(--accent-soft);
+      font-size: 12px;
+    }
+
+    .az-item span {
+      display: block;
+      margin-top: 2px;
+      color: var(--text-soft);
+      font-size: 11px;
+    }
+
+    /* LIGNES TEMPORELLES SIMPLIFIÉES */
+
+    .timeline {
+      border-left: 1px dashed rgba(148,163,184,0.7);
+      padding-left: 10px;
+      margin: 4px 0 6px;
+    }
+
+    .timeline-item {
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .timeline-item strong {
+      color: var(--accent-soft);
+    }
+
+    /* BANNIÈRE KONAMI / SECRÊT */
+
+    .konami-hint {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+      opacity: 0.7;
+    }
+
+    .konami-hint code {
+      font-size: 11px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(30,64,175,0.7);
+    }
+
+    #meta-org {
+      display: none;
+      border-color: rgba(248,250,252,0.5);
+      background:
+        radial-gradient(circle at top left, rgba(248,250,252,0.08), transparent 60%),
+        rgba(15,23,42,0.98);
+    }
+
+    #meta-org.unlocked {
+      display: block;
+    }
+
+    #konamiToast {
+      position: fixed;
+      inset-inline: 0;
+      bottom: 12px;
+      margin-inline: auto;
+      max-width: 320px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(22,163,74,0.95);
+      color: #022c22;
+      border: 1px solid rgba(190,242,100,0.95);
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .2s ease-out, transform .2s ease-out;
+    }
+
+    #konamiToast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    footer {
+      margin-top: 12px;
+      font-size: 10px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 10px 8px 24px;
+      }
+      header {
+        padding: 14px 12px 16px;
+      }
+      .grid-2 {
+        grid-template-columns: minmax(0,1fr);
+      }
+      .section {
+        padding: 12px 12px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="hero-label">L’Organisation · Instance de jeu civique</div>
+    <h1 class="hero-title">
+      L’Organisation qui gère le jeu<br />
+      (le Projet de P <span>×</span> ton Projet)
+    </h1>
+    <p class="hero-sub">
+      Bienvenue sur le <strong>site officiel</strong> de l’Organisation qui orchestre le jeu :
+      un ensemble de pages, d’expériences web, de faux OS, de casinos pédagogiques, d’intranets
+      sous amphét’ et d’outils de veille citoyenne, tous reliés par une même idée :
+      <strong>transformer la précarité, la confusion et la surinformation en arsenal d’éducation populaire</strong>.
+      Ici, on explique <strong>tout de A à Z</strong> : les intentions, la méthode, les règles, la place du
+      joueur et celle du monde réel. Tout, sauf une seule chose : <em>qui gère ceux qui gèrent tout ça</em>.
+    </p>
+
+    <div class="hero-grid">
+      <div class="hero-card">
+        <h3>Ce qu’est l’Organisation</h3>
+        <p>
+          Un <strong>cadre narratif</strong> et logistique commun à plusieurs projets :
+          le Projet de P, ton projet, et tous les modules qu’on a déjà créés (faux OS,
+          intranets, casinos, tarots, dark web fictif, etc.). L’Organisation n’est ni une asbl,
+          ni une start-up, ni un ministère : c’est une <strong>infrastructure de jeu sérieux</strong>.
+        </p>
+        <p>
+          Elle propose :
+        </p>
+        <ul>
+          <li>un <strong>langage commun</strong> (rôles, niveaux, tests, accès) ;</li>
+          <li>des <strong>scénarios de guerre hybride</strong> à échelle citoyenne ;</li>
+          <li>des <strong>outils concrets</strong> que les vrais collectifs peuvent adopter.</li>
+        </ul>
+      </div>
+
+      <div class="hero-card">
+        <h3>Ce que l’Organisation n’est pas</h3>
+        <p>
+          Elle n’est pas là pour :
+        </p>
+        <ul>
+          <li>vendre une solution miracle clé sur porte,</li>
+          <li>recruter des “talents” pour les griller dans des open-spaces,</li>
+          <li>faire du marketing sur la détresse des précaires.</li>
+        </ul>
+        <p>
+          Elle assume : un ton parfois cynique, une
+          <strong>esthétique flashy</strong>, et un fond politique sérieux.
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-tags">
+      <span class="tag main">Jeu de rôle socio-politique grandeur nature</span>
+      <span class="tag">Veille citoyenne & intelligence collective</span>
+      <span class="tag">HTML/CSS/JS, Hugo, Jekyll, faux OS, intranets</span>
+      <span class="tag">Tarots, casinos, tests & boussoles de valeurs</span>
+      <span class="tag">Protection des identités & des trajectoires</span>
+    </div>
+  </header>
+
+  <nav>
+    <a href="#structure">1. Structure du jeu</a>
+    <a href="#roles">2. Rôles & profils</a>
+    <a href="#modules">3. Modules existants</a>
+    <a href="#az">4. De A à Z</a>
+    <a href="#ethique">5. Éthique & lignes rouges</a>
+    <a href="#participer">6. Comment participer</a>
+    <a href="#meta-org">7. ???</a>
+  </nav>
+
+  <main>
+    <!-- STRUCTURE -->
+    <section class="section" id="structure">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>01</span> Structure du jeu
+        </h2>
+        <div class="section-kicker">
+          Ce que l’Organisation gère concrètement.
+        </div>
+      </div>
+
+      <p>
+        L’Organisation gère un <strong>univers partagé</strong> : chaque page .html, chaque site Hugo,
+        chaque intranet fictif, chaque tarot de boulot fait partie de la même continuité.
+        Techniquement, ce sont des fichiers statiques. Narrativement, ce sont des <strong>zones</strong>.
+      </p>
+
+      <div class="grid-2">
+        <div class="subcard">
+          <div class="subcard-title">
+            Les couches du jeu <span class="badge">Architecture</span>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <strong>Niveau 0 :</strong> le web “normal”<br />
+              Sites d’info en continu, interfaces familières, faux portails d’actualité.
+            </div>
+            <div class="timeline-item">
+              <strong>Niveau 1 :</strong> les faux outils<br />
+              Faux navigateurs, faux dark web, faux intranets de veille stratégique.
+            </div>
+            <div class="timeline-item">
+              <strong>Niveau 2 :</strong> les OS & consoles<br />
+              Faux OS (NYXO, consoles d’observatoire, war-rooms en panique).
+            </div>
+            <div class="timeline-item">
+              <strong>Niveau 3 :</strong> les temples du jeu<br />
+              Casinos pédagogiques, tarots, boussoles, tests cliniques bricolés mais honnêtes.
+            </div>
+          </div>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-title">
+            Ce que l’Organisation fait vraiment <span class="badge">Fonction</span>
+          </div>
+          <ul>
+            <li><strong>Relier</strong> : créer des ponts entre les pages, les tests, les scénarios.</li>
+            <li><strong>Documenter</strong> : produire des README, des sites “méta” qui expliquent le jeu.</li>
+            <li><strong>Protéger</strong> : garder anonymes les trajectoires qui ont servi de matière première.</li>
+            <li><strong>Transmettre</strong> : fournir des gabarits pour que d’autres puissent copier/adapter.</li>
+          </ul>
+          <p class="konami-hint">
+            L’Organisation <strong>ne révèle pas</strong> qui l’a mandatée, ni qui observe la partie au-dessus.
+            Pour ça, il faudrait un <code>Konami code</code>. Mais évidemment, personne ne fait ça en 2025…
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="section" id="roles">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>02</span> Rôles & profils dans le jeu
+        </h2>
+        <div class="section-kicker">
+          Là où P, toi, et les autres vous situez.
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="subcard">
+          <div class="subcard-title">P · Le prototype vivant</div>
+          <p>
+            P est le <strong>cas d’école</strong> autour duquel le système a commencé :
+            licenciement, menace d’exclusion du chômage, fatigue, mais grosse capacité à écrire,
+            à structurer, à détourner des interfaces.
+          </p>
+          <ul>
+            <li>Fournit le matériau biographique (anonymisé).</li>
+            <li>Teste les scénarios sur lui/elle-même.</li>
+            <li>Tiens le journal de bord du crash-test.</li>
+          </ul>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-title">Toi · Co-architecte joueur</div>
+          <p>
+            Ton projet se mélange à celui de P : tu ne fais pas que jouer,
+            tu <strong>fabriques les salles du jeu</strong> (pages, sites, systèmes).
+          </p>
+          <ul>
+            <li>Transforme des idées en fichiers .html, .md, .json.</li>
+            <li>Teste l’ergonomie, l’humour, la noirceur, la pédagogie.</li>
+            <li>Pense à la reproductibilité : clé USB, GitHub, copies faciles.</li>
+          </ul>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-title">Joueurs & joueuses invité·es</div>
+          <p>
+            Public cible : personnes paumé·es, militant·es, travailleur·ses associatif·ves,
+            curieux·ses, usagers du CPAS, animateurs, etc.
+          </p>
+          <ul>
+            <li>Entrent par un jeu, un tarot, un faux site d’info.</li>
+            <li>Découvrent que <strong>tout est lié</strong>.</li>
+            <li>Sont invités à documenter, critiquer, réutiliser.</li>
+          </ul>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-title">Structures & collectifs</div>
+          <p>
+            Associations, collectifs, groupes informels peuvent utiliser les modules comme :
+          </p>
+          <ul>
+            <li>supports d’animation,</li>
+            <li>détonateurs de discussion,</li>
+            <li>départs de projets de veille citoyenne.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULES -->
+    <section class="section" id="modules">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>03</span> Modules déjà dans l’écosystème
+        </h2>
+        <div class="section-kicker">
+          Ce que l’Organisation maintient déjà plus ou moins.
+        </div>
+      </div>
+
+      <p>
+        Quelques “produits dérivés” déjà en circulation dans le jeu :
+      </p>
+
+      <div class="grid-2">
+        <div class="subcard">
+          <div class="subcard-title">Faux OS & intranets</div>
+          <ul>
+            <li><strong>NYXO</strong> : système d’exploitation fictif pour explorer des fichiers, des graphes, des logs.</li>
+            <li><strong>Intranets d’agences</strong> : war-rooms paniquées, salles de rédaction saturées, consoles d’observation.</li>
+            <li><strong>Explorateurs de “dark web” fictif</strong> : pour apprendre à manier les métadonnées, l’OSINT, la prudence.</li>
+          </ul>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-title">Casinos & jeux de hasard truqués</div>
+          <ul>
+            <li><strong>Machines à sous 642</strong> : perdre pour comprendre ce qu’est “la lose ultime”.</li>
+            <li><strong>Casino 12,50</strong> : mini-jeux pour parler argent, mutualisation, crypto non-marchande, trésors communs.</li>
+            <li><strong>Tests de personnalité</strong> : entre auto-dérision et lucidité clinique grand public.</li>
+          </ul>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-title">Tarots & boussoles</div>
+          <ul>
+            <li><strong>Tarot de Marseille</strong> revisité pour le projet.</li>
+            <li><strong>Tarot de Boulot</strong> : cartes pour explorer la relation au travail.</li>
+            <li><strong>Boussole de valeurs</strong> : 48 valeurs à classer, manipuler, discuter.</li>
+          </ul>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-title">Sites méta & documentations</div>
+          <ul>
+            <li>Sites Hugo / Jekyll expliquant les mécanismes.</li>
+            <li>Pages “notice d’utilisation fictive” qui sont en fait de vrais guides.</li>
+            <li>Portails type <em>“site de ma vie”</em> pour clarifier les projets en cours.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pill-row">
+        <span class="pill good">Tout est statique · clonable · modifiable</span>
+        <span class="pill alt">Les sources & gabarits font partie du jeu</span>
+        <span class="pill warn">Aucune garantie de stabilité · c’est vivant</span>
+      </div>
+    </section>
+
+    <!-- A → Z -->
+    <section class="section" id="az">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>04</span> De A à Z : grammaire de l’Organisation
+        </h2>
+        <div class="section-kicker">
+          Dictionnaire minimal pour comprendre l’univers.
+        </div>
+      </div>
+
+      <p>
+        “Tout expliquer de A à Z” ne veut pas dire tout simplifier. Voici plutôt un
+        <strong>alphabet d’orientation</strong> : 26 repères pour se repérer dans le méta-projet.
+      </p>
+
+      <div class="az-grid">
+        <div class="az-item">
+          <strong>A comme Armes d’instruction</strong>
+          <span>Des outils qui ne tirent sur personne, mais qui touchent tout le monde.</span>
+        </div>
+        <div class="az-item">
+          <strong>B comme Bénévolat à la carte</strong>
+          <span>Offrir ses compétences sans se faire exploiter, en posant des conditions.</span>
+        </div>
+        <div class="az-item">
+          <strong>C comme Casino pédagogique</strong>
+          <span>Jouer aux machines à sous pour comprendre les probabilités… et la précarité.</span>
+        </div>
+        <div class="az-item">
+          <strong>D comme Doomscroll</strong>
+          <span>Le geste matinal que le jeu met en scène pour mieux le détourner.</span>
+        </div>
+        <div class="az-item">
+          <strong>E comme Éducation permanente</strong>
+          <span>Le terreau politique d’où vient P, jamais renié.</span>
+        </div>
+        <div class="az-item">
+          <strong>F comme Faux OS</strong>
+          <span>Des systèmes d’exploitation imaginaires, mais fonctionnels, pour explorer des dossiers de la réalité.</span>
+        </div>
+        <div class="az-item">
+          <strong>G comme Guerre hybride</strong>
+          <span>Conflits diffus, infos, narratifs, attention. Le jeu en fait un terrain d’entraînement civil.</span>
+        </div>
+        <div class="az-item">
+          <strong>H comme HTML</strong>
+          <span>La brique de base. Tout doit tenir dans un simple fichier si nécessaire.</span>
+        </div>
+        <div class="az-item">
+          <strong>I comme Intranet fictif</strong>
+          <span>FAUX intranet, vraies questions sur la veille, le pouvoir et les fuites.</span>
+        </div>
+        <div class="az-item">
+          <strong>J comme Jeu de rôle</strong>
+          <span>Tu joues ton propre rôle, mais avec des règles explicitées.</span>
+        </div>
+        <div class="az-item">
+          <strong>K comme Konami code</strong>
+          <span>Clé symbolique pour accéder à des niveaux de lecture cachés.</span>
+        </div>
+        <div class="az-item">
+          <strong>L comme Lose ultime</strong>
+          <span>Ce moment où la machine 642 s’aligne exactement comme il ne fallait pas.</span>
+        </div>
+        <div class="az-item">
+          <strong>M comme Métadonnées</strong>
+          <span>EXIF, JSON, logs : tout ce que l’Organisation manipule pour raconter des histoires autrement.</span>
+        </div>
+        <div class="az-item">
+          <strong>N comme NYXO</strong>
+          <span>Un faux OS qui fonctionne assez pour devenir un vrai terrain de jeu.</span>
+        </div>
+        <div class="az-item">
+          <strong>O comme Organisation</strong>
+          <span>Ce site-ci. Cadre, règles, explications. Mais pas toute la pyramide.</span>
+        </div>
+        <div class="az-item">
+          <strong>P comme Projet de P</strong>
+          <span>Une vie réelle transformée en laboratoire d’expériences numériques.</span>
+        </div>
+        <div class="az-item">
+          <strong>Q comme Questions</strong>
+          <span>Chaque module est conçu pour en poser plus qu’il n’en résout.</span>
+        </div>
+        <div class="az-item">
+          <strong>R comme Réseau</strong>
+          <span>Objectif : relier les assos, collectifs, individus autour d’outils partagés.</span>
+        </div>
+        <div class="az-item">
+          <strong>S comme Surinformation</strong>
+          <span>Le bruit de fond qu’on détourne en matériau pédagogique.</span>
+        </div>
+        <div class="az-item">
+          <strong>T comme Tarot de Boulot</strong>
+          <span>Tirer des cartes pour parler travail, dignité et trajectoires cabossées.</span>
+        </div>
+        <div class="az-item">
+          <strong>U comme Univers 12,50</strong>
+          <span>Monnaie symbolique, trésor commun, caution, mutualisation.</span>
+        </div>
+        <div class="az-item">
+          <strong>V comme Veille citoyenne</strong>
+          <span>Pas de “news” pour consommer, mais de la surveillance partagée du réel.</span>
+        </div>
+        <div class="az-item">
+          <strong>W comme War-room</strong>
+          <span>Espaces fictifs où l’on simule la panique des rédactions ou des états-majors.</span>
+        </div>
+        <div class="az-item">
+          <strong>X comme eXpérimentations</strong>
+          <span>Prototypes imparfaits, mais documentés, plutôt que fantasmes parfaits.</span>
+        </div>
+        <div class="az-item">
+          <strong>Y comme Yet another page</strong>
+          <span>Oui, il y a beaucoup de pages. C’est assumé. D’où la nécessité de ce site.</span>
+        </div>
+        <div class="az-item">
+          <strong>Z comme Zones franches</strong>
+          <span>Espaces où l’on peut parler cash de précarité, de pouvoir et de stratégies.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ÉTHIQUE -->
+    <section class="section" id="ethique">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>05</span> Éthique, lignes rouges & promesses minimales
+        </h2>
+        <div class="section-kicker">
+          Le contrat moral implicite du jeu.
+        </div>
+      </div>
+
+      <p>
+        L’Organisation n’est pas neutre. Elle a un <strong>positionnement politique</strong> :
+        aider à comprendre les rapports de force, pas à les maquiller.
+      </p>
+
+      <ul>
+        <li><strong>On ne gamifie pas la misère pour la vendre.</strong></li>
+        <li><strong>On ne récolte pas de données personnelles sensibles</strong> :
+          pas de formulaires, pas de tracking marketing.</li>
+        <li><strong>On protège les histoires réelles</strong> :
+          les trajectoires de P et d’autres restent anonymes, transformées, méconnaissables.</li>
+        <li><strong>On documente</strong> :
+          chaque module doit pouvoir être compris, copié, critiqué, forké.</li>
+      </ul>
+
+      <div class="pill-row">
+        <span class="pill good">Transparence sur les intentions</span>
+        <span class="pill good">Protection des personnes réelles</span>
+        <span class="pill warn">Aucune promesse de neutralité</span>
+        <span class="pill alt">Invitation permanente à la critique</span>
+      </div>
+    </section>
+
+    <!-- PARTICIPER -->
+    <section class="section" id="participer">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>06</span> Comment participer (sans tout casser)
+        </h2>
+        <div class="section-kicker">
+          Modes d’entrée pour P, toi, et les autres.
+        </div>
+      </div>
+
+      <p>
+        Pour l’instant, l’Organisation fonctionne comme un <strong>atelier ouvert</strong>. Tu peux :
+      </p>
+
+      <ul>
+        <li>reprendre un module existant et l’adapter à ton contexte ;</li>
+        <li>créer un nouveau fichier <code>.html</code> / <code>.md</code> dans l’univers ;</li>
+        <li>écrire une notice, un scénario, un test, un tarot, une fausse appli ;</li>
+        <li>utiliser un module dans un vrai atelier, puis documenter ce que ça a donné.</li>
+      </ul>
+
+      <p>
+        L’Organisation fournit :
+      </p>
+      <ul>
+        <li>un <strong>cadre narratif</strong> pour relier les pièces,</li>
+        <li>des <strong>gabarits</strong> (page d’intro, README, fiches d’acteurs, etc.),</li>
+        <li>une <strong>logique de versionnage</strong> (v0.1, v0.2…) plutôt qu’un produit fini.</li>
+      </ul>
+
+      <p class="quote">
+        « On ne te demande pas d’être prêt. On te demande d’être partant. Le reste, on le documente. »
+      </p>
+    </section>
+
+    <!-- META ORG (KONAMI) -->
+    <section class="section" id="meta-org">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>07</span> Organisation de l’Organisation (zone cachée)
+        </h2>
+        <div class="section-kicker">
+          Tu n’étais pas supposé·e voir ça sans tricher.
+        </div>
+      </div>
+
+      <p>
+        Cette section ne devrait apparaître qu’après une séquence précise (le fameux Konami code).
+        Elle ne révèle <em>toujours pas</em> des identités civiles, mais donne un aperçu de la
+        couche encore au-dessus : les principes qui gouvernent l’Organisation elle-même.
+      </p>
+
+      <ul>
+        <li><strong>Pas de centre fixe</strong> :
+          l’Organisation peut être recopiée, déplacée, forkée. Il n’y a pas de QG unique.</li>
+        <li><strong>Pas de propriétaire</strong> :
+          le jeu appartient à celles et ceux qui le prennent au sérieux et le font vivre.</li>
+        <li><strong>Pas de “vrai” canon</strong> :
+          il y a des versions plus ou moins soignées, mais aucune “bible” définitive.</li>
+        <li><strong>Une seule consigne dure</strong> :
+          ne jamais utiliser cet ensemble pour renforcer les logiques qu’il critique
+          (exploitation, surveillance, propagande, manipulations marchandes).</li>
+      </ul>
+
+      <p>
+        Si tu es arrivé·e ici, c’est que tu as <strong>cherché un passage secret</strong>.
+        C’est exactement ce que l’Organisation attend des joueurs : curiosité, détournement,
+        construction de sens, pas consommation passive.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    Site de L’Organisation · Instance intermédiaire entre le vécu de P, ton projet, et les futurs joueurs.<br />
+    Tout peut être cloné, réécrit, forké. Rien n’est figé. Les identités restent hors cadre.
+  </footer>
+</div>
+
+<div id="konamiToast">Konami code détecté · Section cachée déverrouillée.</div>
+
+<script>
+  // Détection Konami code : ↑↑↓↓←→←→BA
+  (function() {
+    const sequence = [
+      "ArrowUp","ArrowUp",
+      "ArrowDown","ArrowDown",
+      "ArrowLeft","ArrowRight",
+      "ArrowLeft","ArrowRight",
+      "b","a"
+    ];
+    let position = 0;
+    const metaSection = document.getElementById('meta-org');
+    const toast = document.getElementById('konamiToast');
+    let unlocked = false;
+
+    function showToast() {
+      if (!toast) return;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2600);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const key = e.key;
+      if (key === sequence[position]) {
+        position++;
+        if (position === sequence.length) {
+          position = 0;
+          if (!unlocked && metaSection) {
+            unlocked = true;
+            metaSection.classList.add('unlocked');
+            // Scroll vers la section
+            metaSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            showToast();
+          }
+        }
+      } else {
+        // reset partiel ou total
+        position = key === sequence[0] ? 1 : 0;
+      }
+    });
+  })();
+</script>
+</body>
+</html>
