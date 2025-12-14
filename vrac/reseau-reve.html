@@ -1,0 +1,1105 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réseau ou Rêve – ARG Enhanced</title>
+  <style>
+    :root {
+      --background: #111;
+      --foreground: #f5f5f5;
+      --accent: #7fc7af;
+      --primary: #41b883;
+      --danger: #e76f51;
+      --border: #333;
+      --transition-time: 0.3s;
+      --axe-1: #7fb069;
+      --axe-2: #b19cd9;
+      --axe-3: #4ecdc4;
+      --axe-intro: #f9ca24;
+      font-size: 16px;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+    }
+
+    /* Glitch effect animation */
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-2px, -2px); }
+      80% { transform: translate(2px, 2px); }
+    }
+
+    .glitch-text {
+      animation: glitch 0.3s infinite;
+      display: inline-block;
+    }
+
+    /* Hero section */
+    .hero {
+      background: linear-gradient(135deg, #0f3443, #2c5364);
+      color: var(--foreground);
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: scan 8s infinite;
+    }
+
+    @keyframes scan {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+
+    .hero-content {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-wrapper {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 1rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .fallback-logo {
+      font-size: 4rem;
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      line-height: 96px;
+      text-align: center;
+      color: var(--axe-3);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #7fb069, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .baseline {
+      font-size: 1rem;
+      color: #cbd5e1;
+      margin-top: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 0.8rem 1.6rem;
+      margin-top: 1rem;
+      background: linear-gradient(90deg, var(--axe-1), var(--axe-3));
+      color: #000;
+      font-weight: 600;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: transform var(--transition-time), box-shadow var(--transition-time);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    /* Progress bar */
+    .progress-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 1rem auto;
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      overflow: hidden;
+      height: 24px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--axe-1), var(--axe-3));
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    /* Navigation */
+    .site-nav {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      background: rgba(0,0,0,0.4);
+      padding: 0.5rem 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .site-nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .site-nav li a {
+      color: var(--foreground);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      transition: background var(--transition-time);
+    }
+
+    .site-nav li a:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .card-intro { border-left: 5px solid var(--axe-intro); }
+    .card-m1 { border-left: 5px solid var(--axe-1); }
+    .card-m2 { border-left: 5px solid var(--axe-2); }
+    .card-m3 { border-left: 5px solid var(--axe-3); }
+    .card-journal { border-left: 5px solid #e76f51; }
+    .card-network { border-left: 5px solid #2a9d8f; }
+
+    .completed-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #000;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+
+    /* Forms */
+    .mission-form input[type="text"],
+    .mission-form textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #1f1f1f;
+      color: var(--foreground);
+      margin-bottom: 0.8rem;
+    }
+
+    .mission-form button.btn {
+      background: linear-gradient(90deg, var(--axe-1), var(--axe-3));
+      color: #000;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform var(--transition-time), box-shadow var(--transition-time);
+    }
+
+    .mission-form button.btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .radio-option input[type="radio"] {
+      accent-color: var(--axe-1);
+      transform: scale(1.2);
+      margin-top: 0.2rem;
+    }
+
+    .cipher {
+      font-family: "Courier New", monospace;
+      background: #222;
+      padding: 0.8rem;
+      border-left: 4px solid var(--primary);
+      margin: 1rem 0;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .cipher::before {
+      content: '⚠️ ENCRYPTED';
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--danger);
+      color: #fff;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.7rem;
+      border-bottom-left-radius: 4px;
+    }
+
+    /* Feedback */
+    .feedback {
+      margin-top: 0.5rem;
+      font-style: italic;
+      min-height: 1.2rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .feedback.success {
+      background: rgba(127, 176, 105, 0.2);
+      color: var(--axe-1);
+      border-left: 3px solid var(--axe-1);
+    }
+
+    .feedback.error {
+      background: rgba(231, 111, 81, 0.2);
+      color: var(--danger);
+      border-left: 3px solid var(--danger);
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.8rem;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: scale(1.05);
+    }
+
+    .stat-card .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--axe-1);
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-top: 0.2rem;
+    }
+
+    /* Network visualization */
+    .network-canvas {
+      width: 100%;
+      height: 300px;
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    /* Journal entries */
+    .journal-entry {
+      background: rgba(0,0,0,0.3);
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border-left: 3px solid var(--axe-2);
+      border-radius: 4px;
+    }
+
+    .journal-entry .timestamp {
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 0.3rem;
+    }
+
+    /* Easter egg hint */
+    .easter-egg-hint {
+      font-size: 0.7rem;
+      color: #555;
+      text-align: center;
+      margin-top: 2rem;
+      font-style: italic;
+    }
+
+    footer {
+      padding: 1rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      background: #0d0d0d;
+      color: #888;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Modal for discoveries */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      padding: 2rem;
+      border-radius: 10px;
+      border: 2px solid var(--axe-1);
+      max-width: 500px;
+      text-align: center;
+      animation: modalAppear 0.5s;
+    }
+
+    @keyframes modalAppear {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-close {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.8rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .site-nav ul { flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero section -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="logo-wrapper">
+        <span class="fallback-logo">🌐</span>
+      </div>
+      <h1>Réseau ou Rêve</h1>
+      <p class="baseline">Un ARG lowtech pour explorer notre imagination collective</p>
+      
+      <!-- Progress bar -->
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar">0%</div>
+      </div>
+      
+      <a href="#missions" class="cta-button">Commencer l'aventure</a>
+    </div>
+    
+    <nav aria-label="Navigation principale" class="site-nav">
+      <ul>
+        <li><a href="#intro">À propos</a></li>
+        <li><a href="#mission1">Mission 1</a></li>
+        <li><a href="#mission2">Mission 2</a></li>
+        <li><a href="#mission3">Mission 3</a></li>
+        <li><a href="#journal">Journal</a></li>
+        <li><a href="#network">Réseau</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="missions">
+    <!-- Introduction -->
+    <section id="intro" class="section card card-intro">
+      <div class="card-header">
+        <span class="card-icon">📖</span>
+        <h2>À propos</h2>
+      </div>
+      <p>
+        Bienvenue dans ce jeu de rôle grandeur nature inspiré de l'éducation populaire. 
+        Vous allez être amené·e à enquêter sur l'existence hypothétique d'un 
+        <strong>réseau de réseaux</strong> orchestré par une organisation secrète. 
+        Est-ce un rêve un peu fou qui arrive trop tôt dans l'histoire, ou trop tard ?
+      </p>
+      <p>
+        <span class="glitch-text" id="glitch-intro">Cette aventure vous invite à explorer, questionner et inventer collectivement des alternatives.</span>
+      </p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">1969</div>
+          <div class="stat-label">année de naissance</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-players">1</div>
+          <div class="stat-label">joueurs actifs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-discoveries">0</div>
+          <div class="stat-label">découvertes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-messages">???</div>
+          <div class="stat-label">messages cachés</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission 1: Cipher -->
+    <section id="mission1" class="section card card-m1">
+      <div class="card-header">
+        <span class="card-icon">🧩</span>
+        <h2>Mission 1 : Déchiffrer le signal <span id="badge-m1"></span></h2>
+      </div>
+      <p>
+        La première étape consiste à rechercher les traces de ce prétendu réseau dans des messages codés. 
+        Voici l'une des phrases extraites du manuscrit :
+      </p>
+      
+      <blockquote class="cipher" id="cipher-text">Qrxv qh vrpphv sdv vhxov</blockquote>
+      
+      <p>
+        <strong>Indice :</strong> Chiffrement de César (décalage dans l'alphabet)
+        <button class="btn" onclick="generateNewCipher()" style="margin-left: 1rem; padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+          🔄 Nouveau code
+        </button>
+      </p>
+      
+      <form id="mission1-form" class="mission-form">
+        <input type="text" id="mission1-input" placeholder="Votre déchiffrement" required>
+        <button type="submit" class="btn">Valider</button>
+      </form>
+      <div id="mission1-feedback" class="feedback"></div>
+    </section>
+
+    <!-- Mission 2: Investigation -->
+    <section id="mission2" class="section card card-m2">
+      <div class="card-header">
+        <span class="card-icon">🕵️‍♀️</span>
+        <h2>Mission 2 : Enquête collective <span id="badge-m2"></span></h2>
+      </div>
+      <p>
+        Pour comprendre si un réseau se cache derrière nos communautés, partez sur le terrain. 
+        Choisissez un lieu de votre quotidien et observez ce qui s'y passe.
+      </p>
+      <p>
+        <strong>Suggestions d'enquête :</strong>
+      </p>
+      <ul>
+        <li>Quels liens se tissent entre les personnes ?</li>
+        <li>Quelles initiatives émergent spontanément ?</li>
+        <li>Que pensent les gens du concept de "réseau de réseaux" ?</li>
+      </ul>
+      
+      <form id="mission2-form" class="mission-form">
+        <textarea id="mission2-input" placeholder="Décrivez ici vos observations…" rows="5" required></textarea>
+        <button type="submit" class="btn">Enregistrer</button>
+      </form>
+      <div id="mission2-feedback" class="feedback"></div>
+    </section>
+
+    <!-- Mission 3: Philosophy -->
+    <section id="mission3" class="section card card-m3">
+      <div class="card-header">
+        <span class="card-icon">💭</span>
+        <h2>Mission 3 : Rêve ou réalité ? <span id="badge-m3"></span></h2>
+      </div>
+      <p>
+        Après vos investigations, il est temps de prendre position. 
+        Selon vous, ce réseau de réseaux existe-t-il vraiment ?
+      </p>
+      
+      <form id="mission3-form" class="mission-form">
+        <fieldset style="border: none; padding: 0;">
+          <legend style="font-weight: 600; margin-bottom: 0.5rem;">Votre perception</legend>
+          <label class="radio-option">
+            <input type="radio" name="question" value="existe" required>
+            <span>Oui, un réseau discret orchestre des initiatives partout dans le monde.</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="question" value="reve">
+            <span>Non, l'idée relève plutôt d'un rêve collectif qui n'attend que nous pour se réaliser.</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="question" value="incertain">
+            <span>Je ne sais pas, mais l'important est de créer des liens dès maintenant.</span>
+          </label>
+        </fieldset>
+        <textarea id="mission3-comment" placeholder="Expliquez votre choix…" rows="4"></textarea>
+        <button type="submit" class="btn">Envoyer</button>
+      </form>
+      <div id="mission3-feedback" class="feedback"></div>
+    </section>
+
+    <!-- Journal section (NEW) -->
+    <section id="journal" class="section card card-journal">
+      <div class="card-header">
+        <span class="card-icon">📔</span>
+        <h2>Journal de bord</h2>
+      </div>
+      <p>Toutes vos découvertes et observations sont automatiquement consignées ici.</p>
+      <div id="journal-entries"></div>
+      <button class="btn" onclick="exportJournal()" style="margin-top: 1rem;">
+        💾 Exporter le journal
+      </button>
+    </section>
+
+    <!-- Network visualization (NEW) -->
+    <section id="network" class="section card card-network">
+      <div class="card-header">
+        <span class="card-icon">🕸️</span>
+        <h2>Visualisation du Réseau</h2>
+      </div>
+      <p>
+        Chaque action que vous effectuez renforce les connexions du réseau. 
+        Observez comment il évolue avec vos découvertes.
+      </p>
+      <canvas id="network-canvas" class="network-canvas"></canvas>
+      <p style="text-align: center; font-size: 0.85rem; color: #888;">
+        Nœuds actifs : <span id="node-count">3</span> | 
+        Connexions : <span id="connection-count">2</span>
+      </p>
+    </section>
+  </main>
+
+  <!-- Easter egg hint -->
+  <div class="easter-egg-hint">
+    <!-- Le code source contient des messages cachés. Inspectez-le. -->
+  </div>
+
+  <!-- Modal for discoveries -->
+  <div id="discovery-modal" class="modal">
+    <div class="modal-content">
+      <h2>🎉 Découverte !</h2>
+      <p id="discovery-message"></p>
+      <button class="modal-close" onclick="closeModal()">Continuer</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      © 2025 – Ce projet est partagé sous licence CC BY-SA. 
+      Vous pouvez le modifier et le réutiliser pour vos propres scénarios d'éducation populaire.
+    </p>
+    <p style="font-size: 0.7rem; margin-top: 0.5rem; color: #555;">
+      <!-- Indice : Konami Code = ? -->
+      Version 2.0.1 | Build <span id="build-number">...</span>
+    </p>
+  </footer>
+
+  <script>
+    // ===== UTILITIES =====
+    function normalizeString(str) {
+      return str.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').trim();
+    }
+
+    function addJournalEntry(type, content) {
+      const journal = JSON.parse(localStorage.getItem('journal') || '[]');
+      journal.push({
+        type,
+        content,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem('journal', JSON.stringify(journal));
+      updateJournalDisplay();
+      updateStats();
+    }
+
+    function updateJournalDisplay() {
+      const journal = JSON.parse(localStorage.getItem('journal') || '[]');
+      const container = document.getElementById('journal-entries');
+      
+      if (journal.length === 0) {
+        container.innerHTML = '<p style="color: #888;">Aucune entrée pour le moment. Commencez votre enquête !</p>';
+        return;
+      }
+
+      container.innerHTML = journal.reverse().map(entry => {
+        const date = new Date(entry.timestamp);
+        return `
+          <div class="journal-entry">
+            <div class="timestamp">${date.toLocaleDateString('fr-FR')} ${date.toLocaleTimeString('fr-FR')}</div>
+            <div><strong>${entry.type}</strong>: ${entry.content}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateProgress() {
+      const completed = [
+        localStorage.getItem('mission1Completed'),
+        localStorage.getItem('mission2Completed'),
+        localStorage.getItem('mission3Completed')
+      ].filter(Boolean).length;
+      
+      const percent = Math.round((completed / 3) * 100);
+      const bar = document.getElementById('progress-bar');
+      bar.style.width = percent + '%';
+      bar.textContent = percent + '%';
+
+      // Update badges
+      if (localStorage.getItem('mission1Completed')) {
+        document.getElementById('badge-m1').innerHTML = '<span class="completed-badge">✓ Complétée</span>';
+      }
+      if (localStorage.getItem('mission2Completed')) {
+        document.getElementById('badge-m2').innerHTML = '<span class="completed-badge">✓ Complétée</span>';
+      }
+      if (localStorage.getItem('mission3Completed')) {
+        document.getElementById('badge-m3').innerHTML = '<span class="completed-badge">✓ Complétée</span>';
+      }
+    }
+
+    function updateStats() {
+      const journal = JSON.parse(localStorage.getItem('journal') || '[]');
+      document.getElementById('stat-discoveries').textContent = journal.length;
+      
+      // Simulate other players
+      const baseNumber = 42;
+      const variation = Math.floor(Math.sin(Date.now() / 10000) * 5);
+      document.getElementById('stat-players').textContent = baseNumber + variation;
+      
+      // Hidden messages count
+      const hiddenCount = localStorage.getItem('easterEggsFound') || 0;
+      document.getElementById('stat-messages').textContent = hiddenCount + '/7';
+    }
+
+    function showDiscovery(message) {
+      const modal = document.getElementById('discovery-modal');
+      document.getElementById('discovery-message').textContent = message;
+      modal.classList.add('active');
+      
+      const currentCount = parseInt(localStorage.getItem('easterEggsFound') || '0');
+      localStorage.setItem('easterEggsFound', currentCount + 1);
+      updateStats();
+    }
+
+    function closeModal() {
+      document.getElementById('discovery-modal').classList.remove('active');
+    }
+
+    function exportJournal() {
+      const journal = JSON.parse(localStorage.getItem('journal') || '[]');
+      const text = journal.map(e => 
+        `[${new Date(e.timestamp).toLocaleString('fr-FR')}] ${e.type}: ${e.content}`
+      ).join('\n\n');
+      
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `journal-reseau-${Date.now()}.txt`;
+      a.click();
+      
+      addJournalEntry('Export', 'Journal exporté avec succès');
+    }
+
+    // ===== CAESAR CIPHER GENERATOR =====
+    const phrases = [
+      "Nous ne sommes pas seuls",
+      "Le réseau existe déjà",
+      "Cherchez les signes cachés",
+      "La vérité est sous vos yeux",
+      "Tout est connecté depuis toujours"
+    ];
+    
+    let currentPhrase = phrases[0];
+    let currentShift = 3;
+
+    function caesarCipher(text, shift) {
+      return text.split('').map(char => {
+        if (char.match(/[a-z]/i)) {
+          const code = char.charCodeAt(0);
+          const isUpperCase = code >= 65 && code <= 90;
+          const base = isUpperCase ? 65 : 97;
+          return String.fromCharCode(((code - base + shift) % 26) + base);
+        }
+        return char;
+      }).join('');
+    }
+
+    function generateNewCipher() {
+      currentPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+      currentShift = Math.floor(Math.random() * 25) + 1;
+      const encrypted = caesarCipher(currentPhrase, currentShift);
+      document.getElementById('cipher-text').textContent = encrypted;
+      document.getElementById('mission1-input').value = '';
+      document.getElementById('mission1-feedback').textContent = '';
+      document.getElementById('mission1-feedback').className = 'feedback';
+      
+      addJournalEntry('Nouveau code', `Code généré avec décalage de ${currentShift}`);
+    }
+
+    // ===== MISSION 1 =====
+    document.getElementById('mission1-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = normalizeString(document.getElementById('mission1-input').value);
+      const expected = normalizeString(currentPhrase);
+      const feedback = document.getElementById('mission1-feedback');
+      
+      feedback.classList.remove('success', 'error');
+      
+      if (input === expected) {
+        feedback.textContent = `Bravo ! Vous avez correctement déchiffré : "${currentPhrase}"`;
+        feedback.classList.add('success');
+        localStorage.setItem('mission1Completed', 'true');
+        addJournalEntry('Mission 1', `Code déchiffré: "${currentPhrase}"`);
+        updateProgress();
+        
+        setTimeout(() => {
+          showDiscovery('Vous avez prouvé votre capacité à décoder les messages du Réseau. D\'autres secrets vous attendent...');
+        }, 500);
+      } else {
+        feedback.textContent = `Ce n'est pas la bonne phrase. Indice : décalage de ${currentShift} positions.`;
+        feedback.classList.add('error');
+      }
+    });
+
+    // ===== MISSION 2 =====
+    const mission2Input = document.getElementById('mission2-input');
+    const saved2 = localStorage.getItem('mission2Notes');
+    if (saved2) mission2Input.value = saved2;
+
+    document.getElementById('mission2-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const notes = mission2Input.value.trim();
+      const feedback = document.getElementById('mission2-feedback');
+      
+      feedback.classList.remove('success', 'error');
+      
+      if (notes.length > 10) {
+        localStorage.setItem('mission2Notes', notes);
+        localStorage.setItem('mission2Completed', 'true');
+        feedback.textContent = 'Votre enquête a été enregistrée. Le Réseau prend note de vos observations.';
+        feedback.classList.add('success');
+        addJournalEntry('Mission 2', notes.substring(0, 100) + '...');
+        updateProgress();
+      } else {
+        feedback.textContent = 'Votre observation est trop courte. Développez davantage.';
+        feedback.classList.add('error');
+      }
+    });
+
+    // ===== MISSION 3 =====
+    const savedChoice = localStorage.getItem('mission3Choice');
+    if (savedChoice) {
+      const radio = document.querySelector(`input[value="${savedChoice}"]`);
+      if (radio) radio.checked = true;
+    }
+    
+    const savedComment = localStorage.getItem('mission3Comment');
+    const mission3Comment = document.getElementById('mission3-comment');
+    if (savedComment) mission3Comment.value = savedComment;
+
+    document.getElementById('mission3-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const choice = document.querySelector('input[name="question"]:checked');
+      const comment = mission3Comment.value.trim();
+      const feedback = document.getElementById('mission3-feedback');
+      
+      feedback.classList.remove('success', 'error');
+      
+      if (!choice) {
+        feedback.textContent = 'Veuillez sélectionner une réponse.';
+        feedback.classList.add('error');
+        return;
+      }
+
+      localStorage.setItem('mission3Choice', choice.value);
+      localStorage.setItem('mission3Comment', comment);
+      localStorage.setItem('mission3Completed', 'true');
+      
+      const messages = {
+        existe: "Vous pensez qu'un réseau discret existe déjà. Ouvrez l'œil !",
+        reve: "Vous voyez cette idée comme un rêve partagé. Il ne tient qu'à vous de le réaliser.",
+        incertain: "Votre position est nuancée : l'important est de créer des liens ici et maintenant."
+      };
+      
+      feedback.textContent = messages[choice.value] + (comment ? ' Merci pour votre réflexion !' : '');
+      feedback.classList.add('success');
+      addJournalEntry('Mission 3', `Position: ${choice.value}`);
+      updateProgress();
+      
+      if (localStorage.getItem('mission1Completed') && 
+          localStorage.getItem('mission2Completed') && 
+          localStorage.getItem('mission3Completed')) {
+        setTimeout(() => {
+          showDiscovery('🎊 Félicitations ! Vous avez complété toutes les missions principales. Mais le Réseau cache encore bien des secrets...');
+        }, 1000);
+      }
+    });
+
+    // ===== NETWORK VISUALIZATION =====
+    const canvas = document.getElementById('network-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Node {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.vy = (Math.random() - 0.5) * 2;
+        this.radius = 5;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#7fb069';
+        ctx.fill();
+        ctx.strokeStyle = '#4ecdc4';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+
+    let nodes = [];
+    const baseNodeCount = 3;
+    
+    function initNodes() {
+      const completedMissions = [
+        localStorage.getItem('mission1Completed'),
+        localStorage.getItem('mission2Completed'),
+        localStorage.getItem('mission3Completed')
+      ].filter(Boolean).length;
+      
+      const nodeCount = baseNodeCount + completedMissions * 2;
+      nodes = [];
+      
+      for (let i = 0; i < nodeCount; i++) {
+        nodes.push(new Node(
+          Math.random() * canvas.width,
+          Math.random() * canvas.height
+        ));
+      }
+      
+      document.getElementById('node-count').textContent = nodeCount;
+    }
+
+    function drawConnections() {
+      let connectionCount = 0;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(78, 205, 196, ${1 - distance / 150})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            connectionCount++;
+          }
+        }
+      }
+      document.getElementById('connection-count').textContent = connectionCount;
+    }
+
+    function animate() {
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      drawConnections();
+      nodes.forEach(node => {
+        node.update();
+        node.draw();
+      });
+      
+      requestAnimationFrame(animate);
+    }
+
+    initNodes();
+    animate();
+
+    // ===== EASTER EGGS =====
+    let konamiCode = [];
+    const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    
+    document.addEventListener('keydown', (e) => {
+      konamiCode.push(e.key);
+      konamiCode = konamiCode.slice(-10);
+      
+      if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+        showDiscovery('🎮 Konami Code activé ! Vous avez trouvé un secret bien caché. Le Réseau apprécie votre persévérance.');
+        konamiCode = [];
+      }
+    });
+
+    // Random glitch effect
+    setInterval(() => {
+      const glitchEl = document.getElementById('glitch-intro');
+      if (Math.random() > 0.7) {
+        glitchEl.style.animation = 'none';
+        setTimeout(() => {
+          glitchEl.style.animation = 'glitch 0.3s infinite';
+          setTimeout(() => {
+            glitchEl.style.animation = 'none';
+          }, 300);
+        }, 10);
+      }
+    }, 5000);
+
+    // Build number easter egg
+    const buildDate = new Date('2025-10-14');
+    const daysSince = Math.floor((Date.now() - buildDate) / (1000 * 60 * 60 * 24));
+    document.getElementById('build-number').textContent = `${1969 + daysSince}`;
+    
+    // Click on build number
+    document.getElementById('build-number').addEventListener('click', () => {
+      showDiscovery('Le numéro de build révèle l\'année de naissance du Réseau... ou peut-être sa résurgence ?');
+    });
+
+    // Triple click on logo
+    let logoClicks = 0;
+    document.querySelector('.logo-wrapper').addEventListener('click', () => {
+      logoClicks++;
+      if (logoClicks === 3) {
+        showDiscovery('🌐 Le logo représente l\'interconnexion de toutes choses. Vous commencez à voir le Réseau.');
+        logoClicks = 0;
+      }
+      setTimeout(() => { logoClicks = 0; }, 2000);
+    });
+
+    // ===== INITIALIZATION =====
+    updateProgress();
+    updateJournalDisplay();
+    updateStats();
+
+    // Welcome message
+    if (!localStorage.getItem('hasVisited')) {
+      localStorage.setItem('hasVisited', 'true');
+      setTimeout(() => {
+        showDiscovery('Bienvenue dans le Réseau. Vos actions sont suivies, vos découvertes enregistrées. Êtes-vous prêt·e à chercher la vérité ?');
+      }, 2000);
+    }
+
+    // Console easter egg
+    console.log(`
+%c██████╗ ███████╗███████╗███████╗ █████╗ ██╗   ██╗
+%c██╔══██╗██╔════╝██╔════╝██╔════╝██╔══██╗██║   ██║
+%c██████╔╝█████╗  ███████╗█████╗  ███████║██║   ██║
+%c██╔══██╗██╔══╝  ╚════██║██╔══╝  ██╔══██║██║   ██║
+%c██║  ██║███████╗███████║███████╗██║  ██║╚██████╔╝
+%c╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ 
+    `, 
+      'color: #7fb069', 'color: #b19cd9', 'color: #4ecdc4', 
+      'color: #7fb069', 'color: #b19cd9', 'color: #4ecdc4'
+    );
+    console.log('%cVous avez trouvé le message caché dans la console !', 'color: #f9ca24; font-size: 16px; font-weight: bold;');
+    console.log('%cIndice: Tapez reseau.secret() pour en savoir plus...', 'color: #888; font-style: italic;');
+    
+    window.reseau = {
+      secret: function() {
+        showDiscovery('🔍 Console explorée ! Les développeurs du Réseau laissent parfois des traces...');
+        console.log('%cCoordonnées: 50.8503° N, 4.3517° E', 'color: #4ecdc4;');
+        console.log('%cQue trouvez-vous à cet endroit ?', 'color: #7fb069;');
+      }
+    };
+  </script>
+</body>
+</html>
